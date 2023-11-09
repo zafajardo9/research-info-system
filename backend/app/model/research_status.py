@@ -1,4 +1,8 @@
+from typing import List, Optional
+from app.model.mixins import TimeMixin
 
+from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlmodel import SQLModel, Field, Relationship
 
 class ResearchPaperStatus(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers_status'

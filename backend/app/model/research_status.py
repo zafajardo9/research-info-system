@@ -8,6 +8,7 @@ class ResearchPaperStatus(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers_status'
 
     id: int = Field(primary_key=True)
+    research_paper_id: int = Field(foreign_key="research_papers.id") 
     proposal: bool
     under_review: bool
     research_protocol: bool
@@ -17,6 +18,8 @@ class ResearchPaperStatus(SQLModel, TimeMixin, table=True):
     published: bool
 
     research_adviser: int
+     # Define a relationship to access the comments associated with the research paper status
+    comments: list["Comment"] = Relationship(back_populates="research_paper_status")
 
 class Comment(SQLModel, TimeMixin, table=True):
     __tablename__ = 'comments'
@@ -25,5 +28,4 @@ class Comment(SQLModel, TimeMixin, table=True):
     text: str
     research_paper_status_id: int = Field(foreign_key="research_papers_status.id")
     
-    research_paper_status: ResearchPaperStatus = relationship("ResearchPaperStatus", back_populates="comments")
-
+    research_paper_status: ResearchPaperStatus = Relationship(back_populates="comments")

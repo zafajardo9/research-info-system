@@ -8,3 +8,4 @@ from .research_paper import ResearchPaper
 from .research_paper import Author
 
 from .research_status import ResearchPaperStatus
+from .research_status import Comment

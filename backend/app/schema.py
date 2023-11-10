@@ -98,7 +98,14 @@ class ResearchPaperSchema(BaseModel):
     title: str
     content: str
     research_adviser: int
+    abstract: str
+    research_type: str
+    submitted_date: str
+    keywords: str
+    file_path: str
+    research_adviser: int
         
+
 
 
 

@@ -19,7 +19,7 @@ class ResearchPaperStatus(SQLModel, TimeMixin, table=True):
 
     research_adviser: int
      # Define a relationship to access the comments associated with the research paper status
-    comments: list["Comment"] = Relationship(back_populates="research_paper_status")
+    comments: Optional["Comment"] = Relationship(back_populates="research_paper_status")
 
 class Comment(SQLModel, TimeMixin, table=True):
     __tablename__ = 'comments'

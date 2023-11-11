@@ -13,7 +13,8 @@ def init_app():
     app = FastAPI(
         title= "PUP-RIZ",
         description= "Login Student Page",
-        version= "1"
+        version= "1",
+        debug=True,  # Set debug mode here
     )
 
     app.add_middleware(

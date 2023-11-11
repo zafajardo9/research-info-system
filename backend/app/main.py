@@ -14,7 +14,6 @@ def init_app():
         title= "PUP-RIZ",
         description= "Login Student Page",
         version= "1",
-        debug=True,  # Set debug mode here
     )
 
     app.add_middleware(
@@ -47,3 +46,4 @@ app = init_app()
 def start():
     """Launched with 'poetry run start' at root level """
     uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)
+   # uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)

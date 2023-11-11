@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlmodel import SQLModel, Field, Relationship
 
-from app.model.research_status import ResearchPaperStatus
+
 
 
 class Author(SQLModel, table=True):
@@ -19,7 +19,6 @@ class Author(SQLModel, table=True):
     research_paper_id: int = Field(foreign_key="research_papers.id")
 
     research_paper: Optional["ResearchPaper"] = Relationship(back_populates="authors")
-
 
 class ResearchPaper(SQLModel, table=True):
     __tablename__ = 'research_papers'
@@ -34,10 +33,7 @@ class ResearchPaper(SQLModel, table=True):
     file_path: str
     research_adviser: int
 
-    author: Optional[Author] = Relationship(back_populates="research_paper")
+    authors: List[Author] = Relationship(back_populates="research_paper")
 
-    status: Optional[ResearchPaperStatus] = Relationship(
-        sa_relationship_kwargs={'uselist': False},
-        back_populates="research_paper"
-    )
-
+    # status_id: Optional[int] = Field(foreign_key="research_papers_status.id")
+    # status: Optional["ResearchPaperStatus"] = Relationship(back_populates="research_paper")

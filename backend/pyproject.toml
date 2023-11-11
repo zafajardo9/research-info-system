@@ -26,6 +26,3 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start = "app.main:start"
 
-
-#[tool.poetry.scripts]
-#start = "uvicorn app.main:start --reload --host 0.0.0.0 --port 10000"

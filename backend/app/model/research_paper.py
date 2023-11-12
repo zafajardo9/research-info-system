@@ -13,15 +13,14 @@ from sqlmodel import SQLModel, Field, Relationship
 class Author(SQLModel, table=True):
     __tablename__ = "authors"
 
-    id: int = Field(primary_key=True)
+    id: Optional[str] = Field(primary_key=True)
     name: str
-    user_id: int = Field(foreign_key="users.id")
-    research_paper_id: int = Field(foreign_key="research_papers.id")
+    user_id: str = Field(foreign_key="users.id")
+    research_paper_id: str = Field(foreign_key="research_papers.id")
 
     # Define the relationship to Users
     user: Optional["Users"] = Relationship(back_populates="author", sa_relationship_kwargs={'uselist': False})
     research_paper: Optional["ResearchPaper"] = Relationship(back_populates="authors")
-
 
 
 class ResearchPaper(SQLModel, TimeMixin, table=True):
@@ -37,8 +36,11 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     file_path: str
     research_adviser: str
 
+
+
     authors: Optional[List["Author"]] = Relationship(back_populates="research_paper")
     status: Optional["ResearchPaperStatus"] = Relationship(back_populates="research_paper")
+    
 
 
     # status_id: Optional[int] = Field(foreign_key="research_papers_status.id")

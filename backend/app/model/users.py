@@ -1,6 +1,5 @@
 from typing import List, Optional
 from app.model.mixins import TimeMixin
-from app.model.research_paper import Author, ResearchPaper
 from sqlalchemy import Column, String, Integer
 from sqlmodel import SQLModel, Field, Relationship
 # from app.model.faculty import Faculty
@@ -54,7 +53,7 @@ class Users(SQLModel, TimeMixin, table=True):
     roles: str
 
      # Define the relationship to Author
-    author: Optional["Author"] = Relationship(back_populates="user")
+    author: Optional[List["Author"]] = Relationship(back_populates="user")
 
     # # Define relationships to access related data
     # research_papers: Optional["ResearchPaper"] = Relationship(back_populates="research_adviser")

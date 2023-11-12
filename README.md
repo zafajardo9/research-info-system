@@ -16,6 +16,35 @@ NOTE: Use 'alembic revision -m "Update Table"' when adding
 3. poetry export -f requirements.txt --without-hashes > requirements.txt
 4. pip install -r requirements.txt
 
+
+```
+└── 📁backend
+    └── alembic.ini
+    └── 📁app
+        └── 📁controller
+        └── 📁model
+        └── 📁repository
+        └── 📁service
+        └── config.py
+        └── main.py
+        └── schema.py
+        └── __init__.py
+    └── 📁media
+        └── profile.png
+    └── 📁migrations
+        └── env.py
+    └── poetry.lock
+    └── pyproject.toml
+    └── README.md
+    └── requirements-freeze.txt
+    └── requirements.txt
+    └── 📁tests
+        └── __init__.py
+
+```
+
+
+
 ## Frontend
 
 1. Run frontend `npm start`

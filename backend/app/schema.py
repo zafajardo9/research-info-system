@@ -9,6 +9,8 @@ from pydantic.generics import GenericModel
 from pydantic import BaseModel, validator
 from sqlalchemy import false
 
+from app.model.research_paper import Author
+
 
 T = TypeVar('T')
 
@@ -94,18 +96,32 @@ class AuthorSchema(BaseModel):
     
     
 
-class ResearchPaperSchema(BaseModel):
+
+class ResearchPaperCreate(BaseModel):
     title: str
     content: str
-    research_adviser: int
     abstract: str
     research_type: str
     submitted_date: str
     keywords: str
     file_path: str
-    research_adviser: int
-        
+    research_adviser: str
+    author_id: Optional[str] = None
 
+class ResearchPaper(BaseModel):
+    id: Optional[str] = None
+    title: str
+    content: str
+    abstract: str
+    research_type: str
+    submitted_date: str
+    keywords: str
+    file_path: str
+    research_adviser: str
+    authors: Optional[List[Author]] = []
+
+    class Config:
+        orm_mode = True
 
 
 

@@ -35,9 +35,9 @@ class AuthService:
                         id=_student_id,
                         name=register.name,
                         birth=birth_date,
-                        year=register.year,  # Add the year field
-                        section=register.section,  # Add the section field
-                        course=register.course,  # Add the course field
+                        year=register.year, 
+                        section=register.section,  
+                        course=register.course, 
                         student_number=register.student_number,
                         phone_number=register.phone_number,
                         )

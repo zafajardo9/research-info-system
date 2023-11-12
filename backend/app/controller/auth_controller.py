@@ -1,36 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException
-from app.schema import AuthorSchema, ResponseSchema
+from fastapi import APIRouter, Depends, HTTPException, Security
+from fastapi.security import HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
+
 from app.service.author_service import AuthorService
+from app.model.research_paper import Author
+from app.schema import AuthorSchema, ResponseSchema
+from app.repository.auth_repo import JWTBearer, JWTRepo
+from app.service.users_service import UserService
+from app.config import db
 
 router = APIRouter(
-    prefix="/authors",
-    tags=["Authors"]
+    prefix="/author",
+    tags=['Author'],
+    dependencies=[Depends(JWTBearer())]
 )
 
 @router.post("/", response_model=ResponseSchema, response_model_exclude_none=True)
-async def create_author(author: AuthorSchema):
-    created_author = await AuthorService.create_author(author)
-    return ResponseSchema(detail="Author created successfully!", result=created_author)
+async def create_author(
+    author_data: AuthorSchema,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+    username = token['username']
 
-@router.get("/{author_id}", response_model=ResponseSchema, response_model_exclude_none=True)
-async def get_author_by_id(author_id: int):
-    author = await AuthorService.get_author_by_id(author_id)
-    if author:
-        return ResponseSchema(detail="Fetched author by ID", result=author)
-    else:
-        raise HTTPException(status_code=404, detail="Author not found")
+    # Get user_id by username
+    user_id = await UserService.get_student_profile(username)
 
-@router.get("/", response_model=ResponseSchema, response_model_exclude_none=True)
-async def get_all_authors():
-    authors = await AuthorService.get_all_authors()
-    return ResponseSchema(detail="Fetched all authors", result=authors)
+    # Link the author with the current user
+    author_data.user_id = user_id
 
-@router.put("/{author_id}", response_model=ResponseSchema, response_model_exclude_none=True)
-async def update_author(author_id: int, updated_author: AuthorSchema):
-    await AuthorService.update_author(author_id, updated_author)
-    return ResponseSchema(detail="Author updated successfully!")
+    return await AuthorService.create_author(db, author_data)
 
-@router.delete("/{author_id}", response_model=ResponseSchema, response_model_exclude_none=True)
-async def delete_author(author_id: int):
-    await AuthorService.delete_author(author_id)
-    return ResponseSchema(detail="Author deleted successfully!")
+@router.get("/{author_id}", response_model=Author)
+async def read_author(author_id: str):
+    return await AuthorService.get_author(db, author_id)

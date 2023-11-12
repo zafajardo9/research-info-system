@@ -9,8 +9,8 @@ from sqlmodel import SQLModel, Field, Relationship
 class ResearchPaperStatus(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers_status'
 
-    id: int = Field(primary_key=True)
-    research_paper_id: Optional[int] = Field(foreign_key="research_papers.id")
+    id: Optional[str] = Field(primary_key=True)
+    research_paper_id: Optional[str] = Field(foreign_key="research_papers.id")
     research_paper: Optional["ResearchPaper"] = Relationship(back_populates="status")
 
     proposal: bool
@@ -25,11 +25,12 @@ class ResearchPaperStatus(SQLModel, TimeMixin, table=True):
 
     comments: Optional[List["Comment"]] = Relationship(back_populates="research_paper_status")
 
+
 class Comment(SQLModel, TimeMixin, table=True):
     __tablename__ = 'comments'
 
-    id: int = Field(primary_key=True)
+    id: Optional[str] = Field(primary_key=True)
     text: str
-    research_paper_status_id: int = Field(foreign_key="research_papers_status.id")
+    research_paper_status_id: Optional[str] = Field(foreign_key="research_papers_status.id")
 
-    research_paper_status: ResearchPaperStatus = Relationship(back_populates="comments")
+    research_paper_status: Optional[ResearchPaperStatus] = Relationship(back_populates="comments")

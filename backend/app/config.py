@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
-DB_CONFIG = f"postgresql+asyncpg://postgres:ddGb2*6B-Dc-DGbcCcbeF26Egc3a146a@monorail.proxy.rlwy.net:16258/railway"
+DB_CONFIG = f"postgresql+asyncpg://postgres:2EA1F*56fbcF12-dE-366bc4b2cDDFD1@roundhouse.proxy.rlwy.net:52591/railway"
 
 
 

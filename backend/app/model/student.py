@@ -7,7 +7,7 @@ from app.model.mixins import TimeMixin
 class Student(SQLModel, TimeMixin, table=True):
     __tablename__ = "student"
 
-    id: Optional[int] = Field(primary_key=True, nullable=False)
+    id: Optional[str] = Field(primary_key=True, nullable=False)
     name: str
     birth: date
     year: int
@@ -17,3 +17,4 @@ class Student(SQLModel, TimeMixin, table=True):
     phone_number: str
 
     users: Optional["Users"] = Relationship(sa_relationship_kwargs={'uselist': False}, back_populates="student")
+

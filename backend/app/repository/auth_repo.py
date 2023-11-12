@@ -21,12 +21,19 @@ class JWTRepo:
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
         else:
-            expire = datetime.utcnow() + timedelta(minutes=15) 
-            # token expires
-        to_encode.update({"exp": expire})
-        encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+            expire = datetime.utcnow() + timedelta(minutes=15)  # token expires
 
+        role = self.data.get("role", "guest")
+        if role == "student":
+            # Include student-specific logic here
+            to_encode.update({"exp": expire, "role": "student"})
+        elif role == "faculty":
+            # Include faculty-specific logic here
+            to_encode.update({"exp": expire, "role": "faculty"})
+
+        encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encode_jwt
+
 
     def decode_token(self):
         try:

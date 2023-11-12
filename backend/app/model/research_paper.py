@@ -18,12 +18,16 @@ class Author(SQLModel, table=True):
     user_id: int = Field(foreign_key="users.id")
     research_paper_id: int = Field(foreign_key="research_papers.id")
 
+    # Define the relationship to Users
+    user: Optional["Users"] = Relationship(back_populates="author", sa_relationship_kwargs={'uselist': False})
     research_paper: Optional["ResearchPaper"] = Relationship(back_populates="authors")
 
-class ResearchPaper(SQLModel, table=True):
+
+
+class ResearchPaper(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers'
 
-    id: int = Field(primary_key=True)
+    id: Optional[str] = Field(primary_key=True)
     title: str
     content: str
     abstract: str
@@ -31,9 +35,11 @@ class ResearchPaper(SQLModel, table=True):
     submitted_date: datetime
     keywords: str
     file_path: str
-    research_adviser: int
+    research_adviser: str
 
-    authors: List[Author] = Relationship(back_populates="research_paper")
+    authors: Optional[List["Author"]] = Relationship(back_populates="research_paper")
+    status: Optional["ResearchPaperStatus"] = Relationship(back_populates="research_paper")
+
 
     # status_id: Optional[int] = Field(foreign_key="research_papers_status.id")
     # status: Optional["ResearchPaperStatus"] = Relationship(back_populates="research_paper")

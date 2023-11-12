@@ -27,7 +27,7 @@ class BaseRepo:
         return await db.execute(query)
 
     @classmethod
-    async def get_by_id(cls, db: AsyncSession, model_id: int):
+    async def get_by_id(cls, db: AsyncSession, model_id: str):
         query = select(cls.model).where(cls.model.id == model_id)
         return await db.execute(query)
 

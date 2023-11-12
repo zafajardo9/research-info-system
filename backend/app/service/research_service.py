@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.research_repo import ResearchPaperRepository
-from app.schema import ResearchPaperCreate
+from app.schema import ResearchPaperCreate, ResearchPaperResponse
 from app.service.users_service import UserService
 from app.model import Users, ResearchPaper
 
@@ -41,12 +41,12 @@ class ResearchService:
     @staticmethod
     async def get_research_paper(
         db: Session,
-        research_paper_id: int
+        research_paper_id: str
     ) -> Optional[ResearchPaper]:
         research_paper = await ResearchPaperRepository.get_by_id(db, research_paper_id)
         
         if research_paper is None:
-            return None
+            raise HTTPException(status_code=404, detail="Research paper not found")
         
         return research_paper
     

@@ -1,5 +1,6 @@
 
 
+import datetime
 from fastapi import HTTPException
 import logging
 import re
@@ -122,6 +123,18 @@ class ResearchPaper(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ResearchPaperResponse(BaseModel):
+    id: str
+    title: str
+    content: str
+    abstract: str
+    research_type: str
+    submitted_date: str
+    keywords: str
+    file_path: str
+    research_adviser: str
 
 
 

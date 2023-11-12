@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, Security
+
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException, Path, Security
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
@@ -10,6 +12,7 @@ from app.service.users_service import UserService
 from datetime import datetime
 
 from app.config import db
+from app.repository.research_repo import ResearchPaperRepository
 
 router = APIRouter(
     prefix="/research",
@@ -72,3 +75,49 @@ async def read_research_paper(research_paper_id: str):
     )
 
     return response_paper
+
+@router.delete("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def delete_research(
+        research_id: str = Path(..., alias="id"),
+):
+    await ResearchPaperRepository.delete(research_id)
+    return ResponseSchema(detail="Successfully deleted data !")
+
+
+
+@router.get("/", response_model=List[ResearchPaperResponse])
+async def get_all_research_papers():
+    """
+    Get all research papers from the database.
+    """
+    research_papers = await ResearchService.get_all_research_papers(db)
+    
+    # Convert the list of ResearchPaper to a list of ResearchPaperResponse
+    response_papers = [
+        ResearchPaperResponse(
+            id=paper.id,
+            title=paper.title,
+            content=paper.content,
+            abstract=paper.abstract,
+            research_type=paper.research_type,
+            submitted_date=str(paper.submitted_date),
+            keywords=paper.keywords,
+            file_path=paper.file_path,
+            research_adviser=paper.research_adviser,
+        )
+        for paper in research_papers
+    ]
+
+    return response_papers
+
+
+# @router.get("", response_model=ResponseSchema, response_model_exclude_none=True)
+# async def get_all_person(
+#         page: int = 1,
+#         limit: int = 10,
+#         columns: str = Query(None, alias="columns"),
+#         sort: str = Query(None, alias="sort"),
+#         filter: str = Query(None, alias="filter"),
+# ):
+#     result = await PersonRepository.get_all(page, limit, columns, sort, filter)
+#     return ResponseSchema(detail="Successfully fetch person data by id !", result=result)

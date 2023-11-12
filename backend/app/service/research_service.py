@@ -64,3 +64,12 @@ class ResearchService:
         research_paper: ResearchPaper
     ) -> None:
         await ResearchPaperRepository.delete(db, research_paper)
+
+
+    @staticmethod
+    async def get_all_research_papers(db: Session) -> List[ResearchPaper]:
+        """
+        Get all research papers from the database.
+        """
+        research_papers = await ResearchPaperRepository.get_all(db)
+        return research_papers

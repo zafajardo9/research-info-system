@@ -1,14 +1,16 @@
+from datetime import datetime
 import math
 from typing import List
+from uuid import uuid4
 from sqlalchemy import select
 from sqlalchemy import insert
 from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 from app.config import commit_rollback, db
-from app.model.research_paper import ResearchPaper
+from app.model.research_paper import Author, ResearchPaper
 from app.repository.base_repo import BaseRepo
-from app.schema import PageResponse
+from app.schema import PageResponse, ResearchPaperCreate
 
 
 class ResearchPaperRepository(BaseRepo):

@@ -30,7 +30,7 @@ class JWTRepo:
         elif role == "faculty":
             # Include faculty-specific logic here
             to_encode.update({"exp": expire, "role": "faculty"})
-
+            
         encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encode_jwt
 

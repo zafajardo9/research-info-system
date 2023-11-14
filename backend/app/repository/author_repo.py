@@ -1,13 +1,16 @@
+from uuid import uuid4
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.model.research_paper import Author
 from app.config import db
 from app.schema import AuthorSchema
 
 class AuthorRepository:
     @staticmethod
-    async def create(author: AuthorSchema):
-        author = Author(**author.dict())
+    async def create_author(db: Session, author_id: str, research_paper_id: str):
+        _author_id = str(uuid4())
+        author = Author(id=_author_id, user_id=author_id, research_paper_id=research_paper_id)
         db.add(author)
         await db.commit()
         await db.refresh(author)

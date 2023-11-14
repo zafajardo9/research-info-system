@@ -88,6 +88,7 @@ class AuthService:
     @staticmethod
     async def login_student(login: LoginSchema):
         # Check the Users table for a username match
+
         _user_by_username = await UsersRepository.find_by_username(login.username)
         
         # USERNAME
@@ -95,7 +96,7 @@ class AuthService:
             if not pwd_context.verify(login.password, _user_by_username.password):
                 raise HTTPException(
                     status_code=400, detail="Invalid Password !")
-            return JWTRepo(data={"username": _user_by_username.username}).generate_token()
+            return JWTRepo(data={"username": _user_by_username.username, "user_id": _user_by_username.id}).generate_token()
 
         # STUDENT NUMBER
         _user_by_student_number = await UsersRepository.find_by_student_number(login.username)
@@ -103,7 +104,7 @@ class AuthService:
             if not pwd_context.verify(login.password, _user_by_student_number.password):
                 raise HTTPException(
                     status_code=400, detail="Invalid Password !")
-            return JWTRepo(data={"username": _user_by_student_number.username}).generate_token()
+            return JWTRepo(data={"username": _user_by_student_number.username, "user_id": _user_by_username.id}).generate_token()
 
         raise HTTPException(status_code=404, detail="Student not found or invalid role!")
 

@@ -57,3 +57,15 @@ async def get_faculty_list():
         return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
     else:
         raise HTTPException(status_code=404, detail="Faculty profile not found")
+    
+
+@router.get("/all_user", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_faculty_list():
+    """
+    Get all user in USER TABLE
+    """
+    result = await UserService.get_all_list()
+    if result:
+        return ResponseSchema(detail="Successfully fetch all users!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="User profile not found")

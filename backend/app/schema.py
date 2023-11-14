@@ -107,7 +107,7 @@ class ResearchPaperCreate(BaseModel):
     keywords: str
     file_path: str
     research_adviser: str
-    author_id: Optional[str] = None
+
 
 class ResearchPaper(BaseModel):
     id: Optional[str] = None

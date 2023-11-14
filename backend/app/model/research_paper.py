@@ -1,6 +1,7 @@
 # from app.model.users import Users
 
 from typing import List, Optional
+from datetime import date
 from app.model.mixins import TimeMixin
 from datetime import datetime
 
@@ -14,7 +15,6 @@ class Author(SQLModel, table=True):
     __tablename__ = "authors"
 
     id: Optional[str] = Field(primary_key=True)
-    name: str
     user_id: str = Field(foreign_key="users.id")
     research_paper_id: str = Field(foreign_key="research_papers.id")
 
@@ -32,7 +32,7 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     content: str
     abstract: str
     research_type: str
-    submitted_date: str
+    submitted_date: date
     keywords: str
     file_path: str
     research_adviser: str

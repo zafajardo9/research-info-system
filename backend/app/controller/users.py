@@ -32,3 +32,28 @@ async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Securi
         return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
     else:
         raise HTTPException(status_code=404, detail="Faculty profile not found")
+
+
+@router.get("/student_list", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_student_list():
+    """
+    Get all student
+    """
+    result = await UserService.get_all_student()
+    if result:
+        return ResponseSchema(detail="Successfully fetch Student profile!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="Student profile not found")
+
+
+@router.get("/faculty_list", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_faculty_list():
+    """
+    Get all faculty member
+    """
+
+    result = await UserService.get_all_faculty()
+    if result:
+        return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="Faculty profile not found")

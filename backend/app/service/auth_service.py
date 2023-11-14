@@ -50,20 +50,6 @@ class AuthService:
                         roles="student",
                         student_number=register.student_number, 
                         )
-        # # Checking the same username
-        # _username = await UsersRepository.find_by_username(register.username)
-        # if _username:
-        #     raise HTTPException(
-        #         status_code=400, detail="Username already exists!")
-
-        # # Checking the same email
-        # _email = await UsersRepository.find_by_email(register.email)
-        # if _email:
-        #     raise HTTPException(
-        #         status_code=400, detail="Email already exists!")
-
-        # else:
-            # Insert to tables
         await StudentRepository.create(db, **_student.dict())
         await UsersRepository.create(db, **_users.dict())
 
@@ -92,6 +78,7 @@ class AuthService:
             faculty_id=_faculty_id,
             roles="faculty",
         )
+
 
         # Insert to tables
         await FacultyRepository.create(db, **_faculty.dict())

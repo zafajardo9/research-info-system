@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import db
 
+
 origins= [
     "*"
 ]
@@ -41,14 +42,16 @@ def init_app():
     async def shutdown():
         await db.close()
 
-    from app.controller import authentication, users, research_controller, auth_controller
+    from app.controller import authentication, users, research_controller, auth_controller, comment
 
     app.include_router(authentication.router)
     app.include_router(users.router)
     app.include_router(research_controller.router)
     app.include_router(auth_controller.router)
+    app.include_router(comment.router)
 
     return app
+
 
 app = init_app()
 

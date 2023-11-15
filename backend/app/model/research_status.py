@@ -23,7 +23,6 @@ class ResearchPaperStatus(SQLModel, TimeMixin, table=True):
 
     research_adviser: int
 
-    comments: Optional[List["Comment"]] = Relationship(back_populates="research_paper_status")
 
 
 class Comment(SQLModel, TimeMixin, table=True):
@@ -31,6 +30,9 @@ class Comment(SQLModel, TimeMixin, table=True):
 
     id: Optional[str] = Field(primary_key=True)
     text: str
-    research_paper_status_id: Optional[str] = Field(foreign_key="research_papers_status.id")
 
-    research_paper_status: Optional[ResearchPaperStatus] = Relationship(back_populates="comments")
+    user_id: str = Field(foreign_key="users.id")
+    research_paper_id: str = Field(foreign_key="research_papers.id") 
+
+    user: Optional["Users"] = Relationship(back_populates="comments")
+    research_paper: Optional["ResearchPaper"] = Relationship(back_populates="comments")

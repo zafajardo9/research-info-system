@@ -1,13 +1,13 @@
 
 
-import datetime
+from datetime import datetime
 from fastapi import HTTPException
 import logging
 import re
 from typing import List, TypeVar, Optional, Generic
 
 from pydantic.generics import GenericModel
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, Field, validator
 from sqlalchemy import false
 
 from app.model.research_paper import Author
@@ -102,10 +102,10 @@ class ResearchPaperCreate(BaseModel):
     title: str
     content: str
     abstract: str
-    research_type: str
-    submitted_date: str
+    research_type: str 
     keywords: str
     file_path: str
+    submitted_date: str
     research_adviser: str
 
 
@@ -135,6 +135,13 @@ class ResearchPaperResponse(BaseModel):
     keywords: str
     file_path: str
     research_adviser: str
+
+
+class ResearchComment(BaseModel):
+    text: str
+    research_id: str
+
+
 
 
 

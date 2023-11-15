@@ -109,6 +109,8 @@ class AuthService:
         raise HTTPException(status_code=404, detail="Student not found or invalid role!")
 
 
+
+#NEED BALIKAN DAPAT KASI PWEDE EMAIL
     @staticmethod
     async def login_faculty(login: LoginSchema):
         _user = await UsersRepository.find_by_username(login.username)
@@ -117,6 +119,6 @@ class AuthService:
             if not pwd_context.verify(login.password, _user.password):
                 raise HTTPException(
                     status_code=400, detail="Invalid Password !")
-            return JWTRepo(data={"username": _user.username}).generate_token()
+            return JWTRepo(data={"username": _user.username, "user_id": _user.id}).generate_token()
 
         raise HTTPException(status_code=404, detail="Faculty not found or invalid role!")

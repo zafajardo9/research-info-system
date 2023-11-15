@@ -12,6 +12,8 @@ from app.service.users_service import UserService
 from app.model import Users, ResearchPaper
 from app.model.research_paper import Author
 from app.repository.author_repo import AuthorRepository
+from app.model.research_status import Comment
+from app.repository.comment_repo import CommentRepository
 
 class ResearchService:
 
@@ -69,3 +71,24 @@ class ResearchService:
         """
         research_papers = await ResearchPaperRepository.get_all(db)
         return research_papers
+    
+
+
+    #============================ WILL PUT RESEARCH COMMENTS HERE ==================#
+
+
+
+
+    
+    @staticmethod
+    async def post_comment(db: Session, user_id: str, research_id: str, text: str):
+        _comment_id = str(uuid4())
+        _comment = Comment(
+            id=_comment_id,
+            text=text,
+            user_id=user_id,
+            research_paper_id=research_id
+            )
+
+        return await CommentRepository.create(db, **_comment.dict())
+    

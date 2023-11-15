@@ -39,7 +39,7 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
 
     authors: Optional[List["Author"]] = Relationship(back_populates="research_paper")
     status: Optional["ResearchPaperStatus"] = Relationship(back_populates="research_paper")
-    
+    comments: Optional[List["Comment"]] = Relationship(back_populates="research_paper")
 
 
     # status_id: Optional[int] = Field(foreign_key="research_papers_status.id")

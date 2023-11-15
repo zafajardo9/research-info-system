@@ -137,6 +137,20 @@ class ResearchPaperResponse(BaseModel):
     research_adviser: str
 
 
+class ResearchEdit(BaseModel):
+    title: str
+    content: str
+    abstract: str
+    research_type: str
+    submitted_date: str
+    keywords: str
+    file_path: str
+    research_adviser: str
+
+    class Config:
+        orm_mode = True
+
+
 class ResearchComment(BaseModel):
     text: str
     research_id: str

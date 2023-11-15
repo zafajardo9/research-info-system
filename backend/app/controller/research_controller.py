@@ -1,12 +1,12 @@
 
 from typing import List
 from uuid import uuid4
-from fastapi import APIRouter, Depends, HTTPException, Path, Security
+from fastapi import APIRouter, Body, Depends, HTTPException, Path, Security
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.service.research_service import ResearchService
-from app.schema import ResearchPaperCreate, ResearchPaperResponse, ResponseSchema
+from app.schema import ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResponseSchema
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from datetime import datetime
 
@@ -66,6 +66,27 @@ async def delete_research(
     return ResponseSchema(detail="Successfully deleted data !")
 
 
+@router.put("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def edit_research_paper(
+   research_paper_id: str = Path(..., alias="id"),
+   research_paper_data: ResearchEdit = Body(...)
+):
+   try:
+       # Fetch the existing research paper
+       existing_research_paper = await ResearchService.get_research_paper(db, research_paper_id)
+
+       if existing_research_paper is None:
+           raise HTTPException(status_code=404, detail="Research paper not found")
+
+       # Update the research paper
+       await ResearchService.update_research_paper(db, existing_research_paper, research_paper_data.dict(exclude={"id"}))
+
+       return ResponseSchema(detail=f"Research paper {research_paper_id} updated successfully", result=None)
+   except Exception as e:
+       return ResponseSchema(detail=f"Error updating research paper: {str(e)}", result=None)
+   
+
+   
 
 @router.get("/", response_model=List[ResearchPaperResponse])
 async def get_all_research_papers():

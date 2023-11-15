@@ -54,7 +54,13 @@ class ResearchService:
         research_paper: ResearchPaper,
         research_paper_data: dict
     ) -> None:
+        # Check if 'submitted_date' is in the update data
+        if 'submitted_date' in research_paper_data:
+            # Convert the 'submitted_date' to the desired format
+            research_paper_data['submitted_date'] = datetime.strptime(research_paper_data['submitted_date'], '%d-%m-%Y')
+
         await ResearchPaperRepository.update(db, research_paper, **research_paper_data)
+
 
     @staticmethod
     async def delete_research_paper(

@@ -154,6 +154,7 @@ class ResearchComment(BaseModel):
     research_id: str
 
 class ResearchCommentResponse(BaseModel):
+    created_at: datetime
     id: str
     text: str
     user_id: str

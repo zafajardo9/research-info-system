@@ -10,6 +10,7 @@ class UserService:
     async def get_student_profile(username: str):
         query = (
             select(
+                Users.id,
                 Users.username,
                 Users.email,
                 Student.name,
@@ -29,6 +30,7 @@ class UserService:
     async def get_faculty_profile(username: str):
         query = (
             select(
+                Users.id,
                 Users.username,
                 Users.email,
                 Faculty.name,

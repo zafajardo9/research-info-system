@@ -93,10 +93,8 @@ class ResponseSchema(BaseModel):
 class AuthorSchema(BaseModel):
     user_id: int
     research_paper_id: int
-    name: str
     
     
-
 
 class ResearchPaperCreate(BaseModel):
     title: str
@@ -155,8 +153,18 @@ class ResearchComment(BaseModel):
     text: str
     research_id: str
 
+class ResearchCommentResponse(BaseModel):
+    id: str
+    text: str
+    user_id: str
+    research_paper_id: str
+
+    class Config:
+        orm_mode = True
 
 
+class CurrentUserResearchPaperResponse(ResearchPaperResponse):
+    authors: Optional[List[AuthorSchema]] = []
 
 
 #FOR THE DISPLAY OF LIST IN PAGE

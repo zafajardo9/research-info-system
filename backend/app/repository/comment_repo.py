@@ -21,3 +21,14 @@ class CommentRepository(BaseRepo):
             await commit_rollback()
         except Exception as e:
             raise Exception(f"Error deleting comment: {str(e)}")
+    
+    @staticmethod
+    async def get_comments_by_research_id(research_paper_id: str):
+        """ get all comments by research id """
+        try:
+            query = select(Comment).where(Comment.research_paper_id == research_paper_id)
+            result = await db.execute(query)
+            comments = result.scalars().all()
+            return comments
+        except Exception as e:
+            raise Exception(f"Error getting comments: {str(e)}")

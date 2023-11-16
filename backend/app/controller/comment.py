@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.repository.auth_repo import JWTBearer, JWTRepo
 
 from app.config import db
-from app.schema import ResearchComment, ResearchPaperCreate, ResponseSchema, ResearchPaper
+from app.schema import ResearchComment, ResearchCommentResponse, ResearchPaperCreate, ResponseSchema, ResearchPaper
 from app.service.research_service import ResearchService
 from app.repository.comment_repo import CommentRepository
 
@@ -33,10 +33,20 @@ async def post_comment(
         return ResponseSchema(detail=f"Comment {comment.id} created successfully", result=comment)
     except Exception as e:
         return ResponseSchema(detail=f"Error creating comment: {str(e)}", result=None)
-    
+
+#====================DISPLAY RELATED
+@router.get("/{research_paper_id}", response_model=List[ResearchCommentResponse], response_model_exclude_none=True)
+async def get_comments_by_research_id(
+        research_paper_id: str = Path(..., alias="research_paper_id"),
+):
+    try:
+        comments = await CommentRepository.get_comments_by_research_id(research_paper_id)
+        return comments
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting comments: {str(e)}", result=None)
 
 
-
+#=====================DELETE
 @router.delete("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def delete_research(
         comment_id: str = Path(..., alias="id"),

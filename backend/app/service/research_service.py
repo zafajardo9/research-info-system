@@ -2,6 +2,7 @@ from datetime import datetime
 from sqlalchemy.sql import select
 from typing import List, Optional
 from uuid import uuid4
+from app.config import db
 
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
@@ -78,9 +79,24 @@ class ResearchService:
         research_papers = await ResearchPaperRepository.get_all(db)
         return research_papers
     
+    
+    @staticmethod
+    async def get_current_user_research_paper(
+        db: Session,
+        user_id: int
+    ) -> Optional[ResearchPaper]:
+        # Assuming you have a method to get the current user's research paper
+        research_paper = await ResearchPaperRepository.get_current_user_research_paper(db, user_id)
+        
+        if research_paper is None:
+            raise HTTPException(status_code=404, detail="Research paper not found for the current user")
+        
+        return research_paper
+            
 
+    
 
-    #============================ WILL PUT RESEARCH COMMENTS HERE ==================#
+#============================ WILL PUT RESEARCH COMMENTS HERE ==================#
 
 
 

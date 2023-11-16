@@ -1,12 +1,13 @@
 
 from typing import List
+from sqlalchemy.sql import select
 from uuid import uuid4
-from fastapi import APIRouter, Body, Depends, HTTPException, Path, Security
+from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.service.research_service import ResearchService
-from app.schema import ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResponseSchema
+from app.schema import AuthorSchema, CurrentUserResearchPaperResponse, ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResponseSchema
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from datetime import datetime
 
@@ -113,3 +114,48 @@ async def get_all_research_papers():
 
     return response_papers
 
+
+# @router.get("/all_related", response_model=List[ResearchPaperResponse])
+# async def read_research_papers_related_to_user(
+#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+# ):
+#     """ 
+#     Get all research papers related to the logged-in user
+#     """
+#     token = JWTRepo.extract_token(credentials)
+#     current_user_id = token['user_id']
+
+#     research_papers = await ResearchService.get_user_paper(current_user_id)
+
+#     return research_papers
+
+
+
+
+@router.get("/current_user_research_paper", response_model=CurrentUserResearchPaperResponse)
+async def get_current_user_research_paper(
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    """ 
+    Get the research paper related to the logged-in user
+    """
+    token = JWTRepo.extract_token(credentials)
+    current_user_id = token['user_id']
+
+    research_paper = await ResearchService.get_current_user_research_paper(db, current_user_id)
+
+    # Convert ResearchPaper to CurrentUserResearchPaperResponse
+    response_paper = CurrentUserResearchPaperResponse(
+        id=research_paper.id,
+        title=research_paper.title,
+        content=research_paper.content,
+        abstract=research_paper.abstract,
+        research_type=research_paper.research_type,
+        submitted_date=str(research_paper.submitted_date),
+        keywords=research_paper.keywords,
+        file_path=research_paper.file_path,
+        research_adviser=research_paper.research_adviser,
+        authors=[AuthorSchema(user_id=author.user_id, research_paper_id=author.research_paper_id) for author in research_paper.authors]
+    )
+
+    return response_paper

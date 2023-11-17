@@ -175,6 +175,9 @@ class ResearchCommentResponse(BaseModel):
         orm_mode = True
 
 
+class StatusUpdate(BaseModel):
+    status: Status
+
 class CurrentUserResearchPaperResponse(ResearchPaperResponse):
     authors: Optional[List[AuthorSchema]] = []
 

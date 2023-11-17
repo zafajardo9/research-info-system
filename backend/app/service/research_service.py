@@ -11,7 +11,7 @@ from app.repository.research_repo import ResearchPaperRepository
 from app.schema import ResearchPaperCreate, ResearchPaperResponse
 from app.service.users_service import UserService
 from app.model import Users, ResearchPaper
-from app.model.research_paper import Author
+from app.model.research_paper import Author, Status
 from app.repository.author_repo import AuthorRepository
 from app.model.research_status import Comment
 from app.repository.comment_repo import CommentRepository
@@ -94,13 +94,24 @@ class ResearchService:
         return research_paper
             
 
-    
+#=============================MGA POWER NG FACULTY ========================#
+
+
+# research_service.py
+
+    @staticmethod
+    async def check_faculty_permission(research_paper_id: str, faculty_username: str) -> bool:
+        return await ResearchPaperRepository.check_adviser_permission(db, research_paper_id, faculty_username)
+
+    @staticmethod
+    async def update_research_paper_status(db: Session, research_paper_id: str, new_status: Status) -> ResearchPaper:
+
+        research_paper = await ResearchPaperRepository.update_status(db, research_paper_id, new_status)
+        return research_paper
+
+
 
 #============================ WILL PUT RESEARCH COMMENTS HERE ==================#
-
-
-
-
     
     @staticmethod
     async def post_comment(db: Session, user_id: str, research_id: str, text: str):

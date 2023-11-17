@@ -7,7 +7,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.service.research_service import ResearchService
-from app.schema import AuthorSchema, CurrentUserResearchPaperResponse, ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResponseSchema
+from app.schema import AuthorSchema, CurrentUserResearchPaperResponse, ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResponseSchema, StatusUpdate
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from datetime import datetime
 
@@ -51,6 +51,7 @@ async def read_research_paper(research_paper_id: str):
         abstract=get_paper.abstract,
         research_type=get_paper.research_type,
         submitted_date=str(get_paper.submitted_date),
+        status=get_paper.status,
         keywords=get_paper.keywords,
         file_path=get_paper.file_path,
         research_adviser=get_paper.research_adviser,
@@ -159,3 +160,29 @@ async def get_current_user_research_paper(
     )
 
     return response_paper
+
+
+# ========================== POWER NG FACULTY =================
+
+@router.put("/update_status/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def update_research_paper_status(
+    research_paper_id: str,
+    status_update: StatusUpdate,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    # Extract the faculty username from the JWT token
+    token = JWTRepo.extract_token(credentials)
+    current_user_id = token['user_id']
+
+    # Check if the faculty is allowed to update the status (you can implement your own logic)
+    # For example, check if the faculty is the adviser of the research paper
+    is_allowed = await ResearchService.check_faculty_permission(research_paper_id, current_user_id)
+    if not is_allowed:
+        raise HTTPException(status_code=403, detail="You are not allowed to update the status of this research paper.")
+
+    # Update the status
+    try:
+        research_paper = await ResearchService.update_research_paper_status(db, research_paper_id, status_update.status)
+        return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)

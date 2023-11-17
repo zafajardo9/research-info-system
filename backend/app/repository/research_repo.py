@@ -2,13 +2,14 @@ from datetime import datetime
 import math
 from typing import List, Optional
 from uuid import uuid4
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy import insert
 from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 from app.config import commit_rollback, db
-from app.model.research_paper import Author, ResearchPaper
+from app.model.research_paper import Author, ResearchPaper, Status
 from app.repository.base_repo import BaseRepo
 from app.schema import PageResponse, ResearchPaperCreate
 from app.model.users import Users
@@ -62,3 +63,23 @@ class ResearchPaperRepository(BaseRepo):
         research_paper = result.scalar()
 
         return research_paper
+    
+
+    @staticmethod
+    async def check_adviser_permission(db: Session, research_paper_id: str, faculty_username: str) -> bool:
+
+        research_paper = await db.execute(select(ResearchPaper).where(ResearchPaper.id == research_paper_id)).scalar_one_or_none()
+        return research_paper.research_adviser == faculty_username
+
+    @staticmethod
+    async def update_status(db: Session, research_paper_id: str, new_status: Status) -> ResearchPaper:
+        # Implement your logic here to update the status of the research paper
+        # For example, fetch the research paper and update the status
+        research_paper = await db.execute(select(ResearchPaper).where(ResearchPaper.id == research_paper_id)).scalar_one_or_none()
+        if research_paper:
+            research_paper.status = new_status
+            db.commit()
+            db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Research paper not found")

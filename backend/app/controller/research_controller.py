@@ -15,6 +15,7 @@ from app.config import db
 from app.repository.research_repo import ResearchPaperRepository
 from app.model import Users, Author, ResearchPaper
 from app.service.users_service import UserService
+from app.model.research_paper import Status
 
 router = APIRouter(
     prefix="/research",
@@ -28,13 +29,11 @@ async def upload_research_paper(
     research_paper_data: ResearchPaperCreate,
     author_ids: List[str],
 ):
-
     try:
         research_paper = await ResearchService.create_research_paper(db, research_paper_data, author_ids)
         return ResponseSchema(detail=f"Research paper {research_paper.id} created successfully", result=research_paper)
-    except Exception as e:
+    except HTTPException as e:
         return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
-
 
 
 
@@ -105,6 +104,7 @@ async def get_all_research_papers():
             abstract=paper.abstract,
             research_type=paper.research_type,
             submitted_date=str(paper.submitted_date),
+            status = paper.status,
             keywords=paper.keywords,
             file_path=paper.file_path,
             research_adviser=paper.research_adviser,

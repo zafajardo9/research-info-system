@@ -104,15 +104,15 @@ class ResearchPaperCreate(BaseModel):
     keywords: str
     file_path: str
     submitted_date: str
-    status: str
     research_adviser: str
             # status validation
             # kasi tatlo lang daw dapat value nito
-    @validator("status")
-    def status_validation(cls, v):
-        if hasattr(Status, v) is False:
-            raise HTTPException(status_code=400, detail="Invalid input status")
-        return v
+            #di mag wowork now
+    # @validator("status")
+    # def status_validation(cls, v):
+    #     if hasattr(Status, v) is False:
+    #         raise HTTPException(status_code=400, detail="Invalid input status")
+    #     return v
 
 
 class ResearchPaper(BaseModel):

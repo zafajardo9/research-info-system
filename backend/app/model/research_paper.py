@@ -36,8 +36,8 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     abstract: str
     research_type: str
     submitted_date: date
-    status: Status
-    #Status.Pending
+    status: Status = Status.Pending
+
     keywords: str
     file_path: str
     research_adviser: str

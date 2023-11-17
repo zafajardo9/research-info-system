@@ -100,8 +100,12 @@ class ResearchService:
 # research_service.py
 
     @staticmethod
-    async def check_faculty_permission(research_paper_id: str, faculty_username: str) -> bool:
-        return await ResearchPaperRepository.check_adviser_permission(db, research_paper_id, faculty_username)
+    async def check_faculty_permission(research_paper_id: str, current_user_role: str) -> bool:
+        # Check if the user's role is 'faculty'
+        if current_user_role != 'faculty':
+            return False
+        return True
+    
 
     @staticmethod
     async def update_research_paper_status(db: Session, research_paper_id: str, new_status: Status) -> ResearchPaper:

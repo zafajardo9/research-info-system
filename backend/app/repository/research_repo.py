@@ -66,19 +66,14 @@ class ResearchPaperRepository(BaseRepo):
     
 
     @staticmethod
-    async def check_adviser_permission(db: Session, research_paper_id: str, faculty_username: str) -> bool:
-
-        research_paper = await db.execute(select(ResearchPaper).where(ResearchPaper.id == research_paper_id)).scalar_one_or_none()
-        return research_paper.research_adviser == faculty_username
-
-    @staticmethod
     async def update_status(db: Session, research_paper_id: str, new_status: Status) -> ResearchPaper:
-        # Implement your logic here to update the status of the research paper
-        # For example, fetch the research paper and update the status
-        research_paper = await db.execute(select(ResearchPaper).where(ResearchPaper.id == research_paper_id)).scalar_one_or_none()
+        # Fetch the research paper
+        result = await db.execute(select(ResearchPaper).where(ResearchPaper.id == research_paper_id))
+        research_paper = result.scalar_one_or_none()
+
         if research_paper:
             research_paper.status = new_status
-            db.commit()
+            await db.commit()
             db.refresh(research_paper)
             return research_paper
         else:

@@ -170,16 +170,13 @@ async def update_research_paper_status(
     status_update: StatusUpdate,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
-    # Extract the faculty username from the JWT token
+    # Extract the user role from the JWT token
     token = JWTRepo.extract_token(credentials)
-    current_user_id = token['user_id']
+    current_user_role = token['role'] #this line will show what role the logged in user is
 
-    # Check if the faculty is allowed to update the status (you can implement your own logic)
-    # For example, check if the faculty is the adviser of the research paper
-    is_allowed = await ResearchService.check_faculty_permission(research_paper_id, current_user_id)
+    is_allowed = await ResearchService.check_faculty_permission(research_paper_id, current_user_role)
     if not is_allowed:
-        raise HTTPException(status_code=403, detail="You are not allowed to update the status of this research paper.")
-
+        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper. Your role is {current_user_role}.")
     # Update the status
     try:
         research_paper = await ResearchService.update_research_paper_status(db, research_paper_id, status_update.status)

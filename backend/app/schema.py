@@ -10,7 +10,7 @@ from pydantic.generics import GenericModel
 from pydantic import BaseModel, Field, validator
 from sqlalchemy import false
 
-from app.model.research_paper import Author
+from app.model.research_paper import Author, Status
 
 
 T = TypeVar('T')
@@ -104,7 +104,15 @@ class ResearchPaperCreate(BaseModel):
     keywords: str
     file_path: str
     submitted_date: str
+    status: str
     research_adviser: str
+            # status validation
+            # kasi tatlo lang daw dapat value nito
+    @validator("status")
+    def status_validation(cls, v):
+        if hasattr(Status, v) is False:
+            raise HTTPException(status_code=400, detail="Invalid input status")
+        return v
 
 
 class ResearchPaper(BaseModel):
@@ -130,9 +138,12 @@ class ResearchPaperResponse(BaseModel):
     abstract: str
     research_type: str
     submitted_date: str
+    status: str
     keywords: str
     file_path: str
     research_adviser: str
+
+
 
 
 class ResearchEdit(BaseModel):

@@ -5,9 +5,8 @@ from datetime import date
 from app.model.mixins import TimeMixin
 from datetime import datetime
 
-from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, Enum
 from sqlmodel import SQLModel, Field, Relationship
-
 
 
 
@@ -23,6 +22,10 @@ class Author(SQLModel, table=True):
     research_paper: Optional["ResearchPaper"] = Relationship(back_populates="authors")
 
 
+class Status(str, Enum):
+    Approved = "Approved"
+    Rejected = "Rejected"
+    Pending = "Pending"
 
 class ResearchPaper(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers'
@@ -33,12 +36,13 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     abstract: str
     research_type: str
     submitted_date: date
+    status: Status
+    #Status.Pending
     keywords: str
     file_path: str
     research_adviser: str
 
     authors: Optional[List["Author"]] = Relationship(back_populates="research_paper")
-    status: Optional["ResearchPaperStatus"] = Relationship(back_populates="research_paper")
     comments: Optional[List["Comment"]] = Relationship(back_populates="research_paper")
 
 

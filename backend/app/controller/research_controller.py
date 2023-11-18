@@ -39,25 +39,29 @@ async def upload_research_paper(
 
 @router.get("/{research_paper_id}", response_model=ResearchPaperResponse)
 async def read_research_paper(research_paper_id: str):
-    get_paper = await ResearchService.get_research_paper(db, research_paper_id)
-    if get_paper is None:
-        raise HTTPException(status_code=404, detail="Research paper not found")
-    
-    # Convert ResearchPaper to ResearchPaperResponse
-    response_paper = ResearchPaperResponse(
-        id=get_paper.id,
-        title=get_paper.title,
-        content=get_paper.content,
-        abstract=get_paper.abstract,
-        research_type=get_paper.research_type,
-        submitted_date=str(get_paper.submitted_date),
-        status=get_paper.status,
-        keywords=get_paper.keywords,
-        file_path=get_paper.file_path,
-        research_adviser=get_paper.research_adviser,
-    )
 
-    return response_paper
+    try:
+        get_paper = await ResearchService.get_research_paper(db, research_paper_id)
+        if get_paper is None:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        
+        # Convert ResearchPaper to ResearchPaperResponse
+        response_paper = ResearchPaperResponse(
+            id=get_paper.id,
+            title=get_paper.title,
+            content=get_paper.content,
+            abstract=get_paper.abstract,
+            research_type=get_paper.research_type,
+            submitted_date=str(get_paper.submitted_date),
+            status=get_paper.status,
+            keywords=get_paper.keywords,
+            file_path=get_paper.file_path,
+            research_adviser=get_paper.research_adviser,
+        )
+
+        return response_paper
+    except Exception as e:
+        return ResponseSchema(detail=f"Error reading or getting research paper: {str(e)}", result=None)
 
 @router.delete("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def delete_research(
@@ -98,26 +102,29 @@ async def get_all_research_papers():
     """
     Get all research papers from the database.
     """
-    research_papers = await ResearchService.get_all_research_papers(db)
-    
-    # Convert the list of ResearchPaper to a list of ResearchPaperResponse
-    response_papers = [
-        ResearchPaperResponse(
-            id=paper.id,
-            title=paper.title,
-            content=paper.content,
-            abstract=paper.abstract,
-            research_type=paper.research_type,
-            submitted_date=str(paper.submitted_date),
-            status = paper.status,
-            keywords=paper.keywords,
-            file_path=paper.file_path,
-            research_adviser=paper.research_adviser,
-        )
-        for paper in research_papers
-    ]
+    try:
+        research_papers = await ResearchService.get_all_research_papers(db)
+        
+        # Convert the list of ResearchPaper to a list of ResearchPaperResponse
+        response_papers = [
+            ResearchPaperResponse(
+                id=paper.id,
+                title=paper.title,
+                content=paper.content,
+                abstract=paper.abstract,
+                research_type=paper.research_type,
+                submitted_date=str(paper.submitted_date),
+                status = paper.status,
+                keywords=paper.keywords,
+                file_path=paper.file_path,
+                research_adviser=paper.research_adviser,
+            )
+            for paper in research_papers
+        ]
 
-    return response_papers
+        return response_papers
+    except Exception as e:
+       return ResponseSchema(detail=f"Error getting all research paper: {str(e)}", result=None)
 
 
 # @router.get("/all_related", response_model=List[ResearchPaperResponse])
@@ -147,24 +154,26 @@ async def get_current_user_research_paper(
     token = JWTRepo.extract_token(credentials)
     current_user_id = token['user_id']
 
-    research_paper = await ResearchService.get_current_user_research_paper(db, current_user_id)
+    try:
+        research_paper = await ResearchService.get_current_user_research_paper(db, current_user_id)
 
-    # Convert ResearchPaper to CurrentUserResearchPaperResponse
-    response_paper = CurrentUserResearchPaperResponse(
-        id=research_paper.id,
-        title=research_paper.title,
-        content=research_paper.content,
-        abstract=research_paper.abstract,
-        research_type=research_paper.research_type,
-        submitted_date=str(research_paper.submitted_date),
-        keywords=research_paper.keywords,
-        file_path=research_paper.file_path,
-        research_adviser=research_paper.research_adviser,
-        authors=[AuthorSchema(user_id=author.user_id, research_paper_id=author.research_paper_id) for author in research_paper.authors]
-    )
+        # Convert ResearchPaper to CurrentUserResearchPaperResponse
+        response_paper = CurrentUserResearchPaperResponse(
+            id=research_paper.id,
+            title=research_paper.title,
+            content=research_paper.content,
+            abstract=research_paper.abstract,
+            research_type=research_paper.research_type,
+            submitted_date=str(research_paper.submitted_date),
+            keywords=research_paper.keywords,
+            file_path=research_paper.file_path,
+            research_adviser=research_paper.research_adviser,
+            authors=[AuthorSchema(user_id=author.user_id, research_paper_id=author.research_paper_id) for author in research_paper.authors]
+        )
 
-    return response_paper
-
+        return response_paper
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
 
 # ========================== POWER NG FACULTY =================
 

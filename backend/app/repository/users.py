@@ -19,6 +19,11 @@ class UsersRepository(BaseRepo):
     async def find_by_student_number(student_number: str):
         query = select(Users).where(Users.student_number == student_number)
         return (await db.execute(query)).scalar_one_or_none()
+    
+    @staticmethod
+    async def find_by_user_id(user_id: str):
+        query = select(Users).where(Users.id == user_id)
+        return (await db.execute(query)).scalar_one_or_none()
 
     @staticmethod
     async def find_by_email(email: str):

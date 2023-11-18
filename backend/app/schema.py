@@ -169,6 +169,7 @@ class ResearchCommentResponse(BaseModel):
     id: str
     text: str
     user_id: str
+    #username: str  
     research_paper_id: str
 
     class Config:

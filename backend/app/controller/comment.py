@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Path, Security
 from fastapi.security import HTTPAuthorizationCredentials
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 
@@ -35,6 +36,19 @@ async def post_comment(
         return ResponseSchema(detail=f"Error creating comment: {str(e)}", result=None)
 
 #====================DISPLAY RELATED
+# @router.get("/{research_paper_id}", response_model=List[ResearchCommentResponse], response_model_exclude_none=True)
+# async def get_comments_by_research_id(
+#     research_paper_id: str = Path(..., alias="research_paper_id"),
+    
+# ):
+#     try:
+#         comments_with_users = await CommentRepository.get_comments_by_research_id_with_user_details(db, research_paper_id)
+#         comments_response = [ResearchCommentResponse.from_orm(comment) for comment in comments_with_users]
+#         return comments_response
+#     except Exception as e:
+#         print(f"Error getting comments: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Internal Server Error")
+
 @router.get("/{research_paper_id}", response_model=List[ResearchCommentResponse], response_model_exclude_none=True)
 async def get_comments_by_research_id(
         research_paper_id: str = Path(..., alias="research_paper_id"),
@@ -44,6 +58,7 @@ async def get_comments_by_research_id(
         return comments
     except Exception as e:
         return ResponseSchema(detail=f"Error getting comments: {str(e)}", result=None)
+
 
 
 #=====================DELETE

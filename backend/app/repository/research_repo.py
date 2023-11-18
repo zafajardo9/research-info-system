@@ -34,16 +34,20 @@ class ResearchPaperRepository(BaseRepo):
         return (await db.execute(query)).scalars().all()
     
     @staticmethod
-    async def delete(research_id: str):
+    async def delete(research_id: str, db: Session):
         """ delete research data by id """
 
         # Delete related records in the Author table first
         await db.execute(delete(Author).where(Author.research_paper_id == research_id))
 
+        # Delete related records in the Comments table
+        await db.execute(delete(Comment).where(Comment.research_paper_id == research_id))
+
         # Now, delete the research paper
         query = delete(ResearchPaper).where(ResearchPaper.id == research_id)
         await db.execute(query)
         await commit_rollback()
+                
 
 
     @staticmethod

@@ -63,8 +63,12 @@ async def read_research_paper(research_paper_id: str):
 async def delete_research(
         research_id: str = Path(..., alias="id"),
 ):
-    await ResearchPaperRepository.delete(research_id)
-    return ResponseSchema(detail="Successfully deleted data !")
+    try:
+        await ResearchPaperRepository.delete(research_id, db)  # pass Session instance to delete method
+        return ResponseSchema(detail="Successfully deleted data !")
+    except Exception as e:
+        return ResponseSchema(detail=f"Error deleting research paper: {str(e)}", result=None)
+   
 
 
 @router.put("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)

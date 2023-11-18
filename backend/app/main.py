@@ -10,8 +10,8 @@ origins= [
 
 app = FastAPI(
         title= "PUP-RIZ",
-        description= "Login Student Page",
-        version= "1",
+        description= "Research Information System",
+        version= "1.2",
 )
 
 

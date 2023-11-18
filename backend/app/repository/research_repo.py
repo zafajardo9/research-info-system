@@ -13,6 +13,7 @@ from app.model.research_paper import Author, ResearchPaper, Status
 from app.repository.base_repo import BaseRepo
 from app.schema import PageResponse, ResearchPaperCreate
 from app.model.users import Users
+from app.model.research_status import Comment
 
 
 class ResearchPaperRepository(BaseRepo):

@@ -133,39 +133,16 @@ async def get_current_user_research_paper(
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
     """ Get the research paper related to the logged-in user #NOT WORKING """
-    try:
-        token = JWTRepo.extract_token(credentials)
-        current_user_id = token['user_id']
 
-        research_papers_with_authors = await ResearchService.get_research_papers_by_user_id(db, current_user_id)
+    token = JWTRepo.extract_token(credentials)
+    current_user_id = token['user_id']
 
-        if not research_papers_with_authors:
-            # Handle empty list case
-            return []
+    result = await ResearchService.get_research_papers_by_user_id(current_user_id)
 
-        response_papers = []
-        for paper in research_papers_with_authors:
-            # Check if any field is None and replace it with default values
-            response_papers.append(
-                ResearchPaperResponseOnly(
-                    id=paper.id,
-                    title=paper.title or "",
-                    content=paper.content or "",
-                    abstract=paper.abstract or "",
-                    research_type=paper.research_type or "",
-                    submitted_date=str(paper.submitted_date),
-                    status=paper.status,
-                    keywords=paper.keywords or "",
-                    file_path=paper.file_path or "",
-                    research_adviser=paper.research_adviser or "",
-                    authors=[AuthorResponse.from_orm(author).__dict__ for author in paper.authors]
-                )
-            )
-
-        return response_papers
-
-    except HTTPException as e:
-        return ResponseSchema(detail=f"Error getting research papers: {str(e.detail)}", result=None)
+    if result:
+        return ResponseSchema(detail="Successfully fetch research", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="No research paper found")
 
 # ========================== POWER NG FACULTY =================
 
@@ -188,3 +165,47 @@ async def update_research_paper_status(
         return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
+    
+
+@router.get("/adviser_research", response_model=List[ResearchPaperResponse])
+async def get_current_user_research_paper(
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    """ Get the research paper related to the logged-in user #NOT WORKING """
+
+
+    # Extract the user role from the JWT token
+    token = JWTRepo.extract_token(credentials)
+    current_user_role = token['role'] #this line will show what role the logged in user is
+
+    is_allowed = await ResearchService.check_if_faculty(current_user_role)
+    if not is_allowed:
+        raise HTTPException(status_code=403, detail=f"You are not a faculty meaning cant be an adviser. Your role is {current_user_role}.")
+    # Update the status
+    try:
+        research_paper = await ResearchService.get_adviser_papers(db, current_user_role)
+
+        if research_paper is None:
+            raise HTTPException(status_code=404, detail="Research paper not found") 
+        
+        # Convert ResearchPaper to ResearchPaperResponse
+        response_paper = ResearchPaperResponse(
+            id=research_paper.id,
+            title=research_paper.title,
+            content=research_paper.content,
+            abstract=research_paper.abstract,
+            research_type=research_paper.research_type,
+            submitted_date=str(research_paper.submitted_date),
+            status=research_paper.status,
+            keywords=research_paper.keywords,
+            file_path=research_paper.file_path,
+            research_adviser=research_paper.research_adviser,
+        )
+
+        return response_paper
+    
+    
+    
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error collecting researchunder you: {str(e)}", result=None)
+    

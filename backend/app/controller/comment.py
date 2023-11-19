@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.repository.auth_repo import JWTBearer, JWTRepo
 
 from app.config import db
-from app.schema import ResearchComment, ResearchCommentResponse, ResearchPaperCreate, ResponseSchema, ResearchPaper
+from app.schema import ResearchComment, ResearchCommentResponse, ResearchPaperCreate, ResponseSchema
 from app.service.research_service import ResearchService
 from app.repository.comment_repo import CommentRepository
 

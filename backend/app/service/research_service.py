@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy import join
 from sqlalchemy.sql import select
 from typing import List, Optional
 from uuid import uuid4
@@ -89,16 +90,50 @@ class ResearchService:
     
 
     @staticmethod
-    async def get_research_papers_by_user_id(db: Session, user_id: str) -> List[ResearchPaper]:
-        # Filter research papers by user_id
-        query = select(ResearchPaper).join(Author).filter(Author.user_id == user_id)
-        return (await db.execute(query)).scalars().all()
+    async def get_research_papers_by_user_id(db: Session, user_id: str) -> List[ResearchPaperResponseOnly]:
+        # Build the equivalent SQL query
+        query = (
+            select([
+                ResearchPaper.id,
+                ResearchPaper.title,
+                ResearchPaper.content,
+                ResearchPaper.abstract,
+                ResearchPaper.research_type,
+                ResearchPaper.submitted_date,
+                ResearchPaper.status,
+                ResearchPaper.keywords,
+                ResearchPaper.file_path,
+                ResearchPaper.research_adviser,
+            ])
+            .select_from(join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id))
+            .where(Author.user_id == user_id)
+        )
+
+        # Execute the query and return the results
+        return (await db.execute(query)).mappings().all()
 
 
 #=============================MGA POWER NG FACULTY ========================#
 
 
 # research_service.py
+
+
+    @staticmethod
+    async def get_adviser_papers(db: Session, faculty: str) -> List[ResearchPaperResponseOnly]:
+        # Build the equivalent SQL query
+        query = select(ResearchPaper).where(ResearchPaper.research_adviser == faculty)
+        return (await db.execute(query)).scalar_one_or_none()
+    
+
+
+
+    @staticmethod
+    async def check_if_faculty(current_user_role: str) -> bool:
+        # Check if the user's role is 'faculty'
+        if current_user_role != 'faculty':
+            return False
+        return True
 
     @staticmethod
     async def check_faculty_permission(research_paper_id: str, current_user_role: str) -> bool:
@@ -113,6 +148,8 @@ class ResearchService:
 
         research_paper = await ResearchPaperRepository.update_status(db, research_paper_id, new_status)
         return research_paper
+
+
 
 
 

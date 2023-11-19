@@ -115,20 +115,20 @@ class ResearchPaperCreate(BaseModel):
     #     return v
 
 
-class ResearchPaper(BaseModel):
-    id: Optional[str] = None
-    title: str
-    content: str
-    abstract: str
-    research_type: str
-    submitted_date: str
-    keywords: str
-    file_path: str
-    research_adviser: str
-    authors: Optional[List[Author]] = []
+# class ResearchPaper(BaseModel):
+#     id: Optional[str] = None
+#     title: str
+#     content: str
+#     abstract: str
+#     research_type: str
+#     submitted_date: str
+#     keywords: str
+#     file_path: str
+#     research_adviser: str
+#     authors: Optional[List[Author]] = []
 
-    class Config:
-        orm_mode = True
+#     class Config:
+#         orm_mode = True
 
 
 class ResearchPaperResponse(BaseModel):

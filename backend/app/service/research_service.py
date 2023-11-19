@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.research_repo import ResearchPaperRepository
-from app.schema import ResearchPaperCreate, ResearchPaperResponse
+from app.schema import ResearchPaperCreate, ResearchPaperResponse, ResearchPaperResponseOnly
 from app.service.users_service import UserService
 from app.model import Users, ResearchPaper
 from app.model.research_paper import Author, Status
@@ -80,19 +80,20 @@ class ResearchService:
         return research_papers
     
     
+    # @staticmethod
+    # async def get_research_paper_by_user_id(db: Session, user_id: str) -> List[ResearchPaper]:
+    #     # Join the Author and ResearchPaper tables and filter by user_id
+    #     papers = db.query(ResearchPaper).join(Author).filter(Author.user_id == user_id).all()
+
+    #     return papers
+    
+
     @staticmethod
-    async def get_current_user_research_paper(
-        db: Session,
-        user_id: int
-    ) -> Optional[ResearchPaper]:
-        # Assuming you have a method to get the current user's research paper
-        research_paper = await ResearchPaperRepository.get_current_user_research_paper(db, user_id)
-        
-        if research_paper is None:
-            raise HTTPException(status_code=404, detail="Research paper not found for the current user")
-        
-        return research_paper
-            
+    async def get_research_papers_by_user_id(db: Session, user_id: str) -> List[ResearchPaper]:
+        # Filter research papers by user_id
+        query = select(ResearchPaper).join(Author).filter(Author.user_id == user_id)
+        return (await db.execute(query)).scalars().all()
+
 
 #=============================MGA POWER NG FACULTY ========================#
 
@@ -118,11 +119,12 @@ class ResearchService:
 #============================ WILL PUT RESEARCH COMMENTS HERE ==================#
     
     @staticmethod
-    async def post_comment(db: Session, user_id: str, research_id: str, text: str):
+    async def post_comment(db: Session, user_id: str, user_name: str, research_id: str, text: str):
         _comment_id = str(uuid4())
         _comment = Comment(
             id=_comment_id,
             text=text,
+            name=user_name,
             user_id=user_id,
             research_paper_id=research_id
             )

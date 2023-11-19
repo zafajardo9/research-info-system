@@ -13,6 +13,8 @@ class Comment(SQLModel, TimeMixin, table=True):
     id: Optional[str] = Field(primary_key=True)
     text: str
 
+
+    name: str
     user_id: str = Field(foreign_key="users.id")
     research_paper_id: str = Field(foreign_key="research_papers.id") 
 

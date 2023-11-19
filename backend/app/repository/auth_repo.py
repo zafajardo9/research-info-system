@@ -21,7 +21,7 @@ class JWTRepo:
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
         else:
-            expire = datetime.utcnow() + timedelta(minutes=15)  # token expires
+            expire = datetime.utcnow() + timedelta(minutes=30)  # token expires
 
         role = self.data.get("role", "guest")
         if role == "student":

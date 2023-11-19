@@ -169,7 +169,7 @@ class ResearchCommentResponse(BaseModel):
     id: str
     text: str
     user_id: str
-    #username: str  
+    name: str
     research_paper_id: str
 
     class Config:
@@ -181,6 +181,34 @@ class StatusUpdate(BaseModel):
 
 class CurrentUserResearchPaperResponse(ResearchPaperResponse):
     authors: Optional[List[AuthorSchema]] = []
+
+#try lang to
+class ResearchPaperResponseOnly(BaseModel):
+    id: Optional[str]
+    title: str
+    content: str
+    abstract: str
+    research_type: str
+    submitted_date: str
+    status: str
+
+    keywords: str
+    file_path: str
+    research_adviser: str
+
+    class Config:
+        orm_mode = True
+
+class AuthorResponse(BaseModel):
+    id: Optional[str]
+    user_id: str
+    research_paper_id: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+        #===============
+
 
 
 #FOR THE DISPLAY OF LIST IN PAGE

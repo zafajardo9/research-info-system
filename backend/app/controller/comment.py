@@ -28,9 +28,10 @@ async def post_comment(
     """ So dito gagawin nya is nag rerely sa token. Kuninang current id ng nakalogin tapos need lang mag supply nung research paper id """
     token = JWTRepo.extract_token(credentials)
     current_user_id = token['user_id']
+    user_name = token['username']
 
     try:
-        comment = await ResearchService.post_comment(db, current_user_id, faculty_comment.research_id, faculty_comment.text)
+        comment = await ResearchService.post_comment(db, current_user_id, user_name, faculty_comment.research_id, faculty_comment.text)
         return ResponseSchema(detail=f"Comment {comment.id} created successfully", result=comment)
     except Exception as e:
         return ResponseSchema(detail=f"Error creating comment: {str(e)}", result=None)

@@ -65,7 +65,7 @@ class ResearchPaperRepository(BaseRepo):
 
         # Execute the query and return the result
         result = await db.execute(query)
-        research_paper = result.scalar()
+        research_paper = result.scalar().all()
 
         return research_paper
     

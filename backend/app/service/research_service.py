@@ -120,10 +120,32 @@ class ResearchService:
 
 
     @staticmethod
-    async def get_adviser_papers(db: Session, faculty: str) -> List[ResearchPaperResponseOnly]:
-        # Build the equivalent SQL query
-        query = select(ResearchPaper).where(ResearchPaper.research_adviser == faculty)
-        return (await db.execute(query)).scalar_one_or_none()
+    async def get_adviser_papers(db: Session, faculty: str) -> List[ResearchPaperResponse]:
+        # Build the equivalent SQL query using SQLAlchemy ORM
+        query = select(ResearchPaper).filter(ResearchPaper.research_adviser == faculty)
+
+        # Execute the query and fetch the results
+        result = await db.execute(query)
+
+        # Fetch all the rows from the result
+        papers = result.scalars().all()
+
+        # Assuming ResearchPaperResponseOnly is a class representing the response structure
+        # You might need to adjust this part based on your actual response structure
+        return [ResearchPaperResponseOnly(
+            modified_at=paper.modified_at,
+            created_at=paper.created_at,
+            id=paper.id,
+            title=paper.title,
+            content=paper.content,
+            abstract=paper.abstract,
+            research_type=paper.research_type,
+            submitted_date=paper.submitted_date,
+            status=paper.status,
+            keywords=paper.keywords,
+            file_path=paper.file_path,
+            research_adviser=paper.research_adviser,
+        ) for paper in papers]
     
 
 

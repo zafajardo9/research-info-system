@@ -88,7 +88,7 @@ async def edit_research_paper(
            raise HTTPException(status_code=404, detail="Research paper not found")
 
        # Update the research paper
-       await ResearchService.update_research_paper(db, existing_research_paper, research_paper_data.dict(exclude={"id"}))
+       await ResearchService.update_research_paper(db, existinzg_research_paper, research_paper_data.dict(exclude={"id"}))
 
        return ResponseSchema(detail=f"Research paper {research_paper_id} updated successfully", result=None)
    except Exception as e:
@@ -169,43 +169,24 @@ async def update_research_paper_status(
 
 @router.get("/adviser_research", response_model=List[ResearchPaperResponse])
 async def get_current_user_research_paper(
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),
 ):
-    """ Get the research paper related to the logged-in user #NOT WORKING """
-
-
+    """ Get the research paper of the adviser """
     # Extract the user role from the JWT token
     token = JWTRepo.extract_token(credentials)
     current_user_role = token['role'] #this line will show what role the logged in user is
+    current_user_id = token['user_id']
 
     is_allowed = await ResearchService.check_if_faculty(current_user_role)
     if not is_allowed:
         raise HTTPException(status_code=403, detail=f"You are not a faculty meaning cant be an adviser. Your role is {current_user_role}.")
     # Update the status
     try:
-        research_paper = await ResearchService.get_adviser_papers(db, current_user_role)
+        research_paper = await ResearchService.get_adviser_papers(db, current_user_id)
 
-        if research_paper is None:
-            raise HTTPException(status_code=404, detail="Research paper not found") 
-        
-        # Convert ResearchPaper to ResearchPaperResponse
-        response_paper = ResearchPaperResponse(
-            id=research_paper.id,
-            title=research_paper.title,
-            content=research_paper.content,
-            abstract=research_paper.abstract,
-            research_type=research_paper.research_type,
-            submitted_date=str(research_paper.submitted_date),
-            status=research_paper.status,
-            keywords=research_paper.keywords,
-            file_path=research_paper.file_path,
-            research_adviser=research_paper.research_adviser,
-        )
-
-        return response_paper
-    
-    
+        return research_paper
     
     except HTTPException as e:
         return ResponseSchema(detail=f"Error collecting researchunder you: {str(e)}", result=None)
     
+

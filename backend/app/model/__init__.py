@@ -8,3 +8,5 @@ from .research_paper import ResearchPaper
 from .research_paper import Author
 
 from .research_status import Comment
+
+from .ethics import Ethics

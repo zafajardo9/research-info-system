@@ -68,7 +68,7 @@ async def delete_research(
         comment_id: str = Path(..., alias="id"),
 ):
     try:
-        await CommentRepository.delete(comment_id)
+        await CommentRepository.delete(db, comment_id)
         return ResponseSchema(detail=f"Successfully deleted comment {comment_id}!", result=comment_id)
     except Exception as e:
         return ResponseSchema(detail=f"Error deleting comment: {str(e)}", result=None)

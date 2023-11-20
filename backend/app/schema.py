@@ -107,20 +107,18 @@ class ResearchPaperCreate(BaseModel):
     research_adviser: str
 
 
-# class ResearchPaperResponse(BaseModel):
-#     id: Optional[str]
-#     title: str
-#     content: str
-#     abstract: str
-#     research_type: str
-#     submitted_date: str
-#     status: str
-#     keywords: str
-#     file_path: str
-#     research_adviser: str
-
-#     class Config:
-#         orm_mode = True
+# ==============ETHICS
+class EthicSchema(BaseModel):
+    id: Optional[str]
+    research_paper_id: str
+    letter_of_intent: str
+    urec_9: str
+    urec_10: str
+    urec_11: str
+    urec_12: str
+    certificate_of_validation: str
+    co_authorship: str
+# ==============END
 
 
 class AuthorResponse(BaseModel):

@@ -105,34 +105,31 @@ class ResearchPaperCreate(BaseModel):
     file_path: str
     submitted_date: str
     research_adviser: str
-            # status validation
-            # kasi tatlo lang daw dapat value nito
-            #di mag wowork now
-    # @validator("status")
-    # def status_validation(cls, v):
-    #     if hasattr(Status, v) is False:
-    #         raise HTTPException(status_code=400, detail="Invalid input status")
-    #     return v
 
 
-# class ResearchPaper(BaseModel):
-#     id: Optional[str] = None
+# class ResearchPaperResponse(BaseModel):
+#     id: Optional[str]
 #     title: str
 #     content: str
 #     abstract: str
 #     research_type: str
 #     submitted_date: str
+#     status: str
 #     keywords: str
 #     file_path: str
 #     research_adviser: str
-#     authors: Optional[List[Author]] = []
 
 #     class Config:
 #         orm_mode = True
 
 
+class AuthorResponse(BaseModel):
+    id: Optional[str]
+    user_id: str
+    research_paper_id: str
+
 class ResearchPaperResponse(BaseModel):
-    id: str
+    id: Optional[str]
     title: str
     content: str
     abstract: str
@@ -143,6 +140,8 @@ class ResearchPaperResponse(BaseModel):
     file_path: str
     research_adviser: str
 
+    class Config:
+        orm_mode = True
 
 
 
@@ -182,32 +181,7 @@ class StatusUpdate(BaseModel):
 class CurrentUserResearchPaperResponse(ResearchPaperResponse):
     authors: Optional[List[AuthorSchema]] = []
 
-#try lang to
-class ResearchPaperResponseOnly(BaseModel):
-    id: Optional[str]
-    title: str
-    content: str
-    abstract: str
-    research_type: str
-    submitted_date: str
-    status: str
 
-    keywords: str
-    file_path: str
-    research_adviser: str
-
-    class Config:
-        orm_mode = True
-
-class AuthorResponse(BaseModel):
-    id: Optional[str]
-    user_id: str
-    research_paper_id: Optional[str]
-
-    class Config:
-        orm_mode = True
-
-        #===============
 
 
 

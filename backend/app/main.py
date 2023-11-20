@@ -42,13 +42,15 @@ def init_app():
     async def shutdown():
         await db.close()
 
-    from app.controller import authentication, users, research_controller, auth_controller, comment
+    from app.controller import authentication, users, research_controller, auth_controller, comment, adviser_controller
 
     app.include_router(authentication.router)
     app.include_router(users.router)
     app.include_router(research_controller.router)
     app.include_router(auth_controller.router)
+    app.include_router(adviser_controller.router)
     app.include_router(comment.router)
+
 
     return app
 

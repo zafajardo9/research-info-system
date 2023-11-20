@@ -7,7 +7,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.service.research_service import ResearchService
-from app.schema import AuthorResponse, AuthorSchema, CurrentUserResearchPaperResponse, ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperResponseOnly, ResponseSchema, StatusUpdate
+from app.schema import AuthorSchema, CurrentUserResearchPaperResponse, ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResponseSchema, StatusUpdate
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from datetime import datetime
 
@@ -34,6 +34,39 @@ async def upload_research_paper(
         return ResponseSchema(detail=f"Research paper {research_paper.id} created successfully", result=research_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
+
+
+@router.get("/user", response_model=List[ResearchPaperResponse], response_model_exclude_none=True)
+async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+
+    try:
+        research_papers = await ResearchService.get_research_papers_by_user(db, current_user)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        
+        # Convert each ResearchPaper to ResearchPaperResponse
+        response_papers = []
+        for paper in research_papers:
+            response_paper = ResearchPaperResponse(
+                id=paper.id,
+                title=paper.title,
+                content=paper.content,
+                abstract=paper.abstract,
+                research_type=paper.research_type,
+                submitted_date=str(paper.submitted_date),
+                status=paper.status,
+                keywords=paper.keywords,
+                file_path=paper.file_path,
+                research_adviser=paper.research_adviser,
+            )
+            response_papers.append(response_paper)
+
+        return response_papers
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
 
 
 
@@ -88,7 +121,7 @@ async def edit_research_paper(
            raise HTTPException(status_code=404, detail="Research paper not found")
 
        # Update the research paper
-       await ResearchService.update_research_paper(db, existinzg_research_paper, research_paper_data.dict(exclude={"id"}))
+       await ResearchService.update_research_paper(db, existing_research_paper, research_paper_data.dict(exclude={"id"}))
 
        return ResponseSchema(detail=f"Research paper {research_paper_id} updated successfully", result=None)
    except Exception as e:
@@ -127,66 +160,4 @@ async def get_all_research_papers():
        return ResponseSchema(detail=f"Error getting all research paper: {str(e)}", result=None)
 
 
-
-@router.get("/current_user_research_paper", response_model=List[ResearchPaperResponseOnly])
-async def get_current_user_research_paper(
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-):
-    """ Get the research paper related to the logged-in user #NOT WORKING """
-
-    token = JWTRepo.extract_token(credentials)
-    current_user_id = token['user_id']
-
-    result = await ResearchService.get_research_papers_by_user_id(current_user_id)
-
-    if result:
-        return ResponseSchema(detail="Successfully fetch research", result=result)
-    else:
-        raise HTTPException(status_code=404, detail="No research paper found")
-
-# ========================== POWER NG FACULTY =================
-
-@router.put("/update_status/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
-async def update_research_paper_status(
-    research_paper_id: str,
-    status_update: StatusUpdate,
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-):
-    # Extract the user role from the JWT token
-    token = JWTRepo.extract_token(credentials)
-    current_user_role = token['role'] #this line will show what role the logged in user is
-
-    is_allowed = await ResearchService.check_faculty_permission(research_paper_id, current_user_role)
-    if not is_allowed:
-        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper. Your role is {current_user_role}.")
-    # Update the status
-    try:
-        research_paper = await ResearchService.update_research_paper_status(db, research_paper_id, status_update.status)
-        return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
-    except HTTPException as e:
-        return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
-    
-
-@router.get("/adviser_research", response_model=List[ResearchPaperResponse])
-async def get_current_user_research_paper(
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),
-):
-    """ Get the research paper of the adviser """
-    # Extract the user role from the JWT token
-    token = JWTRepo.extract_token(credentials)
-    current_user_role = token['role'] #this line will show what role the logged in user is
-    current_user_id = token['user_id']
-
-    is_allowed = await ResearchService.check_if_faculty(current_user_role)
-    if not is_allowed:
-        raise HTTPException(status_code=403, detail=f"You are not a faculty meaning cant be an adviser. Your role is {current_user_role}.")
-    # Update the status
-    try:
-        research_paper = await ResearchService.get_adviser_papers(db, current_user_id)
-
-        return research_paper
-    
-    except HTTPException as e:
-        return ResponseSchema(detail=f"Error collecting researchunder you: {str(e)}", result=None)
-    
 

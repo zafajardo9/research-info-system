@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.research_repo import ResearchPaperRepository
-from app.schema import ResearchPaperCreate, ResearchPaperResponse, ResearchPaperResponseOnly
+from app.schema import ResearchPaperCreate, ResearchPaperResponse
 from app.service.users_service import UserService
 from app.model import Users, ResearchPaper
 from app.model.research_paper import Author, Status
@@ -79,75 +79,34 @@ class ResearchService:
         """
         research_papers = await ResearchPaperRepository.get_all(db)
         return research_papers
-    
-    
-    # @staticmethod
-    # async def get_research_paper_by_user_id(db: Session, user_id: str) -> List[ResearchPaper]:
-    #     # Join the Author and ResearchPaper tables and filter by user_id
-    #     papers = db.query(ResearchPaper).join(Author).filter(Author.user_id == user_id).all()
-
-    #     return papers
-    
-
+        
     @staticmethod
-    async def get_research_papers_by_user_id(db: Session, user_id: str) -> List[ResearchPaperResponseOnly]:
-        # Build the equivalent SQL query
+    async def get_research_papers_by_adviser(db: Session, user_id: str) -> List[ResearchPaper]:
         query = (
-            select([
-                ResearchPaper.id,
-                ResearchPaper.title,
-                ResearchPaper.content,
-                ResearchPaper.abstract,
-                ResearchPaper.research_type,
-                ResearchPaper.submitted_date,
-                ResearchPaper.status,
-                ResearchPaper.keywords,
-                ResearchPaper.file_path,
-                ResearchPaper.research_adviser,
-            ])
-            .select_from(join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id))
+            select(ResearchPaper)
+            .filter(ResearchPaper.research_adviser == user_id)
+        )
+        result = await db.execute(query)
+        research_papers = result.scalars().all()
+
+        return research_papers
+    
+    @staticmethod
+    async def get_research_papers_by_user(db: Session, user_id: str) -> List[ResearchPaper]:
+        query = (
+            select(ResearchPaper)
+            .join(Author, ResearchPaper.id == Author.research_paper_id)
             .where(Author.user_id == user_id)
         )
+        result = await db.execute(query)
+        research_papers = result.scalars().all()
 
-        # Execute the query and return the results
-        return (await db.execute(query)).mappings().all()
-
+        return research_papers
 
 #=============================MGA POWER NG FACULTY ========================#
 
 
 # research_service.py
-
-
-    @staticmethod
-    async def get_adviser_papers(db: Session, faculty: str) -> List[ResearchPaperResponse]:
-        # Build the equivalent SQL query using SQLAlchemy ORM
-        query = select(ResearchPaper).filter(ResearchPaper.research_adviser == faculty)
-
-        # Execute the query and fetch the results
-        result = await db.execute(query)
-
-        # Fetch all the rows from the result
-        papers = result.scalars().all()
-
-        # Assuming ResearchPaperResponseOnly is a class representing the response structure
-        # You might need to adjust this part based on your actual response structure
-        return [ResearchPaperResponseOnly(
-            modified_at=paper.modified_at,
-            created_at=paper.created_at,
-            id=paper.id,
-            title=paper.title,
-            content=paper.content,
-            abstract=paper.abstract,
-            research_type=paper.research_type,
-            submitted_date=paper.submitted_date,
-            status=paper.status,
-            keywords=paper.keywords,
-            file_path=paper.file_path,
-            research_adviser=paper.research_adviser,
-        ) for paper in papers]
-    
-
 
 
     @staticmethod
@@ -158,7 +117,7 @@ class ResearchService:
         return True
 
     @staticmethod
-    async def check_faculty_permission(research_paper_id: str, current_user_role: str) -> bool:
+    async def check_faculty_permission(current_user_role: str) -> bool:
         # Check if the user's role is 'faculty'
         if current_user_role != 'faculty':
             return False

@@ -14,7 +14,7 @@ from app.repository.comment_repo import CommentRepository
 
 router = APIRouter(
     prefix="/comments",
-    tags=['Faculty Comments'],
+    tags=['Comments'],
     dependencies=[Depends(JWTBearer())]
 )
 

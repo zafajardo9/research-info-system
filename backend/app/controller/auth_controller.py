@@ -33,4 +33,11 @@ async def create_author(
 
 @router.get("/{author_id}", response_model=Author)
 async def read_author(author_id: str):
-    return await AuthorService.get_author(db, author_id)
+    '''FOR STUDENTS'''
+    result = await UserService.get_student_profile(author_id)
+    if result:
+        return ResponseSchema(detail="Successfully fetch student profile!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="Student profile not found")
+
+

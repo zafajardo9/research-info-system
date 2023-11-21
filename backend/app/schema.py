@@ -106,6 +106,40 @@ class ResearchPaperCreate(BaseModel):
     submitted_date: str
     research_adviser: str
 
+# ================ FOR SHOWING
+class AuthorShow(BaseModel):
+    user_id: str
+    student_name: str
+    student_year: int
+    student_section: str
+    student_course: str
+    student_number: str
+    student_phone_number: str
+
+class ResearchPaperShow(BaseModel):
+    id: str
+    title: str
+    content: str
+    abstract: str
+    research_type: str
+    submitted_date: str
+    status: str
+    keywords: str
+    file_path: str
+    research_adviser: str
+
+    class Config:
+        orm_mode = True
+
+class ResearchPaperWithAuthorsResponse(BaseModel):
+    research_paper: ResearchPaperShow
+    authors: List[AuthorShow]
+
+    class Config:
+        orm_mode = True
+
+#==========================
+
 
 # ==============ETHICS
 class EthicSchema(BaseModel):

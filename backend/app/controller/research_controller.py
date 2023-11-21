@@ -7,7 +7,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.service.research_service import ResearchService
-from app.schema import AuthorSchema, CurrentUserResearchPaperResponse, ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResponseSchema, StatusUpdate
+from app.schema import ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperWithAuthorsResponse, ResponseSchema
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from datetime import datetime
 
@@ -95,6 +95,21 @@ async def read_research_paper(research_paper_id: str):
         return response_paper
     except Exception as e:
         return ResponseSchema(detail=f"Error reading or getting research paper: {str(e)}", result=None)
+
+@router.get("/research-with-authors/{research_paper_id}", response_model=ResearchPaperWithAuthorsResponse)
+async def get_research_paper_with_authors(
+        research_paper_id: str = Path(..., alias="research_paper_id"),
+):
+    '''
+    This part kasi more on di ko na alam paano ko i-coconnect tong mga table pero try nyo nalang na didisplay naman na din data
+    '''
+    try:
+        research_paper = await ResearchService.get_research_paper_with_authors(db, research_paper_id)
+        return research_paper
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
+
+
 
 @router.delete("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def delete_research(

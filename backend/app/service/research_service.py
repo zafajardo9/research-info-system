@@ -9,13 +9,14 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.research_repo import ResearchPaperRepository
-from app.schema import ResearchPaperCreate, ResearchPaperResponse
+from app.schema import AuthorShow, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse
 from app.service.users_service import UserService
 from app.model import Users, ResearchPaper
 from app.model.research_paper import Author, Status
 from app.repository.author_repo import AuthorRepository
 from app.model.research_status import Comment
 from app.repository.comment_repo import CommentRepository
+from app.model.student import Student
 
 class ResearchService:
 
@@ -71,6 +72,75 @@ class ResearchService:
     ) -> None:
         await ResearchPaperRepository.delete(db, research_paper)
 
+
+
+    @staticmethod
+    async def get_research_paper_with_authors(db: Session, research_paper_id: str):
+        query = (
+            select(Users, ResearchPaper, Author, Student)
+            .join(Author, Users.id == Author.user_id)
+            .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+            .join(Student, Users.student_id == Student.id)
+            .where(ResearchPaper.id == research_paper_id)
+        )
+
+        # Execute the query and fetch all results
+        result = await db.execute(query)
+        query_result = result.fetchall()
+
+        # Assuming you have a function to map the result to the desired response model
+        response = ResearchService.map_to_response_model(query_result)
+        return response
+    
+
+    @staticmethod
+    def map_to_response_model(query_result):
+    # Assuming a basic mapping, modify based on your actual data structure
+
+        if not query_result:
+            return None # Handle the case where no data is found
+
+        user, research_paper, author, student = query_result[0]
+
+        # Map research paper details
+        research_paper_data = ResearchPaperShow(
+            id=str(research_paper.id),
+            title=str(research_paper.title),
+            content=str(research_paper.content),
+            abstract=str(research_paper.abstract),
+            research_type=str(research_paper.research_type),
+            submitted_date=str(research_paper.submitted_date),
+            status=str(research_paper.status),
+            keywords=str(research_paper.keywords),
+            file_path=str(research_paper.file_path),
+            research_adviser=str(research_paper.research_adviser)
+            # Add other research paper details as needed
+        )
+
+        # Map authors
+        authors_data = [
+            AuthorShow(
+                user_id=str(author.user_id),
+                student_name=str(student.name),
+                student_year=str(student.year),
+                student_section=str(student.section),
+                student_course=str(student.course),
+                student_number=str(student.student_number),
+                student_phone_number=str(student.phone_number)
+            )
+            for _, _, author, student in query_result
+        ]
+
+        # Create the response model
+        response_model = ResearchPaperWithAuthorsResponse(
+            research_paper=research_paper_data,
+            authors=authors_data
+        )
+
+        return response_model
+
+
+    
 
     @staticmethod
     async def get_all_research_papers(db: Session) -> List[ResearchPaper]:

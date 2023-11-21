@@ -11,7 +11,8 @@ from sqlalchemy.orm import Session
 from app.config import commit_rollback, db
 from app.model.research_paper import Author, ResearchPaper, Status
 from app.repository.base_repo import BaseRepo
-from app.schema import PageResponse, ResearchPaperCreate
+from app.schema import PageResponse, ResearchPaperCreate, ResearchPaperWithAuthorsResponse
+from sqlalchemy.orm import joinedload
 from app.model.users import Users
 from app.model.research_status import Comment
 
@@ -83,3 +84,33 @@ class ResearchPaperRepository(BaseRepo):
             return research_paper
         else:
             raise HTTPException(status_code=404, detail="Research paper not found")
+        
+
+
+    # @staticmethod
+    # async def get_research_paper_with_authors(db: Session, research_paper_id: str) -> ResearchPaperWithAuthorsResponse:
+    #     research_paper = await db.execute(
+    #         select(ResearchPaper)
+    #         .options(joinedload(ResearchPaper.authors).joinedload(Author.user))
+    #         .where(ResearchPaper.id == research_paper_id)
+    #     )
+    #     research_paper = research_paper.unique().one()
+
+    #     # Convert the SQLAlchemy model instance to a dictionary
+    #     research_paper_dict = research_paper.__dict__
+
+    #     # Remove SQLAlchemy-specific attributes
+    #     research_paper_dict = {k: v for k, v in research_paper_dict.items() if k in ResearchPaperWithAuthorsResponse.__fields__}
+
+    #     # Convert the authors to a list of dictionaries
+    #     research_paper_dict["authors"] = [
+    #         {
+    #             "id": author.id,
+    #             "user_id": author.user_id,
+    #             "research_paper_id": author.research_paper_id,
+    #         }
+    #         for author in research_paper.authors
+    #     ]
+
+    #     # Create a ResearchPaperWithAuthorsResponse from the dictionary
+    #     return ResearchPaperWithAuthorsResponse(**research_paper_dict)

@@ -15,6 +15,7 @@ from app.schema import PageResponse, ResearchPaperCreate, ResearchPaperWithAutho
 from sqlalchemy.orm import joinedload
 from app.model.users import Users
 from app.model.research_status import Comment
+from app.model.ethics import Ethics
 
 
 class ResearchPaperRepository(BaseRepo):
@@ -39,11 +40,11 @@ class ResearchPaperRepository(BaseRepo):
     async def delete(research_id: str, db: Session):
         """ delete research data by id """
 
-        # Delete related records in the Author table first
+        #Way para i-delete lahat ng mga naka connect na table
         await db.execute(delete(Author).where(Author.research_paper_id == research_id))
-
-        # Delete related records in the Comments table
         await db.execute(delete(Comment).where(Comment.research_paper_id == research_id))
+        await db.execute(delete(Ethics).where(Ethics.research_paper_id == research_id))
+
 
         # Now, delete the research paper
         query = delete(ResearchPaper).where(ResearchPaper.id == research_id)

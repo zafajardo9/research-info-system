@@ -141,19 +141,6 @@ class ResearchPaperWithAuthorsResponse(BaseModel):
 #==========================
 
 
-# ==============ETHICS
-class EthicSchema(BaseModel):
-    id: Optional[str]
-    research_paper_id: str
-    letter_of_intent: str
-    urec_9: str
-    urec_10: str
-    urec_11: str
-    urec_12: str
-    certificate_of_validation: str
-    co_authorship: str
-# ==============END
-
 
 class AuthorResponse(BaseModel):
     id: Optional[str]
@@ -214,6 +201,28 @@ class CurrentUserResearchPaperResponse(ResearchPaperResponse):
     authors: Optional[List[AuthorSchema]] = []
 
 
+#==================== ETHICS =====================
+class EthicsCreate(BaseModel):
+    research_paper_id: str
+    letter_of_intent: str
+    urec_9: str
+    urec_10: str
+    urec_11: str
+    urec_12: str
+    certificate_of_validation: str
+    co_authorship: str
+    research_paper_id: str
+
+class EthicsResponse(BaseModel):
+    created_at: datetime
+    letter_of_intent: str
+    urec_9: str
+    urec_10: str
+    urec_11: str
+    urec_12: str
+    certificate_of_validation: str
+    co_authorship: str
+    research_paper_id: str
 
 
 

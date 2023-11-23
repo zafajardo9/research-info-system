@@ -17,11 +17,10 @@ router = APIRouter(
 @router.post("/upload", response_model=ResponseSchema, response_model_exclude_none=True)
 async def upload_ethics(
     ethics_data: EthicsCreate,
-    research_paper_id: str,
 ):
     try:
         # Call the service method to upload ethics data
-        ethics_paper = await EthicsService.upload_ethics(db, ethics_data, research_paper_id)
+        ethics_paper = await EthicsService.upload_ethics(db, ethics_data)
         
         # Return the response with the created research paper ID
         return ResponseSchema(detail=f"Ethics data for research paper uploaded successfully", result=ethics_paper)

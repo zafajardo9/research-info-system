@@ -22,11 +22,11 @@ from app.repository.ethics_repo import EthicsRepository
 class EthicsService:
     
     @staticmethod
-    async def upload_ethics(db: Session, ethics_data: EthicsCreate, research_paper_id: str):
+    async def upload_ethics(db: Session, ethics_data: EthicsCreate):
         _ethics_id = str(uuid4())
         _research_paper = Ethics(
             id = _ethics_id,
-            research_paper_id = research_paper_id,
+            research_paper_id = ethics_data.research_paper_id,
             letter_of_intent = ethics_data.letter_of_intent,
             urec_9 = ethics_data.urec_9,
             urec_10 = ethics_data.urec_10,

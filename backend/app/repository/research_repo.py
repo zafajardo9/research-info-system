@@ -16,6 +16,7 @@ from sqlalchemy.orm import joinedload
 from app.model.users import Users
 from app.model.research_status import Comment
 from app.model.ethics import Ethics
+from app.model.full_manuscript import FullManuscript
 
 
 class ResearchPaperRepository(BaseRepo):
@@ -44,6 +45,7 @@ class ResearchPaperRepository(BaseRepo):
         await db.execute(delete(Author).where(Author.research_paper_id == research_id))
         await db.execute(delete(Comment).where(Comment.research_paper_id == research_id))
         await db.execute(delete(Ethics).where(Ethics.research_paper_id == research_id))
+        await db.execute(delete(FullManuscript).where(FullManuscript.research_paper_id == research_id))
 
 
         # Now, delete the research paper

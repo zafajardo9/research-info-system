@@ -221,8 +221,28 @@ class EthicsUpdate(BaseModel):
     certificate_of_validation: constr(strip_whitespace=True)
     co_authorship: constr(strip_whitespace=True)
 
-    
+# ===========================FULL MANUSCRIPT
+class FullManuscriptCreate(BaseModel):
+    research_paper_id: str
+    content: str
+    keywords: str
+    file: str
+    status: str
 
+class FullManuscriptUpdate(BaseModel):
+    content: constr(strip_whitespace=True)
+    keywords: constr(strip_whitespace=True)
+    file: constr(strip_whitespace=True)
+    status: constr(strip_whitespace=True)
+
+class FullManuscriptResponse(BaseModel):
+    created_at: datetime
+    research_paper_id: str
+    content: str
+    keywords: str
+    file: str
+    status: str
+# =============================END
 
 
 #FOR THE DISPLAY OF LIST IN PAGE

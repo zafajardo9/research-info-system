@@ -42,17 +42,6 @@ class EthicsRepository(BaseRepo):
         else:
             raise HTTPException(status_code=404, detail="Ethics data not found")
 
-
-    # @staticmethod
-    # async def delete_by_research_paper_id(db: Session, research_paper_id: str) -> bool:
-    #     ethics_data = await db.query(Ethics).filter(Ethics.research_paper_id == research_paper_id).first()
-
-    #     if ethics_data:
-    #         db.delete(ethics_data)
-    #         await db.commit()
-    #         return True
-    #     else:
-    #         return False
         
 
     @staticmethod

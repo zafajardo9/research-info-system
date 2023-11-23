@@ -18,24 +18,30 @@ from app.model.ethics import Ethics
 class EthicsRepository(BaseRepo):
     model = Ethics
 
-
-
+    #getting research paper
     @staticmethod
     async def get_by_research_paper_id(db: Session, research_paper_id: str) -> Ethics:
         query = select(Ethics).filter(Ethics.research_paper_id == research_paper_id)
         result = await db.execute(query)
         return result.scalars().first()
     
-
-    
-
-
+    #getting ethics by id
     @staticmethod
-    async def update(db: Session, ethics: Ethics) -> Ethics:
-        db.add(ethics)
-        await db.commit()
-        await db.refresh(ethics)
-        return ethics
+    async def get_ethics_by_id(db: Session, ethics_id: str) -> Ethics:
+        query = select(Ethics).filter(Ethics.id == ethics_id)
+        result = await db.execute(query)
+        return result.scalars().first()
+    
+    
+    @staticmethod
+    async def update_ethics(db: AsyncSession, ethics_id: str, **kwargs):
+        ethics = await EthicsRepository.get_ethics_by_id(db, ethics_id)
+
+        if ethics:
+            await EthicsRepository.update(db, ethics, **kwargs)
+        else:
+            raise HTTPException(status_code=404, detail="Ethics data not found")
+
 
     # @staticmethod
     # async def delete_by_research_paper_id(db: Session, research_paper_id: str) -> bool:

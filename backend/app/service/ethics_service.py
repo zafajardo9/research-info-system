@@ -6,11 +6,12 @@ from uuid import uuid4
 from app.config import db
 
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 
 
 
-from app.schema import EthicsCreate, EthicsResponse
+from app.schema import EthicsCreate, EthicsResponse, EthicsUpdate
 from app.service.users_service import UserService
 from app.model import Ethics
 from app.repository.author_repo import AuthorRepository
@@ -51,24 +52,18 @@ class EthicsService:
         return research_paper
 
     @staticmethod
-    async def update_ethics(db: Session, ethics_data: EthicsCreate, research_paper_id: str) -> EthicsResponse:
+    async def update_ethics(db: AsyncSession, ethics_data: EthicsUpdate, ethics_id: str) -> EthicsResponse:
         try:
-            existing_ethics = await EthicsRepository.get_by_research_paper_id(db, research_paper_id)
-
-            if existing_ethics is not None:
-                # Update the existing ethics data
-                for key, value in ethics_data.dict().items():
-                    setattr(existing_ethics, key, value)
-
-                # Commit the changes to the database
-                await db.commit()
-
-                return EthicsResponse(**existing_ethics.dict())
-            else:
-                raise HTTPException(status_code=404, detail="Ethics data not found")
-
+            await EthicsRepository.update_ethics(db, ethics_id, **ethics_data.dict())
+            # Fetch the updated data from the database
+            updated_ethics = await EthicsRepository.get_ethics_by_id(db, ethics_id)
+            return EthicsResponse(**updated_ethics.dict())
+        except HTTPException:
+            raise  # Re-raise the HTTPException
         except Exception as e:
+            print(f"Error during update: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
 
     @staticmethod
     async def delete_ethics(db: Session, ethics_id: str):

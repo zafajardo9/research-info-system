@@ -4,7 +4,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
 
 from app.config import db
-from app.schema import EthicsCreate, EthicsResponse, ResponseSchema
+from app.schema import EthicsCreate, EthicsResponse, EthicsUpdate, ResponseSchema
 from app.service.ethics_service import EthicsService
 
 router = APIRouter(
@@ -67,21 +67,21 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
 
 @router.put("/update/{ethics_id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_ethics(
-    ethics_data: EthicsCreate,
+    ethics_data: EthicsUpdate,
     ethics_id: str,
 ):
-    '''
-    NOT WORKING PA
-    '''
     try:
-        # Call the service method to update ethics data by research paper ID
+        # Call the service method to update ethics data by ethics ID
         updated_ethics = await EthicsService.update_ethics(db, ethics_data, ethics_id)
         
         # Return the response with the updated ethics data
         return ResponseSchema(detail=f"Ethics data for research paper {ethics_id} updated successfully", result=updated_ethics)
     except HTTPException as e:
+        return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)
+    except Exception as e:
+        # Print or log the full exception details for debugging
+        print(f"Error updating ethics data: {str(e)}")
         return ResponseSchema(detail=f"Error updating ethics data: {str(e)}", result=None)
-    
 
 
 

@@ -7,7 +7,7 @@ import re
 from typing import List, TypeVar, Optional, Generic
 
 from pydantic.generics import GenericModel
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, constr
 from sqlalchemy import false
 
 from app.model.research_paper import Author, Status
@@ -223,6 +223,17 @@ class EthicsResponse(BaseModel):
     certificate_of_validation: str
     co_authorship: str
     research_paper_id: str
+
+class EthicsUpdate(BaseModel):
+    letter_of_intent: constr(strip_whitespace=True)
+    urec_9: constr(strip_whitespace=True)
+    urec_10: constr(strip_whitespace=True)
+    urec_11: constr(strip_whitespace=True)
+    urec_12: constr(strip_whitespace=True)
+    certificate_of_validation: constr(strip_whitespace=True)
+    co_authorship: constr(strip_whitespace=True)
+
+    
 
 
 

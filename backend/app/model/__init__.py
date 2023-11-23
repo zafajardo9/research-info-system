@@ -10,3 +10,4 @@ from .research_paper import Author
 from .research_status import Comment
 
 from .ethics import Ethics
+from .full_manuscript import FullManuscript

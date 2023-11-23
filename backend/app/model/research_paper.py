@@ -26,19 +26,18 @@ class Status(str, Enum):
     Approved = "Approved"
     Rejected = "Rejected"
     Pending = "Pending"
+    Revised = "Revised"
 
 class ResearchPaper(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers'
 
     id: Optional[str] = Field(primary_key=True)
     title: str
-    content: str
-    abstract: str
+
     research_type: str
     submitted_date: date
     status: Status = Status.Pending
 
-    keywords: str
     file_path: str
     research_adviser: str
 
@@ -46,8 +45,5 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     comments: Optional[List["Comment"]] = Relationship(back_populates="research_paper")
 
     ethics: Optional["Ethics"] = Relationship(back_populates="research_paper")
-    #ethics: Optional[List["Ethics"]] = Relationship(back_populates="research_paper")
+    full_manuscript: Optional["FullManuscript"] = Relationship(back_populates="research_paper")
 
-
-    # status_id: Optional[int] = Field(foreign_key="research_papers_status.id")
-    # status: Optional["ResearchPaperStatus"] = Relationship(back_populates="research_paper")

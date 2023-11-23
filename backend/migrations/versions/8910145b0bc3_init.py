@@ -1,8 +1,8 @@
-"""1st
+"""Init
 
-Revision ID: fb34ae406443
+Revision ID: 8910145b0bc3
 Revises: 
-Create Date: 2023-11-17 08:38:45.589703
+Create Date: 2023-11-23 19:15:26.097687
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 # revision identifiers, used by Alembic.
-revision: str = 'fb34ae406443'
+revision: str = '8910145b0bc3'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -34,11 +34,9 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('title', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('content', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('abstract', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('research_type', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('submitted_date', sa.Date(), nullable=False),
-    sa.Column('keywords', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('status', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('file_path', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('research_adviser', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -54,6 +52,21 @@ def upgrade() -> None:
     sa.Column('course', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('student_number', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('phone_number', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('ethics',
+    sa.Column('modified_at', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('research_paper_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('letter_of_intent', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('urec_9', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('urec_10', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('urec_11', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('urec_12', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('certificate_of_validation', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('co_authorship', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.ForeignKeyConstraint(['research_paper_id'], ['research_papers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -86,6 +99,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('text', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('user_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('research_paper_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.ForeignKeyConstraint(['research_paper_id'], ['research_papers.id'], ),
@@ -100,6 +114,7 @@ def downgrade() -> None:
     op.drop_table('comments')
     op.drop_table('authors')
     op.drop_table('users')
+    op.drop_table('ethics')
     op.drop_table('student')
     op.drop_table('research_papers')
     op.drop_table('faculty')

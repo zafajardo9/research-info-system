@@ -16,12 +16,13 @@ class FullManuscript(SQLModel, TimeMixin, table=True):
     id: Optional[str] = Field(primary_key=True)
 
     research_paper_id: str = Field(foreign_key="research_papers.id")
-
+    content: str
+    keywords: str
     file: str
 
     status: str
 
 
-    research_paper: "ResearchPaper" = Relationship(back_populates="ethics")
+    research_paper: "ResearchPaper" = Relationship(back_populates="full_manuscript")
 
     

@@ -53,12 +53,9 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
             response_paper = ResearchPaperResponse(
                 id=paper.id,
                 title=paper.title,
-                content=paper.content,
-                abstract=paper.abstract,
                 research_type=paper.research_type,
                 submitted_date=str(paper.submitted_date),
                 status=paper.status,
-                keywords=paper.keywords,
                 file_path=paper.file_path,
                 research_adviser=paper.research_adviser,
             )
@@ -82,12 +79,9 @@ async def read_research_paper(research_paper_id: str):
         response_paper = ResearchPaperResponse(
             id=get_paper.id,
             title=get_paper.title,
-            content=get_paper.content,
-            abstract=get_paper.abstract,
             research_type=get_paper.research_type,
             submitted_date=str(get_paper.submitted_date),
             status=get_paper.status,
-            keywords=get_paper.keywords,
             file_path=get_paper.file_path,
             research_adviser=get_paper.research_adviser,
         )
@@ -126,16 +120,14 @@ async def delete_research(
 @router.put("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def edit_research_paper(
    research_paper_id: str = Path(..., alias="id"),
-   research_paper_data: ResearchEdit = Body(...)
+   research_paper_data: ResearchEdit = Body(..., exclude=["status"])
 ):
    try:
-       # Fetch the existing research paper
        existing_research_paper = await ResearchService.get_research_paper(db, research_paper_id)
 
        if existing_research_paper is None:
            raise HTTPException(status_code=404, detail="Research paper not found")
 
-       # Update the research paper
        await ResearchService.update_research_paper(db, existing_research_paper, research_paper_data.dict(exclude={"id"}))
 
        return ResponseSchema(detail=f"Research paper {research_paper_id} updated successfully", result=None)
@@ -158,12 +150,9 @@ async def get_all_research_papers():
             ResearchPaperResponse(
                 id=paper.id,
                 title=paper.title,
-                content=paper.content,
-                abstract=paper.abstract,
                 research_type=paper.research_type,
                 submitted_date=str(paper.submitted_date),
                 status = paper.status,
-                keywords=paper.keywords,
                 file_path=paper.file_path,
                 research_adviser=paper.research_adviser,
             )

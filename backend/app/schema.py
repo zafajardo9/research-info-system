@@ -95,13 +95,10 @@ class AuthorSchema(BaseModel):
     research_paper_id: int
     
     
-
+# ================================================================
 class ResearchPaperCreate(BaseModel):
     title: str
-    content: str
-    abstract: str
-    research_type: str 
-    keywords: str
+    research_type: str
     file_path: str
     submitted_date: str
     research_adviser: str
@@ -119,12 +116,9 @@ class AuthorShow(BaseModel):
 class ResearchPaperShow(BaseModel):
     id: str
     title: str
-    content: str
-    abstract: str
     research_type: str
     submitted_date: str
     status: str
-    keywords: str
     file_path: str
     research_adviser: str
 
@@ -150,12 +144,9 @@ class AuthorResponse(BaseModel):
 class ResearchPaperResponse(BaseModel):
     id: Optional[str]
     title: str
-    content: str
-    abstract: str
     research_type: str
     submitted_date: str
     status: str
-    keywords: str
     file_path: str
     research_adviser: str
 
@@ -166,11 +157,8 @@ class ResearchPaperResponse(BaseModel):
 
 class ResearchEdit(BaseModel):
     title: str
-    content: str
-    abstract: str
     research_type: str
     submitted_date: str
-    keywords: str
     file_path: str
     research_adviser: str
 

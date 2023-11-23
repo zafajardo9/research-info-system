@@ -159,6 +159,11 @@ class ResearchEdit(BaseModel):
     title: str
     research_type: str
     submitted_date: str
+<<<<<<< HEAD
+=======
+    keywords: str
+    #status: str
+>>>>>>> 6bef47d3855f4eb655bd95dbc23fb08efbd2cb40
     file_path: str
     research_adviser: str
 

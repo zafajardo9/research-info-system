@@ -126,7 +126,7 @@ async def delete_research(
 @router.put("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def edit_research_paper(
    research_paper_id: str = Path(..., alias="id"),
-   research_paper_data: ResearchEdit = Body(...)
+   research_paper_data: ResearchEdit = Body(..., exclude=["status"])
 ):
    try:
        # Fetch the existing research paper

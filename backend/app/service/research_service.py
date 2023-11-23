@@ -61,7 +61,7 @@ class ResearchService:
         if 'submitted_date' in research_paper_data:
             # Convert the 'submitted_date' to the desired format
             research_paper_data['submitted_date'] = datetime.strptime(research_paper_data['submitted_date'], '%d-%m-%Y')
-
+        research_paper_data['status'] = 'Revised'
         await ResearchPaperRepository.update(db, research_paper, **research_paper_data)
 
 

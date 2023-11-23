@@ -171,6 +171,7 @@ class ResearchEdit(BaseModel):
     research_type: str
     submitted_date: str
     keywords: str
+    #status: str
     file_path: str
     research_adviser: str
 

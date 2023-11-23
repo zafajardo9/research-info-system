@@ -26,6 +26,7 @@ class Status(str, Enum):
     Approved = "Approved"
     Rejected = "Rejected"
     Pending = "Pending"
+    Revised = "Revised"
 
 class ResearchPaper(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers'

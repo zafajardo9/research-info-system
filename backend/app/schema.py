@@ -192,15 +192,15 @@ class CurrentUserResearchPaperResponse(ResearchPaperResponse):
 
 #==================== ETHICS =====================
 class EthicsCreate(BaseModel):
-    research_paper_id: str
-    letter_of_intent: str
-    urec_9: str
-    urec_10: str
-    urec_11: str
-    urec_12: str
-    certificate_of_validation: str
-    co_authorship: str
-    research_paper_id: str
+    research_paper_id: Optional[str]
+    letter_of_intent: Optional[str]
+    urec_9: Optional[str]
+    urec_10: Optional[str]
+    urec_11: Optional[str]
+    urec_12: Optional[str]
+    certificate_of_validation: Optional[str]
+    co_authorship: Optional[str]
+    research_paper_id: Optional[str]
 
 class EthicsResponse(BaseModel):
     modified_at: Optional[datetime]

@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi.security import HTTPAuthorizationCredentials
@@ -101,39 +102,41 @@ async def delete_ethics(copyright_id: str):
     
 
 
-@router.get("/user", response_model=CopyRightResponse, response_model_exclude_none=True)
+@router.get("/user", response_model=List[CopyRightResponse], response_model_exclude_none=True)
 async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        # Call the service method to get ethics data for the logged-in user
-        copyright_data = await CopyrightService.get_manuscript_by_user(db, current_user)
+        # Call the service method to get copyright data for the logged-in user
+        copyright_data_list = await CopyrightService.get_manuscript_by_user(db, current_user)
         
-        if copyright_data is None:
-            raise HTTPException(status_code=404, detail="No Ethics Found for the logged-in user")
+        response_copyright_list = []
+        for copyright_data in copyright_data_list:
+            response_copyright = CopyRightResponse(
+                id = copyright_data.id,
+                modified_at=copyright_data.modified_at,
+                created_at = copyright_data.created_at,
+                research_paper_id = copyright_data.research_paper_id,
+                co_authorship = copyright_data.co_authorship,
+                affidavit_co_ownership = copyright_data.affidavit_co_ownership,
+                joint_authorship = copyright_data.joint_authorship,
+                approval_sheet = copyright_data.approval_sheet,
+                receipt_payment = copyright_data.receipt_payment,
+                recordal_slip = copyright_data.recordal_slip,
+                acknowledgement_receipt = copyright_data.acknowledgement_receipt,
+                certificate_copyright = copyright_data.certificate_copyright,
+                recordal_template = copyright_data.recordal_template,
+                ureb_18 = copyright_data.ureb_18,
+                journal_publication = copyright_data.journal_publication,
+                copyright_manuscript = copyright_data.copyright_manuscript,
+            )
+            response_copyright_list.append(response_copyright)
 
-        # Create an EthicsResponse instance
-        copyright_data = CopyRightResponse(
-            id = copyright_data.id,
-            modified_at=copyright_data.modified_at,
-            created_at = copyright_data.created_at,
-            research_paper_id = copyright_data.research_paper_id,
-            co_authorship = copyright_data.co_authorship,
-            affidavit_co_ownership = copyright_data.affidavit_co_ownership,
-            joint_authorship = copyright_data.joint_authorship,
-            approval_sheet = copyright_data.approval_sheet,
-            receipt_payment = copyright_data.receipt_payment,
-            recordal_slip = copyright_data.recordal_slip,
-            acknowledgement_receipt = copyright_data.acknowledgement_receipt,
-            certificate_copyright = copyright_data.certificate_copyright,
-            recordal_template = copyright_data.recordal_template,
-            ureb_18 = copyright_data.ureb_18,
-            journal_publication = copyright_data.journal_publication,
-            copyright_manuscript = copyright_data.copyright_manuscript,
-        )
+        if not response_copyright_list:
+            raise HTTPException(status_code=404, detail="No Copyright Found for the logged-in user")
 
-        return copyright_data
+        return response_copyright_list
 
     except HTTPException as e:
         return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)

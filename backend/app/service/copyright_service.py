@@ -80,7 +80,7 @@ class CopyrightService:
 
 
     @staticmethod
-    async def get_manuscript_by_user(db: Session, user_id: str) -> CopyRight:
+    async def get_manuscript_by_user(db: Session, user_id: str) -> List[CopyRight]:
         query = (
             select(CopyRight)
             .join(ResearchPaper, CopyRight.research_paper_id == ResearchPaper.id)
@@ -88,6 +88,9 @@ class CopyrightService:
             .where(Author.user_id == user_id)
         )
         result = await db.execute(query)
-        ethics = result.scalar()
+        copyright_list = result.scalars().all()
 
-        return ethics
+        if not copyright_list:
+            raise HTTPException(status_code=404, detail="Copyright data not found for the user")
+
+        return copyright_list

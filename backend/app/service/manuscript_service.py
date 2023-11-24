@@ -73,7 +73,7 @@ class ManuscriptService:
 
 
     @staticmethod
-    async def get_manuscript_by_user(db: Session, user_id: str) -> FullManuscript:
+    async def get_manuscript_by_user(db: Session, user_id: str) -> List[FullManuscript]:
         query = (
             select(FullManuscript)
             .join(ResearchPaper, FullManuscript.research_paper_id == ResearchPaper.id)
@@ -81,6 +81,9 @@ class ManuscriptService:
             .where(Author.user_id == user_id)
         )
         result = await db.execute(query)
-        ethics = result.scalar()
+        manuscript_list = result.scalars().all()
 
-        return ethics
+        if not manuscript_list:
+            raise HTTPException(status_code=404, detail="Manuscript data not found for the user")
+
+        return manuscript_list

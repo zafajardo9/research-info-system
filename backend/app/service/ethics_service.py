@@ -77,7 +77,7 @@ class EthicsService:
 
 
     @staticmethod
-    async def get_ethics_by_user(db: Session, user_id: str) -> Ethics:
+    async def get_ethics_by_user(db: Session, user_id: str) -> List[Ethics]:
         query = (
             select(Ethics)
             .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
@@ -85,9 +85,9 @@ class EthicsService:
             .where(Author.user_id == user_id)
         )
         result = await db.execute(query)
-        ethics = result.scalar()
+        ethics_list = result.scalars().all()
 
-        if ethics is None:
+        if not ethics_list:
             raise HTTPException(status_code=404, detail="Ethics data not found for the user")
 
-        return ethics
+        return ethics_list

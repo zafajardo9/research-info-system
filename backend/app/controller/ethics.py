@@ -1,4 +1,5 @@
 
+from typing import List
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
@@ -101,34 +102,35 @@ async def delete_ethics(ethics_id: str):
     
 
 
-@router.get("/user", response_model=EthicsResponse, response_model_exclude_none=True)
+@router.get("/user", response_model=List[EthicsResponse], response_model_exclude_none=True)
 async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-
-        ethics_data = await EthicsService.get_ethics_by_user(db, current_user)
+        ethics_data_list = await EthicsService.get_ethics_by_user(db, current_user)
         
-        response_ethics = EthicsResponse(
-            id=ethics_data.id,
-            created_at=ethics_data.created_at,
-            modified_at=ethics_data.modified_at,
-            letter_of_intent=ethics_data.letter_of_intent,
-            urec_9=ethics_data.urec_9,
-            urec_10=ethics_data.urec_10,
-            urec_11=ethics_data.urec_11,
-            urec_12=ethics_data.urec_12,
-            certificate_of_validation=ethics_data.certificate_of_validation,
-            co_authorship=ethics_data.co_authorship,
-            research_paper_id=ethics_data.research_paper_id,
-        )
+        response_ethics_list = []
+        for ethics_data in ethics_data_list:
+            response_ethics = EthicsResponse(
+                id=ethics_data.id,
+                created_at=ethics_data.created_at,
+                modified_at=ethics_data.modified_at,
+                letter_of_intent=ethics_data.letter_of_intent,
+                urec_9=ethics_data.urec_9,
+                urec_10=ethics_data.urec_10,
+                urec_11=ethics_data.urec_11,
+                urec_12=ethics_data.urec_12,
+                certificate_of_validation=ethics_data.certificate_of_validation,
+                co_authorship=ethics_data.co_authorship,
+                research_paper_id=ethics_data.research_paper_id,
+            )
+            response_ethics_list.append(response_ethics)
 
-        if response_ethics is None:
+        if not response_ethics_list:
             raise HTTPException(status_code=404, detail="No Ethics Found for the logged-in user")
 
-
-        return response_ethics
+        return response_ethics_list
 
     except HTTPException as e:
         if e.status_code == 404:

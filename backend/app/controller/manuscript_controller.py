@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi.security import HTTPAuthorizationCredentials
@@ -94,32 +95,34 @@ async def delete_ethics(manuscript_id: str):
 
 
 
-@router.get("/user", response_model=FullManuscriptResponse, response_model_exclude_none=True)
+@router.get("/user", response_model=List[FullManuscriptResponse], response_model_exclude_none=True)
 async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        # Call the service method to get ethics data for the logged-in user
-        manuscript_data = await ManuscriptService.get_manuscript_by_user(db, current_user)
+        # Call the service method to get manuscript data for the logged-in user
+        manuscript_data_list = await ManuscriptService.get_manuscript_by_user(db, current_user)
         
-        if manuscript_data is None:
-            raise HTTPException(status_code=404, detail="No Ethics Found for the logged-in user")
+        response_manuscript_list = []
+        for manuscript_data in manuscript_data_list:
+            response_manuscript = FullManuscriptResponse(
+                id=manuscript_data.id,
+                created_at = manuscript_data.created_at,
+                modified_at=manuscript_data.modified_at,
+                research_paper_id=manuscript_data.research_paper_id,
+                content = manuscript_data.content,
+                keywords = manuscript_data.keywords,
+                abstract = manuscript_data.abstract,
+                file = manuscript_data.file,
+                status = manuscript_data.status,
+            )
+            response_manuscript_list.append(response_manuscript)
 
-        # Create an EthicsResponse instance
-        response_manuscript = FullManuscriptResponse(
-            id=manuscript_data.id,
-            created_at = manuscript_data.created_at,
-            modified_at=manuscript_data.modified_at,
-            research_paper_id=manuscript_data.research_paper_id,
-            content = manuscript_data.content,
-            keywords = manuscript_data.keywords,
-            abstract = manuscript_data.abstract,
-            file = manuscript_data.file,
-            status = manuscript_data.status,
-        )
+        if not response_manuscript_list:
+            raise HTTPException(status_code=404, detail="No Manuscript Found for the logged-in user")
 
-        return response_manuscript
+        return response_manuscript_list
 
     except HTTPException as e:
         return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)

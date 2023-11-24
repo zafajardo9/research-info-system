@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 from app.repository.auth_repo import JWTBearer, JWTRepo
+from fastapi.security import HTTPAuthorizationCredentials
 
 from app.config import db
 from app.schema import FullManuscriptCreate, FullManuscriptResponse, FullManuscriptUpdate, ResponseSchema
@@ -30,19 +31,19 @@ async def upload_ethics(
 @router.get("/get_manuscript_by_research/{research_paper_id}", response_model=FullManuscriptResponse)
 async def get_ethics_by_research_paper_id(research_paper_id: str):
     try:
-        ethics_data = await ManuscriptService.get_manuscript_by_research_paper_id(db, research_paper_id)
-        if ethics_data is None:
+        manuscript_data = await ManuscriptService.get_manuscript_by_research_paper_id(db, research_paper_id)
+        if manuscript_data is None:
             raise HTTPException(status_code=404, detail="No Manuscript Found")
         
         response_ethics = FullManuscriptResponse(
-            id=ethics_data.id,
-            created_at = ethics_data.created_at,
-            research_paper_id=ethics_data.research_paper_id,
-            content = ethics_data.content,
-            keywords = ethics_data.keywords,
-            abstract = ethics_data.abstract,
-            file = ethics_data.file,
-            status = ethics_data.status,
+            id=manuscript_data.id,
+            created_at = manuscript_data.created_at,
+            research_paper_id=manuscript_data.research_paper_id,
+            content = manuscript_data.content,
+            keywords = manuscript_data.keywords,
+            abstract = manuscript_data.abstract,
+            file = manuscript_data.file,
+            status = manuscript_data.status,
         )
 
         return response_ethics
@@ -88,3 +89,40 @@ async def delete_ethics(manuscript_id: str):
         return ResponseSchema(detail=f"Manuscript data for research paper {manuscript_id} deleted successfully", result=None)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error deleting manuscript data: {str(e)}", result=None)
+    
+
+
+
+@router.get("/user", response_model=FullManuscriptResponse, response_model_exclude_none=True)
+async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+
+    try:
+        # Call the service method to get ethics data for the logged-in user
+        manuscript_data = await ManuscriptService.get_manuscript_by_user(db, current_user)
+        
+        if manuscript_data is None:
+            raise HTTPException(status_code=404, detail="No Ethics Found for the logged-in user")
+
+        # Create an EthicsResponse instance
+        response_manuscript = FullManuscriptResponse(
+            id=manuscript_data.id,
+            created_at = manuscript_data.created_at,
+            research_paper_id=manuscript_data.research_paper_id,
+            content = manuscript_data.content,
+            keywords = manuscript_data.keywords,
+            abstract = manuscript_data.abstract,
+            file = manuscript_data.file,
+            status = manuscript_data.status,
+        )
+
+        return response_manuscript
+
+    except HTTPException as e:
+        return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)
+
+    except Exception as e:
+        # Print or log the full exception details for debugging
+        print(f"Error getting user research papers: {str(e)}")
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)

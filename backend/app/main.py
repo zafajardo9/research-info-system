@@ -42,7 +42,7 @@ def init_app():
     async def shutdown():
         await db.close()
 
-    from app.controller import authentication, users, research_controller, auth_controller, comment, adviser_controller, ethics, manuscript_controller
+    from app.controller import authentication, users, research_controller, auth_controller, comment, adviser_controller, ethics, manuscript_controller, copyright_controller
 
     app.include_router(authentication.router)
     app.include_router(users.router)
@@ -52,6 +52,7 @@ def init_app():
     app.include_router(comment.router)
     app.include_router(ethics.router)
     app.include_router(manuscript_controller.router)
+    app.include_router(copyright_controller.router)
 
 
     return app

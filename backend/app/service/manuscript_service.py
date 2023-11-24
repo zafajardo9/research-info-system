@@ -13,6 +13,7 @@ from fastapi import HTTPException
 from app.schema import FullManuscriptCreate, FullManuscriptResponse, FullManuscriptUpdate
 from app.model import FullManuscript
 from app.repository.manuscript_repo import ManuscriptRepository
+from app.model.research_paper import Author, ResearchPaper
 
 class ManuscriptService:
 
@@ -69,3 +70,17 @@ class ManuscriptService:
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+    @staticmethod
+    async def get_manuscript_by_user(db: Session, user_id: str) -> FullManuscript:
+        query = (
+            select(FullManuscript)
+            .join(ResearchPaper, FullManuscript.research_paper_id == ResearchPaper.id)
+            .join(Author, ResearchPaper.id == Author.research_paper_id)
+            .where(Author.user_id == user_id)
+        )
+        result = await db.execute(query)
+        ethics = result.scalar()
+
+        return ethics

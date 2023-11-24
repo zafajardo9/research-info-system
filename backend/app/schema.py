@@ -247,6 +247,53 @@ class FullManuscriptResponse(BaseModel):
     status: str
 # =============================END
 
+# =========================COPYRIGHT =================
+class CopyRightCreate(BaseModel):
+    research_paper_id: str
+    co_authorship: str
+    affidavit_co_ownership: str
+    joint_authorship: str
+    approval_sheet: str
+    receipt_payment: str
+    recordal_slip: str
+    acknowledgement_receipt: str
+    certificate_copyright: str
+    recordal_template: str
+    ureb_18: str
+    journal_publication: str
+    copyright_manuscript: str
+
+
+class CopyRightUpdate(BaseModel):
+    co_authorship: constr(strip_whitespace=True)
+    affidavit_co_ownership: constr(strip_whitespace=True)
+    joint_authorship: constr(strip_whitespace=True)
+    approval_sheet: constr(strip_whitespace=True)
+    receipt_payment: constr(strip_whitespace=True)
+    recordal_slip: constr(strip_whitespace=True)
+    acknowledgement_receipt: constr(strip_whitespace=True)
+    certificate_copyright: constr(strip_whitespace=True)
+    recordal_template: constr(strip_whitespace=True)
+    ureb_18: constr(strip_whitespace=True)
+    journal_publication: constr(strip_whitespace=True)
+    copyright_manuscript: constr(strip_whitespace=True)
+
+class CopyRightResponse(BaseModel):
+    created_at: datetime
+    research_paper_id: str
+    co_authorship: str
+    affidavit_co_ownership: str
+    joint_authorship: str
+    approval_sheet: str
+    receipt_payment: str
+    recordal_slip: str
+    acknowledgement_receipt: str
+    certificate_copyright: str
+    recordal_template: str
+    ureb_18: str
+    journal_publication: str
+    copyright_manuscript: str
+
 
 #FOR THE DISPLAY OF LIST IN PAGE
 class PageResponse(GenericModel, Generic[T]):

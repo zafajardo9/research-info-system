@@ -97,3 +97,46 @@ async def delete_ethics(ethics_id: str):
         return ResponseSchema(detail=f"Ethics data for research paper {ethics_id} deleted successfully", result=None)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error deleting ethics data: {str(e)}", result=None)
+    
+
+
+@router.get("/user", response_model=EthicsResponse, response_model_exclude_none=True)
+async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+
+    try:
+        # Call the service method to get ethics data for the logged-in user
+        ethics_data = await EthicsService.get_ethics_by_user(db, current_user)
+        
+        if ethics_data is None:
+            raise HTTPException(status_code=404, detail="No Ethics Found for the logged-in user")
+
+        if ethics_data is None:
+            return {"detail": "No Ethics Found for the logged-in user"}
+        # Create an EthicsResponse instance
+        response_ethics = EthicsResponse(
+            id=ethics_data.id,
+            created_at=ethics_data.created_at,
+            letter_of_intent=ethics_data.letter_of_intent,
+            urec_9=ethics_data.urec_9,
+            urec_10=ethics_data.urec_10,
+            urec_11=ethics_data.urec_11,
+            urec_12=ethics_data.urec_12,
+            certificate_of_validation=ethics_data.certificate_of_validation,
+            co_authorship=ethics_data.co_authorship,
+            research_paper_id=ethics_data.research_paper_id,
+        )
+
+        return response_ethics
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return ResponseSchema(detail="No Ethics Found for the logged-in user", result=None)
+        else:
+            return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)
+
+    except Exception as e:
+        # Print or log the full exception details for debugging
+        print(f"Error getting user research papers: {str(e)}")
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)

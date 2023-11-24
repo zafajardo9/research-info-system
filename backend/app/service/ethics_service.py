@@ -14,10 +14,8 @@ from fastapi import HTTPException
 from app.schema import EthicsCreate, EthicsResponse, EthicsUpdate
 from app.service.users_service import UserService
 from app.model import Ethics
-from app.repository.author_repo import AuthorRepository
-from app.model.research_status import Comment
-from app.repository.comment_repo import CommentRepository
 from app.repository.ethics_repo import EthicsRepository
+from app.model.research_paper import Author, ResearchPaper
 
 class EthicsService:
     
@@ -76,3 +74,20 @@ class EthicsService:
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+    @staticmethod
+    async def get_ethics_by_user(db: Session, user_id: str) -> Ethics:
+        query = (
+            select(Ethics)
+            .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
+            .join(Author, ResearchPaper.id == Author.research_paper_id)
+            .where(Author.user_id == user_id)
+        )
+        result = await db.execute(query)
+        ethics = result.scalar()
+
+        if ethics is None:
+            raise HTTPException(status_code=404, detail="Ethics data not found for the user")
+
+        return ethics

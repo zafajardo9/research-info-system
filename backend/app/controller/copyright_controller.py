@@ -38,6 +38,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
         
         response_ethics = CopyRightResponse(
             id = copyright_data.id,
+            modified_at=copyright_data.modified_at,
             created_at = copyright_data.created_at,
             research_paper_id = copyright_data.research_paper_id,
             co_authorship = copyright_data.co_authorship,
@@ -115,6 +116,7 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
         # Create an EthicsResponse instance
         copyright_data = CopyRightResponse(
             id = copyright_data.id,
+            modified_at=copyright_data.modified_at,
             created_at = copyright_data.created_at,
             research_paper_id = copyright_data.research_paper_id,
             co_authorship = copyright_data.co_authorship,

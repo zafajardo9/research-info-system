@@ -165,7 +165,7 @@ class ResearchEdit(BaseModel):
     class Config:
         orm_mode = True
 
-
+# ========================COMMENT
 class ResearchComment(BaseModel):
     text: str
     research_id: str
@@ -181,6 +181,7 @@ class ResearchCommentResponse(BaseModel):
     class Config:
         orm_mode = True
 
+#==================STATUS
 
 class StatusUpdate(BaseModel):
     status: Status
@@ -202,6 +203,7 @@ class EthicsCreate(BaseModel):
     research_paper_id: str
 
 class EthicsResponse(BaseModel):
+    modified_at: Optional[datetime]
     created_at: Optional[datetime]
     letter_of_intent: Optional[str]
     urec_9: Optional[str]
@@ -238,6 +240,7 @@ class FullManuscriptUpdate(BaseModel):
     status: constr(strip_whitespace=True)
 
 class FullManuscriptResponse(BaseModel):
+    modified_at: Optional[datetime]
     created_at: Optional[datetime]
     research_paper_id: Optional[str]
     content: Optional[str]
@@ -279,6 +282,7 @@ class CopyRightUpdate(BaseModel):
     copyright_manuscript: constr(strip_whitespace=True)
 
 class CopyRightResponse(BaseModel):
+    modified_at: Optional[datetime]
     created_at: Optional[datetime]
     research_paper_id: Optional[str]
     co_authorship: Optional[str]

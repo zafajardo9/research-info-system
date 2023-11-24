@@ -39,6 +39,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
         
         response_ethics = EthicsResponse(
             id=ethics_data.id,
+            modified_at = ethics_data.modified_at,
             created_at = ethics_data.created_at,
             letter_of_intent=ethics_data.letter_of_intent,
             urec_9=ethics_data.urec_9,
@@ -112,6 +113,7 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
         response_ethics = EthicsResponse(
             id=ethics_data.id,
             created_at=ethics_data.created_at,
+            modified_at=ethics_data.modified_at,
             letter_of_intent=ethics_data.letter_of_intent,
             urec_9=ethics_data.urec_9,
             urec_10=ethics_data.urec_10,

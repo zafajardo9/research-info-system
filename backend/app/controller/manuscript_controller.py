@@ -37,6 +37,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
         
         response_ethics = FullManuscriptResponse(
             id=manuscript_data.id,
+            modified_at=manuscript_data.modified_at,
             created_at = manuscript_data.created_at,
             research_paper_id=manuscript_data.research_paper_id,
             content = manuscript_data.content,
@@ -109,6 +110,7 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
         response_manuscript = FullManuscriptResponse(
             id=manuscript_data.id,
             created_at = manuscript_data.created_at,
+            modified_at=manuscript_data.modified_at,
             research_paper_id=manuscript_data.research_paper_id,
             content = manuscript_data.content,
             keywords = manuscript_data.keywords,

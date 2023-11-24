@@ -40,6 +40,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
             research_paper_id=ethics_data.research_paper_id,
             content = ethics_data.content,
             keywords = ethics_data.keywords,
+            abstract = ethics_data.abstract,
             file = ethics_data.file,
             status = ethics_data.status,
         )

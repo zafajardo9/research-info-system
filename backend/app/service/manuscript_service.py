@@ -24,6 +24,7 @@ class ManuscriptService:
             research_paper_id = manuscript_data.research_paper_id,
             content = manuscript_data.content,
             keywords = manuscript_data.keywords,
+            abstract = manuscript_data.abstract,
             file = manuscript_data.file,
             status = manuscript_data.status,
         )

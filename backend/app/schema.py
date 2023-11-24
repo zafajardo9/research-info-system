@@ -226,6 +226,7 @@ class FullManuscriptCreate(BaseModel):
     research_paper_id: str
     content: str
     keywords: str
+    abstract: str
     file: str
     status: str
 
@@ -233,6 +234,7 @@ class FullManuscriptUpdate(BaseModel):
     content: constr(strip_whitespace=True)
     keywords: constr(strip_whitespace=True)
     file: constr(strip_whitespace=True)
+    abstract: constr(strip_whitespace=True)
     status: constr(strip_whitespace=True)
 
 class FullManuscriptResponse(BaseModel):
@@ -240,6 +242,7 @@ class FullManuscriptResponse(BaseModel):
     research_paper_id: str
     content: str
     keywords: str
+    abstract: str
     file: str
     status: str
 # =============================END

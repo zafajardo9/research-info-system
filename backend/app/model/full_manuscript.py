@@ -19,7 +19,12 @@ class FullManuscript(SQLModel, TimeMixin, table=True):
     content: str
     keywords: str
     file: str
+    abstract: str
 
+
+
+
+    
     status: str
 
 

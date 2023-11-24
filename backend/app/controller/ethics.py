@@ -106,15 +106,9 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
     current_user = token['user_id']
 
     try:
-        # Call the service method to get ethics data for the logged-in user
+
         ethics_data = await EthicsService.get_ethics_by_user(db, current_user)
         
-        if ethics_data is None:
-            raise HTTPException(status_code=404, detail="No Ethics Found for the logged-in user")
-
-        if ethics_data is None:
-            return {"detail": "No Ethics Found for the logged-in user"}
-        # Create an EthicsResponse instance
         response_ethics = EthicsResponse(
             id=ethics_data.id,
             created_at=ethics_data.created_at,
@@ -127,6 +121,10 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
             co_authorship=ethics_data.co_authorship,
             research_paper_id=ethics_data.research_paper_id,
         )
+
+        if response_ethics is None:
+            raise HTTPException(status_code=404, detail="No Ethics Found for the logged-in user")
+
 
         return response_ethics
 

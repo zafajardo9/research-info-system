@@ -202,15 +202,15 @@ class EthicsCreate(BaseModel):
     research_paper_id: str
 
 class EthicsResponse(BaseModel):
-    created_at: datetime
-    letter_of_intent: str
-    urec_9: str
-    urec_10: str
-    urec_11: str
-    urec_12: str
-    certificate_of_validation: str
-    co_authorship: str
-    research_paper_id: str
+    created_at: Optional[datetime]
+    letter_of_intent: Optional[str]
+    urec_9: Optional[str]
+    urec_10: Optional[str]
+    urec_11: Optional[str]
+    urec_12: Optional[str]
+    certificate_of_validation: Optional[str]
+    co_authorship: Optional[str]
+    research_paper_id: Optional[str]
 
 class EthicsUpdate(BaseModel):
     letter_of_intent: constr(strip_whitespace=True)
@@ -238,13 +238,13 @@ class FullManuscriptUpdate(BaseModel):
     status: constr(strip_whitespace=True)
 
 class FullManuscriptResponse(BaseModel):
-    created_at: datetime
-    research_paper_id: str
-    content: str
-    keywords: str
-    abstract: str
-    file: str
-    status: str
+    created_at: Optional[datetime]
+    research_paper_id: Optional[str]
+    content: Optional[str]
+    keywords: Optional[str]
+    abstract: Optional[str]
+    file: Optional[str]
+    status: Optional[str]
 # =============================END
 
 # =========================COPYRIGHT =================
@@ -279,20 +279,20 @@ class CopyRightUpdate(BaseModel):
     copyright_manuscript: constr(strip_whitespace=True)
 
 class CopyRightResponse(BaseModel):
-    created_at: datetime
-    research_paper_id: str
-    co_authorship: str
-    affidavit_co_ownership: str
-    joint_authorship: str
-    approval_sheet: str
-    receipt_payment: str
-    recordal_slip: str
-    acknowledgement_receipt: str
-    certificate_copyright: str
-    recordal_template: str
-    ureb_18: str
-    journal_publication: str
-    copyright_manuscript: str
+    created_at: Optional[datetime]
+    research_paper_id: Optional[str]
+    co_authorship: Optional[str]
+    affidavit_co_ownership: Optional[str]
+    joint_authorship: Optional[str]
+    approval_sheet: Optional[str]
+    receipt_payment: Optional[str]
+    recordal_slip: Optional[str]
+    acknowledgement_receipt: Optional[str]
+    certificate_copyright: Optional[str]
+    recordal_template: Optional[str]
+    ureb_18: Optional[str]
+    journal_publication: Optional[str]
+    copyright_manuscript: Optional[str]
 
 
 #FOR THE DISPLAY OF LIST IN PAGE

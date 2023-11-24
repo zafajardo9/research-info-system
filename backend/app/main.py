@@ -11,9 +11,8 @@ origins= [
 app = FastAPI(
         title= "PUP-RIZ",
         description= "Research Information System",
-        version= "1.2",
+        version= "1.3",
 )
-
 
 def init_app():
     db.init()
@@ -33,6 +32,8 @@ def init_app():
         allow_methods=["*"],
         allow_headers=["*"]
     )
+
+
 
     @app.on_event("startup")
     async def starup():

@@ -203,6 +203,7 @@ class EthicsCreate(BaseModel):
     research_paper_id: Optional[str]
 
 class EthicsResponse(BaseModel):
+    id: Optional[str]
     modified_at: Optional[datetime]
     created_at: Optional[datetime]
     letter_of_intent: Optional[str]
@@ -240,6 +241,7 @@ class FullManuscriptUpdate(BaseModel):
     status: constr(strip_whitespace=True)
 
 class FullManuscriptResponse(BaseModel):
+    id: Optional[str]
     modified_at: Optional[datetime]
     created_at: Optional[datetime]
     research_paper_id: Optional[str]
@@ -282,6 +284,7 @@ class CopyRightUpdate(BaseModel):
     copyright_manuscript: constr(strip_whitespace=True)
 
 class CopyRightResponse(BaseModel):
+    id: Optional[str]
     modified_at: Optional[datetime]
     created_at: Optional[datetime]
     research_paper_id: Optional[str]

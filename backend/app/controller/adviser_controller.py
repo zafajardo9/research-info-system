@@ -61,12 +61,9 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
             response_paper = ResearchPaperResponse(
                 id=paper.id,
                 title=paper.title,
-                content=paper.content,
-                abstract=paper.abstract,
                 research_type=paper.research_type,
                 submitted_date=str(paper.submitted_date),
                 status=paper.status,
-                keywords=paper.keywords,
                 file_path=paper.file_path,
                 research_adviser=paper.research_adviser,
             )

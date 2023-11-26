@@ -19,18 +19,22 @@ class ManuscriptService:
 
     @staticmethod
     async def upload_manuscript(db: Session, manuscript_data: FullManuscriptCreate):
-        _manuscript_id = str(uuid4())
-        _manuscript_paper = FullManuscript(
-            id = _manuscript_id,
-            research_paper_id = manuscript_data.research_paper_id,
-            content = manuscript_data.content,
-            keywords = manuscript_data.keywords,
-            abstract = manuscript_data.abstract,
-            file = manuscript_data.file,
-            status = manuscript_data.status,
-        )
+        try:
+            _manuscript_id = str(uuid4())
+            _manuscript_paper = FullManuscript(
+                id=_manuscript_id,
+                research_paper_id=manuscript_data.research_paper_id,
+                content=manuscript_data.content,
+                keywords=manuscript_data.keywords,
+                abstract=manuscript_data.abstract,
+                file=manuscript_data.file,
+                status=manuscript_data.status,
+            )
 
-        await ManuscriptRepository.create(db, **_manuscript_paper.dict())
+            await ManuscriptRepository.create(db, **_manuscript_paper.dict())
+
+        except Exception as e:
+            return {"detail": f"Error uploading manuscript: {str(e)}", "status_code": 500}
 
     @staticmethod
     async def get_manuscript_by_research_paper_id(

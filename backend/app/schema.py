@@ -226,12 +226,18 @@ class EthicsUpdate(BaseModel):
 
 # ===========================FULL MANUSCRIPT
 class FullManuscriptCreate(BaseModel):
-    research_paper_id: str
-    content: str
-    keywords: str
-    abstract: str
-    file: str
-    status: str
+    research_paper_id: str = Field(..., min_length=1)
+    content: str = Field(..., min_length=1)
+    keywords: str = Field(..., min_length=1)
+    abstract: str = Field(..., min_length=1)
+    file: str = Field(..., min_length=1)
+    status: str = Field(..., min_length=1)
+
+    @validator('research_paper_id', 'content', 'keywords', 'abstract', 'file', 'status')
+    def check_empty(cls, v):
+        if v == "":
+            raise ValueError("Field cannot be empty")
+        return v
 
 class FullManuscriptUpdate(BaseModel):
     content: constr(strip_whitespace=True)
@@ -254,19 +260,19 @@ class FullManuscriptResponse(BaseModel):
 
 # =========================COPYRIGHT =================
 class CopyRightCreate(BaseModel):
-    research_paper_id: str
-    co_authorship: str
-    affidavit_co_ownership: str
-    joint_authorship: str
-    approval_sheet: str
-    receipt_payment: str
-    recordal_slip: str
-    acknowledgement_receipt: str
-    certificate_copyright: str
-    recordal_template: str
-    ureb_18: str
-    journal_publication: str
-    copyright_manuscript: str
+    research_paper_id: Optional[str]
+    co_authorship: Optional[str]
+    affidavit_co_ownership: Optional[str]
+    joint_authorship: Optional[str]
+    approval_sheet: Optional[str]
+    receipt_payment: Optional[str]
+    recordal_slip: Optional[str]
+    acknowledgement_receipt: Optional[str]
+    certificate_copyright: Optional[str]
+    recordal_template: Optional[str]
+    ureb_18: Optional[str]
+    journal_publication: Optional[str]
+    copyright_manuscript: Optional[str]
 
 
 class CopyRightUpdate(BaseModel):
@@ -300,6 +306,52 @@ class CopyRightResponse(BaseModel):
     ureb_18: Optional[str]
     journal_publication: Optional[str]
     copyright_manuscript: Optional[str]
+
+# ------------ RESPONSE FOR ALL ETHICS< MANU< COPYRIGHT ---------------
+
+
+# ================ FOR SHOWING
+class EthicsSchema(BaseModel):
+    letter_of_intent: Optional[str]
+    urec_9: Optional[str]
+    urec_10: Optional[str]
+    urec_11: Optional[str]
+    urec_12: Optional[str]
+    certificate_of_validation: Optional[str]
+    co_authorship: Optional[str]
+
+class FullManuscriptSchema(BaseModel):
+    content: str
+    keywords: str
+    file: str
+    abstract: str
+    status: str
+
+class CopyrightSchema(BaseModel):
+    co_authorship: Optional[str]
+    affidavit_co_ownership: Optional[str]
+    joint_authorship: Optional[str]
+    approval_sheet: Optional[str]
+    receipt_payment: Optional[str]
+    recordal_slip: Optional[str]
+    acknowledgement_receipt: Optional[str]
+    certificate_copyright: Optional[str]
+    recordal_template: Optional[str]
+    ureb_18: Optional[str]
+    journal_publication: Optional[str]
+    copyright_manuscript: Optional[str]
+class DisplayAllByUser(BaseModel):
+    research_paper_id: str
+    title: str
+    research_type: str
+    submitted_date: str
+    status: str
+    file_path: str
+    research_adviser: str
+    ethics: Optional[EthicsSchema]
+    full_manuscript: Optional[FullManuscriptSchema]
+    copyright: Optional[CopyrightSchema]
+
 
 
 #FOR THE DISPLAY OF LIST IN PAGE

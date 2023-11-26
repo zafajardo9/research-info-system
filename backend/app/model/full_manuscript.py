@@ -13,20 +13,15 @@ class FullManuscript(SQLModel, TimeMixin, table=True):
     __tablename__ = "full_manuscript"
 
 
-    id: Optional[str] = Field(primary_key=True)
+    id: str = Field(primary_key=True)
 
     research_paper_id: str = Field(foreign_key="research_papers.id")
-    content: str
-    keywords: str
-    file: str
-    abstract: str
-
-
-
-
-    
-    status: str
-
+    content: str = Field(nullable=False)
+    keywords: str = Field(nullable=False)
+    file: str = Field(nullable=False)
+    abstract: str = Field(nullable=False)
+    status: str = Field(nullable=False)
+    #para di pwedeng walang laman
 
     research_paper: "ResearchPaper" = Relationship(back_populates="full_manuscript")
 

@@ -7,7 +7,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.service.research_service import ResearchService
-from app.schema import ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperWithAuthorsResponse, ResponseSchema
+from app.schema import DisplayAllByUser, ResearchEdit, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperWithAuthorsResponse, ResponseSchema
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from datetime import datetime
 
@@ -105,6 +105,22 @@ async def get_research_paper_with_authors(
 
 
 
+@router.get("/all_ethics_manu_copyright_user", response_model=List[DisplayAllByUser])
+async def get_all_for_user(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    """
+    Get all research papers from the database.
+    """
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+    try:
+        research_paper = await ResearchService.all_by_current_user(db, current_user)
+        return research_paper
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
+
+
+
+
 @router.delete("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def delete_research(
         research_id: str = Path(..., alias="id"),
@@ -135,7 +151,7 @@ async def edit_research_paper(
        return ResponseSchema(detail=f"Error updating research paper: {str(e)}", result=None)
    
 
-   
+
 
 @router.get("/", response_model=List[ResearchPaperResponse])
 async def get_all_research_papers():

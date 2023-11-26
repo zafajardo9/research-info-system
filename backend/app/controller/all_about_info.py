@@ -34,8 +34,24 @@ async def read_research_count_all():
     count = await AllInformationService.get_number_of_research_proposal(db)
     return {"Number": "All Research", "Research Count": count}
 
-# async def read_research_count_all(course: str):
-#     count = await AllInformationService.get_number_of_research_proposal(db)
-#     return {"course": course, "student_count": count}
+
+@router.get("/research_proposal_count_based_status/all")
+async def read_research_count_all():
+    counts = await AllInformationService.get_number_of_research_proposal_by_approve(db)
+    return counts
 
 
+@router.get("/ethics_count/all")
+async def read_research_count_all():
+    counts = await AllInformationService.get_number_ethics(db)
+    return {"Ethics Count": counts}
+
+@router.get("/manuscript_count/all")
+async def read_research_count_all():
+    counts = await AllInformationService.get_number_manuscript(db)
+    return {"Manuscript Count": counts}
+
+@router.get("/copyright_count/all")
+async def read_research_count_all():
+    counts = await AllInformationService.get_number_copyright(db)
+    return {"Copyright Count": counts}

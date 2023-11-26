@@ -93,13 +93,29 @@ class ResearchService:
         response = ResearchService.map_to_response_model(query_result)
         return response
     
+    @staticmethod
+    async def get_all_with_authors(db: Session):
+        query = (
+            select(Users, ResearchPaper, Author, Student)
+            .join(Author, Users.id == Author.user_id)
+            .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+            .join(Student, Users.student_id == Student.id)
+        )
+
+        # Execute the query and fetch all results
+        result = await db.execute(query)
+        query_result = result.fetchall()
+
+        # Assuming you have a function to map the result to the desired response model
+        response_list = [ResearchService.map_to_response_model(item) for item in query_result]
+        return response_list
+
 
     @staticmethod
     def map_to_response_model(query_result):
-    # Assuming a basic mapping, modify based on your actual data structure
 
         if not query_result:
-            return None # Handle the case where no data is found
+            return None
 
         user, research_paper, author, student = query_result[0]
 
@@ -326,6 +342,9 @@ class ResearchService:
         )
 
         return response_model
+
+
+
 
 #=============================MGA POWER NG FACULTY ========================#
 

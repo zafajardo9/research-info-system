@@ -105,6 +105,16 @@ async def get_research_paper_with_authors(
 
 
 
+@router.get("/research-with-authors", response_model=List[ResearchPaperWithAuthorsResponse])
+async def get_all_research_papers_with_authors():
+    try:
+        research_papers = await ResearchService.get_all_with_authors(db)
+        return research_papers
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
+
+
+
 @router.get("/all_ethics_manu_copyright_user", response_model=List[DisplayAllByUser])
 async def get_all_for_user(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     """

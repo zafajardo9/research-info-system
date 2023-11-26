@@ -45,7 +45,7 @@ class UserService:
     @staticmethod
     async def get_all_student():
         query = (
-            select(Users.id, Users.username, Users.email, Users.student_id ,Student.student_number, Student.name)
+            select(Users.id, Users.username, Users.email, Users.student_id ,Student.student_number, Student.name, Student.section, Student.course)
             .select_from(outerjoin(Users, Student))
             .where(Users.roles == 'student')
         )

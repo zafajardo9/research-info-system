@@ -283,7 +283,7 @@ class FullManuscriptWithResearchResponse(BaseModel):
     abstract: Optional[str]
     file: Optional[str]
     status: Optional[str]
-    title: str  # Add this line to include the title attribute
+    title: Optional[str]
 
 # =============================END
 
@@ -354,8 +354,8 @@ class CopyRightWithResearchResponse(BaseModel):
     ureb_18: Optional[str]
     journal_publication: Optional[str]
     copyright_manuscript: Optional[str]
-    status: str
-    title: str
+    status: Optional[str]
+    title: Optional[str]
 # ------------ RESPONSE FOR ALL ETHICS< MANU< COPYRIGHT ---------------
 
 

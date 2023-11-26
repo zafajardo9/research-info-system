@@ -114,86 +114,75 @@ async def get_adviser_research_papers_and_ethics(
     except Exception as e:
         return [{"Error": f"Error getting user research papers: {str(e)}"}]
     
+
 @router.get("/adviser/manuscript", response_model=List[FullManuscriptWithResearchResponse], response_model_exclude_none=True)
-async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    '''
-        Faculty lang para malaman nila yung mga research paper na adviser sila
-    '''
-    
+async def get_user_research_manuscripts(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_manuscript_by_adviser(db, current_user)
-        
-        if research_papers is None:
-            raise HTTPException(status_code=404, detail="Research paper not found")
-        
-        # Convert each ResearchPaper to ResearchPaperResponse
-        response_papers = []
-        for research_paper, manuscript in research_papers:
-            response_paper = FullManuscriptWithResearchResponse(
-                id = manuscript.id,
-                modified_at = manuscript.modified_at,
-                created_at = manuscript.created_at,
-                research_paper_id = manuscript.research_paper_id,
-                content = manuscript.content,
-                keywords = manuscript.keywords,
-                abstract = manuscript.abstract,
-                file = manuscript.file,
-                status = manuscript.status,
-                title = research_paper.title
+        result = await ResearchService.get_research_manuscript_by_adviser(db, current_user)
 
+        # Convert each result row to a response model
+        response_papers = []
+        for research_paper, manuscript in result:
+            response_paper = FullManuscriptWithResearchResponse(
+                id=manuscript.id,
+                modified_at=manuscript.modified_at,
+                created_at=manuscript.created_at,
+                research_paper_id=manuscript.research_paper_id,
+                content=manuscript.content,
+                keywords=manuscript.keywords,
+                abstract=manuscript.abstract,
+                file=manuscript.file,
+                status=manuscript.status,
+                title=research_paper.title,
             )
             response_papers.append(response_paper)
 
+        # Return the list of response papers
         return response_papers
     except Exception as e:
-        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+        raise HTTPException(status_code=500, detail=f"Error getting user research manuscripts: {str(e)}")
+
 
 @router.get("/adviser/copyright", response_model=List[CopyRightWithResearchResponse], response_model_exclude_none=True)
-async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    '''
-        Faculty lang para malaman nila yung mga research paper na adviser sila
-    '''
-    
+async def get_faculty_copyright_info(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_manuscript_by_adviser(db, current_user)
-        
-        if research_papers is None:
-            raise HTTPException(status_code=404, detail="Research paper not found")
-        
-        # Convert each ResearchPaper to ResearchPaperResponse
-        response_papers = []
-        for research_paper, copyright in research_papers:
-            response_paper = CopyRightWithResearchResponse(
-                id=copyright.id,
-                modified_at=copyright.modified_at,
-                created_at=copyright.created_at,
-                research_paper_id=copyright.research_paper_id,
-                co_authorship=copyright.co_authorship,
-                affidavit_co_ownership=copyright.affidavit_co_ownership,
-                joint_authorship=copyright.joint_authorship,
-                approval_sheet=copyright.approval_sheet,
-                receipt_payment=copyright.receipt_payment,
-                recordal_slip=copyright.recordal_slip,
-                acknowledgement_receipt=copyright.acknowledgement_receipt,
-                certificate_copyright=copyright.certificate_copyright,
-                recordal_template=copyright.recordal_template,
-                ureb_18=copyright.ureb_18,
-                journal_publication=copyright.journal_publication,
-                copyright_manuscript=copyright.copyright_manuscript,
-                status=copyright.status,
-                title=research_paper.title
-            )
-            response_papers.append(response_paper)
+        result = await ResearchService.get_research_copyright_by_adviser(db, current_user)
 
-        return response_papers
+        # Convert each result row to a response model
+        response_copyrights = []
+        for research_paper, copyright_info in result:
+            response_copyright = CopyRightWithResearchResponse(
+                id=copyright_info.id,
+                modified_at=copyright_info.modified_at,
+                created_at=copyright_info.created_at,
+                research_paper_id=copyright_info.research_paper_id,
+                co_authorship=copyright_info.co_authorship,
+                affidavit_co_ownership=copyright_info.affidavit_co_ownership,
+                joint_authorship=copyright_info.joint_authorship,
+                approval_sheet=copyright_info.approval_sheet,
+                receipt_payment=copyright_info.receipt_payment,
+                recordal_slip=copyright_info.recordal_slip,
+                acknowledgement_receipt=copyright_info.acknowledgement_receipt,
+                certificate_copyright=copyright_info.certificate_copyright,
+                recordal_template=copyright_info.recordal_template,
+                ureb_18=copyright_info.ureb_18,
+                journal_publication=copyright_info.journal_publication,
+                copyright_manuscript=copyright_info.copyright_manuscript,
+                status=copyright_info.status,
+                title=research_paper.title,
+            )
+            response_copyrights.append(response_copyright)
+
+        # Return the list of response copyrights
+        return response_copyrights
     except Exception as e:
-        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+        raise HTTPException(status_code=500, detail=f"Error getting faculty copyright information: {str(e)}")
 
 @router.put("/approve_ethics/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_research_paper_status(

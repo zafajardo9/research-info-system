@@ -346,11 +346,11 @@ class ResearchService:
     async def get_research_manuscript_by_adviser(db: Session, user_id: str) -> List[FullManuscript]:
         query = (
             select(ResearchPaper, FullManuscript)
-            .join(Ethics, ResearchPaper.id == FullManuscript.research_paper_id)
+            .join(FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
             .filter(ResearchPaper.research_adviser == user_id)
         )
         result = await db.execute(query)
-        research_papers = result.scalars().all()
+        research_papers = result.fetchall()
 
         return research_papers
     
@@ -359,11 +359,11 @@ class ResearchService:
     async def get_research_copyright_by_adviser(db: Session, user_id: str) -> List[CopyRight]:
         query = (
             select(ResearchPaper, CopyRight)
-            .join(Ethics, ResearchPaper.id == CopyRight.research_paper_id)
+            .join(CopyRight, ResearchPaper.id == CopyRight.research_paper_id)
             .filter(ResearchPaper.research_adviser == user_id)
         )
         result = await db.execute(query)
-        research_papers = result.scalars().all()
+        research_papers = result.fetchall()
 
         return research_papers
 

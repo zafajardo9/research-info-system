@@ -95,7 +95,7 @@ async def delete_ethics(manuscript_id: str):
 
 
 
-@router.get("/user", response_model=List[FullManuscriptResponse], response_model_exclude_none=True)
+@router.get("/user", response_model=List[FullManuscriptResponse])
 async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']

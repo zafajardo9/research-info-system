@@ -115,29 +115,30 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
         response_copyright_list = []
         for copyright_data in copyright_data_list:
             response_copyright = CopyRightResponse(
-                id = copyright_data.id,
+                id=copyright_data.id,
                 modified_at=copyright_data.modified_at,
-                created_at = copyright_data.created_at,
-                research_paper_id = copyright_data.research_paper_id,
-                co_authorship = copyright_data.co_authorship,
-                affidavit_co_ownership = copyright_data.affidavit_co_ownership,
-                joint_authorship = copyright_data.joint_authorship,
-                approval_sheet = copyright_data.approval_sheet,
-                receipt_payment = copyright_data.receipt_payment,
-                recordal_slip = copyright_data.recordal_slip,
-                acknowledgement_receipt = copyright_data.acknowledgement_receipt,
-                certificate_copyright = copyright_data.certificate_copyright,
-                recordal_template = copyright_data.recordal_template,
-                ureb_18 = copyright_data.ureb_18,
-                journal_publication = copyright_data.journal_publication,
-                copyright_manuscript = copyright_data.copyright_manuscript,
+                created_at=copyright_data.created_at,
+                research_paper_id=copyright_data.research_paper_id,
+                co_authorship=copyright_data.co_authorship,
+                affidavit_co_ownership=copyright_data.affidavit_co_ownership,
+                joint_authorship=copyright_data.joint_authorship,
+                approval_sheet=copyright_data.approval_sheet,
+                receipt_payment=copyright_data.receipt_payment,
+                recordal_slip=copyright_data.recordal_slip,
+                acknowledgement_receipt=copyright_data.acknowledgement_receipt,
+                certificate_copyright=copyright_data.certificate_copyright,
+                recordal_template=copyright_data.recordal_template,
+                ureb_18=copyright_data.ureb_18,
+                journal_publication=copyright_data.journal_publication,
+                copyright_manuscript=copyright_data.copyright_manuscript,
+                status=copyright_data.status,
             )
             response_copyright_list.append(response_copyright)
 
         if not response_copyright_list:
             raise HTTPException(status_code=404, detail="No Copyright Found for the logged-in user")
 
-        return response_copyright_list
+        return response_copyright_list  # Wrap the single item in a list
 
     except HTTPException as e:
         return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)

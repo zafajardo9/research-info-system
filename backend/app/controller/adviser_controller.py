@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
@@ -73,25 +73,30 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
     
 
 @router.get("/adviser/ethics", response_model=List[EthicsWithResearchResponse], response_model_exclude_none=True)
-async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    '''
-        Faculty lang para malaman nila yung mga research paper na adviser sila
-    '''
-    
+async def get_adviser_research_papers_and_ethics(
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),
+):
+    """
+    Retrieve a list of research papers under the current adviser along with associated ethics.
+    """
+
+    # Extract user_id from the JWT token
     token = JWTRepo.extract_token(credentials)
-    current_user = token['user_id']
+    current_user_id = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_ethics_by_adviser(db, current_user)
+        research_papers = await ResearchService.get_research_ethics_by_adviser(db, current_user_id)
         
         if research_papers is None:
-            raise HTTPException(status_code=404, detail="Research paper not found")
+            return [{"Ethic": "No list of ethics found under you"}]  # Return a list with a single item
         
         # Convert each ResearchPaper to ResearchPaperResponse
         response_papers = []
         for research_paper, ethics in research_papers:
-            response_paper = EthicsResponse(
+            response_paper = EthicsWithResearchResponse(
                 id=ethics.id,
+                modified_at=ethics.modified_at,
+                created_at=ethics.created_at,
                 letter_of_intent=ethics.letter_of_intent,
                 urec_9=ethics.urec_9,
                 urec_10=ethics.urec_10,
@@ -101,14 +106,14 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
                 co_authorship=ethics.co_authorship,
                 research_paper_id=ethics.research_paper_id,
                 status=ethics.status,
-                title=research_paper.title
+                title=research_paper.title,
             )
             response_papers.append(response_paper)
 
         return response_papers
     except Exception as e:
-        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
-
+        return [{"Error": f"Error getting user research papers: {str(e)}"}]
+    
 @router.get("/adviser/manuscript", response_model=List[FullManuscriptWithResearchResponse], response_model_exclude_none=True)
 async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     '''
@@ -126,17 +131,17 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
         
         # Convert each ResearchPaper to ResearchPaperResponse
         response_papers = []
-        for research_paper, ethics in research_papers:
+        for research_paper, manuscript in research_papers:
             response_paper = FullManuscriptWithResearchResponse(
-                id = ethics.id,
-                modified_at = ethics.modified_at,
-                created_at = ethics.created_at,
-                research_paper_id = ethics.research_paper_id,
-                content = ethics.content,
-                keywords = ethics.keywords,
-                abstract = ethics.abstract,
-                file = ethics.file,
-                status = ethics.status,
+                id = manuscript.id,
+                modified_at = manuscript.modified_at,
+                created_at = manuscript.created_at,
+                research_paper_id = manuscript.research_paper_id,
+                content = manuscript.content,
+                keywords = manuscript.keywords,
+                abstract = manuscript.abstract,
+                file = manuscript.file,
+                status = manuscript.status,
                 title = research_paper.title
 
             )
@@ -163,25 +168,25 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
         
         # Convert each ResearchPaper to ResearchPaperResponse
         response_papers = []
-        for research_paper, ethics in research_papers:
+        for research_paper, copyright in research_papers:
             response_paper = CopyRightWithResearchResponse(
-                id=ethics.id,
-                modified_at=ethics.modified_at,
-                created_at=ethics.created_at,
-                research_paper_id=ethics.research_paper_id,
-                co_authorship=ethics.co_authorship,
-                affidavit_co_ownership=ethics.affidavit_co_ownership,
-                joint_authorship=ethics.joint_authorship,
-                approval_sheet=ethics.approval_sheet,
-                receipt_payment=ethics.receipt_payment,
-                recordal_slip=ethics.recordal_slip,
-                acknowledgement_receipt=ethics.acknowledgement_receipt,
-                certificate_copyright=ethics.certificate_copyright,
-                recordal_template=ethics.recordal_template,
-                ureb_18=ethics.ureb_18,
-                journal_publication=ethics.journal_publication,
-                copyright_manuscript=ethics.copyright_manuscript,
-                status=ethics.status,
+                id=copyright.id,
+                modified_at=copyright.modified_at,
+                created_at=copyright.created_at,
+                research_paper_id=copyright.research_paper_id,
+                co_authorship=copyright.co_authorship,
+                affidavit_co_ownership=copyright.affidavit_co_ownership,
+                joint_authorship=copyright.joint_authorship,
+                approval_sheet=copyright.approval_sheet,
+                receipt_payment=copyright.receipt_payment,
+                recordal_slip=copyright.recordal_slip,
+                acknowledgement_receipt=copyright.acknowledgement_receipt,
+                certificate_copyright=copyright.certificate_copyright,
+                recordal_template=copyright.recordal_template,
+                ureb_18=copyright.ureb_18,
+                journal_publication=copyright.journal_publication,
+                copyright_manuscript=copyright.copyright_manuscript,
+                status=copyright.status,
                 title=research_paper.title
             )
             response_papers.append(response_paper)

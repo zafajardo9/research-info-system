@@ -228,7 +228,8 @@ class EthicsWithResearchResponse(BaseModel):
     certificate_of_validation: Optional[str]
     co_authorship: Optional[str]
     research_paper_id: Optional[str]
-    status: str
+    status: Optional[str]
+    title: Optional[str]
 
 class EthicsUpdate(BaseModel):
     letter_of_intent: constr(strip_whitespace=True)

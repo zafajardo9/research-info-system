@@ -330,7 +330,6 @@ class ResearchService:
 #=============================MGA POWER NG FACULTY ========================#
 
 
-# research_service.py
     @staticmethod
     async def get_research_ethics_by_adviser(db: Session, user_id: str) -> List[Ethics]:
         query = (
@@ -339,7 +338,7 @@ class ResearchService:
             .filter(ResearchPaper.research_adviser == user_id)
         )
         result = await db.execute(query)
-        research_papers = result.scalars().all()
+        research_papers = result.fetchall()
 
         return research_papers
     

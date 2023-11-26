@@ -54,6 +54,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
             ureb_18 = copyright_data.ureb_18,
             journal_publication = copyright_data.journal_publication,
             copyright_manuscript = copyright_data.copyright_manuscript,
+            status=copyright_data.status
         )
 
         return response_ethics

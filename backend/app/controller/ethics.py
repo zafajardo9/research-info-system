@@ -123,6 +123,7 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
                 urec_12=ethics_data.urec_12,
                 certificate_of_validation=ethics_data.certificate_of_validation,
                 co_authorship=ethics_data.co_authorship,
+                status=ethics_data.status,
                 research_paper_id=ethics_data.research_paper_id,
             )
             response_ethics_list.append(response_ethics)

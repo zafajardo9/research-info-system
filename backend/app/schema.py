@@ -126,8 +126,8 @@ class ResearchPaperShow(BaseModel):
         orm_mode = True
 
 class ResearchPaperWithAuthorsResponse(BaseModel):
-    research_paper: ResearchPaperShow
-    authors: List[AuthorShow]
+    research_paper: Optional[ResearchPaperShow]
+    authors: Optional[List[AuthorShow]]
 
     class Config:
         orm_mode = True
@@ -186,8 +186,8 @@ class ResearchCommentResponse(BaseModel):
 class StatusUpdate(BaseModel):
     status: Status
 
-class CurrentUserResearchPaperResponse(ResearchPaperResponse):
-    authors: Optional[List[AuthorSchema]] = []
+# class CurrentUserResearchPaperResponse(ResearchPaperResponse):
+#     authors: Optional[List[AuthorSchema]] = []
 
 
 #==================== ETHICS =====================

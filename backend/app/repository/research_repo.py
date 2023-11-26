@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.config import commit_rollback, db
 from app.model.research_paper import Author, ResearchPaper, Status
 from app.repository.base_repo import BaseRepo
-from app.schema import DisplayAllByUser, PageResponse, ResearchPaperCreate, ResearchPaperWithAuthorsResponse
+from app.schema import AuthorShow, DisplayAllByUser, PageResponse, ResearchPaperCreate, ResearchPaperShow, ResearchPaperWithAuthorsResponse
 from sqlalchemy.orm import joinedload
 from app.model.users import Users
 from app.model.research_status import Comment
@@ -133,4 +133,31 @@ class ResearchPaperRepository(BaseRepo):
         else:
             raise HTTPException(status_code=404, detail="Research paper not found")
         
-        
+
+    @staticmethod
+    def map_to_research_paper_model(query_result):
+        # Map research paper details
+        user, research_paper, _, _ = query_result
+        return ResearchPaperShow(
+            id=str(research_paper.id),
+            title=str(research_paper.title),
+            research_type=str(research_paper.research_type),
+            submitted_date=str(research_paper.submitted_date),
+            status=str(research_paper.status),
+            file_path=str(research_paper.file_path),
+            research_adviser=str(research_paper.research_adviser)
+        )
+
+    @staticmethod
+    def map_to_author_model(query_result):
+        # Map authors
+        _, _, author, student = query_result
+        return AuthorShow(
+            user_id=str(author.user_id),
+            student_name=str(student.name),
+            student_year=str(student.year),
+            student_section=str(student.section),
+            student_course=str(student.course),
+            student_number=str(student.student_number),
+            student_phone_number=str(student.phone_number)
+        )

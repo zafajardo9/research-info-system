@@ -74,6 +74,43 @@ class ResearchService:
         await ResearchPaperRepository.delete(db, research_paper)
 
 
+    @staticmethod
+    async def get_all_with_authors(db: Session):
+        query = (
+            select(Users, ResearchPaper, Author, Student)
+            .join(Author, Users.id == Author.user_id)
+            .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+            .join(Student, Users.student_id == Student.id)
+        )
+
+        # Execute the query and fetch all results
+        result = await db.execute(query)
+        query_result = result.fetchall()
+
+        # Check if there are any results
+        if not query_result:
+            return []
+
+        # Assuming you have a function to map the result to the desired response model
+        response_dict = {}
+        for item in query_result:
+            research_paper_id = item[1].id  # Assuming the second element is ResearchPaper
+
+            if research_paper_id not in response_dict:
+                response_dict[research_paper_id] = {
+                    "research_paper": ResearchPaperRepository.map_to_research_paper_model(item),
+                    "authors": []
+                }
+
+            # Map the author for the current row
+            author = ResearchPaperRepository.map_to_author_model(item)
+            response_dict[research_paper_id]["authors"].append(author)
+
+        # Convert the dictionary values to a list for the final response
+        response_list = list(response_dict.values())
+        return response_list
+
+
 
     @staticmethod
     async def get_research_paper_with_authors(db: Session, research_paper_id: str):
@@ -93,28 +130,14 @@ class ResearchService:
         response = ResearchService.map_to_response_model(query_result)
         return response
     
-    @staticmethod
-    async def get_all_with_authors(db: Session):
-        query = (
-            select(Users, ResearchPaper, Author, Student)
-            .join(Author, Users.id == Author.user_id)
-            .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-            .join(Student, Users.student_id == Student.id)
-        )
 
-        # Execute the query and fetch all results
-        result = await db.execute(query)
-        query_result = result.fetchall()
 
-        # Assuming you have a function to map the result to the desired response model
-        response_list = [ResearchService.map_to_response_model(item) for item in query_result]
-        return response_list
 
 
     @staticmethod
     def map_to_response_model(query_result):
 
-        if not query_result:
+        if query_result is None or not query_result:
             return None
 
         user, research_paper, author, student = query_result[0]
@@ -143,7 +166,8 @@ class ResearchService:
             )
             for _, _, author, student in query_result
         ]
-
+        if research_paper_data is None or authors_data is None:
+            return None
         # Create the response model
         response_model = ResearchPaperWithAuthorsResponse(
             research_paper=research_paper_data,

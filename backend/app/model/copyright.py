@@ -6,6 +6,8 @@ from datetime import datetime
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, Enum
 from sqlmodel import SQLModel, Field, Relationship
 
+from app.model.research_paper import Status
+
 
 class CopyRight(SQLModel, TimeMixin, table=True):
     __tablename__ = "copyright"
@@ -29,6 +31,6 @@ class CopyRight(SQLModel, TimeMixin, table=True):
 
 
     copyright_manuscript: Optional[str] = Field(default=None)
-
+    status: Status = Status.Pending
 
     research_paper: "ResearchPaper" = Relationship(back_populates="copyright")

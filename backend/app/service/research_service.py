@@ -331,7 +331,42 @@ class ResearchService:
 
 
 # research_service.py
+    @staticmethod
+    async def get_research_ethics_by_adviser(db: Session, user_id: str) -> List[Ethics]:
+        query = (
+            select(ResearchPaper, Ethics)
+            .join(Ethics, ResearchPaper.id == Ethics.research_paper_id)
+            .filter(ResearchPaper.research_adviser == user_id)
+        )
+        result = await db.execute(query)
+        research_papers = result.scalars().all()
 
+        return research_papers
+    
+    @staticmethod
+    async def get_research_manuscript_by_adviser(db: Session, user_id: str) -> List[FullManuscript]:
+        query = (
+            select(ResearchPaper, FullManuscript)
+            .join(Ethics, ResearchPaper.id == FullManuscript.research_paper_id)
+            .filter(ResearchPaper.research_adviser == user_id)
+        )
+        result = await db.execute(query)
+        research_papers = result.scalars().all()
+
+        return research_papers
+    
+
+    @staticmethod
+    async def get_research_copyright_by_adviser(db: Session, user_id: str) -> List[CopyRight]:
+        query = (
+            select(ResearchPaper, CopyRight)
+            .join(Ethics, ResearchPaper.id == CopyRight.research_paper_id)
+            .filter(ResearchPaper.research_adviser == user_id)
+        )
+        result = await db.execute(query)
+        research_papers = result.scalars().all()
+
+        return research_papers
 
     @staticmethod
     async def check_if_faculty(current_user_role: str) -> bool:
@@ -353,6 +388,26 @@ class ResearchService:
 
         research_paper = await ResearchPaperRepository.update_status(db, research_paper_id, new_status)
         return research_paper
+    
+    # STATUS NG MGA PINAPASA RELATED SA PAPER
+    @staticmethod
+    async def update_ethics_status(db: Session, ethics_id: str, new_status: Status) -> ResearchPaper:
+
+        ethics_paper = await ResearchPaperRepository.update_ethics_status(db, ethics_id, new_status)
+        return ethics_paper
+    
+
+    @staticmethod
+    async def update_manuscript_status(db: Session, manuscript_id: str, new_status: Status) -> ResearchPaper:
+
+        manuscript_paper = await ResearchPaperRepository.update_manuscript_status(db, manuscript_id, new_status)
+        return manuscript_paper
+    
+    @staticmethod
+    async def update_copyright_status(db: Session, copyright_id: str, new_status: Status) -> ResearchPaper:
+
+        copyright_paper = await ResearchPaperRepository.update_copyright_status(db, copyright_id, new_status)
+        return copyright_paper
 
 
 

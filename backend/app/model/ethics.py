@@ -7,6 +7,8 @@ from datetime import datetime
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, Enum
 from sqlmodel import SQLModel, Field, Relationship
 
+from app.model.research_paper import Status
+
 
 
 class Ethics(SQLModel, TimeMixin, table=True):
@@ -24,7 +26,7 @@ class Ethics(SQLModel, TimeMixin, table=True):
     urec_12: Optional[str] = Field(default=None)
     certificate_of_validation: Optional[str] = Field(default=None)
     co_authorship: Optional[str] = Field(default=None)
-
+    status: Status = Status.Pending
 
     research_paper: "ResearchPaper" = Relationship(back_populates="ethics")
 

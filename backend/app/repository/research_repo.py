@@ -89,3 +89,48 @@ class ResearchPaperRepository(BaseRepo):
         else:
             raise HTTPException(status_code=404, detail="Research paper not found")
         
+    # ========================== DITO MGA STATUSES ======================
+    @staticmethod
+    async def update_ethics_status(db: Session, id: str, new_status: Status) -> ResearchPaper:
+        # Fetch the research paper
+        result = await db.execute(select(Ethics).where(Ethics.id == id))
+        research_paper = result.scalar_one_or_none()
+
+        if research_paper:
+            research_paper.status = new_status
+            await db.commit()
+            db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        
+    @staticmethod
+    async def update_manuscript_status(db: Session, id: str, new_status: Status) -> ResearchPaper:
+        # Fetch the research paper
+        result = await db.execute(select(FullManuscript).where(FullManuscript.id == id))
+        research_paper = result.scalar_one_or_none()
+
+        if research_paper:
+            research_paper.status = new_status
+            await db.commit()
+            db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        
+
+    @staticmethod
+    async def update_copyright_status(db: Session, id: str, new_status: Status) -> ResearchPaper:
+        # Fetch the research paper
+        result = await db.execute(select(CopyRight).where(CopyRight.id == id))
+        research_paper = result.scalar_one_or_none()
+
+        if research_paper:
+            research_paper.status = new_status
+            await db.commit()
+            db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        
+        

@@ -214,6 +214,21 @@ class EthicsResponse(BaseModel):
     certificate_of_validation: Optional[str]
     co_authorship: Optional[str]
     research_paper_id: Optional[str]
+    status: str
+
+class EthicsWithResearchResponse(BaseModel):
+    id: Optional[str]
+    modified_at: Optional[datetime]
+    created_at: Optional[datetime]
+    letter_of_intent: Optional[str]
+    urec_9: Optional[str]
+    urec_10: Optional[str]
+    urec_11: Optional[str]
+    urec_12: Optional[str]
+    certificate_of_validation: Optional[str]
+    co_authorship: Optional[str]
+    research_paper_id: Optional[str]
+    status: str
 
 class EthicsUpdate(BaseModel):
     letter_of_intent: constr(strip_whitespace=True)
@@ -256,6 +271,19 @@ class FullManuscriptResponse(BaseModel):
     abstract: Optional[str]
     file: Optional[str]
     status: Optional[str]
+
+class FullManuscriptWithResearchResponse(BaseModel):
+    id: Optional[str]
+    modified_at: Optional[datetime]
+    created_at: Optional[datetime]
+    research_paper_id: Optional[str]
+    content: Optional[str]
+    keywords: Optional[str]
+    abstract: Optional[str]
+    file: Optional[str]
+    status: Optional[str]
+    title: str  # Add this line to include the title attribute
+
 # =============================END
 
 # =========================COPYRIGHT =================
@@ -306,7 +334,27 @@ class CopyRightResponse(BaseModel):
     ureb_18: Optional[str]
     journal_publication: Optional[str]
     copyright_manuscript: Optional[str]
+    status: str
 
+class CopyRightWithResearchResponse(BaseModel):
+    id: Optional[str]
+    modified_at: Optional[datetime]
+    created_at: Optional[datetime]
+    research_paper_id: Optional[str]
+    co_authorship: Optional[str]
+    affidavit_co_ownership: Optional[str]
+    joint_authorship: Optional[str]
+    approval_sheet: Optional[str]
+    receipt_payment: Optional[str]
+    recordal_slip: Optional[str]
+    acknowledgement_receipt: Optional[str]
+    certificate_copyright: Optional[str]
+    recordal_template: Optional[str]
+    ureb_18: Optional[str]
+    journal_publication: Optional[str]
+    copyright_manuscript: Optional[str]
+    status: str
+    title: str
 # ------------ RESPONSE FOR ALL ETHICS< MANU< COPYRIGHT ---------------
 
 

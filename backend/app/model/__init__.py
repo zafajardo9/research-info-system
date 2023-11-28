@@ -1,6 +1,8 @@
 from .users import Users
 from .users import UsersRole
 from .users import Role
+from .workflowprocess import Workflow
+from .workflowprocess import WorkflowStep
 
 
 from .student import Student

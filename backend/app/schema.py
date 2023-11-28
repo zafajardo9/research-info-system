@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field, validator, constr
 from sqlalchemy import false
 
 from app.model.research_paper import Author, Status
+from app.model.workflowprocess import Workflow, WorkflowStep
 
 
 T = TypeVar('T')
@@ -406,7 +407,31 @@ class DisplayAllByUser(BaseModel):
 
 
 
+# ==================================RESEARCH PROF =======================
 
+class WorkflowStepCreate(BaseModel):
+    name: str
+    description: str
+    step_number: str
+
+class WorkflowCreate(BaseModel):
+    course: str 
+    year: str
+    type: str
+
+class WorkflowStepDetail(BaseModel):
+    id: str
+    name: str
+    description: str
+    step_number: str
+
+class WorkflowDetail(BaseModel):
+    id: str
+    course: str
+    year: str
+    type: str
+    user_id: str
+    steps: List[WorkflowStepDetail]
 
 #FOR THE DISPLAY OF LIST IN PAGE
 class PageResponse(GenericModel, Generic[T]):

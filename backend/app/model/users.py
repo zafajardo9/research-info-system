@@ -13,7 +13,7 @@ class UsersRole(SQLModel, TimeMixin,table=True):
 class Role(SQLModel, TimeMixin, table=True):
     __tablename__ = "role"
 
-    id: Optional[str] = Field(None,primary_key=True, nullable=True)
+    id: Optional[str] = Field(primary_key=True, nullable=False)
     role_name: str
 
     users: List["Users"] = Relationship(back_populates="roles", link_model=UsersRole)
@@ -38,5 +38,8 @@ class Users(SQLModel, TimeMixin, table=True):
        # Define the relationship to Author and Comment
    author: Optional[List["Author"]] = Relationship(back_populates="user")
    comments: Optional[List["Comment"]] = Relationship(back_populates="user")
+
+    #Setting relation to workflow na magagawa ng user
+   workflow: List["Workflow"] = Relationship(back_populates="users")
 
 

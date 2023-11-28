@@ -1,6 +1,6 @@
 from datetime import datetime
 import uuid
-from sqlalchemy import delete, join
+from sqlalchemy import delete, join, and_
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
@@ -70,6 +70,38 @@ class WorkflowService:
     async def get_workflow_with_steps(user_id: str):
         workflows_query = select(Workflow).where(Workflow.user_id == user_id)
         workflows = await db.execute(workflows_query)
+        workflows = workflows.scalars().all()
+
+        if not workflows:
+            return []  # Return an empty list when no workflows are found
+
+        workflows_with_steps = []
+        for workflow in workflows:
+            steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+            steps = await db.execute(steps_query)
+            steps = steps.scalars().all()
+
+            workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+            workflows_with_steps.append(workflow_detail)
+
+        return workflows_with_steps
+    
+
+    @staticmethod
+    async def get_my_workflow(user_course: str, user_section: str):
+        # workflows_query = select(Workflow).where(
+        #     and_(Workflow.course == user_course, Workflow.section == user_section)
+        # )
+        # workflows = await db.execute(workflows_query)
+        # workflows = workflows.scalars().all()
+
+        query = (
+            select(Workflow, WorkflowStep)
+            .join(WorkflowStep, Workflow.id == WorkflowStep.workflow_id)
+            .where(and_(Workflow.course == user_course, Workflow.year == user_section))
+        )
+
+        workflows = await db.execute(query)
         workflows = workflows.scalars().all()
 
         if not workflows:

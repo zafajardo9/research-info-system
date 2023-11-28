@@ -48,3 +48,19 @@ class UsersRepository(BaseRepo):
     async def update_password(user: Users, password: str):
         user.password = password
         await db.commit()
+
+
+    @staticmethod
+    async def assign_roles(user_id: int, roles: List[str]):
+        # Clear existing roles for the user
+        await db.execute(UsersRole.__table__.delete().where(UsersRole.users_id == user_id))
+
+        # Assign new roles
+        for role_name in roles:
+            role = await db.execute(select(Role).where(Role.role_name == role_name))
+            role = role.scalar_one_or_none()
+            if role:
+                user_role = UsersRole(users_id=user_id, role_id=role.id)
+                db.add(user_role)
+
+        await db.commit()

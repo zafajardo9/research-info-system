@@ -5,7 +5,8 @@ from app.schema import ResponseSchema
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.service.users_service import UserService
 from app.model.student import Student  
-from app.model.faculty import Faculty  
+from app.model.faculty import Faculty
+from app.repository.users import UsersRepository  
 
 router = APIRouter(
     prefix="/users",
@@ -32,15 +33,20 @@ async def get_student_profile(credentials: HTTPAuthorizationCredentials = Securi
 async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     username = token['username']
-    roles = token.get('role', [])
+    user_id = token['user_id']
+    roles = await UsersRepository.get_user_roles(user_id)
+    result = await UserService.get_faculty_profile(username)
 
     if "faculty" not in roles and "research professor" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only faculty members are allowed.")
-    result = await UserService.get_faculty_profile(username)
+    
     if result:
-        return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
+        result_dict = dict(result)
+        result_dict['roles'] = roles
+        return ResponseSchema(detail="Successfully fetch faculty profile!", result=result_dict)
     else:
         raise HTTPException(status_code=404, detail="Faculty profile not found")
+
 
 
 @router.get("/student_list", response_model=ResponseSchema, response_model_exclude_none=True)
@@ -65,11 +71,36 @@ async def get_faculty_list():
     if result:
         return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
     else:
-        raise HTTPException(status_code=404, detail="Faculty profile not found")
+        raise HTTPException(status_code=404, detail="Faculty list not found")
+
+@router.get("/research_prof_list", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_prof_list():
+    """
+    Get all faculty member
+    """
+
+    result = await UserService.get_all_research_prof()
+    if result:
+        return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="Research Profesor list not found")
+    
+
+@router.get("/admin_list", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_admin_list():
+    """
+    Get all faculty member
+    """
+
+    result = await UserService.get_all_admin()
+    if result:
+        return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="Admin list not found")
     
 
 @router.get("/all_user", response_model=ResponseSchema, response_model_exclude_none=True)
-async def get_faculty_list():
+async def get_all_list():
     """
     Get all user in USER TABLE
     """

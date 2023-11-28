@@ -1,5 +1,5 @@
-from sqlalchemy import outerjoin, select
-from app.model.users import Users
+from sqlalchemy import func, outerjoin, select, and_
+from app.model.users import Role, Users, UsersRole
 from app.model.student import Student  # Import the Student model
 from app.model.faculty import Faculty  # Import the Faculty model
 from app.config import db
@@ -42,12 +42,27 @@ class UserService:
         )
         return (await db.execute(query)).mappings().one()
 
+
     @staticmethod
     async def get_all_student():
         query = (
-            select(Users.id, Users.username, Users.email, Users.student_id ,Student.student_number, Student.name, Student.section, Student.course)
-            .select_from(outerjoin(Users, Student))
-            .where(Users.roles == 'student')
+            select(
+                Users.id,
+                Users.username,
+                Users.email,
+                Users.student_id,
+                Student.student_number,
+                Student.name,
+                Student.section,
+                Student.course,
+            )
+            .select_from(
+                outerjoin(Users, Student).join(UsersRole).join(Role, and_(
+                    UsersRole.users_id == Users.id,
+                    UsersRole.role_id == Role.id,
+                    Role.role_name == "student",
+                ))
+            )
         )
 
         result = await db.execute(query)
@@ -60,14 +75,56 @@ class UserService:
     async def get_all_faculty():
         query = (
             select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
-            .select_from(outerjoin(Users, Faculty))
-            .where(Users.roles == 'faculty')
+            .select_from(
+                outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
+                    UsersRole.users_id == Users.id,
+                    UsersRole.role_id == Role.id,
+                    Role.role_name == "faculty",
+                ))
+            )
         )
 
         result = await db.execute(query)
         faculty_data = result.mappings().all()
 
         return faculty_data
+
+    @staticmethod
+    async def get_all_research_prof():
+        query = (
+            select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
+            .select_from(
+                outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
+                    UsersRole.users_id == Users.id,
+                    UsersRole.role_id == Role.id,
+                    Role.role_name == "research professor",
+                ))
+            )
+        )
+
+        result = await db.execute(query)
+        research_prof_data = result.mappings().all()
+
+        return research_prof_data
+    
+    @staticmethod
+    async def get_all_admin():
+        query = (
+            select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
+            .select_from(
+                outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
+                    UsersRole.users_id == Users.id,
+                    UsersRole.role_id == Role.id,
+                    Role.role_name == "admin",
+                ))
+            )
+        )
+
+        result = await db.execute(query)
+        admin_data = result.mappings().all()
+
+        return admin_data
+
 
     @staticmethod
     async def get_all_list():

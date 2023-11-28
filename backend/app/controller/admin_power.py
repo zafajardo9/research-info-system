@@ -7,6 +7,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Securi
 from app.schema import ResponseSchema
 from app.service.research_service import ResearchService
 from app.config import db
+from app.repository.users import UsersRepository
 
 router = APIRouter(
     prefix="/admin",
@@ -14,7 +15,27 @@ router = APIRouter(
     dependencies=[Depends(JWTBearer())]
 )
 
+@router.post("/assign-roles/{user_id}")
+async def assign_roles(
+    user_id: str,
+    roles: list[str],
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),
+):
 
+    token = JWTRepo.extract_token(credentials)
+    roles = token.get('role', [])
+
+    if "admin" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    user = await UsersRepository.find_by_user_id(user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Assign roles to the user
+    await UsersRepository.assign_roles(user_id, roles)
+
+    return {"message": f"Roles assigned to user with ID {user_id}"}
 
 # @router.put("/select_process/", response_model=ResponseSchema, response_model_exclude_none=True)
 # async def make_process(

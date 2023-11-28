@@ -18,14 +18,14 @@ router = APIRouter(
 async def assign_roles(
     user_id: str,
     assigned_roles: list[str],
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),
+    #credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
 
-    token = JWTRepo.extract_token(credentials)
-    user_roles = token.get('role', [])
+    #token = JWTRepo.extract_token(credentials)
+    #user_roles = token.get('role', [])
 
-    if "admin" not in user_roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    # if "admin" not in user_roles:
+    #     raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
     
     user = await UsersRepository.find_by_user_id(user_id)
 

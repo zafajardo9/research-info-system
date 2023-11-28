@@ -1,8 +1,8 @@
-"""Init
+"""First
 
-Revision ID: 8910145b0bc3
+Revision ID: 9c83aed3d032
 Revises: 
-Create Date: 2023-11-23 19:15:26.097687
+Create Date: 2023-11-27 21:55:34.750934
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 # revision identifiers, used by Alembic.
-revision: str = '8910145b0bc3'
+revision: str = '9c83aed3d032'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -41,6 +41,13 @@ def upgrade() -> None:
     sa.Column('research_adviser', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('role',
+    sa.Column('modified_at', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('role_name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('student',
     sa.Column('modified_at', sa.DateTime(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -52,6 +59,27 @@ def upgrade() -> None:
     sa.Column('course', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('student_number', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('phone_number', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('copyright',
+    sa.Column('modified_at', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('research_paper_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('co_authorship', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('affidavit_co_ownership', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('joint_authorship', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('approval_sheet', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('receipt_payment', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('recordal_slip', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('acknowledgement_receipt', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('certificate_copyright', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('recordal_template', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('ureb_18', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('journal_publication', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('copyright_manuscript', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('status', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.ForeignKeyConstraint(['research_paper_id'], ['research_papers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('ethics',
@@ -66,6 +94,20 @@ def upgrade() -> None:
     sa.Column('urec_12', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('certificate_of_validation', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('co_authorship', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('status', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.ForeignKeyConstraint(['research_paper_id'], ['research_papers.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('full_manuscript',
+    sa.Column('modified_at', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('research_paper_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('content', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('keywords', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('file', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('abstract', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('status', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.ForeignKeyConstraint(['research_paper_id'], ['research_papers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -79,7 +121,6 @@ def upgrade() -> None:
     sa.Column('password', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('student_id', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('faculty_id', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('roles', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.ForeignKeyConstraint(['faculty_id'], ['faculty.id'], ),
     sa.ForeignKeyConstraint(['student_id'], ['student.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -106,16 +147,29 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('user_role',
+    sa.Column('modified_at', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('users_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('role_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
+    sa.ForeignKeyConstraint(['users_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('users_id', 'role_id')
+    )
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table('user_role')
     op.drop_table('comments')
     op.drop_table('authors')
     op.drop_table('users')
+    op.drop_table('full_manuscript')
     op.drop_table('ethics')
+    op.drop_table('copyright')
     op.drop_table('student')
+    op.drop_table('role')
     op.drop_table('research_papers')
     op.drop_table('faculty')
     # ### end Alembic commands ###

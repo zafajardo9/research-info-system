@@ -402,6 +402,11 @@ class DisplayAllByUser(BaseModel):
     copyright: Optional[CopyrightSchema]
 
 
+# ================================= ADMIN ================================
+
+
+
+
 
 #FOR THE DISPLAY OF LIST IN PAGE
 class PageResponse(GenericModel, Generic[T]):

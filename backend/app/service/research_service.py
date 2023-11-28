@@ -424,6 +424,21 @@ class ResearchService:
             return False
         return True
     
+    @staticmethod
+    async def check_student_permission(current_user_role: str) -> bool:
+        # Check if the user's role is 'faculty'
+        if current_user_role != 'student':
+            return False
+        return True
+    
+    @staticmethod
+    async def check_admin_permission(current_user_role: str) -> bool:
+        # Check if the user's role is 'faculty'
+        if current_user_role != 'admin':
+            return False
+        return True
+    
+    
 
     @staticmethod
     async def update_research_paper_status(db: Session, research_paper_id: str, new_status: Status) -> ResearchPaper:

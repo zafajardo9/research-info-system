@@ -1,4 +1,7 @@
 from .users import Users
+from .users import UsersRole
+from .users import Role
+
 
 from .student import Student
 from .faculty import Faculty

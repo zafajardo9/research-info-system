@@ -40,3 +40,8 @@ class WorkflowStep(SQLModel, table=True):
     step_number: str
     workflow_id: str = Field(foreign_key="workflow.id")
     workflow: "Workflow" = Relationship(back_populates="steps")
+    
+    research_paper: List["ResearchPaper"] = Relationship(back_populates="workflow_step")
+    ethics: List["Ethics"] = Relationship(back_populates="workflow_step")
+    copyright:  List["Ethics"] = Relationship(back_populates="workflow_step")
+    full_manuscript: List["Ethics"] = Relationship(back_populates="workflow_step")

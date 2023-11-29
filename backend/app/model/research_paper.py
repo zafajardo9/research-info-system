@@ -40,6 +40,8 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
 
     file_path: str
     research_adviser: str
+    workflow_step_id: str = Field(foreign_key="workflow_steps.id")
+    workflow_step: "WorkflowStep" = Relationship(back_populates="research_paper")
 
     authors: Optional[List["Author"]] = Relationship(back_populates="research_paper")
     comments: Optional[List["Comment"]] = Relationship(back_populates="research_paper")

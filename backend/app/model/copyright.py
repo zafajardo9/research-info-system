@@ -32,5 +32,7 @@ class CopyRight(SQLModel, TimeMixin, table=True):
 
     copyright_manuscript: Optional[str] = Field(default=None)
     status: Status = Status.Pending
+    workflow_step_id: str = Field(foreign_key="workflow_steps.id")
+    workflow_step: "WorkflowStep" = Relationship(back_populates="copyright")
 
     research_paper: "ResearchPaper" = Relationship(back_populates="copyright")

@@ -103,6 +103,7 @@ class ResearchPaperCreate(BaseModel):
     file_path: str
     submitted_date: str
     research_adviser: str
+    workflow_step_id: str
 
 # ================ FOR SHOWING
 class AuthorShow(BaseModel):
@@ -122,6 +123,7 @@ class ResearchPaperShow(BaseModel):
     status: str
     file_path: str
     research_adviser: str
+    workflow_step_id: str
 
     class Config:
         orm_mode = True

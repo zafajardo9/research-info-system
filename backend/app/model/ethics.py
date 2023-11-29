@@ -28,6 +28,9 @@ class Ethics(SQLModel, TimeMixin, table=True):
     co_authorship: Optional[str] = Field(default=None)
     status: Status = Status.Pending
 
+    workflow_step_id: str = Field(foreign_key="workflow_steps.id")
+    workflow_step: "WorkflowStep" = Relationship(back_populates="ethics")
+
     research_paper: "ResearchPaper" = Relationship(back_populates="ethics")
 
     

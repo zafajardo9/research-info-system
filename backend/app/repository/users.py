@@ -1,11 +1,12 @@
 from typing import List, Optional
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy import insert
 from sqlalchemy import update
 from sqlalchemy import delete
 from app.config import db
 from app.model.users import Role, Users, UsersRole
 from app.repository.base_repo import BaseRepo
+from app.model.student import Student
 
 
 class UsersRepository(BaseRepo):
@@ -64,3 +65,23 @@ class UsersRepository(BaseRepo):
                 db.add(user_role)
 
         await db.commit()
+
+
+    # @staticmethod
+    # async def get_user_list_with_roles() -> List[str]:
+    #     query = (
+    #         select(Role.role_name)
+    #         .join(UsersRole, Role.id == UsersRole.role_id)
+    #         .join(Users, Users.id == UsersRole.users_id)  # Join Users table
+    #         .join(Student, and_(Users.id == Student.user_id, UsersRole.users_id == user_id))  # Join Student table
+    #         .where(UsersRole.users_id == user_id)
+    #     )
+
+    #     result = await db.execute(query)
+
+    #     roles_and_student_info = result.fetchall()
+
+    #     # Process and extract the information as needed
+    #     roles = [row[0] for row in roles_and_student_info]
+    #     student_info = [row[1] for row in roles_and_student_info]
+    #     return roles, student_info

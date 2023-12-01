@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, Security, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
@@ -6,7 +7,8 @@ from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.service.users_service import UserService
 from app.model.student import Student  
 from app.model.faculty import Faculty
-from app.repository.users import UsersRepository  
+from app.repository.users import UsersRepository
+from app.model.workflowprocess import Course
 
 router = APIRouter(
     prefix="/users",
@@ -99,6 +101,21 @@ async def get_admin_list():
         raise HTTPException(status_code=404, detail="Admin list not found")
     
 
+@router.get("/users_faculty_with_roles", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_users_with_roles():
+    """
+    Get all users with their roles
+    """
+
+    result = await UserService.get_all_in_faculty_with_roles()
+    
+    if result:
+        formatted_result = UserService.format_users_with_roles(result)
+        return ResponseSchema(detail="Successfully fetched user profiles with roles!", result=formatted_result)
+    else:
+        raise HTTPException(status_code=404, detail="User list not found")
+
+
 @router.get("/all_user", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_all_list():
     """
@@ -109,3 +126,22 @@ async def get_all_list():
         return ResponseSchema(detail="Successfully fetch all users!", result=result)
     else:
         raise HTTPException(status_code=404, detail="User profile not found")
+
+
+course_descriptions = {
+    "BSIT": "Bachelor of Science in Information Technology",
+    "BSENTREP": "Bachelor of Science in Entrepreneurship",
+    "BTLEDICT": "Bachelor of Technical and Livelihood Education",
+    "BSBAMM": "Bachelor of Science in Business Administration",
+    "BBTLEDHE": "Bachelor of Business Technology and Livelihood Education",
+    "BSBAHRM": "Bachelor of Science in Business Administration in Human Resource Management",
+    "BPAPFM": "Bachelor of Public Administration and Public Finance Management",
+    "DOMTMOM": "Doctor of Management and Organizational Management"
+}
+
+@router.get("/course_list")
+async def get_courses():
+    """
+    Get all courses with their descriptions
+    """
+    return course_descriptions

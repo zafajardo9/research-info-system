@@ -1,5 +1,7 @@
 from typing import List, Optional
 from datetime import date
+
+from pydantic import BaseModel
 from app.model.mixins import TimeMixin
 from datetime import datetime
 
@@ -17,6 +19,9 @@ class Course(str, Enum):
     BSBAHRM = "BSBAHRM"
     BPAPFM = "BPAPFM"
     DOMTMOM = "DOMTMOM"
+
+
+
 
 class Workflow(SQLModel, table=True):
     __tablename__ = "workflow"

@@ -36,3 +36,20 @@ async def assign_roles(
     await UsersRepository.assign_roles(user_id, assigned_roles)
 
     return {"message": f"Roles assigned to user with ID {user_id}"}
+
+
+@router.post("/list-user-with-roles")
+async def assign_roles(
+    assigned_roles: List[str],
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "admin" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+
+
+    # Assign roles to the user
+    await UsersRepository.get_user_list_with_roles(assigned_roles)

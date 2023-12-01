@@ -1,4 +1,4 @@
-from sqlalchemy import func, outerjoin, select, and_
+from sqlalchemy import func, or_, outerjoin, select, and_
 from app.model.users import Role, Users, UsersRole
 from app.model.student import Student  # Import the Student model
 from app.model.faculty import Faculty  # Import the Faculty model
@@ -70,6 +70,7 @@ class UserService:
 
         return students_data
     
+    
 
     @staticmethod
     async def get_all_faculty():
@@ -137,3 +138,57 @@ class UserService:
 
         return all_user
     
+
+    @staticmethod
+    async def get_all_in_faculty_with_roles():
+        query = (
+            select(
+                Users.id,
+                Users.username,
+                Users.email,
+                Users.faculty_id,
+                Faculty.name.label("faculty_name"),
+                Role.role_name
+            )
+            .select_from(
+                outerjoin(Users, Faculty)
+                .join(UsersRole)
+                .join(Role, and_(
+                    UsersRole.users_id == Users.id,
+                    UsersRole.role_id == Role.id,
+                ))
+            )
+            .where(or_(
+                Role.role_name == "faculty",
+                Role.role_name == "admin",
+                Role.role_name == "research professor",
+            ))
+        )
+
+        result = await db.execute(query)
+        faculty_data = result.mappings().all()
+
+        return faculty_data
+
+    @staticmethod
+    def format_users_with_roles(users_with_roles):
+        formatted_result = {}
+        
+        for user_role in users_with_roles:
+            user_id = user_role["id"]
+            
+            if user_id not in formatted_result:
+                # Initialize user entry if not exists
+                formatted_result[user_id] = {
+                    "id": user_role["id"],
+                    "username": user_role["username"],
+                    "email": user_role["email"],
+                    "faculty_id": user_role["faculty_id"],
+                    "faculty_name": user_role["faculty_name"],
+                    "role_names": [user_role["role_name"]],
+                }
+            else:
+                # Add role to existing user entry
+                formatted_result[user_id]["role_names"].append(user_role["role_name"])
+
+        return list(formatted_result.values())

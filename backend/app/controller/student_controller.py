@@ -41,3 +41,27 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=404, detail="Workflow not found")
     return workflow
 
+# todo make a function that will display the status of the step
+
+@router.get("/your-workflow-status", response_model=List[WorkflowDetail])
+async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    username = token['username']
+    roles = token.get('role', [])
+
+    if "student" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
+
+
+    result = await UserService.get_student_profile(username)
+
+    user_course = result['course']
+    user_section = result['section']
+
+    workflow = await WorkflowService.get_my_workflow(user_course, user_section)
+    
+
+    if not workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    return workflow
+

@@ -72,8 +72,8 @@ class UsersRepository(BaseRepo):
     #     query = (
     #         select(Role.role_name)
     #         .join(UsersRole, Role.id == UsersRole.role_id)
-    #         .join(Users, Users.id == UsersRole.users_id)  # Join Users table
-    #         .join(Student, and_(Users.id == Student.user_id, UsersRole.users_id == user_id))  # Join Student table
+    #         .join(Users, Users.id == UsersRole.users_id)
+    #         .join(Student, and_(Users.id == Student.user_id, UsersRole.users_id == user_id)) 
     #         .where(UsersRole.users_id == user_id)
     #     )
 

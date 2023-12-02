@@ -47,9 +47,9 @@ def init_app():
 
     app.include_router(authentication.router)
     app.include_router(users.router)
-    app.include_router(all_about_info.router)
+    #app.include_router(all_about_info.router)
     app.include_router(research_controller.router)
-    app.include_router(auth_controller.router)
+    #app.include_router(auth_controller.router)
     app.include_router(student_controller.router)
     app.include_router(adviser_controller.router)
     app.include_router(research_professor.router)

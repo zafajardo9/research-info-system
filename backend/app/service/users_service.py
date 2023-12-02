@@ -183,7 +183,7 @@ class UserService:
                     "id": user_role["id"],
                     "username": user_role["username"],
                     "email": user_role["email"],
-                    "faculty_id": user_role["faculty_id"],
+                    # "faculty_id": user_role["faculty_id"],
                     "faculty_name": user_role["faculty_name"],
                     "role_names": [user_role["role_name"]],
                 }

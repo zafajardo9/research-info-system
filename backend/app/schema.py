@@ -123,7 +123,7 @@ class ResearchPaperShow(BaseModel):
     status: str
     file_path: str
     research_adviser: str
-    workflow_step_id: str
+    #workflow_step_id: str
 
     class Config:
         orm_mode = True

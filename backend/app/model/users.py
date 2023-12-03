@@ -41,5 +41,8 @@ class Users(SQLModel, TimeMixin, table=True):
 
     #Setting relation to workflow na magagawa ng user
    workflow: List["Workflow"] = Relationship(back_populates="users")
+   
+   notifications: Optional[List["Notification"]] = Relationship(back_populates="user")
+
 
 

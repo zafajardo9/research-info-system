@@ -244,3 +244,12 @@ async def update_research_paper_status(
         return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
+    
+    
+    
+    
+# todo make a api route for showing list of faculty and section and course they are adviser
+
+
+
+# todo 

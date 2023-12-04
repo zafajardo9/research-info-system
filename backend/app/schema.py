@@ -441,7 +441,6 @@ class AssignedResearchTypeCreate(BaseModel):
     user_id: str
     research_type_name: str
 
-
 class AssignedSectionsCreate(BaseModel):
     section: str
     course: str
@@ -451,7 +450,28 @@ class AssignWhole(BaseModel):
     user_id: str
     research_type_name: str
     assignsection: List[AssignedSectionsCreate]
+
+#FOR UPDATING ASSIGNED ======================
+class UpdateResearchTypeAssign(BaseModel):
+    research_type_name: str
+
+class UpdateAssign(BaseModel):
+    assignresearchtype: UpdateResearchTypeAssign
+    assignsection: List[AssignedSectionsCreate]
+
+class AssignUserProfileNoID(BaseModel):
+    id: str
+    research_type_name: str
+    assignsection: List[AssignedSectionsCreate]
+
+class AssignUserProfile(BaseModel):
+    user_profile: dict
+    assignments: AssignUserProfileNoID
     
+class UserWithAssignments(BaseModel):
+    user_profile: dict  # Update this based on the actual structure of user profile
+    assignments: dict
+
 
 #FOR THE DISPLAY OF LIST IN PAGE
 class PageResponse(GenericModel, Generic[T]):

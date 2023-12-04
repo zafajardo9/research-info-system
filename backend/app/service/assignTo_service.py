@@ -1,6 +1,9 @@
 from datetime import datetime
+import logging
 import uuid
-from sqlalchemy import join
+from sqlalchemy import insert, join
+from sqlalchemy import update
+from sqlalchemy import delete
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
@@ -12,9 +15,10 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.assignTo_repo import AssignedResearchTypeRepository, AssignedSectionsRepository
-from app.schema import AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse
+from app.schema import AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse, UpdateAssign
 from app.service.users_service import UserService
 from app.model import AssignedSections, AssignedResearchType
+from app.model.users import Users
 
 class AssignToSection:
     
@@ -51,11 +55,72 @@ class AssignToSection:
         assign_section = await db.execute(second_query)
         assign_section = assign_section.scalars().all()
 
-        workflow_detail = AssignWhole(
+        detail = AssignWhole(
             id=assign.id,
             user_id=assign.user_id,
             research_type_name=assign.research_type_name,
             assignsection=assign_section
         )
 
-        return workflow_detail
+        return detail
+    
+
+    @staticmethod
+    async def update_assignments(user_id: str, update_data: UpdateAssign):
+        try:
+            # Retrieve existing assignments
+            existing_assignments = await AssignToSection.display_assignments_by_user(user_id)
+            if not existing_assignments:
+                raise HTTPException(status_code=404, detail="User assignments not found")
+
+            # Update existing research type
+            research_type_update_data = update_data.assignresearchtype.dict(exclude_unset=True)
+            await db.execute(
+                update(AssignedResearchType).where(AssignedResearchType.user_id == user_id).values(research_type_update_data)
+            )
+
+            # Delete existing sections
+            await db.execute(
+                delete(AssignedSections).where(AssignedSections.research_type_id == existing_assignments.id)
+            )
+            assign_section_id = str(uuid.uuid4()) 
+
+    # Insert new sections
+            new_sections = [
+                {"id": str(uuid.uuid4()), "research_type_id": existing_assignments.id, **section.dict()} 
+                for section in update_data.assignsection
+            ]
+            for section in new_sections:
+                await db.execute(insert(AssignedSections).values(section))
+            await db.commit()
+
+            # Return updated assignments
+            updated_assignments = await AssignToSection.display_assignments_by_user(user_id)
+            return updated_assignments
+        except Exception as e:
+            logging.error(f"Error during update_assignments: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
+        
+    @staticmethod
+    async def get_users_with_assignments():
+        query = (
+            select(Users)
+            .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
+            .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
+        )
+        users_with_assignments = await db.execute(query)
+        
+        result = []
+        for user in users_with_assignments.scalars().all():
+            # Assuming you have functions to get user profile and assignments
+            user_profile = await UserService.get_faculty_profile_by_ID(user.id)
+            assignments = await AssignToSection.display_assignments_by_user(user.id)
+            
+            result.append({
+                "user_profile": user_profile,
+                "assignments": assignments.dict(),
+            })
+            
+
+
+        return result

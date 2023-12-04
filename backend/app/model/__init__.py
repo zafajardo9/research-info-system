@@ -19,3 +19,7 @@ from .full_manuscript import FullManuscript
 from .copyright import CopyRight
 
 from .notification import Notification
+
+
+#todo making a course section table
+#

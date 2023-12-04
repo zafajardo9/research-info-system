@@ -50,3 +50,5 @@ async def forgot_password(request_body: ForgotPasswordSchema):
     return ResponseSchema(detail="Password updated successfully!")
 
 
+# todo making user automatically register faculty information
+# todo integrate with ROBERT

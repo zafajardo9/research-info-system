@@ -85,3 +85,9 @@ class UsersRepository(BaseRepo):
     #     roles = [row[0] for row in roles_and_student_info]
     #     student_info = [row[1] for row in roles_and_student_info]
     #     return roles, student_info
+    
+
+    @staticmethod
+    async def filter_student_year_course():
+        query = select(Student.course, Student.section).distinct()
+        return (await db.execute(query)).fetchall()

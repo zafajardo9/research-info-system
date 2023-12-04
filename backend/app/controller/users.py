@@ -139,9 +139,25 @@ course_descriptions = {
     "DOMTMOM": "Doctor of Management and Organizational Management"
 }
 
+
+
+
 @router.get("/course_list")
 async def get_courses():
     """
     Get all courses with their descriptions
     """
     return course_descriptions
+
+
+@router.get("/course_with_year_list")
+async def get_courses():
+    """
+    Mga nasa Table lang for now
+    """
+    
+    result = await UsersRepository.filter_student_year_course()
+    if result:
+        return ResponseSchema(detail="Successfully fetch all year and course!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="No data found")

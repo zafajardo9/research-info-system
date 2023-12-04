@@ -2,12 +2,13 @@ from typing import List
 from fastapi import APIRouter, Depends, Path, Security, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import ResponseSchema, WorkflowCreate, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
+from app.schema import AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, ResponseSchema, WorkflowCreate, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.repository.workflow_repo import WorkflowRepository
 from app.repository.workflowsteps_repo import WorkflowStepRepository
-from app.model.workflowprocess import Workflow, WorkflowStep
+from app.model import Workflow, WorkflowStep, AssignedResearchType, AssignedSections
 from app.service.workflow_service import WorkflowService
+from app.service.assignTo_service import AssignToSection
 
 #from app.schema import WorkflowCreate
 
@@ -16,9 +17,6 @@ router = APIRouter(
     tags=['Research Professor'],
     dependencies=[Depends(JWTBearer())]
 )
-
-
-
 
 
 
@@ -73,3 +71,37 @@ async def delete_workflow(workflow_id: str = Path(..., title="The ID of the work
         raise HTTPException(status_code=404, detail="Workflow not found")
 
     return {"message": "Workflow deleted successfully"}
+
+
+
+@router.post("/assign-adviser-type-section/", response_model=AssignedResearchType)
+async def assign_section(
+        assign_research_type: AssignedResearchTypeCreate, 
+        assign_section: List[AssignedSectionsCreate], 
+        credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+    ):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+    roles = token.get('role', [])
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
+
+    assignUser = await AssignToSection.assign_user_researchh_type(assign_research_type)
+    for each in assign_section:
+        assigned_section = await AssignToSection.assign_user_section(each, assignUser.id)
+
+    return assignUser
+
+
+@router.get("/user-assignments/{user_id}", response_model=AssignWhole)
+async def get_user_assignments(
+    user_id: str
+):
+    try:
+        user_assignments = await AssignToSection.display_assignments_by_user(user_id)
+        if not user_assignments:
+            raise HTTPException(status_code=404, detail="User assignments not found")
+
+        return user_assignments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

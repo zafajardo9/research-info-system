@@ -89,11 +89,6 @@ class WorkflowService:
 
     @staticmethod
     async def get_my_workflow(user_course: str, user_section: str):
-        # workflows_query = select(Workflow).where(
-        #     and_(Workflow.course == user_course, Workflow.section == user_section)
-        # )
-        # workflows = await db.execute(workflows_query)
-        # workflows = workflows.scalars().all()
 
         query = (
             select(Workflow, WorkflowStep)

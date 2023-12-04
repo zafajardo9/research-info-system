@@ -434,6 +434,24 @@ class WorkflowDetail(BaseModel):
     type: str
     user_id: str
     steps: List[WorkflowStepDetail]
+    
+    
+# ============ ASSIGN SECTION COURSE to a user based in research type
+class AssignedResearchTypeCreate(BaseModel):
+    user_id: str
+    research_type_name: str
+
+
+class AssignedSectionsCreate(BaseModel):
+    section: str
+    course: str
+
+class AssignWhole(BaseModel):
+    id: str
+    user_id: str
+    research_type_name: str
+    assignsection: List[AssignedSectionsCreate]
+    
 
 #FOR THE DISPLAY OF LIST IN PAGE
 class PageResponse(GenericModel, Generic[T]):

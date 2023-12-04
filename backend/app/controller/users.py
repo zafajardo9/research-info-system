@@ -161,3 +161,6 @@ async def get_courses():
         return ResponseSchema(detail="Successfully fetch all year and course!", result=result)
     else:
         raise HTTPException(status_code=404, detail="No data found")
+
+
+# todo for putting research adviser to a particular ang section

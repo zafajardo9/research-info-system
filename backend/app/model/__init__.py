@@ -21,5 +21,6 @@ from .copyright import CopyRight
 from .notification import Notification
 
 
-#todo making a course section table
-#
+from .assignedTo import AssignedResearchType
+from .assignedTo import AssignedSections
+

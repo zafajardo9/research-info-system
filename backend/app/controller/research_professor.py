@@ -73,8 +73,10 @@ async def delete_workflow(workflow_id: str = Path(..., title="The ID of the work
 
     return {"message": "Workflow deleted successfully"}
 
+# ==========================ASSIGNING=============================================================
 
 
+# ORIGINAL CODE FROM TOP
 @router.post("/assign-adviser-type-section/", response_model=AssignedResearchType)
 async def assign_section(
         assign_research_type: AssignedResearchTypeCreate, 
@@ -93,7 +95,7 @@ async def assign_section(
     return assignUser
 
 
-@router.put("/user-assignments-update/{user_id}", response_model=AssignWhole)
+@router.put("/assign-adviser-update/{user_id}", response_model=AssignWhole)
 async def update_user_assignments(
     user_id: str,
     update_data: UpdateAssign,
@@ -108,7 +110,7 @@ async def update_user_assignments(
         raise HTTPException(status_code=500, detail=str(e))
     
     
-@router.get("/user/{user_id}/assignments", response_model=AssignUserProfile)
+@router.get("/adviser/{user_id}/assigned", response_model=AssignUserProfile)
 async def read_user_assignments(user_id: str):
     try:
         # Get user profile
@@ -133,7 +135,7 @@ async def read_user_assignments(user_id: str):
         raise HTTPException(status_code=500, detail=str(e))
     
 
-@router.get("/users-with-assignments", response_model=List[UserWithAssignments])
+@router.get("/adviser-with-assigned", response_model=List[UserWithAssignments])
 async def get_users_with_assignments():
     try:
         users_with_assignments = await AssignToSection.get_users_with_assignments()

@@ -18,9 +18,13 @@ from .ethics import Ethics
 from .full_manuscript import FullManuscript
 from .copyright import CopyRight
 
-from .notification import Notification
 
+#Announcement and Notifications
+from .notification import Notification
+from .announcements import Announcement
 
 from .assignedTo import AssignedResearchType
 from .assignedTo import AssignedSections
+
+
 

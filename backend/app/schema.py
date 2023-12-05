@@ -473,6 +473,27 @@ class UserWithAssignments(BaseModel):
     assignments: dict
 
 
+
+
+# ============== MAKING ANNOUNCEMENT ==================
+
+class AnnouncementCreate(BaseModel):
+    user_role_target: str
+    title: str
+    content: str
+    other_details: str
+
+class AnnouncementDisplay(BaseModel):
+    user_Name: str
+    user_role_target: str
+    title: str
+    content: str
+    other_details: str
+    created_at: datetime
+    modified_at: datetime
+
+# =========================================
+
 #FOR THE DISPLAY OF LIST IN PAGE
 class PageResponse(GenericModel, Generic[T]):
     """ The response for a pagination query. """

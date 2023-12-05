@@ -4,9 +4,11 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 
-from app.schema import CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FullManuscriptWithResearchResponse, ResearchPaperResponse, ResponseSchema, StatusUpdate
+from app.schema import AssignUserProfile, CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FullManuscriptWithResearchResponse, ResearchPaperResponse, ResponseSchema, StatusUpdate
 from app.service.research_service import ResearchService
 from app.config import db
+from app.service.assignTo_service import AssignToSection
+from app.service.users_service import UserService
 
 router = APIRouter(
     prefix="/faculty",
@@ -36,6 +38,34 @@ async def update_research_paper_status(
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
 
+
+
+@router.get("/my-assigned-research-section", response_model=AssignUserProfile)
+async def read_user_assignments(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+    try:
+        # Get user profile
+        user_profile = await UserService.get_faculty_profile_by_ID(current_user)
+        if user_profile is None:
+            raise HTTPException(status_code=404, detail="User profile not found")
+
+        # Get user assignments
+        assignments = await AssignToSection.display_assignments_by_user(user_profile["id"])
+        if assignments is None:
+            raise HTTPException(status_code=404, detail="Assignments not found")
+
+        # Combine user profile and assignments
+        response_data = {
+            "user_profile": user_profile,
+            "assignments": assignments.dict(),
+        }
+
+        return response_data
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/adviser", response_model=List[ResearchPaperResponse], response_model_exclude_none=True)

@@ -109,18 +109,25 @@ class AssignToSection:
             .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
         )
         users_with_assignments = await db.execute(query)
-        
-        result = []
+
+        results = {}
         for user in users_with_assignments.scalars().all():
-            # Assuming you have functions to get user profile and assignments
             user_profile = await UserService.get_faculty_profile_by_ID(user.id)
-            assignments = await AssignToSection.display_assignments_by_user(user.id)
             
-            result.append({
-                "user_profile": user_profile,
-                "assignments": assignments.dict(),
-            })
-            
-
-
-        return result
+            if user.id not in results:
+                assignments = await AssignToSection.display_assignments_by_user(user.id)
+                
+                results[user.id] = {
+                    "user_profile": user_profile,
+                    "assignments": assignments.dict(),
+                }
+            else:
+                new_assignment = await AssignToSection.display_assignments_by_user(user.id)
+                new_sections = new_assignment.dict()['assignsection']
+                
+                # If the new section is not already in the list, add it
+                for section in new_sections:
+                    if section not in results[user.id]['assignments']['assignsection']:
+                        results[user.id]['assignments']['assignsection'].append(section)
+        
+        return list(results.values())

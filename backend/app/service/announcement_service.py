@@ -78,3 +78,161 @@ class AnnouncementService:
             return True 
         else:
             return False
+        
+    @staticmethod
+    async def delete_all_announcements_function():
+        try:
+            delete_statement = delete(Announcement)
+            await db.execute(delete_statement)
+
+
+            return delete_statement
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            
+            
+            
+    @staticmethod
+    async def get_announcements_students_funding():
+        
+        query = (
+            select(
+                Announcement,
+                Users.email,
+                Faculty.name,
+            )
+            .join(Users, Announcement.user_id == Users.id)
+            .join(Faculty, Users.faculty_id == Faculty.id)
+            .where((Announcement.user_role_target == "student") & (Announcement.announcement_type == "funding opportunity"))
+        )
+        result = await db.execute(query)
+        announcements = result.fetchall()
+
+        return [
+            {
+                "announcement": {
+                    "id": announcement.id,
+                    "created_at": announcement.created_at,
+                    "announcement_type": announcement.announcement_type,
+                    "title": announcement.title,
+                    "other_details": announcement.other_details,
+                    "modified_at": announcement.modified_at,
+                    "user_role_target": announcement.user_role_target,
+                    "content": announcement.content
+                },
+                "user_email": user,
+                "faculty_name": faculty
+            }
+            for announcement, user, faculty, *extra in announcements
+        ]
+        
+        
+
+    @staticmethod
+    async def get_announcements_students_training():
+        
+        query = (
+            select(
+                Announcement,
+                Users.email,
+                Faculty.name,
+            )
+            .join(Users, Announcement.user_id == Users.id)
+            .join(Faculty, Users.faculty_id == Faculty.id)
+            .where((Announcement.user_role_target == "student") & (Announcement.announcement_type == "training and workshop"))
+        )
+        result = await db.execute(query)
+        announcements = result.fetchall()
+
+        return [
+            {
+                "announcement": {
+                    "id": announcement.id,
+                    "created_at": announcement.created_at,
+                    "announcement_type": announcement.announcement_type,
+                    "title": announcement.title,
+                    "other_details": announcement.other_details,
+                    "modified_at": announcement.modified_at,
+                    "user_role_target": announcement.user_role_target,
+                    "content": announcement.content
+                },
+                "user_email": user,
+                "faculty_name": faculty
+            }
+            for announcement, user, faculty, *extra in announcements
+        ]
+        
+        
+        
+        
+    @staticmethod
+    async def get_announcements_faculty_funding():
+        
+        query = (
+            select(
+                Announcement,
+                Users.email,
+                Faculty.name,
+            )
+            .join(Users, Announcement.user_id == Users.id)
+            .join(Faculty, Users.faculty_id == Faculty.id)
+            .where((Announcement.user_role_target == "faculty") & (Announcement.announcement_type == "funding opportunity"))
+        )
+        result = await db.execute(query)
+        announcements = result.fetchall()
+
+        return [
+            {
+                "announcement": {
+                    "id": announcement.id,
+                    "created_at": announcement.created_at,
+                    "announcement_type": announcement.announcement_type,
+                    "title": announcement.title,
+                    "other_details": announcement.other_details,
+                    "modified_at": announcement.modified_at,
+                    "user_role_target": announcement.user_role_target,
+                    "content": announcement.content
+                },
+                "user_email": user,
+                "faculty_name": faculty
+            }
+            for announcement, user, faculty, *extra in announcements
+        ]
+        
+        
+
+    @staticmethod
+    async def get_announcements_faculty_training():
+        
+        query = (
+            select(
+                Announcement,
+                Users.email,
+                Faculty.name,
+            )
+            .join(Users, Announcement.user_id == Users.id)
+            .join(Faculty, Users.faculty_id == Faculty.id)
+            .where((Announcement.user_role_target == "faculty") & (Announcement.announcement_type == "training and workshop"))
+        )
+        result = await db.execute(query)
+        announcements = result.fetchall()
+
+        return [
+            {
+                "announcement": {
+                    "id": announcement.id,
+                    "created_at": announcement.created_at,
+                    "announcement_type": announcement.announcement_type,
+                    "title": announcement.title,
+                    "other_details": announcement.other_details,
+                    "modified_at": announcement.modified_at,
+                    "user_role_target": announcement.user_role_target,
+                    "content": announcement.content
+                },
+                "user_email": user,
+                "faculty_name": faculty
+            }
+            for announcement, user, faculty, *extra in announcements
+        ]
+        
+        

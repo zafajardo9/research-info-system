@@ -53,8 +53,47 @@ async def delete_announcement_by_id(id: str):
 
 @router.delete("/delete_all_announcement")
 async def delete_all_announcement():
-    announcements = await AnnouncementRepository.delete()
-    return announcements
+    announcements = await AnnouncementService.delete_all_announcements_function()
+    if announcements:
+        return {"message": "All Announcement deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Announcement not found")
 
 
+# ============== STUDENT
+@router.get("/announcements_for-student/FundingOpportunity")
+async def get_announcements_students_funding():
+    announcements = await AnnouncementService.get_announcements_students_funding()
+    if announcements:
+        return announcements
+    else:
+        return {"message": "No announcements found for students with training or workshop type."}
+
+@router.get("/announcements_for-student/Training&Workshop")
+async def get_announcements_students_training():
+    announcements = await AnnouncementService.get_announcements_students_training()
+    
+    if announcements:
+        return announcements
+    else:
+        return {"message": "No announcements found for students with training or workshop type."}
+    
+    
+# ============ FACULTY
+@router.get("/announcements_for-faculty/FundingOpportunity")
+async def get_announcements_students_funding():
+    announcements = await AnnouncementService.get_announcements_faculty_funding()
+    if announcements:
+        return announcements
+    else:
+        return {"message": "No announcements found for faculty with training or workshop type."}
+
+@router.get("/announcements_for-faculty/Training&Workshop")
+async def get_announcements_students_training():
+    announcements = await AnnouncementService.get_announcements_faculty_training()
+    
+    if announcements:
+        return announcements
+    else:
+        return {"message": "No announcements found for faculty with training or workshop type."}
 

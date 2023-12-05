@@ -23,10 +23,17 @@ class Author(SQLModel, table=True):
 
 
 class Status(str, Enum):
+    #Faculty
+    Approve = "Approve"
+    Reject = "Rejected"
+    Pending = "Pending"
+    Revise = "Revise" # if magpapa revise si faculty
+    Revised = "Revised" #pag ang student nag revise nung pinasa
+    
+    #Student 
     Approved = "Approved"
     Rejected = "Rejected"
-    Pending = "Pending"
-    Revised = "Revised"
+    
 
 class ResearchPaper(SQLModel, TimeMixin, table=True):
     __tablename__ = 'research_papers'

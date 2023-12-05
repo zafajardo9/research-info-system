@@ -17,8 +17,9 @@ from fastapi import HTTPException
 from app.repository.assignTo_repo import AssignedResearchTypeRepository, AssignedSectionsRepository
 from app.schema import AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse, UpdateAssign
 from app.service.users_service import UserService
-from app.model import AssignedSections, AssignedResearchType
+from app.model import AssignedSections, AssignedResearchType, AssignedSectionsToProf
 from app.model.users import Users
+from app.model.faculty import Faculty
 
 class AssignToSection:
     
@@ -131,3 +132,50 @@ class AssignToSection:
                         results[user.id]['assignments']['assignsection'].append(section)
         
         return list(results.values())
+    
+    # =================== DISPLAY ALL PROF WITH THEIR SECTION AND COURSE
+    @staticmethod
+    async def assign_prof_to_section(assign_data: List[AssignedSectionsCreate], user_id: str):
+        for data in assign_data:
+            assign_section_id = str(uuid.uuid4())
+            db_assign_section = AssignedSectionsToProf(id=assign_section_id, **data.dict(), user_id=user_id)
+            db.add(db_assign_section)
+            await db.commit()
+            await db.refresh(db_assign_section)
+
+        return db_assign_section
+    
+    
+    @staticmethod
+    async def display_assigned_for_prof():
+        query = (
+            select(
+                AssignedSectionsToProf.section,
+                AssignedSectionsToProf.course,
+                AssignedSectionsToProf.id.label("section_id"),  # Alias for AssignedSectionsToProf.id
+                Users.id.label("user_id"),  # Alias for Users.id
+                Faculty.name
+            )
+            .join(Users, Users.id == AssignedSectionsToProf.user_id)
+            .join(Faculty, Users.faculty_id == Faculty.id)
+        )
+        result = await db.execute(query)
+        assigned_sections = result.fetchall()
+    
+
+        # Create a list to store the modified results
+        modified_results = []
+
+        for section_info in assigned_sections:
+            # Create a dictionary for each section_info
+            section_dict = {
+                "id": section_info.section_id,
+                "user_id": section_info.user_id,
+                "professor_name": section_info.name,
+                "section": section_info.section,
+                "course": section_info.course
+            }
+            
+            modified_results.append(section_dict)
+
+        return modified_results

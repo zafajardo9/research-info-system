@@ -479,6 +479,7 @@ class UserWithAssignments(BaseModel):
 
 class AnnouncementCreate(BaseModel):
     user_role_target: str
+    announcement_type: str
     title: str
     content: str
     other_details: str
@@ -486,6 +487,7 @@ class AnnouncementCreate(BaseModel):
 class AnnouncementDisplay(BaseModel):
     user_Name: str
     user_role_target: str
+    announcement_type: str
     title: str
     content: str
     other_details: str

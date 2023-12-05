@@ -3,12 +3,13 @@ from fastapi import APIRouter, Depends, Path, Security, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
 from app.repository.auth_repo import JWTBearer, JWTRepo
-
+from app.config import db
 
 
 from app.schema import ResponseSchema, AnnouncementCreate, AnnouncementDisplay
 from app.service.announcement_service import AnnouncementService
 from app.model.announcements import Announcement
+from app.repository.announcement_repo import AnnouncementRepository
 
 #from app.schema import WorkflowCreate
 
@@ -35,7 +36,25 @@ async def assign_section(
 
     return assignUser
 
-@router.get("/announcements_with_user_names/", response_model=List[AnnouncementDisplay])
+@router.get("/announcements_with_user_names/")
 async def get_announcements_with_user_names():
     announcements = await AnnouncementService.get_announcements_with_user_names()
     return announcements
+
+
+@router.delete("/delete_announcement/{id}")
+async def delete_announcement_by_id(id: str):
+    announcements = await AnnouncementService.delete_announcement_by_id(id)
+    if announcements:
+        return {"message": "Announcement deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+
+
+@router.delete("/delete_all_announcement")
+async def delete_all_announcement():
+    announcements = await AnnouncementRepository.delete()
+    return announcements
+
+
+

@@ -43,28 +43,6 @@ async def assign_roles(
     return {"message": f"Roles assigned to user with ID {user_id}"}
 
 
-# @router.post("/list-user-with-roles")
-# async def assign_roles(
-#     response_model=ResponseSchema, 
-#     response_model_exclude_none=True,
-#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-# ):
-
-#     token = JWTRepo.extract_token(credentials)
-#     user_roles = token.get('role', [])
-
-#     if "admin" not in user_roles:
-#         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
-
-
-#     result = await UserService.get_all_in_faculty_with_roles()
-    
-#     if result:
-#         formatted_result = UserService.format_users_with_roles(result)
-#         return ResponseSchema(detail="Successfully fetched user profiles with roles!", result=formatted_result)
-#     else:
-#         raise HTTPException(status_code=404, detail="User list not found")
-
 
 @router.get("/users_faculty_with_roles", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_users_with_roles(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
@@ -84,3 +62,5 @@ async def get_users_with_roles(credentials: HTTPAuthorizationCredentials = Secur
         return ResponseSchema(detail="Successfully fetched user profiles with roles!", result=formatted_result)
     else:
         raise HTTPException(status_code=404, detail="User list not found")
+    
+    

@@ -25,6 +25,7 @@ from .announcements import Announcement
 
 from .assignedTo import AssignedResearchType
 from .assignedTo import AssignedSections
+from .assignedTo import AssignedSectionsToProf
 
 
 

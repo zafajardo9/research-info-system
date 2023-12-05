@@ -11,6 +11,7 @@ class Announcement(SQLModel, TimeMixin, table=True):
     id: Optional[str] = Field(primary_key=True, nullable=False)
     user_id: str = Field(nullable=True)
     user_role_target: str
+    announcement_type: str
     title: str
     content: str
     other_details: Optional[str]

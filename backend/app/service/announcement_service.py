@@ -7,9 +7,10 @@ from sqlalchemy import delete
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
-from app.config import db
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.config import commit_rollback, db
 
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
@@ -31,28 +32,49 @@ class AnnouncementService:
 
 
     @staticmethod
-    async def get_announcements_with_user_names() -> List[AnnouncementDisplay]:
+    async def get_announcements_with_user_names():
+        
         query = (
             select(
                 Announcement,
-                Users,
-                Faculty
+                Users.email,
+                Faculty.name,
             )
             .join(Users, Announcement.user_id == Users.id)
             .join(Faculty, Users.faculty_id == Faculty.id)
         )
         result = await db.execute(query)
-        announcements = result.scalars().all()
+        announcements = result.fetchall()
 
         return [
-            AnnouncementDisplay(
-                user_name=faculty.name,  # Access the Faculty's name
-                user_role_target=announcement.user_role_target,
-                title=announcement.title,
-                content=announcement.content,
-                other_details=announcement.other_details,
-                created_at=announcement.created_at,
-                modified_at=announcement.modified_at,
-            )
+            {
+                "announcement": {
+                    "id": announcement.id,
+                    "created_at": announcement.created_at,
+                    "announcement_type": announcement.announcement_type,
+                    "title": announcement.title,
+                    "other_details": announcement.other_details,
+                    "modified_at": announcement.modified_at,
+                    "user_role_target": announcement.user_role_target,
+                    "content": announcement.content
+                },
+                "user_email": user,
+                "faculty_name": faculty
+            }
             for announcement, user, faculty, *extra in announcements
         ]
+        
+        
+    @staticmethod
+    async def delete_announcement_by_id(announcement_id: str):
+        print(f"Deleting announcement with ID: {announcement_id}")
+
+        query = delete(Announcement).where(Announcement.id == announcement_id)
+        
+        
+        result = await db.execute(query)
+        
+        if result.rowcount > 0:
+            return True 
+        else:
+            return False

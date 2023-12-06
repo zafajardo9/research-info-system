@@ -85,6 +85,26 @@ async def assign_roles(
     return {"message": f"Section and Course assigned to Faculty {user_id}"}
 
 
+@router.delete("/delete-assignment/{user_id}")
+async def delete_assignment(
+    user_id: str,
+    deleted_assignments: List[AssignedSectionsCreate],
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "admin" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+
+    # Delete section and course assignment
+    await AssignToSection.delete_assignment(deleted_assignments, user_id)
+
+    return {"message": f"Section and Course assignment deleted for Faculty {user_id}"}
+
+
+
 @router.get("/assign-prof-to-section/list", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_users_with_roles(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     """

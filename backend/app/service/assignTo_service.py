@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 import uuid
-from sqlalchemy import insert, join
+from sqlalchemy import and_, insert, join
 from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.orm import joinedload
@@ -137,15 +137,46 @@ class AssignToSection:
     @staticmethod
     async def assign_prof_to_section(assign_data: List[AssignedSectionsCreate], user_id: str):
         for data in assign_data:
-            assign_section_id = str(uuid.uuid4())
-            db_assign_section = AssignedSectionsToProf(id=assign_section_id, **data.dict(), user_id=user_id)
-            db.add(db_assign_section)
-            await db.commit()
-            await db.refresh(db_assign_section)
+            #pang query
+            stmt = select(AssignedSectionsToProf).where(
+                AssignedSectionsToProf.user_id == user_id,
+                AssignedSectionsToProf.section == data.section,
+                AssignedSectionsToProf.course == data.course
+            )
+            result = await db.execute(stmt)
+            db_existing_section = result.scalars().first()
+
+            # If yung value di nag eexist the gagawin or inster
+            if not db_existing_section:
+                assign_section_id = str(uuid.uuid4())
+                db_assign_section = AssignedSectionsToProf(id=assign_section_id, **data.dict(), user_id=user_id)
+                db.add(db_assign_section)
+                await db.commit()
+                await db.refresh(db_assign_section)
 
         return db_assign_section
-    
-    
+
+
+    @staticmethod
+    async def delete_assignment(deleted_data: List[AssignedSectionsCreate], user_id: str):
+        for data in deleted_data:
+            # pang query
+            stmt = select(AssignedSectionsToProf).where(
+                AssignedSectionsToProf.user_id == user_id,
+                AssignedSectionsToProf.section == data.section,
+                AssignedSectionsToProf.course == data.course
+            )
+            result = await db.execute(stmt)
+            db_existing_section = result.scalars().first()
+
+            # If the value exists, delete the assignment
+            if db_existing_section:
+                await db.delete(db_existing_section)
+                await db.commit()
+
+        return {"message": "Section and Course assignment deleted successfully"}
+
+
     @staticmethod
     async def display_assigned_for_prof():
         query = (
@@ -179,3 +210,51 @@ class AssignToSection:
             modified_results.append(section_dict)
 
         return modified_results
+    
+    
+    
+    @staticmethod
+    async def student_get_adviser_list(user_course: str, user_section: str):
+        query = (
+            select(
+                Users.faculty_id,
+                Faculty.name,
+                AssignedResearchType.research_type_name,
+                AssignedSections.section,
+                AssignedSections.course
+            )
+            .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
+            .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
+            .join(Faculty, Users.faculty_id == Faculty.id)  # Join with the Faculty table
+            .where(
+                (AssignedSections.section == user_section) &
+                (AssignedSections.course == user_course)
+                # (AssignedResearchType.research_type_name == "")
+            )
+        )
+        users_with_assignments = await db.execute(query)
+        results = users_with_assignments.fetchall()
+        
+        return results
+    
+    
+    @staticmethod
+    async def student_get_prof_list(user_course: str, user_section: str):
+        query = (
+            select(
+                Users.faculty_id,
+                Faculty.name,
+                AssignedSectionsToProf.section,
+                AssignedSectionsToProf.course
+            )
+            .join(AssignedSectionsToProf, Users.id == AssignedSectionsToProf.user_id)
+            .join(Faculty, Users.faculty_id == Faculty.id)  # Join with the Faculty table
+            .where(
+                (AssignedSectionsToProf.section == user_section) &
+                (AssignedSectionsToProf.course == user_course)
+            )
+        )
+        users_with_assignments = await db.execute(query)
+        results = users_with_assignments.fetchall()
+        
+        return results

@@ -103,7 +103,26 @@ async def delete_assignment(
 
     return {"message": f"Section and Course assignment deleted for Faculty {user_id}"}
 
+# @router.delete("/delete-assignment/{assign_id}")
+# async def delete_assignment(
+#     assign_id: str,
+#     deleted_assignments: List[AssignedSectionsWithID],
+#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+# ):
+#     '''
+#     DITO INISIP KO if gusto mo naka base nalang ang pag delete sa id nung record
+#     '''
 
+#     token = JWTRepo.extract_token(credentials)
+#     user_roles = token.get('role', [])
+
+#     if "admin" not in user_roles:
+#         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+
+#     # Delete section and course assignment
+#     await AssignToSection.delete_assignment(deleted_assignments, assign_id)
+
+#     return {"message": f"Section and Course assignment deleted for Faculty {assign_id}"}
 
 @router.get("/assign-prof-to-section/list", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_users_with_roles(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):

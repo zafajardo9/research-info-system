@@ -444,6 +444,11 @@ class AssignedResearchTypeCreate(BaseModel):
 class AssignedSectionsCreate(BaseModel):
     section: str
     course: str
+    
+class AssignedSectionsWithID(BaseModel):
+    id: str
+    section: str
+    course: str
 
 class AssignWhole(BaseModel):
     id: str

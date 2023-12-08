@@ -114,20 +114,12 @@ class AssignToSection:
 
         results = {}
         for user, research_type, section in users_with_assignments:
-            user_profile = await UserService.get_faculty_profile_by_ID(user.id)
+            user_id = user.id
 
-            assignment = {
-                # "id": research_type.id,
-                # "user_id": user.id,
-                "research_type_name": research_type.research_type_name,
-                "assignsection": {
-                    "section": section.section,
-                    "course": section.course
-                }
-            }
-
-            if research_type.research_type_name not in results:
-                results[research_type.research_type_name] = {
+            if user_id not in results:
+                # If user not in results, add user profile and initialize assignments list
+                user_profile = await UserService.get_faculty_profile_by_ID(user_id)
+                results[user_id] = {
                     "user_profile": {
                         "id": user_profile.id,
                         "username": user_profile.username,
@@ -136,10 +128,18 @@ class AssignToSection:
                         "birth": user_profile.birth,
                         "phone_number": user_profile.phone_number
                     },
-                    "assignments": [assignment]
+                    "assignments": []
                 }
-            else:
-                results[research_type.research_type_name]["assignments"].append(assignment)
+
+            # Add assignment to the user's assignments list
+            assignment = {
+                "research_type_name": research_type.research_type_name,
+                "assignsection": {
+                    "section": section.section,
+                    "course": section.course
+                }
+            }
+            results[user_id]["assignments"].append(assignment)
 
         return list(results.values())
     

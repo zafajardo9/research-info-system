@@ -53,7 +53,7 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     authors: Optional[List["Author"]] = Relationship(back_populates="research_paper")
     comments: Optional[List["Comment"]] = Relationship(back_populates="research_paper")
 
-    ethics: Optional["Ethics"] = Relationship(back_populates="research_paper")
-    full_manuscript: Optional["FullManuscript"] = Relationship(back_populates="research_paper")
-    copyright: Optional["CopyRight"] = Relationship(back_populates="research_paper")
+    ethics: "Ethics" = Relationship(back_populates="research_paper")
+    full_manuscript: "FullManuscript" = Relationship(back_populates="research_paper")
+    copyright: "CopyRight" = Relationship(back_populates="research_paper")
 

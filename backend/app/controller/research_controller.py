@@ -116,19 +116,18 @@ async def get_research_paper_with_authors(
         return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
 
 
-
-@router.get("/all_ethics_manu_copyright_user", response_model=List[DisplayAllByUser])
-async def get_all_for_user(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    """
-    Get all research papers from the database.
-    """
-    token = JWTRepo.extract_token(credentials)
-    current_user = token['user_id']
-    try:
-        research_paper = await ResearchService.all_by_current_user(db, current_user)
-        return research_paper
-    except HTTPException as e:
-        return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
+# @router.get("/all_ethics_manu_copyright_user", response_model=List[DisplayAllByUser])
+# async def get_all_for_user(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+#     """
+#     Get all research papers from the database.
+#     """
+#     token = JWTRepo.extract_token(credentials)
+#     current_user = token['user_id']
+#     try:
+#         research_paper = await ResearchService.all_by_current_user(db, current_user)
+#         return research_paper
+#     except HTTPException as e:
+#         return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
 
 
 
@@ -190,4 +189,5 @@ async def get_all_research_papers():
         return response_papers
     except Exception as e:
        return ResponseSchema(detail=f"Error getting all research paper: {str(e)}", result=None)
+
 

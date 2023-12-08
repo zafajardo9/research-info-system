@@ -5,7 +5,7 @@ from sqlalchemy.future import select
 from app.repository.auth_repo import JWTBearer, JWTRepo
 
 
-from app.schema import ResponseSchema, WorkflowCreate, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
+from app.schema import ResponseSchema, WorkflowAllDetails, WorkflowCreate, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
 from app.service.users_service import UserService
 from app.model.student import Student  
 from app.model.faculty import Faculty
@@ -42,7 +42,6 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=404, detail="Workflow not found")
     return workflow
 
-# todo make a function that will display the status of the step
 
 @router.get("/your-workflow-status", response_model=List[WorkflowDetail])
 async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
@@ -90,7 +89,7 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
     return advisers_assigned
 
 
-@router.get("/my-research-professor-list"  )
+@router.get("/my-research-professor-list")
 async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     username = token['username']
@@ -112,3 +111,16 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=404, detail="Nothing found")
     return advisers_assigned
 
+
+# todo making a workflow that shows the status of the step it is connected
+
+
+@router.get("/workflow/{workflow_id}")
+async def get_workflow_details(workflow_id: str):
+    workflow = await WorkflowService.get_my_workflow_by_id(workflow_id)
+    #workflowstep_id = workflow['woq']
+    
+    if not workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    
+    return workflow

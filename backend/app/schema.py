@@ -434,6 +434,22 @@ class WorkflowDetail(BaseModel):
     type: str
     user_id: str
     steps: List[WorkflowStepDetail]
+
+
+class WorkflowAllDetails(BaseModel):
+    id: str
+    course: str
+    year: str
+    type: str
+    user_id: str
+    steps: List[WorkflowStepDetail]
+    research_paper: ResearchPaperResponse
+    ethics: EthicsResponse
+    copyright: CopyRightResponse
+    manuscript: FullManuscriptResponse
+    
+    
+
     
     
 # ============ ASSIGN SECTION COURSE to a user based in research type

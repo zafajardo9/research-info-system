@@ -16,6 +16,7 @@ from app.repository.research_repo import ResearchPaperRepository
 from app.model import Users, Author, ResearchPaper
 from app.service.users_service import UserService
 from app.model.research_paper import Status
+from app.service.workflow_service import WorkflowService
 
 router = APIRouter(
     prefix="/research",
@@ -190,4 +191,13 @@ async def get_all_research_papers():
     except Exception as e:
        return ResponseSchema(detail=f"Error getting all research paper: {str(e)}", result=None)
 
-
+@router.get("/{workflowstep_id}/{research_id}",)
+async def get_research_paper_by_step_and_id(workflowstep_id: str,research_id: str):
+    """
+    Get ethics with workflowstep id and research that are connected
+    """
+    try:
+        research_result = await WorkflowService.get_research_paper_by_step_and_id(workflowstep_id,research_id)
+        return research_result
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting ethics related to paper: {str(e)}", result=None)

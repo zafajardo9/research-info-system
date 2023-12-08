@@ -6,6 +6,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.config import db
 from app.schema import CopyRightCreate, CopyRightUpdate, CopyRightResponse, ResponseSchema
 from app.service.copyright_service import CopyrightService
+from app.service.workflow_service import WorkflowService
 
 
 router = APIRouter(
@@ -147,3 +148,16 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
         # Print or log the full exception details for debugging
         print(f"Error getting user research papers: {str(e)}")
         return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+
+
+@router.get("/{workflowstep_id}/{research_id}",)
+async def get_copyright_by_workflow_step_id(workflowstep_id: str,research_id: str):
+    """
+    Get copyright with workflowstep id and research that are connected
+    """
+    try:
+        copyright_result = await WorkflowService.get_copyright_by_workflow_step_id(workflowstep_id,research_id)
+        return copyright_result
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting copyright related to paper: {str(e)}", result=None)
+

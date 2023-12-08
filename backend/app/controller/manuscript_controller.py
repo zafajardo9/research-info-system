@@ -6,6 +6,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.config import db
 from app.schema import FullManuscriptCreate, FullManuscriptResponse, FullManuscriptUpdate, ResponseSchema
 from app.service.manuscript_service import ManuscriptService
+from app.service.workflow_service import WorkflowService
 
 
 router = APIRouter(
@@ -131,3 +132,19 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
         # Print or log the full exception details for debugging
         print(f"Error getting user research papers: {str(e)}")
         return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+    
+    
+    
+
+
+@router.get("/{workflowstep_id}/{research_id}",)
+async def get_manuscript_by_workflow_step_id(workflowstep_id: str,research_id: str):
+    """
+    Get manuscript with workflowstep id and research that are connected
+    """
+    try:
+        manuscript_result = await WorkflowService.get_manuscript_by_workflow_step_id(workflowstep_id,research_id)
+        return manuscript_result
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting manuscript related to paper: {str(e)}", result=None)
+

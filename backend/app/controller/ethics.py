@@ -7,6 +7,7 @@ from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.config import db
 from app.schema import EthicsCreate, EthicsResponse, EthicsUpdate, ResponseSchema
 from app.service.ethics_service import EthicsService
+from app.service.workflow_service import WorkflowService
 
 router = APIRouter(
     prefix="/ethics",
@@ -143,3 +144,15 @@ async def get_user_research_paper(credentials: HTTPAuthorizationCredentials = Se
         # Print or log the full exception details for debugging
         print(f"Error getting user research papers: {str(e)}")
         return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+    
+    
+@router.get("/{workflowstep_id}/{research_id}",)
+async def get_ethics_by_workflow_step_id(workflowstep_id: str,research_id: str):
+    """
+    Get ethics with workflowstep id and research that are connected
+    """
+    try:
+        ethics_result = await WorkflowService.get_ethics_by_workflow_step_id(workflowstep_id,research_id)
+        return ethics_result
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting ethics related to paper: {str(e)}", result=None)

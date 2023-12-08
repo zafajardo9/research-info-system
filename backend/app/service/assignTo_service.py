@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.assignTo_repo import AssignedResearchTypeRepository, AssignedSectionsRepository
-from app.schema import AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse, UpdateAssign
+from app.schema import AssignUserProfileNoID, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse, UpdateAssign
 from app.service.users_service import UserService
 from app.model import AssignedSections, AssignedResearchType, AssignedSectionsToProf
 from app.model.users import Users
@@ -46,24 +46,25 @@ class AssignToSection:
     @staticmethod
     async def display_assignments_by_user(user_id: str):
         first_query = select(AssignedResearchType).where(AssignedResearchType.user_id == user_id)
-        assign = await db.execute(first_query)
-        assign = assign.scalar()
+        assigns = await db.execute(first_query)
+        assigns = assigns.scalars().all()
 
-        if not assign:
+        if not assigns:
             return None  # Return None when the workflow is not found
 
-        second_query = select(AssignedSections).where(AssignedSections.research_type_id == assign.id)
-        assign_section = await db.execute(second_query)
-        assign_section = assign_section.scalars().all()
+        assignments_list = []
+        for assign in assigns:
+            second_query = select(AssignedSections).where(AssignedSections.research_type_id == assign.id)
+            assign_sections = await db.execute(second_query)
+            assign_sections = assign_sections.scalars().all()
 
-        detail = AssignWhole(
-            id=assign.id,
-            user_id=assign.user_id,
-            research_type_name=assign.research_type_name,
-            assignsection=assign_section
-        )
+            assign_details = AssignUserProfileNoID(
+                research_type_name=assign.research_type_name,
+                assignsection=assign_sections
+            )
+            assignments_list.append(assign_details)
 
-        return detail
+        return assignments_list
     
 
     @staticmethod
@@ -134,14 +135,36 @@ class AssignToSection:
             # Add assignment to the user's assignments list
             assignment = {
                 "research_type_name": research_type.research_type_name,
-                "assignsection": {
+                "assignsection": [
+                    {
+                        "section": section.section,
+                        "course": section.course
+                    }
+                ]
+            }
+
+            existing_assignment = next(
+                (a for a in results[user_id]["assignments"] if a["research_type_name"] == research_type.research_type_name),
+                None
+            )
+
+            if existing_assignment:
+                existing_assignment["assignsection"].append({
                     "section": section.section,
                     "course": section.course
-                }
-            }
-            results[user_id]["assignments"].append(assignment)
+                })
+            else:
+                results[user_id]["assignments"].append(assignment)
 
-        return list(results.values())
+        # Convert results to a list with the desired structure
+        final_result = []
+        for user_data in results.values():
+            final_result.append({
+                "user_profile": user_data["user_profile"],
+                "assignments": user_data["assignments"]
+            })
+
+        return final_result
     
     # =================== DISPLAY ALL PROF WITH THEIR SECTION AND COURSE
     @staticmethod

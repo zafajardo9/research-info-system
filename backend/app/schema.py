@@ -481,13 +481,12 @@ class UpdateAssign(BaseModel):
     assignsection: List[AssignedSectionsCreate]
 
 class AssignUserProfileNoID(BaseModel):
-    id: str
     research_type_name: str
     assignsection: List[AssignedSectionsCreate]
 
 class AssignUserProfile(BaseModel):
     user_profile: dict
-    assignments: AssignUserProfileNoID
+    assignments: List[AssignUserProfileNoID]
     
 class UserWithAssignments(BaseModel):
     user_profile: Dict[str, str]  # Update this based on the actual structure of user profile

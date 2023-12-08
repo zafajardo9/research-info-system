@@ -135,7 +135,7 @@ async def read_user_assignments(user_id: str):
         raise HTTPException(status_code=500, detail=str(e))
     
 
-@router.get("/adviser-with-assigned", response_model=List[UserWithAssignments])
+@router.get("/adviser-with-assigned")
 async def get_users_with_assignments():
     try:
         users_with_assignments = await AssignToSection.get_users_with_assignments()

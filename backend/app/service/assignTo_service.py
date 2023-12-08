@@ -105,32 +105,42 @@ class AssignToSection:
     @staticmethod
     async def get_users_with_assignments():
         query = (
-            select(Users)
+            select(Users, AssignedResearchType, AssignedSections)
             .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
             .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
         )
+
         users_with_assignments = await db.execute(query)
 
         results = {}
-        for user in users_with_assignments.scalars().all():
+        for user, research_type, section in users_with_assignments:
             user_profile = await UserService.get_faculty_profile_by_ID(user.id)
-            
-            if user.id not in results:
-                assignments = await AssignToSection.display_assignments_by_user(user.id)
-                
-                results[user.id] = {
-                    "user_profile": user_profile,
-                    "assignments": assignments.dict(),
+
+            assignment = {
+                # "id": research_type.id,
+                # "user_id": user.id,
+                "research_type_name": research_type.research_type_name,
+                "assignsection": {
+                    "section": section.section,
+                    "course": section.course
+                }
+            }
+
+            if research_type.research_type_name not in results:
+                results[research_type.research_type_name] = {
+                    "user_profile": {
+                        "id": user_profile.id,
+                        "username": user_profile.username,
+                        "email": user_profile.email,
+                        "name": user_profile.name,
+                        "birth": user_profile.birth,
+                        "phone_number": user_profile.phone_number
+                    },
+                    "assignments": [assignment]
                 }
             else:
-                new_assignment = await AssignToSection.display_assignments_by_user(user.id)
-                new_sections = new_assignment.dict()['assignsection']
-                
-                # If the new section is not already in the list, add it
-                for section in new_sections:
-                    if section not in results[user.id]['assignments']['assignsection']:
-                        results[user.id]['assignments']['assignsection'].append(section)
-        
+                results[research_type.research_type_name]["assignments"].append(assignment)
+
         return list(results.values())
     
     # =================== DISPLAY ALL PROF WITH THEIR SECTION AND COURSE

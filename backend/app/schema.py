@@ -4,7 +4,7 @@ from datetime import datetime
 from fastapi import HTTPException
 import logging
 import re
-from typing import List, TypeVar, Optional, Generic
+from typing import Dict, List, TypeVar, Optional, Generic
 
 from pydantic.generics import GenericModel
 from pydantic import BaseModel, Field, validator, constr
@@ -489,10 +489,9 @@ class AssignUserProfile(BaseModel):
     user_profile: dict
     assignments: AssignUserProfileNoID
     
-class UserWithAssignments(BaseModel):
-    user_profile: dict  # Update this based on the actual structure of user profile
-    assignments: dict
-
+# class UserWithAssignments(BaseModel):
+#     user_profile: Dict[str, str]  # Update this based on the actual structure of user profile
+#     assignments: Dict[str, List[Dict[str, str]]]
 
 
 

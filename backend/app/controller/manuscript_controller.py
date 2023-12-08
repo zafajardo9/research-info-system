@@ -12,7 +12,7 @@ from app.service.workflow_service import WorkflowService
 router = APIRouter(
     prefix="/fullmanuscript",
     tags=['Full Manuscript'],
-    dependencies=[Depends(JWTBearer())]
+    dependencies=[Depends(JWTBearer())] 
 )
 
 

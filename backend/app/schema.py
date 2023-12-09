@@ -471,6 +471,9 @@ class AssignWhole(BaseModel):
     user_id: str
     research_type_name: str
     assignsection: List[AssignedSectionsCreate]
+    
+    
+
 
 #FOR UPDATING ASSIGNED ======================
 class UpdateResearchTypeAssign(BaseModel):
@@ -492,7 +495,10 @@ class UserWithAssignments(BaseModel):
     user_profile: Dict[str, str]  # Update this based on the actual structure of user profile
     assignments: Dict[str, List[Dict[str, str]]]
 
-
+class AssignedSectionsCreateWithID(BaseModel):
+    id: str
+    section: str
+    course: str
 
 # ============== MAKING ANNOUNCEMENT ==================
 

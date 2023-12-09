@@ -47,6 +47,6 @@ class AssignedSectionsToProf(SQLModel, table=True):
     research_type_prof_id: Optional[str] = Field(default=None, foreign_key="research_type_assigned_prof.id")
 
     
-    research_type: Optional["AssignedResearchType"] = Relationship(back_populates="course_section")
+    research_type: Optional["AssignedResearchTypeToProf"] = Relationship(back_populates="course_section")
 
 

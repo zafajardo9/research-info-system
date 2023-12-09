@@ -7,12 +7,13 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Securi
 from app.service.research_service import ResearchService
 from app.config import db
 from app.repository.users import UsersRepository
-from app.schema import AssignedSectionsCreate, ResponseSchema
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, ResponseSchema, UpdateAssign
 
 
 from app.service.users_service import UserService
 from app.repository.users import UsersRepository
 from app.service.assignTo_service import AssignToSection
+from app.model import AssignedResearchTypeToProf, AssignedSectionsToProf
 
 router = APIRouter(
     prefix="/admin",
@@ -65,77 +66,162 @@ async def get_users_with_roles(credentials: HTTPAuthorizationCredentials = Secur
         raise HTTPException(status_code=404, detail="User list not found")
     
     
+    #############################
     
-@router.post("/assign-prof-to-section/{user_id}")
+    
+    #FOR ASSIGNING
+    #############################
+
+# ORIGINAL CODE FROM TOP
+@router.post("/assign-professor/{user_id}")
 async def assign_roles(
     user_id: str,
-    assigned_sections: List[AssignedSectionsCreate],
+    assigned_roles: List[str],
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
+    '''
+    Assign a User to be a Research Professor
+    '''
 
     token = JWTRepo.extract_token(credentials)
     user_roles = token.get('role', [])
 
-    if "admin" not in user_roles:
+    if "research professor" not in user_roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    
+    user = await UsersRepository.find_by_user_id(user_id)
 
-    # Assign section to a user
-    await AssignToSection.assign_prof_to_section(assigned_sections, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
-    return {"message": f"Section and Course assigned to Faculty {user_id}"}
+    # Assign roles to the user
+    await UsersRepository.assign_roles(user_id, assigned_roles)
+
+    return {"message": f"Research Professor assigned to user with ID {user_id}"}
 
 
-@router.delete("/delete-assignment/{user_id}")
+@router.post("/assign-professor-type-section/", response_model=AssignedResearchTypeToProf)
+async def assign_section(
+        assign_research_type: AssignedResearchTypeCreate, 
+        assign_section: List[AssignedSectionsCreate], 
+        credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+    ):
+    token = JWTRepo.extract_token(credentials)
+    roles = token.get('role', [])
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
+
+    assignUser = await AssignToSection.assign_user_researchh_type(assign_research_type)
+    for each in assign_section:
+        assigned_section = await AssignToSection.assign_user_section(each, assignUser.id)
+
+    return assignUser
+
+
+@router.delete("/delete-assigned-research-type/{research_type_id}")
 async def delete_assignment(
-    user_id: str,
-    deleted_assignments: List[AssignedSectionsCreate],
+    research_type_id: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
-
+    '''
+    deleting the research type assigned to adviser
+    Also delete all linked sections
+    '''
     token = JWTRepo.extract_token(credentials)
     user_roles = token.get('role', [])
 
-    if "admin" not in user_roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    if "research professor" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
+
+    # Delete research type assignment
+    deleted_research_type = await AssignToSection.delete_research_type_assignment(research_type_id)
+
+    if not deleted_research_type:
+        raise HTTPException(status_code=404, detail="Research Type not found")
+
+    return {"message": f"Research type assignment deleted {research_type_id}"}
+
+@router.delete("/delete-assigned-sections/{section_id}")
+async def delete_assignment(
+    section_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "research professor" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
 
     # Delete section and course assignment
-    await AssignToSection.delete_assignment(deleted_assignments, user_id)
+    try:
+        deleted_section = await AssignToSection.delete_section_assignment(section_id)
+        if deleted_section is None:
+            raise HTTPException(status_code=404, detail="Section not found")
+        return {"message": f"Section assignment deleted {section_id}"}
+    except Exception as e:
+        print(f"Error deleting section assignment: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
-    return {"message": f"Section and Course assignment deleted for Faculty {user_id}"}
 
-# @router.delete("/delete-assignment/{assign_id}")
-# async def delete_assignment(
-#     assign_id: str,
-#     deleted_assignments: List[AssignedSectionsWithID],
-#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-# ):
-#     '''
-#     DITO INISIP KO if gusto mo naka base nalang ang pag delete sa id nung record
-#     '''
+@router.post("/add-section-to-research-assign/{research_type_id}", response_model=List[AssignedSectionsCreate])
+async def assign_section(
+    assign_section: List[AssignedSectionsCreate], 
+    research_type_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+    ):
 
-#     token = JWTRepo.extract_token(credentials)
-#     user_roles = token.get('role', [])
-
-#     if "admin" not in user_roles:
-#         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
-
-#     # Delete section and course assignment
-#     await AssignToSection.delete_assignment(deleted_assignments, assign_id)
-
-#     return {"message": f"Section and Course assignment deleted for Faculty {assign_id}"}
-
-@router.get("/assign-prof-to-section/list", response_model=ResponseSchema, response_model_exclude_none=True)
-async def get_users_with_roles(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    """
-    Get all users with their roles
-    """
+    '''
+    Once nag delete nung mga section and course pwede naman magdagdag pero need ikabit si research type id
+    and need din si user id
+    '''
     token = JWTRepo.extract_token(credentials)
-    user_roles = token.get('role', [])
+    roles = token.get('role', [])
+    if "research professor" not in roles:
+       raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
 
-    if "admin" not in user_roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    assigned_sections = []
+    for each in assign_section:
+        assigned_section = await AssignToSection.assign_user_section(each, research_type_id)
+        assigned_sections.append(assigned_section)
+
+    return assigned_sections
 
 
-    result = await AssignToSection.display_assigned_for_prof()
 
-    return ResponseSchema(detail="Successfully fetched professor with section", result=result)
+    
+@router.get("/professor/{user_id}/assigned", response_model=AssignUserProfile)
+async def read_user_assignments(user_id: str):
+    try:
+        # Get user profile
+        user_profile = await UserService.get_faculty_profile_by_ID(user_id)
+        if user_profile is None:
+            raise HTTPException(status_code=404, detail="User profile not found")
+
+        # Get user assignments
+        assignments = await AssignToSection.display_assignments_by_user(user_id)
+        if assignments is None:
+            raise HTTPException(status_code=404, detail="Assignments not found")
+
+        # Combine user profile and assignments
+        response_data = {
+            "user_profile": user_profile,
+            "assignments": assignments,
+        }
+
+        return response_data
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+@router.get("/prof-with-assigned")
+async def get_users_with_assignments():
+    try:
+        users_with_assignments = await AssignToSection.get_users_with_assignments()
+        return users_with_assignments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+

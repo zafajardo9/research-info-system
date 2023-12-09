@@ -117,7 +117,12 @@ class UserService:
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
                     UsersRole.role_id == Role.id,
+                or_(
                     Role.role_name == "faculty",
+                    Role.role_name == "research professor",
+                    Role.role_name == "research adviser",
+                    Role.role_name == "admin",
+                ),
                 ))
             )
         )
@@ -217,6 +222,7 @@ class UserService:
                 Role.role_name == "faculty",
                 Role.role_name == "admin",
                 Role.role_name == "research professor",
+                Role.role_name == "research adviser",
             ))
         )
 

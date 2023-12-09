@@ -100,6 +100,21 @@ async def get_faculty_list():
         return ResponseSchema(detail="Successfully fetch faculty profile!", result=result)
     else:
         raise HTTPException(status_code=404, detail="Faculty list not found")
+    
+
+@router.get("/research_adviser_list", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_faculty_list():
+    """
+    Get all research adviser member
+    """
+
+    result = await UserService.get_all_research_adviser()
+    if result:
+        return ResponseSchema(detail="Successfully fetch adviser profile!", result=result)
+    else:
+        raise HTTPException(status_code=404, detail="Faculty list not found")
+    
+    
 
 @router.get("/research_prof_list", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_prof_list():

@@ -10,6 +10,7 @@ from app.model import Workflow, WorkflowStep, AssignedResearchType, AssignedSect
 from app.service.workflow_service import WorkflowService
 from app.service.assignTo_service import AssignToSection
 from app.service.users_service import UserService
+from app.repository.users import UsersRepository
 
 #from app.schema import WorkflowCreate
 
@@ -77,6 +78,30 @@ async def delete_workflow(workflow_id: str = Path(..., title="The ID of the work
 
 
 # ORIGINAL CODE FROM TOP
+@router.post("/assign-adviser/{user_id}")
+async def assign_roles(
+    user_id: str,
+    assigned_roles: List[str],
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "admin" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    
+    user = await UsersRepository.find_by_user_id(user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Assign roles to the user
+    await UsersRepository.assign_roles(user_id, assigned_roles)
+
+    return {"message": f"Roles assigned to user with ID {user_id}"}
+
+
 @router.post("/assign-adviser-type-section/", response_model=AssignedResearchType)
 async def assign_section(
         assign_research_type: AssignedResearchTypeCreate, 
@@ -108,6 +133,26 @@ async def update_user_assignments(
         return user_assignments
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/delete-assigned/{user_id}")
+async def delete_assignment(
+    user_id: str,
+    deleted_assignments: List[AssignedSectionsCreate],
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "research professor" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
+
+    # Delete section and course assignment
+    await AssignToSection.delete_assignment(deleted_assignments, user_id)
+
+    return {"message": f"Section and Course assignment deleted for  {user_id}"}
+
     
     
 @router.get("/adviser/{user_id}/assigned", response_model=AssignUserProfile)
@@ -133,7 +178,8 @@ async def read_user_assignments(user_id: str):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+
 
 @router.get("/adviser-with-assigned")
 async def get_users_with_assignments():
@@ -142,3 +188,8 @@ async def get_users_with_assignments():
         return users_with_assignments
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+
+
+#setting user for adviser role

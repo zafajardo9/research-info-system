@@ -218,5 +218,6 @@ async def generate_role():
                 Role(id=str(uuid4()), role_name="admin"), 
                 Role(id=str(uuid4()), role_name="student"),
                 Role(id=str(uuid4()), role_name="faculty"),
-                Role(id=str(uuid4()), role_name="research professor")
+                Role(id=str(uuid4()), role_name="research professor"),
+                Role(id=str(uuid4()), role_name="research adviser")
             ])

@@ -27,13 +27,26 @@ class AssignedSections(SQLModel, table=True):
     research_type: Optional["AssignedResearchType"] = Relationship(back_populates="course_section")
 
 
+class AssignedResearchTypeToProf(SQLModel, table=True):
+    __tablename__ = "research_type_assigned_prof"
 
+    id: Optional[str] = Field(primary_key=True, nullable=False)
+    user_id: str = Field(default=None, foreign_key="users.id")
+    research_type_name: str
+    
+    users: List["Users"] = Relationship(back_populates="research_type_assigned_prof")
+    course_section: List["AssignedSectionsToProf"] = Relationship(back_populates="research_type")
+
+    
 class AssignedSectionsToProf(SQLModel, table=True):
     __tablename__ = "section_assigned_prof"
 
     id: Optional[str] = Field(primary_key=True, nullable=False)
     section: str
     course: str
+    research_type_prof_id: Optional[str] = Field(default=None, foreign_key="research_type_assigned_prof.id")
+
     
-    user_id: str = Field(default=None, foreign_key="users.id")
-    users: List["Users"] = Relationship(back_populates="sections_prof")
+    research_type: Optional["AssignedResearchType"] = Relationship(back_populates="course_section")
+
+

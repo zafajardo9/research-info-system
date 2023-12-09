@@ -208,6 +208,25 @@ class AssignToSection:
                 await db.commit()
 
         return {"message": "Section and Course assignment deleted successfully"}
+    
+    @staticmethod
+    async def delete_assignment(deleted_data: List[AssignedSectionsCreate], user_id: str):
+        for data in deleted_data:
+            # pang query
+            stmt = select(AssignedSectionsToProf).where(
+                AssignedSectionsToProf.user_id == user_id,
+                AssignedSectionsToProf.section == data.section,
+                AssignedSectionsToProf.course == data.course
+            )
+            result = await db.execute(stmt)
+            db_existing_section = result.scalars().first()
+
+            # If the value exists, delete the assignment
+            if db_existing_section:
+                await db.delete(db_existing_section)
+                await db.commit()
+
+        return {"message": "Section and Course assignment deleted successfully"}
 
 
     @staticmethod

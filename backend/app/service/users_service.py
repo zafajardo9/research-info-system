@@ -126,6 +126,24 @@ class UserService:
         faculty_data = result.mappings().all()
 
         return faculty_data
+    
+    @staticmethod
+    async def get_all_research_adviser():
+        query = (
+            select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
+            .select_from(
+                outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
+                    UsersRole.users_id == Users.id,
+                    UsersRole.role_id == Role.id,
+                    Role.role_name == "research adviser",
+                ))
+            )
+        )
+
+        result = await db.execute(query)
+        faculty_data = result.mappings().all()
+
+        return faculty_data
 
     @staticmethod
     async def get_all_research_prof():

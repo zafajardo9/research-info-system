@@ -17,7 +17,7 @@ from fastapi import HTTPException
 from app.repository.assignTo_repo import AssignedResearchTypeRepository, AssignedSectionsRepository
 from app.schema import AssignUserProfileNoID, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse, UpdateAssign
 from app.service.users_service import UserService
-from app.model import AssignedResearchTypeToProf, AssignedSectionsToProf
+from app.model import AssignedSectionsToProf
 from app.model.users import Users
 from app.model.faculty import Faculty
 
@@ -29,19 +29,19 @@ class AssignToProf:
     
     
     #############################################################################################
-    @staticmethod
-    async def assign_user_researchh_type(assign_data: AssignedResearchTypeCreate):
-        assign_research_type_id = str(uuid.uuid4()) 
-        db_assign_research = AssignedResearchTypeToProf(id=assign_research_type_id, **assign_data.dict())
-        db.add(db_assign_research)
-        await db.commit()
-        await db.refresh(db_assign_research)
-        return db_assign_research
+    # @staticmethod
+    # async def assign_user_researchh_type(assign_data: AssignedResearchTypeCreate):
+    #     assign_research_type_id = str(uuid.uuid4()) 
+    #     db_assign_research = AssignedResearchTypeToProf(id=assign_research_type_id, **assign_data.dict())
+    #     db.add(db_assign_research)
+    #     await db.commit()
+    #     await db.refresh(db_assign_research)
+    #     return db_assign_research
     
     @staticmethod
-    async def assign_user_section(assign_data: AssignedSectionsCreate, research_type_id: str):
+    async def assign_prof_section(assign_data: AssignedSectionsCreate, user_id: str):
         assign_section_id = str(uuid.uuid4())
-        db_assign_section = AssignedSectionsToProf(id=assign_section_id, **assign_data.dict(), research_type_id=research_type_id)
+        db_assign_section = AssignedSectionsToProf(id=assign_section_id, **assign_data.dict(), user_id=user_id)
         db.add(db_assign_section)
         await db.commit()
         await db.refresh(db_assign_section)
@@ -49,41 +49,41 @@ class AssignToProf:
     
     
     #Display the user assign based on the user_id
-    @staticmethod
-    async def display_assignments_by_user(user_id: str):
-        first_query = select(AssignedResearchTypeToProf).where(AssignedResearchTypeToProf.user_id == user_id)
-        assigns = await db.execute(first_query)
-        assigns = assigns.scalars().all()
+    # @staticmethod
+    # async def display_assignments_by_user(user_id: str):
+    #     first_query = select(AssignedResearchTypeToProf).where(AssignedResearchTypeToProf.user_id == user_id)
+    #     assigns = await db.execute(first_query)
+    #     assigns = assigns.scalars().all()
 
-        if not assigns:
-            return None  # Return None when the workflow is not found
+    #     if not assigns:
+    #         return None  # Return None when the workflow is not found
 
-        assignments_list = []
-        for assign in assigns:
-            second_query = select(AssignedSectionsToProf).where(AssignedSectionsToProf.research_type_id == assign.id)
-            assign_sections = await db.execute(second_query)
-            assign_sections = assign_sections.scalars().all()
+    #     assignments_list = []
+    #     for assign in assigns:
+    #         second_query = select(AssignedSectionsToProf).where(AssignedSectionsToProf.research_type_id == assign.id)
+    #         assign_sections = await db.execute(second_query)
+    #         assign_sections = assign_sections.scalars().all()
 
-            assign_details = AssignUserProfileNoID(
-                research_type_name=assign.research_type_name,
-                assignsection=assign_sections
-            )
-            assignments_list.append(assign_details)
+    #         assign_details = AssignUserProfileNoID(
+    #             research_type_name=assign.research_type_name,
+    #             assignsection=assign_sections
+    #         )
+    #         assignments_list.append(assign_details)
 
-        return assignments_list
+    #     return assignments_list
     
-    @staticmethod
-    async def update_research_type_assignment(research_type_id: str, update_data: AssignedResearchTypeCreate):
-        existing_research_type = await db.get(AssignedResearchTypeToProf, research_type_id)
-        if not existing_research_type:
-            return None
+    # @staticmethod
+    # async def update_research_type_assignment(research_type_id: str, update_data: AssignedResearchTypeCreate):
+    #     existing_research_type = await db.get(AssignedResearchTypeToProf, research_type_id)
+    #     if not existing_research_type:
+    #         return None
 
-        for var, value in vars(update_data).items():
-            if value is not None:
-                setattr(existing_research_type, var, value)
+    #     for var, value in vars(update_data).items():
+    #         if value is not None:
+    #             setattr(existing_research_type, var, value)
 
-        await db.commit()
-        return existing_research_type
+    #     await db.commit()
+    #     return existing_research_type
 
     @staticmethod
     async def update_section_assignment(section_id: str, update_data: AssignedSectionsCreate):
@@ -98,19 +98,19 @@ class AssignToProf:
         await db.commit()
         return existing_section
     
-    @staticmethod
-    async def delete_research_type_assignment(research_type_id: str):
+    # @staticmethod
+    # async def delete_research_type_assignment(research_type_id: str):
         
         
-        one = delete(AssignedSectionsToProf).where(AssignedSectionsToProf.research_type_id == research_type_id)
-        await db.execute(one)
-        two = delete(AssignedResearchTypeToProf).where(AssignedResearchTypeToProf.id == research_type_id)
-        result = await db.execute(two)
-        await db.commit()
-        if result.rowcount == 0:
-            return False 
+    #     one = delete(AssignedSectionsToProf).where(AssignedSectionsToProf.research_type_id == research_type_id)
+    #     await db.execute(one)
+    #     two = delete(AssignedResearchTypeToProf).where(AssignedResearchTypeToProf.id == research_type_id)
+    #     result = await db.execute(two)
+    #     await db.commit()
+    #     if result.rowcount == 0:
+    #         return False 
 
-        return True
+    #     return True
         
 
 
@@ -128,67 +128,75 @@ class AssignToProf:
     
     
     @staticmethod
-    async def get_users_with_assignments():
-        query = (
-            select(Users, AssignedResearchTypeToProf, AssignedSectionsToProf)
-            .join(AssignedResearchTypeToProf, Users.id == AssignedResearchTypeToProf.user_id)
-            .join(AssignedSectionsToProf, AssignedResearchTypeToProf.id == AssignedSectionsToProf.research_type_id)
-        )
+    async def display_assigned_sections(user_id: str):
+        try:
+            # Fetch assigned sections for the user
+            first_query = select(AssignedSectionsToProf).where(AssignedSectionsToProf.user_id == user_id)
+            assigns = await db.execute(first_query)
+            assigns = assigns.fetchall()
 
-        users_with_assignments = await db.execute(query)
+            if not assigns:
+                return None  # Return None when no assignments are found
 
-        results = {}
-        for user, research_type, section in users_with_assignments:
-            user_id = user.id
+            # Convert SQLAlchemy result to a list of dictionaries
+            assignments_list = [dict(assign) for assign in assigns]
 
-            if user_id not in results:
-                # If user not in results, add user profile and initialize assignments list
-                user_profile = await UserService.get_faculty_profile_by_ID(user_id)
-                results[user_id] = {
-                    "user_profile": {
-                        "id": user_profile.id,
-                        "username": user_profile.username,
-                        "email": user_profile.email,
-                        "name": user_profile.name,
-                        "birth": user_profile.birth,
-                        "phone_number": user_profile.phone_number
-                    },
-                    "assignments": []
-                }
+            return assignments_list
 
-            # Add assignment to the user's assignments list
-            assignment = {
-                "id": research_type.id,
-                "research_type_name": research_type.research_type_name,
-                "assignsection": [
-                    {
-                        "id": section.id,
-                        "section": section.section,
-                        "course": section.course
-                    }
-                ]
-            }
-
-            existing_assignment = next(
-                (a for a in results[user_id]["assignments"] if a["research_type_name"] == research_type.research_type_name),
-                None
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    
+            
+    @staticmethod
+    async def get_prof_with_assigned():
+        try:
+            query = (
+                select(Users, AssignedSectionsToProf, Faculty)
+                .join(Faculty, Users.faculty_id == Faculty.id)
+                .join(AssignedSectionsToProf, Users.id == AssignedSectionsToProf.user_id)
             )
 
-            if existing_assignment:
-                existing_assignment["assignsection"].append({
-                    "id": section.id,
-                    "section": section.section,
-                    "course": section.course
-                })
-            else:
-                results[user_id]["assignments"].append(assignment)
+            users_with_assignments = await db.execute(query)
+            results = users_with_assignments.fetchall()
 
-        # Convert results to a list with the desired structure
-        final_result = []
-        for user_data in results.values():
-            final_result.append({
-                "user_profile": user_data["user_profile"],
-                "assignments": user_data["assignments"]
-            })
+            # Organize the results as a list of dictionaries with selected fields
+            organized_results = []
+            current_user = None
+            user_data = None
 
-        return final_result
+            for row in results:
+                if current_user is None or current_user.id != row[0].id:
+                    # New user, start a new dictionary
+                    if user_data is not None:
+                        organized_results.append(user_data)
+
+                    current_user = row[0]
+                    user_data = {
+                        "id": current_user.id,
+                        "username": current_user.username,
+                        "email": current_user.email,
+                        "faculty_name": None,  # Initialize faculty_name to None
+                        "assignments": []
+                    }
+
+                    # Check if faculty data is available
+                    if row[0].faculty:
+                        user_data['faculty_name'] = row[0].faculty.name
+
+                # Add assignment data to the current user's dictionary
+                assignment_data = {
+                    "section": row[1].section,
+                    "course": row[1].course,
+                    "id": row[1].id
+                }
+                user_data['assignments'].append(assignment_data)
+
+            # Add the last user's data to the list
+            if user_data is not None:
+                organized_results.append(user_data)
+
+            return organized_results
+
+        except Exception as e:
+            print(f"Error in get_prof_with_assigned: {e}")
+            raise HTTPException(status_code=500, detail=str(e))

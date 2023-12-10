@@ -20,7 +20,7 @@ from app.service.users_service import UserService
 from app.model import AssignedSections, AssignedResearchType
 from app.model.users import Users
 from app.model.faculty import Faculty
-from app.model.assignedTo import AssignedResearchTypeToProf, AssignedSectionsToProf
+from app.model.assignedTo import AssignedSectionsToProf
 
 class AssignToSection:
     
@@ -42,6 +42,8 @@ class AssignToSection:
         await db.refresh(db_assign_section)
         return db_assign_section
     
+    
+
     
     #Display the user assign based on the user_id
     @staticmethod

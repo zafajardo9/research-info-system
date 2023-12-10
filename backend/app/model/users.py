@@ -47,7 +47,8 @@ class Users(SQLModel, TimeMixin, table=True):
 
     research_types: Optional[List["AssignedResearchType"]] = Relationship(back_populates="users")
    
-    research_type_assigned_prof: Optional[List["AssignedResearchTypeToProf"]] = Relationship(back_populates="users")
+    # research_type_assigned_prof: Optional[List["AssignedResearchTypeToProf"]] = Relationship(back_populates="users")
+    section_assigned_prof: Optional[List["AssignedSectionsToProf"]] = Relationship(back_populates="users")
 
 
 

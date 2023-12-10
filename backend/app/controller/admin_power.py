@@ -35,7 +35,7 @@ async def assign_roles(
     user_roles = token.get('role', [])
     assigned_roles = "admin"
 
-    if "research professor" not in user_roles:
+    if "admin" not in user_roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
     
     user = await UsersRepository.find_by_user_id(user_id)

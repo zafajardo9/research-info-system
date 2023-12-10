@@ -21,13 +21,13 @@ router = APIRouter(
     dependencies=[Depends(JWTBearer())]
 )
 
-@router.post("/assign-roles/{user_id}")
-async def assign_roles(
+@router.post("/assign-research-professor/{user_id}")
+async def assign_role(
     user_id: str,
-    assigned_roles: List[str],
+
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
-
+    assigned_role = "research professor"
     token = JWTRepo.extract_token(credentials)
     user_roles = token.get('role', [])
 
@@ -39,10 +39,112 @@ async def assign_roles(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Assign roles to the user
-    await UsersRepository.assign_roles(user_id, assigned_roles)
+    # Assign role to the user
+    await UsersRepository.assign_role(user_id, assigned_role)
 
-    return {"message": f"Roles assigned to user with ID {user_id}"}
+    return {"message": f"Role assigned to user with ID {user_id}"}
+
+@router.delete("/remove-professor-role/{user_id}")
+async def remove_role(
+    user_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+    removed_role = "research professor"
+
+    if "admin" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    
+    user = await UsersRepository.find_by_user_id(user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Remove role from the user
+    await UsersRepository.remove_role(user_id, removed_role)
+
+    return {"message": f"Role removed from user with ID {user_id}"}
+
+@router.post("/assign-faculty/{user_id}")
+async def assign_roles(
+    user_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    '''
+    Assign a User to be a Research Professor
+    '''
+
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+    assigned_roles = "faculty"
+
+    if "research professor" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    
+    user = await UsersRepository.find_by_user_id(user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Assign roles to the user
+    await UsersRepository.assign_role(user_id, assigned_roles)
+
+    return {"message": f"Faculty assigned to user with ID {user_id}"}
+
+@router.delete("/remove-faculty-role/{user_id}")
+async def remove_role(
+    user_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+    removed_role = "faculty"
+
+    if "admin" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    
+    user = await UsersRepository.find_by_user_id(user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Remove role from the user
+    await UsersRepository.remove_role(user_id, removed_role)
+
+    return {"message": f"Role removed from user with ID {user_id}"}
+
+
+
+# @router.delete("/delete-role/{user_id}/{role_name}")
+# async def delete_role(
+#     user_id: str,
+#     role_name: str,
+#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+# ):
+#     try:
+#         token = JWTRepo.extract_token(credentials)
+#         user_roles = token.get('role', [])
+
+#         if "admin" not in user_roles:
+#             raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+        
+#         async with db.begin():
+#             user = await UsersRepository.find_by_user_id(user_id)
+
+#             if not user:
+#                 raise HTTPException(status_code=404, detail="User not found")
+
+#             await UsersRepository.delete_role(user_id, role_name)
+
+#         return {"message": f"Role '{role_name}' deleted for user with ID {user_id}"}
+
+#     except Exception as e:
+#         # Log the exception for debugging
+#         logger.error(f"Error deleting role '{role_name}' for user {user_id}: {str(e)}")
+#         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 
@@ -73,31 +175,6 @@ async def get_users_with_roles(credentials: HTTPAuthorizationCredentials = Secur
     #############################
 
 # ORIGINAL CODE FROM TOP
-@router.post("/assign-professor/{user_id}")
-async def assign_roles(
-    user_id: str,
-    assigned_roles: List[str],
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-):
-    '''
-    Assign a User to be a Research Professor
-    '''
-
-    token = JWTRepo.extract_token(credentials)
-    user_roles = token.get('role', [])
-
-    if "research professor" not in user_roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
-    
-    user = await UsersRepository.find_by_user_id(user_id)
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    # Assign roles to the user
-    await UsersRepository.assign_roles(user_id, assigned_roles)
-
-    return {"message": f"Research Professor assigned to user with ID {user_id}"}
 
 
 @router.post("/assign-professor-type-section/", response_model=AssignedResearchTypeToProf)

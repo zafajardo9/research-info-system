@@ -52,20 +52,32 @@ class UsersRepository(BaseRepo):
 
 
     @staticmethod
-    async def assign_roles(user_id: int, roles: List[str]):
-        # Clear existing roles for the user
-        await db.execute(UsersRole.__table__.delete().where(UsersRole.users_id == user_id))
-
-        # Assign new roles
-        for role_name in roles:
-            role = await db.execute(select(Role).where(Role.role_name == role_name))
-            role = role.scalar_one_or_none()
-            if role:
-                user_role = UsersRole(users_id=user_id, role_id=role.id)
-                db.add(user_role)
+    async def assign_role(user_id: int, role: str):
+        role = await db.execute(select(Role).where(Role.role_name == role))
+        role = role.scalar_one_or_none()
+        if role:
+            user_role = UsersRole(users_id=user_id, role_id=role.id)
+            db.add(user_role)
 
         await db.commit()
+        
 
+        
+    @staticmethod
+    async def remove_role(user_id: int, role: str):
+        # Find the role
+        role = await db.execute(select(Role).where(Role.role_name == role))
+        role = role.scalar_one_or_none()
+        if role:
+            # Find the user role
+            user_role = await db.execute(select(UsersRole).where((UsersRole.users_id == user_id) & (UsersRole.role_id == role.id)))
+            user_role = user_role.scalar_one_or_none()
+
+            # If the user has this role, remove it
+            if user_role:
+                await db.execute(UsersRole.__table__.delete().where((UsersRole.users_id == user_id) & (UsersRole.role_id == role.id)))
+
+        await db.commit()
 
     # @staticmethod
     # async def get_user_list_with_roles() -> List[str]:

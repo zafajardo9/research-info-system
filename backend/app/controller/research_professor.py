@@ -77,19 +77,38 @@ async def delete_workflow(workflow_id: str = Path(..., title="The ID of the work
 # ==========================ASSIGNING=============================================================
 
 
-# ORIGINAL CODE FROM TOP
 @router.post("/assign-adviser/{user_id}")
-async def assign_roles(
+async def assign_role(
     user_id: str,
-    assigned_roles: List[str],
+
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
-    '''
-    Assign a User to be a Research Adviser
-    '''
+    assigned_role = "research adviser"
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "admin" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
+    
+    user = await UsersRepository.find_by_user_id(user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Assign role to the user
+    await UsersRepository.assign_role(user_id, assigned_role)
+
+    return {"message": f"Role assigned to user with ID {user_id}"}
+
+@router.delete("/remove-adviser-role/{user_id}")
+async def remove_role(
+    user_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
 
     token = JWTRepo.extract_token(credentials)
     user_roles = token.get('role', [])
+    removed_role = "research adviser"
 
     if "research professor" not in user_roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
@@ -99,10 +118,10 @@ async def assign_roles(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Assign roles to the user
-    await UsersRepository.assign_roles(user_id, assigned_roles)
+    # Remove role from the user
+    await UsersRepository.remove_role(user_id, removed_role)
 
-    return {"message": f"Research Adviser assigned to user with ID {user_id}"}
+    return {"message": f"Role removed from user with ID {user_id}"}
 
 
 @router.post("/assign-adviser-type-section/", response_model=AssignedResearchType)

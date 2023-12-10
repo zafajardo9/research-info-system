@@ -155,7 +155,7 @@ async def remove_role(
     user_roles = token.get('role', [])
     removed_role = "faculty"
 
-    if "admin" not in user_roles:
+    if "research professor" not in user_roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
     
     user = await UsersRepository.find_by_user_id(user_id)
@@ -167,36 +167,6 @@ async def remove_role(
     await UsersRepository.remove_role(user_id, removed_role)
 
     return {"message": f"Role removed from user with ID {user_id}"}
-
-
-
-# @router.delete("/delete-role/{user_id}/{role_name}")
-# async def delete_role(
-#     user_id: str,
-#     role_name: str,
-#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-# ):
-#     try:
-#         token = JWTRepo.extract_token(credentials)
-#         user_roles = token.get('role', [])
-
-#         if "admin" not in user_roles:
-#             raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
-        
-#         async with db.begin():
-#             user = await UsersRepository.find_by_user_id(user_id)
-
-#             if not user:
-#                 raise HTTPException(status_code=404, detail="User not found")
-
-#             await UsersRepository.delete_role(user_id, role_name)
-
-#         return {"message": f"Role '{role_name}' deleted for user with ID {user_id}"}
-
-#     except Exception as e:
-#         # Log the exception for debugging
-#         logger.error(f"Error deleting role '{role_name}' for user {user_id}: {str(e)}")
-#         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 

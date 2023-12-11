@@ -86,9 +86,7 @@ class UserService:
                 Users.id,
                 Users.username,
                 Users.email,
-                Faculty.name,
-                Faculty.birth,
-                Faculty.phone_number
+                Faculty.name
             )
             .join_from(Users, Faculty)
             .where(Users.id == user_id)

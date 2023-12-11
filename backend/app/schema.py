@@ -494,11 +494,29 @@ class AssignUserProfile(BaseModel):
 class UserWithAssignments(BaseModel):
     user_profile: Dict[str, str]  # Update this based on the actual structure of user profile
     assignments: Dict[str, List[Dict[str, str]]]
-
+#======================
 class AssignedSectionsCreateWithID(BaseModel):
     id: str
     section: str
     course: str
+
+class Assignment(BaseModel):
+    id:str 
+    research_type_name: str
+    assignsection: List[str]
+
+class UserProfile(BaseModel):
+    id: str
+    username: str
+    email: str
+    name: str
+    birth: str
+    phone_number: str
+
+class UserWithAssignments(BaseModel):
+    user_profile: UserProfile
+    assignments: List[Assignment]
+
 
 # ============== MAKING ANNOUNCEMENT ==================
 

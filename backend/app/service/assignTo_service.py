@@ -96,24 +96,6 @@ class AssignToSection:
         return existing_section
     
     @staticmethod
-    async def delete_all_assignment(user_id: str):
-        assigned_research_type = await db.execute(select(AssignedResearchType).where(AssignedResearchType.user_id == user_id))
-        assigned_research_type = assigned_research_type.scalar()
-
-        if not assigned_research_type:
-            return False
-
-        # Delete linked sections
-        delete_sections = AssignedSections.__table__.delete().where(AssignedSections.research_type_id == assigned_research_type.id)
-        await db.execute(delete_sections)
-
-        # Delete research type assignment
-        await db.delete(assigned_research_type)
-        await db.commit()
-
-        return True
-    
-    @staticmethod
     async def delete_research_type_assignment(research_type_id: str):
         
         
@@ -126,6 +108,7 @@ class AssignToSection:
             return False 
 
         return True
+        
 
 
     @staticmethod
@@ -144,6 +127,74 @@ class AssignToSection:
 
 
 
+    # @staticmethod
+    # async def get_users_with_assignments():
+    #     query = (
+    #         select(Users, AssignedResearchType, AssignedSections)
+    #         .join(AssignedResearchType, Users.id == AssignedResearchType.user_id, isouter=True)
+    #         .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id, isouter=True)
+    #     )
+
+    #     users_with_assignments = await db.execute(query)
+
+    #     results = {}
+    #     for user, research_type, section in users_with_assignments:
+    #         user_id = user.id
+
+    #         if research_type is not None:
+    #             user_profile = await UserService.getprofile(user_id)
+
+    #             if user_id not in results:
+    #                 if user_profile is not None:
+    #                     results[user_id] = {
+    #                         "user_profile": {
+    #                             "id": user_profile.id,
+    #                             "username": user_profile.username,
+    #                             "email": user_profile.email,
+    #                             "name": user_profile.name,
+    #                             "birth": user_profile.birth,
+    #                             "phone_number": user_profile.phone_number
+    #                         },
+    #                         "assignments": []
+    #                     }
+
+    #             assignment = {
+    #                 "id": research_type.id,
+    #                 "research_type_name": research_type.research_type_name,
+    #                 "assignsection": []
+    #             }
+
+    #             if section is not None:
+    #                 assignment["assignsection"].append({
+    #                     "id": section.id,
+    #                     "section": section.section,
+    #                     "course": section.course
+    #                 })
+
+    #             existing_assignment = next(
+    #                 (a for a in results[user_id]["assignments"] if a["research_type_name"] == research_type.research_type_name),
+    #                 None
+    #             )
+
+    #             if existing_assignment:
+    #                 existing_assignment["assignsection"].append({
+    #                     "id": section.id,
+    #                     "section": section.section,
+    #                     "course": section.course
+    #                 })
+    #             else:
+    #                 results[user_id]["assignments"].append(assignment)
+
+    #     final_result = []
+    #     for user_data in results.values():
+    #         if len(user_data["assignments"]) > 0:
+    #             final_result.append({
+    #                 "user_profile": user_data["user_profile"],
+    #                 "assignments": user_data["assignments"]
+    #             })
+
+    #     return final_result
+
     @staticmethod
     async def get_users_with_assignments():
         query = (
@@ -154,68 +205,9 @@ class AssignToSection:
 
         users_with_assignments = await db.execute(query)
 
-        results = {}
-        for user, research_type, section in users_with_assignments:
-            user_id = user.id
+        
 
-            if research_type is not None:
-                user_profile = await UserService.getprofile(user_id)
-
-                if user_id not in results:
-                    if user_profile is not None:
-                        results[user_id] = {
-                            "user_profile": {
-                                "id": user_profile.id,
-                                "username": user_profile.username,
-                                "email": user_profile.email,
-                                "name": user_profile.name,
-                                "birth": user_profile.birth,
-                                "phone_number": user_profile.phone_number
-                            },
-                            "assignments": []
-                        }
-
-                assignment = {
-                    "id": research_type.id,
-                    "research_type_name": research_type.research_type_name,
-                    "assignsection": []
-                }
-
-                if section is not None:
-                    assignment["assignsection"].append({
-                        "id": section.id,
-                        "section": section.section,
-                        "course": section.course
-                    })
-
-                existing_assignment = next(
-                    (a for a in results[user_id]["assignments"] if a["research_type_name"] == research_type.research_type_name),
-                    None
-                )
-
-                if existing_assignment:
-                    existing_assignment["assignsection"].append({
-                        "id": section.id,
-                        "section": section.section,
-                        "course": section.course
-                    })
-                else:
-                    results[user_id]["assignments"].append(assignment)
-
-        final_result = []
-        for user_data in results.values():
-            if len(user_data["assignments"]) > 0:
-                final_result.append({
-                    "user_profile": user_data["user_profile"],
-                    "assignments": user_data["assignments"]
-                })
-
-        return final_result
-
-
-
- 
-
+        return users_with_assignments
 
 
     #=================== DISPLAY ALL PROF WITH THEIR SECTION AND COURSE

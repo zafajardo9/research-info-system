@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
+from sqlalchemy.ext.asyncio import create_async_engine
 
 DB_CONFIG = f"postgresql+asyncpg://postgres:fCBCc*G3Ce4geF*c1gFDgB24BCgg234g@viaduct.proxy.rlwy.net:28889/railway"
 
@@ -21,7 +22,8 @@ class AsyncDatabaseSession:
         return getattr(self.session,name)
 
     def init(self):
-        self.engine = create_async_engine(DB_CONFIG,future=True, echo=True)
+        self.engine = create_async_engine(DB_CONFIG, future=True, echo=True)
+        #self.engine = create_async_engine(DB_CONFIG, echo=True)
         self.session = sessionmaker(self.engine, expire_on_commit=False, class_=AsyncSession)()
 
     async def create_all(self):

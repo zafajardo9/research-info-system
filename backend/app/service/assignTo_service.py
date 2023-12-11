@@ -122,14 +122,17 @@ class AssignToSection:
         except Exception as e:
             print(f"Error in delete_section_assignment: {e}")
             raise
-    
-    
+
+
+
+
+
     @staticmethod
     async def get_users_with_assignments():
         query = (
             select(Users, AssignedResearchType, AssignedSections)
-            .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
-            .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
+            .join(AssignedResearchType, Users.id == AssignedResearchType.user_id, isouter=True)
+            .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id, isouter=True)
         )
 
         users_with_assignments = await db.execute(query)
@@ -138,59 +141,67 @@ class AssignToSection:
         for user, research_type, section in users_with_assignments:
             user_id = user.id
 
-            if user_id not in results:
-                # If user not in results, add user profile and initialize assignments list
-                user_profile = await UserService.get_faculty_profile_by_ID(user_id)
-                results[user_id] = {
-                    "user_profile": {
-                        "id": user_profile.id,
-                        "username": user_profile.username,
-                        "email": user_profile.email,
-                        "name": user_profile.name,
-                        "birth": user_profile.birth,
-                        "phone_number": user_profile.phone_number
-                    },
-                    "assignments": []
+            if research_type is not None:
+                user_profile = await UserService.getprofile(user_id)
+
+                if user_id not in results:
+                    if user_profile is not None:
+                        results[user_id] = {
+                            "user_profile": {
+                                "id": user_profile.id,
+                                "username": user_profile.username,
+                                "email": user_profile.email,
+                                "name": user_profile.name,
+                                "birth": user_profile.birth,
+                                "phone_number": user_profile.phone_number
+                            },
+                            "assignments": []
+                        }
+
+                assignment = {
+                    "id": research_type.id,
+                    "research_type_name": research_type.research_type_name,
+                    "assignsection": []
                 }
 
-            # Add assignment to the user's assignments list
-            assignment = {
-                "id": research_type.id,
-                "research_type_name": research_type.research_type_name,
-                "assignsection": [
-                    {
+                if section is not None:
+                    assignment["assignsection"].append({
                         "id": section.id,
                         "section": section.section,
                         "course": section.course
-                    }
-                ]
-            }
+                    })
 
-            existing_assignment = next(
-                (a for a in results[user_id]["assignments"] if a["research_type_name"] == research_type.research_type_name),
-                None
-            )
+                existing_assignment = next(
+                    (a for a in results[user_id]["assignments"] if a["research_type_name"] == research_type.research_type_name),
+                    None
+                )
 
-            if existing_assignment:
-                existing_assignment["assignsection"].append({
-                    "id": section.id,
-                    "section": section.section,
-                    "course": section.course
-                })
-            else:
-                results[user_id]["assignments"].append(assignment)
+                if existing_assignment:
+                    existing_assignment["assignsection"].append({
+                        "id": section.id,
+                        "section": section.section,
+                        "course": section.course
+                    })
+                else:
+                    results[user_id]["assignments"].append(assignment)
 
-        # Convert results to a list with the desired structure
         final_result = []
         for user_data in results.values():
-            final_result.append({
-                "user_profile": user_data["user_profile"],
-                "assignments": user_data["assignments"]
-            })
+            if len(user_data["assignments"]) > 0:
+                final_result.append({
+                    "user_profile": user_data["user_profile"],
+                    "assignments": user_data["assignments"]
+                })
 
         return final_result
-    
-    # =================== DISPLAY ALL PROF WITH THEIR SECTION AND COURSE
+
+
+
+ 
+
+
+
+    #=================== DISPLAY ALL PROF WITH THEIR SECTION AND COURSE
     # @staticmethod
     # async def assign_prof_to_section(assign_data: List[AssignedSectionsCreate], user_id: str):
     #     for data in assign_data:
@@ -320,12 +331,9 @@ class AssignToSection:
             select(
                 Users.faculty_id,
                 Faculty.name,
-                AssignedResearchTypeToProf.research_type_name,
                 AssignedSectionsToProf.section,
                 AssignedSectionsToProf.course
             )
-            .join(AssignedResearchTypeToProf, Users.id == AssignedResearchTypeToProf.user_id)
-            .join(AssignedSectionsToProf, AssignedResearchTypeToProf.id == AssignedSectionsToProf.research_type)
             .join(Faculty, Users.faculty_id == Faculty.id)  
             .where(
                 (AssignedSectionsToProf.section == user_section) &

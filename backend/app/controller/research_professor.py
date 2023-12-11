@@ -204,7 +204,7 @@ async def delete_all_assignment(
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
     '''
-    deleting the research type assigned to adviser
+    deleting all assigned 
     Also delete all linked sections
     '''
     token = JWTRepo.extract_token(credentials)

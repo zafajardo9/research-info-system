@@ -112,7 +112,7 @@ async def get_faculty_list():
     if result:
         return ResponseSchema(detail="Successfully fetch adviser profile!", result=result)
     else:
-        raise HTTPException(status_code=404, detail="Faculty list not found")
+        raise HTTPException(status_code=404, detail="Research Adviser list not found")
     
     
 

@@ -198,6 +198,29 @@ async def assign_section(
 
 #     return {"message": f"Research Type and sections updated successfully"}
 
+@router.delete("/delete-all-assigned/{user_id}")
+async def delete_all_assignment(
+    user_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    '''
+    deleting the research type assigned to adviser
+    Also delete all linked sections
+    '''
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "research professor" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
+
+    # Delete research type assignment
+    deleted_research_type = await AssignToSection.delete_all_assignment(user_id)
+
+    if not deleted_research_type:
+        raise HTTPException(status_code=404, detail="Research Type not found")
+
+    return {"message": f" User assigned all deleted {user_id}"}
+
 
 
 @router.delete("/delete-assigned-research-type/{research_type_id}")

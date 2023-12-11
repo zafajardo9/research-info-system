@@ -123,11 +123,29 @@ async def remove_role(
 
     return {"message": f"Role removed from user with ID {user_id}"}
 
+# ==================== ASSIGNING ADIVIOSER
 
-@router.post("/assign-adviser-type-section/", response_model=AssignedResearchType)
+# @router.post("/assign-adviser-type-section/", response_model=AssignedResearchType)
+# async def assign_section(
+#         assign_research_type: AssignedResearchTypeCreate, 
+#         assign_section: List[AssignedSectionsCreate], 
+#         credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+#     ):
+#     token = JWTRepo.extract_token(credentials)
+#     roles = token.get('role', [])
+#     if "research professor" not in roles:
+#         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
+
+#     assignUser = await AssignToSection.assign_user_researchh_type(assign_research_type)
+#     for each in assign_section:
+#         assigned_section = await AssignToSection.assign_user_section(each, assignUser.id)
+
+#     return assignUser
+
+
+@router.post("/assign-adviser-type/", response_model=AssignedResearchType)
 async def assign_section(
         assign_research_type: AssignedResearchTypeCreate, 
-        assign_section: List[AssignedSectionsCreate], 
         credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
     ):
     token = JWTRepo.extract_token(credentials)
@@ -136,11 +154,28 @@ async def assign_section(
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
 
     assignUser = await AssignToSection.assign_user_researchh_type(assign_research_type)
-    for each in assign_section:
-        assigned_section = await AssignToSection.assign_user_section(each, assignUser.id)
 
     return assignUser
 
+
+@router.post("/assign-adviser-section/{research_type_id}", response_model=List[AssignedSectionsCreate])
+async def assign_section(
+        assign_section: List[AssignedSectionsCreate], 
+        research_type_id: str,
+        credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+    roles = token.get('role', [])
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
+
+    assigned_sections = []
+
+    for each in assign_section:
+        assigned_section = await AssignToSection.assign_user_section(each, research_type_id)
+        assigned_sections.append(assigned_section)
+
+    return assigned_sections
 
 # @router.put("/update-adviser-type-section/{research_type_id}")
 # async def update_research_type(research_type_id: str, update_data: AssignedResearchTypeCreate, sections_data: List[AssignedSectionsCreate], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):

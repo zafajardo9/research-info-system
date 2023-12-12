@@ -34,7 +34,7 @@ async def assign_roles(
 
     token = JWTRepo.extract_token(credentials)
     user_roles = token.get('role', [])
-    assigned_roles = "admin"
+    assigned_role = "admin"
 
     if "admin" not in user_roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
@@ -44,10 +44,15 @@ async def assign_roles(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Assign roles to the user
-    await UsersRepository.assign_role(user_id, assigned_roles)
+    # Assign role to the user
+    if await UsersRepository.has_role(user_id, assigned_role):
+        return {"message": f"User with ID {user_id} already has the assigned role."}
 
-    return {"message": f"Faculty assigned to user with ID {user_id}"}
+        # Assign role to the user
+    await UsersRepository.assign_role(user_id, assigned_role)
+
+
+    return {"message": f"Admin assigned to user with ID {user_id}"}
 
 @router.delete("/remove-admin-role/{user_id}")
 async def remove_role(
@@ -93,6 +98,10 @@ async def assign_role(
         raise HTTPException(status_code=404, detail="User not found")
 
     # Assign role to the user
+    if await UsersRepository.has_role(user_id, assigned_role):
+        return {"message": f"User with ID {user_id} already has the assigned role."}
+
+        # Assign role to the user
     await UsersRepository.assign_role(user_id, assigned_role)
 
     return {"message": f"Role assigned to user with ID {user_id}"}
@@ -131,7 +140,7 @@ async def assign_roles(
 
     token = JWTRepo.extract_token(credentials)
     user_roles = token.get('role', [])
-    assigned_roles = "faculty"
+    assigned_role = "faculty"
 
     if "research professor" not in user_roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
@@ -141,8 +150,12 @@ async def assign_roles(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Assign roles to the user
-    await UsersRepository.assign_role(user_id, assigned_roles)
+    # Assign role to the user
+    if await UsersRepository.has_role(user_id, assigned_role):
+        return {"message": f"User with ID {user_id} already has the assigned role."}
+
+        # Assign role to the user
+    await UsersRepository.assign_role(user_id, assigned_role)
 
     return {"message": f"Faculty assigned to user with ID {user_id}"}
 

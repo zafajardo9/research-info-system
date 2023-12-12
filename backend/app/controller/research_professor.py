@@ -95,7 +95,6 @@ async def assign_role(
         raise HTTPException(status_code=403, detail="Access forbidden. Only Admins are allowed.")
     
     user = await UsersRepository.find_by_user_id(user_id)
-
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 

@@ -122,8 +122,44 @@ class AssignToSection:
         except Exception as e:
             print(f"Error in delete_section_assignment: {e}")
             raise
+        
+        
+    @staticmethod
+    async def delete_all_assignment(user_id: str):
+        assigned_research_type = await db.execute(select(AssignedResearchType).where(AssignedResearchType.user_id == user_id))
+        assigned_research_type = assigned_research_type.scalar()
 
+        if not assigned_research_type:
+            return False
 
+        # Delete linked sections
+        delete_sections = AssignedSections.__table__.delete().where(AssignedSections.research_type_id == assigned_research_type.id)
+        await db.execute(delete_sections)
+
+        # Delete research type assignment
+        await db.delete(assigned_research_type)
+        await db.commit()
+
+        return True
+
+    # @staticmethod
+    # async def delete_assignment(deleted_data: List[AssignedSectionsCreate], user_id: str):
+    #     for data in deleted_data:
+    #         # pang query
+    #         stmt = select(AssignedSectionsToProf).where(
+    #             AssignedSectionsToProf.user_id == user_id,
+    #             AssignedSectionsToProf.section == data.section,
+    #             AssignedSectionsToProf.course == data.course
+    #         )
+    #         result = await db.execute(stmt)
+    #         db_existing_section = result.scalars().first()
+
+    #         # If the value exists, delete the assignment
+    #         if db_existing_section:
+    #             await db.delete(db_existing_section)
+    #             await db.commit()
+
+    #     return {"message": "Section and Course assignment deleted successfully"}
 
 
 
@@ -253,24 +289,7 @@ class AssignToSection:
 
     #     return {"message": "Section and Course assignment deleted successfully"}
     
-    # @staticmethod
-    # async def delete_assignment(deleted_data: List[AssignedSectionsCreate], user_id: str):
-    #     for data in deleted_data:
-    #         # pang query
-    #         stmt = select(AssignedSectionsToProf).where(
-    #             AssignedSectionsToProf.user_id == user_id,
-    #             AssignedSectionsToProf.section == data.section,
-    #             AssignedSectionsToProf.course == data.course
-    #         )
-    #         result = await db.execute(stmt)
-    #         db_existing_section = result.scalars().first()
 
-    #         # If the value exists, delete the assignment
-    #         if db_existing_section:
-    #             await db.delete(db_existing_section)
-    #             await db.commit()
-
-    #     return {"message": "Section and Course assignment deleted successfully"}
 
 
     # @staticmethod

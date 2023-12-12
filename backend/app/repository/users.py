@@ -51,33 +51,34 @@ class UsersRepository(BaseRepo):
         await db.commit()
 
 
-    # @staticmethod
-    # async def assign_role(user_id: int, role: str):
-    #     role = await db.execute(select(Role).where(Role.role_name == role))
-    #     role = role.scalar_one_or_none()
-    #     if role:
-    #         user_role = UsersRole(users_id=user_id, role_id=role.id)
-    #         db.add(user_role)
-
-    #     await db.commit()
-
-
     @staticmethod
     async def assign_role(user_id: int, role: str):
         role = await db.execute(select(Role).where(Role.role_name == role))
         role = role.scalar_one_or_none()
         if role:
-            # Check if the user already has the assigned role
-            existing_user_role = await db.execute(
-                select(UsersRole).where((UsersRole.users_id == user_id) & (UsersRole.role_id == role.id))
-            )
-            existing_user_role = existing_user_role.scalar_one_or_none()
-
-            if not existing_user_role:
-                user_role = UsersRole(users_id=user_id, role_id=role.id)
-                await db.add(user_role)
+            user_role = UsersRole(users_id=user_id, role_id=role.id)
+            db.add(user_role)
 
         await db.commit()
+
+
+    # @staticmethod
+    # async def assign_role(user_id: int, role: str):
+    #     role_query = await db.execute(select(Role).where(Role.role_name == role))
+    #     role = role_query.scalar_one_or_none()
+
+    #     if role:
+    #         # Check if the user already has the assigned role
+    #         existing_user_role = await db.execute(
+    #             select(UsersRole).where((UsersRole.users_id == user_id) & (UsersRole.role_id == role.id))
+    #         )
+    #         existing_user_role = existing_user_role.scalar_one_or_none()
+
+    #         if not existing_user_role:
+    #             user_role = UsersRole(users_id=user_id, role_id=role.id)
+    #             await db.add(user_role)
+
+    #     await db.commit()
         
     #ROLE CHECKER
     @staticmethod

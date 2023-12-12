@@ -109,7 +109,6 @@ async def remove_role(
     user_id: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
-
     token = JWTRepo.extract_token(credentials)
     user_roles = token.get('role', [])
     removed_role = "research adviser"
@@ -124,6 +123,9 @@ async def remove_role(
 
     # Remove role from the user
     await UsersRepository.remove_role(user_id, removed_role)
+
+    # Call the delete_all_assignment function after successfully removing the role
+    await AssignToSection.delete_all_assignment(user_id)
 
     return {"message": f"Role removed from user with ID {user_id}"}
 
@@ -202,28 +204,28 @@ async def assign_section(
 
 #     return {"message": f"Research Type and sections updated successfully"}
 
-@router.delete("/delete-all-assigned/{user_id}")
-async def delete_all_assignment(
-    user_id: str,
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-):
-    '''
-    deleting all assigned 
-    Also delete all linkSed sections
-    '''
-    token = JWTRepo.extract_token(credentials)
-    user_roles = token.get('role', [])
+# @router.delete("/delete-all-assigned/{user_id}")
+# async def delete_all_assignment(
+#     user_id: str,
+#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+# ):
+#     '''
+#     deleting all assigned 
+#     Also delete all linkSed sections
+#     '''
+#     token = JWTRepo.extract_token(credentials)
+#     user_roles = token.get('role', [])
 
-    if "research professor" not in user_roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
+#     if "research professor" not in user_roles:
+#         raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
 
-    # Delete research type assignment
-    deleted_research_type = await AssignToSection.delete_all_assignment(user_id)
+#     # Delete research type assignment
+#     deleted_research_type = await AssignToSection.delete_all_assignment(user_id)
 
-    if not deleted_research_type:
-        raise HTTPException(status_code=404, detail="Research Type not found")
+#     if not deleted_research_type:
+#         raise HTTPException(status_code=404, detail="Research Type not found")
 
-    return {"message": f" User assigned all deleted {user_id}"}
+#     return {"message": f" User assigned all deleted {user_id}"}
 
 
 

@@ -123,7 +123,7 @@ class AssignToSection:
             print(f"Error in delete_section_assignment: {e}")
             raise
         
-        
+        #asdfasdfasdf
     @staticmethod
     async def delete_all_assignment(user_id: str):
         assigned_research_type = await db.execute(select(AssignedResearchType).where(AssignedResearchType.user_id == user_id))

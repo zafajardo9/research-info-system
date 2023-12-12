@@ -227,7 +227,7 @@ async def delete_all_assignment(
 
     return {"message": f" User assigned all deleted {user_id}"}
 
-
+#asadfasdfasdf
 
 @router.delete("/delete-assigned-research-type/{research_type_id}")
 async def delete_assignment(

@@ -92,7 +92,7 @@ class UserService:
             .where(Users.id == user_id)
         )
         return (await db.execute(query)).mappings().first()
-
+#asdfasdfadf
 
     @staticmethod
     async def get_all_student():

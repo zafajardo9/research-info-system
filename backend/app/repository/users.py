@@ -51,17 +51,61 @@ class UsersRepository(BaseRepo):
         await db.commit()
 
 
+    # @staticmethod
+    # async def assign_role(user_id: int, role: str):
+    #     role = await db.execute(select(Role).where(Role.role_name == role))
+    #     role = role.scalar_one_or_none()
+    #     if role:
+    #         user_role = UsersRole(users_id=user_id, role_id=role.id)
+    #         db.add(user_role)
+
+    #     await db.commit()
+
+
     @staticmethod
     async def assign_role(user_id: int, role: str):
         role = await db.execute(select(Role).where(Role.role_name == role))
         role = role.scalar_one_or_none()
         if role:
-            user_role = UsersRole(users_id=user_id, role_id=role.id)
-            db.add(user_role)
+            # Check if the user already has the assigned role
+            existing_user_role = await db.execute(
+                select(UsersRole).where((UsersRole.users_id == user_id) & (UsersRole.role_id == role.id))
+            )
+            existing_user_role = existing_user_role.scalar_one_or_none()
+
+            if not existing_user_role:
+                user_role = UsersRole(users_id=user_id, role_id=role.id)
+                await db.add(user_role)
 
         await db.commit()
         
+    #ROLE CHECKER
+    @staticmethod
+    async def has_role(user_id: str, target_role: str) -> bool:
+        """
+        Check if a user has a specific role.
 
+        Args:
+            session (AsyncSession): SQLAlchemy async session.
+            user_id (str): ID of the user.
+            target_role (str): Target role to check.
+
+        Returns:
+            bool: True if the user has the specified role, False otherwise.
+        """
+        # Query the role ID based on the role name
+        role = await db.execute(select(Role).where(Role.role_name == target_role))
+        role = role.scalar_one_or_none()
+
+        if role:
+            # Check if the user has the specified role
+            user_role = await db.execute(
+                select(UsersRole)
+                .where((UsersRole.users_id == user_id) & (UsersRole.role_id == role.id))
+            )
+            return user_role.scalar_one_or_none() is not None
+
+        return False
         
     @staticmethod
     async def remove_role(user_id: int, role: str):

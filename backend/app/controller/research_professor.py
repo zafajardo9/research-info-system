@@ -100,9 +100,15 @@ async def assign_role(
         raise HTTPException(status_code=404, detail="User not found")
 
     # Assign role to the user
+    if await UsersRepository.has_role(user_id, assigned_role):
+        return {"message": f"User with ID {user_id} already has the assigned role."}
+
+        # Assign role to the user
     await UsersRepository.assign_role(user_id, assigned_role)
 
     return {"message": f"Research Adviser assigned to user with ID {user_id}"}
+
+
 
 @router.delete("/remove-adviser-role/{user_id}")
 async def remove_role(

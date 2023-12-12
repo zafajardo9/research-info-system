@@ -102,7 +102,7 @@ async def assign_role(
     # Assign role to the user
     await UsersRepository.assign_role(user_id, assigned_role)
 
-    return {"message": f"Role assigned to user with ID {user_id}"}
+    return {"message": f"Research Adviser assigned to user with ID {user_id}"}
 
 @router.delete("/remove-adviser-role/{user_id}")
 async def remove_role(

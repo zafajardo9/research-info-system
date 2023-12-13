@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, Path, Security, HTTPException
+from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
 from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
@@ -15,6 +15,7 @@ from app.model.users import Users
 
 
 from app.config import db
+from app.model.faculty import Faculty
 
 #from app.schema import WorkflowCreate
 
@@ -164,9 +165,14 @@ async def assign_section(
     if "research professor" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
 
+    # Check if the user already has the assigned research type
+    await AssignToSection.check_assigned_research_type(assign_research_type.user_id, assign_research_type.research_type_name)
+
+
     assignUser = await AssignToSection.assign_user_researchh_type(assign_research_type)
 
     return assignUser
+
 
 
 @router.post("/assign-adviser-section/{research_type_id}", response_model=List[AssignedSectionsCreate])
@@ -188,26 +194,7 @@ async def assign_section(
 
     return assigned_sections
 
-# @router.put("/update-adviser-type-section/{research_type_id}")
-# async def update_research_type(research_type_id: str, update_data: AssignedResearchTypeCreate, sections_data: List[AssignedSectionsCreate], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-#     token = JWTRepo.extract_token(credentials)
-#     user_roles = token.get('role', [])
 
-#     if "research professor" not in user_roles:
-#         raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
-
-#     # Update the research type
-#     updated_research_type = await AssignToSection.update_research_type_assignment(research_type_id, update_data)
-#     if not updated_research_type:
-#         raise HTTPException(status_code=404, detail="Research Type not found")
-
-#     # Update the sections
-#     for section_data in sections_data:
-#         updated_section = await AssignToSection.update_section_assignment(section_data.id, section_data)
-#         if not updated_section:
-#             raise HTTPException(status_code=404, detail="Section not found")
-
-#     return {"message": f"Research Type and sections updated successfully"}
 
 @router.delete("/delete-all-assigned/{user_id}")
 async def delete_all_assignment(
@@ -330,7 +317,6 @@ async def read_user_assignments(user_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
 # @router.get("/adviser-with-assigned")
 # async def get_users_with_assignments():
 #     try:
@@ -378,6 +364,41 @@ async def read_user_assignments(user_id: str):
 #             return result_list
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/adviser/{research_type}/list", response_model=List[AssignUserProfile])
+async def display_by_filter(research_type: str):
+    try:
+
+
+        assignments = await AssignToSection.display_assignments_by_type(research_type)
+        if assignments is None:
+            raise HTTPException(status_code=404, detail="Assignments not found")
+
+        if assignments is None:
+            assignments = []
+            
+        elif not isinstance(assignments, list):
+            assignments = [assignments]
+        response_data = {
+            "assignments": assignments,
+        }
+
+        return response_data
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# @router.get("/adviser/{research_type}/list")
+# async def display_by_filter(research_type: str):
+    
+#     query = (select(AssignedResearchType)
+#             .filter(AssignedResearchType.research_type_name == research_type))
+    
+#     assigned_research_types = await db.execute(query)
+#     assigned_research_types = assigned_research_types.scalars().all()
+    
+#     return assigned_research_types
 
 
 @router.get("/adviser-with-assigned")

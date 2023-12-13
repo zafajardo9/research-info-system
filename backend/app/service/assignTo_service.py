@@ -25,6 +25,19 @@ from app.model.assignedTo import AssignedSectionsToProf
 class AssignToSection:
     
     @staticmethod
+    async def check_assigned_research_type(user_id: str, research_type: str):
+
+        query = select(AssignedResearchType).where(AssignedResearchType.user_id == user_id, AssignedResearchType.research_type_name == research_type)
+
+        existing_assignment = await db.execute(query)
+        
+        if existing_assignment.first():
+            raise HTTPException(status_code=400, detail="User already has the assigned research type")
+
+        
+    
+    
+    @staticmethod
     async def assign_user_researchh_type(assign_data: AssignedResearchTypeCreate):
         assign_research_type_id = str(uuid.uuid4()) 
         db_assign_research = AssignedResearchType(id=assign_research_type_id, **assign_data.dict())
@@ -32,6 +45,9 @@ class AssignToSection:
         await db.commit()
         await db.refresh(db_assign_research)
         return db_assign_research
+    
+
+    
     
     @staticmethod
     async def assign_user_section(assign_data: AssignedSectionsCreate, research_type_id: str):
@@ -68,6 +84,31 @@ class AssignToSection:
             assignments_list.append(assign_details)
 
         return assignments_list
+    
+    
+    @staticmethod
+    async def display_assignments_by_type(research_type: str):
+        first_query = select(AssignedResearchType).where(AssignedResearchType.research_type_name == research_type)
+        assigns = await db.execute(first_query)
+        assigns = assigns.scalars().all()
+
+        if not assigns:
+            return None  # Return None when the workflow is not found
+
+        assignments_list = []
+        for assign in assigns:
+            second_query = select(AssignedSections).where(AssignedSections.research_type_id == assign.id)
+            assign_sections = await db.execute(second_query)
+            assign_sections = assign_sections.scalars().all()
+
+            assign_details = AssignUserProfileNoID(
+                research_type_name=assign.research_type_name,
+                assignsection=assign_sections
+            )
+            assignments_list.append(assign_details)
+
+        return assignments_list
+    
     
     @staticmethod
     async def update_research_type_assignment(research_type_id: str, update_data: AssignedResearchTypeCreate):

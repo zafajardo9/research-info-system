@@ -62,6 +62,7 @@ class UsersRepository(BaseRepo):
         await db.commit()
 
 
+
     # @staticmethod
     # async def assign_role(user_id: int, role: str):
     #     role_query = await db.execute(select(Role).where(Role.role_name == role))

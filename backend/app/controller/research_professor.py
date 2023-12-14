@@ -366,39 +366,37 @@ async def read_user_assignments(user_id: str):
 #         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/adviser/{research_type}/list", response_model=List[AssignUserProfile])
+# dfgdf
+
+@router.get("/adviser/{research_type}/list")
 async def display_by_filter(research_type: str):
-    try:
-
-
-        assignments = await AssignToSection.display_assignments_by_type(research_type)
-        if assignments is None:
-            raise HTTPException(status_code=404, detail="Assignments not found")
-
-        if assignments is None:
-            assignments = []
-            
-        elif not isinstance(assignments, list):
-            assignments = [assignments]
-        response_data = {
-            "assignments": assignments,
-        }
-
-        return response_data
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-# @router.get("/adviser/{research_type}/list")
-# async def display_by_filter(research_type: str):
     
-#     query = (select(AssignedResearchType)
-#             .filter(AssignedResearchType.research_type_name == research_type))
+    query = (select(AssignedResearchType)
+            .filter(AssignedResearchType.research_type_name == research_type))
     
-#     assigned_research_types = await db.execute(query)
-#     assigned_research_types = assigned_research_types.scalars().all()
+    assigned_research_types = await db.execute(query)
+    assigned_research_types = assigned_research_types.scalars().all()
+
+    result = []
+    for assigned_research_type in assigned_research_types:
+        user_profile = await UserService.getprofile(assigned_research_type.user_id)
+        
+        # Query the AssignedSections table to get the list of assigned sections
+        sections_query = (select(AssignedSections)
+                        .filter(AssignedSections.research_type_id == assigned_research_type.id))
+        assigned_sections = await db.execute(sections_query)
+        assigned_sections = assigned_sections.scalars().all()
+        
+        # Create a new dictionary that only includes the fields you want
+        assigned_research_type_dict = {k: v for k, v in vars(assigned_research_type).items() if k != 'user_id'}
+        
+        result.append({
+            "assigned_research_type": assigned_research_type_dict,
+            "user_profile": user_profile,
+            "assigned_sections": [{"id": section.id, "course": section.course, "section": section.section} for section in assigned_sections]
+        })
     
-#     return assigned_research_types
+    return result
 
 
 @router.get("/adviser-with-assigned")

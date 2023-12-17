@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.announcement_repo import AnnouncementRepository
-from app.schema import AnnouncementCreate, AnnouncementDisplay, ResponseSchema
+from app.schema import AnnouncementCreate, AnnouncementDisplay, AnnouncementUpdate, ResponseSchema
 from app.model import Users, Faculty, Announcement
 
 class AnnouncementService:
@@ -29,6 +29,31 @@ class AnnouncementService:
         await db.commit()
         await db.refresh(db_assign_research)
         return db_assign_research
+
+    @staticmethod
+    async def update_announcement(id: str, data: AnnouncementUpdate):
+        # Fetch the announcement by ID
+        query = select(Announcement).filter_by(id=id)
+        
+        
+        query_announcement = await db.execute(query)
+        announcement = query_announcement.scalar()
+        
+        if not announcement:
+            raise HTTPException(status_code=404, detail="Announcement not found")
+
+        # Update the announcement fields
+        update_data = data.dict(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(announcement, field, value)
+
+        # Commit the changes to the database
+        await db.commit()
+
+        # Refresh the announcement to reflect the changes
+        await db.refresh(announcement)
+
+        return announcement
 
 
     @staticmethod

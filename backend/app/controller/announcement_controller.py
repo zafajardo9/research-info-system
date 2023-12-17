@@ -6,7 +6,7 @@ from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.config import db
 
 
-from app.schema import ResponseSchema, AnnouncementCreate, AnnouncementDisplay
+from app.schema import AnnouncementUpdate, ResponseSchema, AnnouncementCreate, AnnouncementDisplay
 from app.service.announcement_service import AnnouncementService
 from app.model.announcements import Announcement
 from app.repository.announcement_repo import AnnouncementRepository
@@ -35,6 +35,35 @@ async def assign_section(
     assignUser = await AnnouncementService.create_announcement(data, current_user)
 
     return assignUser
+
+@router.put("/update_announcement/{id}", response_model=Announcement)
+async def update_announcement_by_id(
+        id: str,
+        data: AnnouncementUpdate,
+        credentials: HTTPAuthorizationCredentials = Depends(JWTBearer())
+    ):
+    token = JWTRepo.extract_token(credentials)
+    roles = token.get('role', [])
+    
+    # Check if the current user has the necessary permissions to update an announcement
+    if "admin" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to update.")
+
+    # Check if the announcement with the given ID exists
+    
+    
+    query = select(Announcement).filter_by(id=id)
+    query_announcement = await db.execute(query)
+    announcement = query_announcement.fetchone()
+    
+    if not announcement:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+
+    # Update the announcement
+    updated_announcement = await AnnouncementService.update_announcement(id, data)
+
+    return updated_announcement
+
 
 @router.get("/announcements_with_user_names/")
 async def get_announcements_with_user_names():

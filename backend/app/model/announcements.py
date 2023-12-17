@@ -16,3 +16,4 @@ class Announcement(SQLModel, TimeMixin, table=True):
     content: str
     other_details: Optional[str]
     
+

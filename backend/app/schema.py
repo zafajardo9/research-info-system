@@ -195,6 +195,7 @@ class StatusUpdate(BaseModel):
 
 #==================== ETHICS =====================
 class EthicsCreate(BaseModel):
+    workflow_step_id: Optional[str]
     research_paper_id: Optional[str]
     letter_of_intent: Optional[str]
     urec_9: Optional[str]
@@ -207,6 +208,7 @@ class EthicsCreate(BaseModel):
 
 class EthicsResponse(BaseModel):
     id: Optional[str]
+    workflow_step_id: Optional[str]
     modified_at: Optional[datetime]
     created_at: Optional[datetime]
     letter_of_intent: Optional[str]
@@ -233,6 +235,7 @@ class EthicsWithResearchResponse(BaseModel):
     research_paper_id: Optional[str]
     status: Optional[str]
     title: Optional[str]
+    workflowstep_id: Optional[str]
 
 class EthicsUpdate(BaseModel):
     letter_of_intent: constr(strip_whitespace=True)
@@ -246,6 +249,7 @@ class EthicsUpdate(BaseModel):
 # ===========================FULL MANUSCRIPT
 class FullManuscriptCreate(BaseModel):
     research_paper_id: str = Field(..., min_length=1)
+    workflow_step_id: str = Field(..., min_length=1)
     content: str = Field(..., min_length=1)
     keywords: str = Field(..., min_length=1)
     abstract: str = Field(..., min_length=1)
@@ -275,6 +279,7 @@ class FullManuscriptResponse(BaseModel):
     abstract: Optional[str]
     file: Optional[str]
     status: Optional[str]
+    workflow_step_id: Optional[str]
 
 class FullManuscriptWithResearchResponse(BaseModel):
     id: Optional[str]
@@ -293,6 +298,7 @@ class FullManuscriptWithResearchResponse(BaseModel):
 # =========================COPYRIGHT =================
 class CopyRightCreate(BaseModel):
     research_paper_id: Optional[str]
+    workflow_step_id: Optional[str]
     co_authorship: Optional[str]
     affidavit_co_ownership: Optional[str]
     joint_authorship: Optional[str]
@@ -521,6 +527,13 @@ class UserWithAssignments(BaseModel):
 # ============== MAKING ANNOUNCEMENT ==================
 
 class AnnouncementCreate(BaseModel):
+    user_role_target: str
+    announcement_type: str
+    title: str
+    content: str
+    other_details: str
+    
+class AnnouncementUpdate(BaseModel):
     user_role_target: str
     announcement_type: str
     title: str

@@ -47,7 +47,6 @@ def init_app():
 
     app.include_router(authentication.router)
     app.include_router(users.router)
-    #app.include_router(all_about_info.router)
     app.include_router(research_controller.router)
     #app.include_router(auth_controller.router)
     app.include_router(announcement_controller.router)
@@ -59,6 +58,7 @@ def init_app():
     app.include_router(ethics.router)
     app.include_router(manuscript_controller.router)
     app.include_router(copyright_controller.router)
+    app.include_router(all_about_info.router)
 
 
     return app

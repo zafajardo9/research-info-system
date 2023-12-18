@@ -14,11 +14,11 @@ from fastapi import HTTPException
 
 
 from app.repository.workflow_repo import WorkflowRepository
-from app.model.workflowprocess import Workflow
+from app.model.workflowprocess import NavigationTab, Workflow
 from app.model.workflowprocess import WorkflowStep
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
-from app.schema import WorkflowCreate, WorkflowDetail, WorkflowStepCreate
+from app.schema import NavigationTabCreate, WorkflowCreate, WorkflowDetail, WorkflowStepCreate
 
 
 
@@ -66,7 +66,38 @@ class WorkflowService:
         )
 
         return workflow_detail
+# ================================================ FOR NAVIGATIONS
+    @staticmethod
+    async def create_process_role(navigation_tab: NavigationTabCreate):
+        process_id = str(uuid.uuid4())
+        db_process = NavigationTab(id=process_id, **navigation_tab.dict())
+        db.add(db_process)
+        await db.commit()
+        await db.refresh(db_process)
+        return db_process
+    
+    @staticmethod
+    async def update_process_role(id: str, navigation_tab: NavigationTabCreate):
+        result = await db.execute(select(NavigationTab).where(NavigationTab.id == id))
+        update_process = result.scalar_one_or_none()
 
+        if update_process:
+            # Update the fields with new values
+            for key, value in navigation_tab.dict().items():
+                setattr(update_process, key, value)
+
+            await db.commit()
+            await db.refresh(update_process)
+            return update_process
+        else:
+            raise HTTPException(status_code=404, detail="Process set not found")
+        
+    @staticmethod
+    async def display_process():
+        result = await db.execute(select(NavigationTab))
+        update_process = result.scalars().all()
+
+        return update_process
 
 # =================================================
     @staticmethod

@@ -552,6 +552,26 @@ class AnnouncementDisplay(BaseModel):
 
 # =========================================
 
+
+
+
+# ======================ASSIGNING A PROCESS FOR A ROLE ====================
+
+class NavigationTabCreate(BaseModel):
+
+    role: str
+    section: str
+    course: str
+    type: str
+    has_submitted_proposal: bool
+    has_pre_oral_defense_date: bool
+    has_submitted_ethics_protocol: bool
+    has_submitted_full_manuscript: bool
+    has_set_final_defense_date: bool
+    has_submitted_copyright: bool
+    
+
+
 #FOR THE DISPLAY OF LIST IN PAGE
 class PageResponse(GenericModel, Generic[T]):
     """ The response for a pagination query. """

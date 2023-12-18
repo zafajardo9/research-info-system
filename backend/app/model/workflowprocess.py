@@ -50,3 +50,31 @@ class WorkflowStep(SQLModel, table=True):
     ethics: List["Ethics"] = Relationship(back_populates="workflow_step")
     copyright:  List["CopyRight"] = Relationship(back_populates="workflow_step")
     full_manuscript: List["FullManuscript"] = Relationship(back_populates="workflow_step")
+
+
+# todo LIST
+# Submitted Proposal
+# Pre-Oral Defense Date
+# Submitted Ethics/Protocol
+# Submitted Full Manuscript
+# Set Final Defense Date
+# Submitted Copyright
+
+class NavigationTab(SQLModel, table=True):
+    __tablename__ = "navigation_role"
+
+    id: str = Field(primary_key=True, index=True, unique=True)
+    role: str
+    section: str
+    course: str
+    type: str
+    has_submitted_proposal: bool = Field(default=False)
+    has_pre_oral_defense_date: bool = Field(default=False)
+    has_submitted_ethics_protocol: bool = Field(default=False)
+    has_submitted_full_manuscript: bool = Field(default=False)
+    has_set_final_defense_date: bool = Field(default=False)
+    has_submitted_copyright: bool = Field(default=False)
+
+
+#if role research adviser assigned research type and section course... dito sa navigation tab checker nung role then section course tapos type
+#table na to for research adviser and prof

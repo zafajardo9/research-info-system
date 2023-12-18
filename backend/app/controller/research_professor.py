@@ -1,8 +1,9 @@
+from operator import itemgetter
 from typing import List
 from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.repository.workflow_repo import WorkflowRepository
 from app.repository.workflowsteps_repo import WorkflowStepRepository
@@ -12,10 +13,12 @@ from app.service.assignTo_service import AssignToSection
 from app.service.users_service import UserService
 from app.repository.users import UsersRepository
 from app.model.users import Users
+from itertools import groupby
 
 
 from app.config import db
 from app.model.faculty import Faculty
+from app.model.workflowprocess import NavigationTab
 
 #from app.schema import WorkflowCreate
 
@@ -79,6 +82,46 @@ async def delete_workflow(workflow_id: str = Path(..., title="The ID of the work
 
     return {"message": "Workflow deleted successfully"}
 
+
+# ==========================PROCESS NAVIGATION FOR ADVISER AND PROFESSOR=============================================================
+@router.post("/assign-process/")
+async def create_process_role(navigation_tab: NavigationTabCreate,):
+    create_process = await WorkflowService.create_process_role(navigation_tab)
+    return create_process
+
+
+@router.put("/update-assigned-process/{id}")
+async def update_process_role(id: str, navigation_tab: NavigationTabCreate):
+    updated_process = await WorkflowService.update_process_role(id, navigation_tab)
+    return updated_process
+
+    
+@router.get("/display-all/")
+async def display_process_all():
+    '''Wala to like as in same lang nung query sa Database SELECT * FROM'''
+    results = await WorkflowService.display_process()
+    return results
+    
+@router.get("/display-process-all/")
+async def display_process_role():
+    '''Ito may Format pero pwede ka mag req ano pinakamaganda'''
+    results = await WorkflowService.display_process()
+    grouped_results = group_by_type(results)
+    return grouped_results
+
+
+def group_by_type(results):
+    # Sort the results by type and section
+    sorted_results = sorted(results, key=lambda x: (x.type, x.section))
+
+    # Group the sorted results by type
+    grouped_results = {}
+    for research_type, type_group in groupby(sorted_results, key=lambda x: x.type):
+        type_list = list(type_group)
+        grouped_results[research_type] = type_list
+
+    return grouped_results
+
 # ==========================ASSIGNING=============================================================
 
 
@@ -135,24 +178,6 @@ async def remove_role(
 
     return {"message": f"Role removed from user with ID {user_id}"}
 
-# ==================== ASSIGNING ADIVIOSER
-
-# @router.post("/assign-adviser-type-section/", response_model=AssignedResearchType)
-# async def assign_section(
-#         assign_research_type: AssignedResearchTypeCreate, 
-#         assign_section: List[AssignedSectionsCreate], 
-#         credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-#     ):
-#     token = JWTRepo.extract_token(credentials)
-#     roles = token.get('role', [])
-#     if "research professor" not in roles:
-#         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
-
-#     assignUser = await AssignToSection.assign_user_researchh_type(assign_research_type)
-#     for each in assign_section:
-#         assigned_section = await AssignToSection.assign_user_section(each, assignUser.id)
-
-#     return assignUser
 
 
 @router.post("/assign-adviser-type/", response_model=AssignedResearchType)

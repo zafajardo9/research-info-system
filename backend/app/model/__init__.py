@@ -28,5 +28,7 @@ from .assignedTo import AssignedSections
 # from .assignedTo import AssignedResearchTypeToProf
 from .assignedTo import AssignedSectionsToProf
 
+from .workflowprocess import NavigationTab
+
 
 

@@ -107,21 +107,35 @@ async def get_number_of_advisory_by_status(
 ):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
-    number_pending = await AllInformationService.get_number_of_advisory_by_status(db, current_user, "Pending")
-    number_approve = await AllInformationService.get_number_of_advisory_by_status(db, current_user, "Approve")
-    number_reject = await AllInformationService.get_number_of_advisory_by_status(db, current_user, "Reject")
+    # number_pending = await AllInformationService.get_number_of_advisory_by_status(db, current_user, "Pending")
+    # number_approve = await AllInformationService.get_number_of_advisory_by_status(db, current_user, "Approve")
+    # number_reject = await AllInformationService.get_number_of_advisory_by_status(db, current_user, "Reject")
     total_number = await AllInformationService.get_number_of_my_advisory(db, current_user)
+    ethics_count = await AllInformationService.get_number_of_ethics_by_adviser(db, current_user)
+    copyright_count = await AllInformationService.get_number_of_copyright_by_adviser(db, current_user)
+    manuscript_count = await AllInformationService.get_number_of_full_manuscript_by_adviser(db, current_user)
+    
+    
+    proposal_status_count = await AllInformationService.get_status_count_of_proposal_by_adviser(db, current_user)
+    ethics_status_count = await AllInformationService.get_status_count_of_ethics_by_adviser(db, current_user)
+    copyright_status_count = await AllInformationService.get_status_count_of_copyright_by_adviser(db, current_user)
+    manuscript_status_count = await AllInformationService.get_status_count_of_full_manuscript_by_adviser(db, current_user)
     return {
-        "Pending": {
-            "Advisory count": number_pending,
+        "Number of my advisory": total_number,
+        "PROPOSALS": {
+            "Proposal Status Counts": proposal_status_count,
         },
-        "Approve": {
-            "Advisory count": number_approve,
+        "ETHICS": {
+            "COUNT OF SUBMITTED" : ethics_count,
+            "Ethics Status Counts": ethics_status_count,
         },
-        "Reject": {
-            "Advisory count": number_reject,
-        },
-        "Number of my advisory": total_number
         
-        
+        "COPYRIGHT": {
+            "COUNT OF SUBMITTED": copyright_count,
+            "Copyright Status Counts": copyright_status_count,
+        },
+        "FULL MANUSCRIPT": {
+            "COUNT OF SUBMITTED": manuscript_count,
+            "Manuscript Status Counts": manuscript_status_count,
         }
+    }

@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 import uuid
-from sqlalchemy import and_, insert, join
+from sqlalchemy import and_, distinct, insert, join
 from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.orm import joinedload
@@ -381,25 +381,47 @@ class AssignToSection:
             )
             .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
             .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
-            .join(Faculty, Users.faculty_id == Faculty.id)  # Join with the Faculty table
+            .join(Faculty, Users.faculty_id == Faculty.id)
             .where(
                 (AssignedSections.section == user_section) &
                 (AssignedSections.course == user_course)
-                # (AssignedResearchType.research_type_name == "")
             )
         )
         users_with_assignments = await db.execute(query)
         results = users_with_assignments.fetchall()
-        
-        return results
+
+        # Group results by research type
+        grouped_results = {}
+        for result in results:
+            research_type = result['research_type_name']
+            if research_type not in grouped_results:
+                grouped_results[research_type] = []
+
+            grouped_results[research_type].append({
+                "faculty_id": result['faculty_id'],
+                "name": result['name'],
+                "section": result['section'],
+                "course": result['course']
+            })
+
+        # Convert the dictionary to the desired format
+        final_result = []
+        for research_type, advisers in grouped_results.items():
+            final_result.append({
+                "research_type": research_type,
+                "advisers": advisers
+            })
+
+        return final_result
     
     
     @staticmethod
     async def student_get_prof_list(user_course: str, user_section: str):
         query = (
             select(
-                Users.faculty_id,
+                distinct(Users.faculty_id).label('faculty_id'),
                 Faculty.name,
+                (Users.id).label('user_id'),
                 AssignedSectionsToProf.section,
                 AssignedSectionsToProf.course
             )
@@ -411,6 +433,5 @@ class AssignToSection:
         )
         users_with_assignments = await db.execute(query)
         results = users_with_assignments.fetchall()
-        
+
         return results
-    

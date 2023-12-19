@@ -42,7 +42,7 @@ class WorkflowStep(SQLModel, table=True):
     id: str = Field(primary_key=True)
     name: str
     description: str
-    step_number: str
+    step_number: int
     workflow_id: str = Field(foreign_key="workflow.id")
     workflow: "Workflow" = Relationship(back_populates="steps")
     

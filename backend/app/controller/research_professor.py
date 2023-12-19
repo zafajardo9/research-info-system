@@ -82,8 +82,50 @@ async def delete_workflow(workflow_id: str = Path(..., title="The ID of the work
 
     return {"message": "Workflow deleted successfully"}
 
+# @router.delete("/workflows-step/{workflow_step_id}", response_model=dict)
+# async def delete_workflow(workflow_step_id: str = Path(..., title="The ID of the workflow step")):
+#     deleted = await WorkflowService.delete_workflowstep_by_id(workflow_step_id)
+
+#     if not deleted:
+#         raise HTTPException(status_code=404, detail="Workflow step not found")
+
+#     return {"message": "Workflow deleted successfully"}
+
+
+student_process_name = {
+    "Proposal": "Proposal",
+    "Pre-Oral Defense": "Pre-Oral Defense Date",
+    "Ethics": "Ethics/Protocol",
+    "Full Manuscript": "Full Manuscript",
+    "Final Defense": "Final Defense",
+    "Copyright": "Copyright"
+}
+
+
+@router.get("/workflows-list-name-process-student")
+async def list_of_process_for_student():
+    '''Can be use in dropdown list'''
+    return student_process_name
+
+
 
 # ==========================PROCESS NAVIGATION FOR ADVISER AND PROFESSOR=============================================================
+
+faculty_process_name = {
+    1 : "Submitted Proposal",
+    2 : "Pre-Oral Defense Date",
+    3 : "Submitted Ethics/Protocol",
+    4 : "Submitted Full Manuscript",
+    5 : "Set Final Defense Date",
+    6 : "Submitted Copyright"
+}
+
+
+@router.get("/process-list-name")
+async def list_of_process_for_student():
+    '''Can be use in dropdown list'''
+    return faculty_process_name
+
 @router.post("/assign-process/")
 async def create_process_role(navigation_tab: NavigationTabCreate,):
     create_process = await WorkflowService.create_process_role(navigation_tab)
@@ -95,6 +137,14 @@ async def update_process_role(id: str, navigation_tab: NavigationTabCreate):
     updated_process = await WorkflowService.update_process_role(id, navigation_tab)
     return updated_process
 
+@router.delete("/delete-assigned-process/{id}")
+async def update_process_role(id: str):
+    delete = await WorkflowService.delete_process_by_id(id)
+    if not delete:
+        raise HTTPException(status_code=404, detail="Process not found")
+
+    return {"message": "Process deleted successfully"}
+
     
 @router.get("/display-all/")
 async def display_process_all():
@@ -102,13 +152,19 @@ async def display_process_all():
     results = await WorkflowService.display_process()
     return results
     
-@router.get("/display-process-all/")
+@router.get("/display-process-all/type")
 async def display_process_role():
     '''Ito may Format pero pwede ka mag req ano pinakamaganda'''
     results = await WorkflowService.display_process()
     grouped_results = group_by_type(results)
     return grouped_results
 
+@router.get("/display-process-all/user_role")
+async def display_process_role():
+    '''Ito may Format pero pwede ka mag req ano pinakamaganda'''
+    results = await WorkflowService.display_process()
+    grouped_results = group_by_role(results)
+    return grouped_results
 
 def group_by_type(results):
     # Sort the results by type and section
@@ -119,6 +175,18 @@ def group_by_type(results):
     for research_type, type_group in groupby(sorted_results, key=lambda x: x.type):
         type_list = list(type_group)
         grouped_results[research_type] = type_list
+
+    return grouped_results
+
+def group_by_role(results):
+    # Sort the results by role and section
+    sorted_results = sorted(results, key=lambda x: (x.role, x.section))
+
+    # Group the sorted results by role
+    grouped_results = {}
+    for role, role_group in groupby(sorted_results, key=lambda x: x.role):
+        role_list = list(role_group)
+        grouped_results[role] = role_list
 
     return grouped_results
 

@@ -420,7 +420,7 @@ class DisplayAllByUser(BaseModel):
 class WorkflowStepCreate(BaseModel):
     name: str
     description: str
-    step_number: str
+    step_number: int
 
 class WorkflowCreate(BaseModel):
     course: str 
@@ -431,7 +431,7 @@ class WorkflowStepDetail(BaseModel):
     id: str
     name: str
     description: str
-    step_number: str
+    step_number: int
 
 class WorkflowDetail(BaseModel):
     id: str

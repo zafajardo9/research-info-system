@@ -93,6 +93,13 @@ class WorkflowService:
             raise HTTPException(status_code=404, detail="Process set not found")
         
     @staticmethod
+    async def delete_process_by_id(id: str):
+            # Delete workflow steps
+        await db.execute(delete(NavigationTab).where(NavigationTab.id == id))
+
+        return True
+        
+    @staticmethod
     async def display_process():
         result = await db.execute(select(NavigationTab))
         update_process = result.scalars().all()
@@ -166,6 +173,12 @@ class WorkflowService:
             # Delete the workflow itself
         await db.execute(delete(Workflow).where(Workflow.id == workflow.id))
 
+        return True
+    
+    @staticmethod
+    async def delete_workflowstep_by_id(workflow_step_id: str):
+            # Delete workflow steps
+        await db.execute(delete(WorkflowStep).where(WorkflowStep.id == workflow_step_id))
         return True
 
 # 28914385-40fd-43f2-ad5c-898b9263f08f

@@ -47,50 +47,89 @@ async def assign_process(
 # @router.get("/filtered-process-by-user-role/")
 # async def filtered_process_by_user_role(credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),):
 #     # Get the result from display_process_role
-    
 #     token = JWTRepo.extract_token(credentials)
 #     user_id = token.get('user_id')
-
-#     display_process_result = await WorkflowService.display_process()
 
 #     user_roles = await UsersRepository.get_user_roles(user_id)
 
 #     if "research professor" in user_roles:
 #         assigned_sections = await AssignToProf.display_assigned_sections(user_id)
+#         # Fetch NavigationTab data for each section
+#         course_section_list = []  # Initialize a list to store course and section values
         
+#         for section_data in assigned_sections:
+#             assigned_sections_to_prof = section_data['AssignedSectionsToProf']
+            
+#             course = assigned_sections_to_prof.course
+#             section = assigned_sections_to_prof.section
+
+#             # Extracted course and section values
+#             course_section_list.append({"course": course, "section": section})
+
+#             navigation_tabs = await FacultyFlow.get_processes_for_user("research professor", course, section)
+#             assigned_sections_to_prof.navigation_tabs = navigation_tabs
+
+#         # Construct the response with assigned_sections and course_section_list
+#         response_data = {
+#             "assigned_sections_as_prof": assigned_sections,
+#             "course_section_list": course_section_list
+#         }
 #     else:
 #         assigned_sections = ["Nothing found assign as a research professor"]
-        
-        
-#     if "research adviser" in user_roles:
-#         assigned_sections_adviser = await AssignToSection.display_assignments_by_user(user_id)
-#     else:
-#         assigned_sections_adviser = ["Nothing found assign as a research adviser"]
-        
-#         # Get the assigned_sections_as_prof
-#     assigned_sections_as_prof = [
-#         {
-#             "AssignedSectionsToProf": {
-#                 "course": assigned_section["course"],
-#                 "id": assigned_section["id"],
-#                 "section": assigned_section["section"],
-#                 "user_id": assigned_section["user_id"]
-#             }
-#         } for assigned_section in assigned_sections if assigned_section["course"] == course
-#     ]
+#         # Construct the response without course_section_list
+#         response_data = {
+#             "assigned_sections_as_prof": assigned_sections,
+#         }
 
-#     # Get the assigned_sections_as_adviser
-#     assigned_sections_as_adviser = [
-#         {
-#             "research_type_name": assigned_section_adviser["research_type_name"],
-#             "assignsection": assigned_section_adviser["assignsection"]
-#         } for assigned_section_adviser in assigned_sections_adviser if assigned_section_adviser["assignsection"][0]["course"] == course
-#     ]
+#     return response_data
 
-#     # Construct the response
-#     response_data = {
-#         "filtered_results_as_prof": assigned_sections_as_prof,
-#         "filtered_results_as_adviser": assigned_sections_as_adviser,
-#     }
+
+
+
+
+@router.get("/filtered-process-by-user-role/")
+async def filtered_process_by_user_role(credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),):
+    # Get the result from display_process_role
+    token = JWTRepo.extract_token(credentials)
+    user_id = token.get('user_id')
+
+    user_roles = await UsersRepository.get_user_roles(user_id)
+    
+    navigation_tabs_list = []
+    assigned_sections_adviser = []
+
+    if "research professor" in user_roles:
+        assigned_sections = await AssignToProf.display_assigned_sections(user_id)
+
+
+        for section_data in assigned_sections:
+            assigned_sections_to_prof = section_data['AssignedSectionsToProf']
+
+            course = assigned_sections_to_prof.course
+            section = assigned_sections_to_prof.section
+
+            navigation_tabs = await FacultyFlow.get_processes_for_user("research professor", course, section)
+
+            if navigation_tabs:
+                # Add navigation tabs to the list
+                navigation_tabs_list.append({"course": course, "section": section, "navigation_tabs": navigation_tabs})
+            else:
+                # Display a message if no processes are found for the role, section, and course
+                navigation_tabs_list.append({"course": course, "section": section, "navigation_tabs": "No process found for this role"})
+
+    else:
+        navigation_tabs_list = ["Nothing found assign as a research professor"]
         
+    
+    if "research adviser" in user_roles:
+        assigned_sections_adviser = await FacultyFlow.display_assignment(user_id)
+    else:
+        assigned_sections_adviser = ["Nothing found assign as a research adviser"]
+
+    # Construct the response
+    response_data = {
+        "assigned_sections_as_prof": navigation_tabs_list,
+        "assigned_sections_as_adviser": assigned_sections_adviser
+    }
+    return response_data
 

@@ -492,6 +492,11 @@ class UpdateAssign(BaseModel):
 class AssignUserProfileNoID(BaseModel):
     research_type_name: str
     assignsection: List[AssignedSectionsCreate]
+    
+# class AssignUserProfileForOVERALL(BaseModel):
+#     research_type_name: str
+#     assignsection: List[AssignedSectionsCreate]
+    
 
 class AssignUserProfile(BaseModel):
     user_profile: dict

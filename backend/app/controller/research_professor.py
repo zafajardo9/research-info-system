@@ -61,7 +61,20 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=404, detail="Workflow not found")
     return workflow
 
+@router.get("/workflows/all-list", response_model=List[WorkflowDetail])
+async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+    roles = token.get('role', [])
 
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
+
+    workflow = await WorkflowService.get_workflow_all()
+    
+    if not workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    return workflow
 
 @router.get("/workflows/{workflow_id}", response_model=WorkflowDetail)
 async def read_workflow_by_id(workflow_id: str = Path(..., title="The ID of the workflow")):

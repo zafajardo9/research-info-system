@@ -58,6 +58,11 @@ async def create_workflows1(workflows_data: List[WorkflowCreateWithSteps], crede
     for workflow_data_with_steps in workflows_data:
         workflow_data = workflow_data_with_steps.workflow_data
         workflow_steps_data = workflow_data_with_steps.workflow_steps
+        
+    # Check if workflow already exists
+        if await WorkflowService.check_if_workflow_exists(workflow_data.type, workflow_data.year, workflow_data.course):
+            raise HTTPException(status_code=400, detail="A workflow with the same type, section, and course already exists.")
+
 
         created_workflow = await WorkflowService.create_workflow(workflow_data, current_user)
 
@@ -79,6 +84,11 @@ async def create_workflows2(workflow_data: List[WorkflowCreate], workflow_steps:
 
     created_workflows = []
     for data in workflow_data:
+        
+        if await WorkflowService.check_if_workflow_exists(data.type, data.year, data.course):
+            raise HTTPException(status_code=400, detail="A workflow with the same type, section, and course already exists.")
+        
+        
         created_workflow = await WorkflowService.create_workflow(data, current_user)
 
         for step_data in workflow_steps:

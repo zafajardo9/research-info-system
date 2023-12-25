@@ -28,11 +28,25 @@ router = APIRouter(
     dependencies=[Depends(JWTBearer())]
 )
 
+student_process_name = {
+    "Proposal": "Proposal",
+    "Pre-Oral Defense": "Pre-Oral Defense Date",
+    "Ethics": "Ethics/Protocol",
+    "Full Manuscript": "Full Manuscript",
+    "Final Defense": "Final Defense",
+    "Copyright": "Copyright"
+}
+
+
+@router.get("/workflows-list-name-process-student")
+async def list_of_process_for_student():
+    '''Can be use in dropdown list'''
+    return student_process_name
 
 
 
 @router.post("/create/1", response_model=List[Workflow])
-async def create_workflows(workflows_data: List[WorkflowCreateWithSteps], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+async def create_workflows1(workflows_data: List[WorkflowCreateWithSteps], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
     roles = token.get('role', [])
@@ -56,7 +70,7 @@ async def create_workflows(workflows_data: List[WorkflowCreateWithSteps], creden
 
 
 @router.post("/create/2", response_model=List[Workflow])
-async def create_workflows(workflow_data: List[WorkflowCreate], workflow_steps: List[WorkflowStepCreate], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+async def create_workflows2(workflow_data: List[WorkflowCreate], workflow_steps: List[WorkflowStepCreate], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
     roles = token.get('role', [])
@@ -118,7 +132,7 @@ async def update_workflow_with_steps(
 
 
 @router.get("/created-workflow-by-user", response_model=List[WorkflowDetail])
-async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+async def read_workflow_made_by_user(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     '''Hindi ito magagamit ata.. pero ginawa ko lang sana para ma display yung mga ginawa na workflow na ginawa ng research prof talaga'''
     
     token = JWTRepo.extract_token(credentials)
@@ -180,17 +194,3 @@ async def delete_workflow(workflow_step_id: str = Path(..., title="The ID of the
     return {"message": "Workflow deleted successfully"}
 
 
-student_process_name = {
-    "Proposal": "Proposal",
-    "Pre-Oral Defense": "Pre-Oral Defense Date",
-    "Ethics": "Ethics/Protocol",
-    "Full Manuscript": "Full Manuscript",
-    "Final Defense": "Final Defense",
-    "Copyright": "Copyright"
-}
-
-
-@router.get("/workflows-list-name-process-student")
-async def list_of_process_for_student():
-    '''Can be use in dropdown list'''
-    return student_process_name

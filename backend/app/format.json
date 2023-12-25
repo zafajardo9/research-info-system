@@ -1,0 +1,40 @@
+[
+    {
+        "workflow_data": {
+            "course": "BSIT",
+            "year": "4-1",
+            "type": "Research"
+        },
+        "workflow_steps": [
+            {
+            "name": "Product",
+            "description": "asdfasdf",
+            "step_number": 1
+            },
+            {
+            "name": "asdfasdf",
+            "description": "adfass",
+            "step_number": 2
+            }
+        ]
+    },
+    {
+        "workflow_data": {
+            "course": "BSIT",
+            "year": "4-2",
+            "type": "Capstone"
+        },
+        "workflow_steps": [
+            {
+            "name": "Product 1",
+            "description": "asdfasdf",
+            "step_number": 1
+            },
+            {
+            "name": "defense",
+            "description": "adfass",
+            "step_number": 2
+            }
+        ]
+    }
+]

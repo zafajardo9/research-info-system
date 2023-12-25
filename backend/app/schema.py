@@ -417,15 +417,7 @@ class DisplayAllByUser(BaseModel):
 
 # ==================================RESEARCH PROF =======================
 
-class WorkflowStepCreate(BaseModel):
-    name: str
-    description: str
-    step_number: int
 
-class WorkflowCreate(BaseModel):
-    course: str 
-    year: str
-    type: str
 
 class WorkflowStepDetail(BaseModel):
     id: str
@@ -453,10 +445,21 @@ class WorkflowAllDetails(BaseModel):
     ethics: EthicsResponse
     copyright: CopyRightResponse
     manuscript: FullManuscriptResponse
-    
+
+class WorkflowStepCreate(BaseModel):
+    name: str
+    description: str
+    step_number: int
+
+class WorkflowCreate(BaseModel):
+    course: str 
+    year: str
+    type: str
+class WorkflowCreateWithSteps(BaseModel):
+    workflow_data: WorkflowCreate
+    workflow_steps: List[WorkflowStepCreate]
     
 
-    
     
 # ============ ASSIGN SECTION COURSE to a user based in research type
 class AssignedResearchTypeCreate(BaseModel):

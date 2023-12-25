@@ -1,6 +1,6 @@
 from datetime import datetime
 import uuid
-from sqlalchemy import delete, join, and_
+from sqlalchemy import delete, join, and_, update
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.orm import selectinload
@@ -127,6 +127,26 @@ class WorkflowService:
 
         return workflows_with_steps
     
+    
+    #Ginamit lang para sa update para mas makuha ang mga data
+    @staticmethod
+    async def get_workflow_by_id_with_steps(workflow_id: str):
+        workflow_query = select(Workflow).where(Workflow.id == workflow_id)
+        workflow = await db.execute(workflow_query)
+        workflow = workflow.scalars().first()
+
+        if not workflow:
+            return None
+
+        steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+        steps = await db.execute(steps_query)
+        steps = steps.scalars().all()
+
+        workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+        
+        return workflow_detail
+    
+    
     @staticmethod
     async def get_workflow_all():
         workflows_query = select(Workflow)
@@ -173,9 +193,52 @@ class WorkflowService:
             workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
             workflows_with_steps.append(workflow_detail)
 
-        return workflows_with_steps
+        return workflows_with_steps    
     
+    
+    
+        
+    #BREAKDOWN BETWEEN THE WORKFLOW DATA AND THE STEPS
+    @staticmethod
+    async def get_workflow_id(workflow_id: str):
+        workflow_query = select(Workflow).where(Workflow.id == workflow_id)
+        workflow = await db.execute(workflow_query)
+        workflow = workflow.scalars().first()
 
+        if not workflow:
+            return None
+
+        return workflow
+    
+    @staticmethod
+    async def get_workflow_steps_id(workflow_id: str):
+
+
+        steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
+        steps = await db.execute(steps_query)
+        steps = steps.scalars().all()
+
+        return steps
+
+    
+    @staticmethod
+    async def update_workflow_with_steps(workflow_id: str, workflow_data: WorkflowCreate, steps_data: List[WorkflowStepCreate]):
+        workflow = await WorkflowService.get_workflow_id(workflow_id)
+        if workflow:
+            for key, value in dict(workflow_data).items():
+                setattr(workflow, key, value)
+
+            # Delete all existing steps
+            await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id))
+
+            # Insert new steps
+            for step_data in steps_data:
+                await WorkflowService.create_workflow_step(step_data, workflow.id)
+
+            await db.commit()
+            await db.refresh(workflow)
+            return workflow
+        return None
 #==============deleting
 
 

@@ -451,7 +451,7 @@ class WorkflowAllDetails(BaseModel):
 class WorkflowStepCreate(BaseModel):
     name: str
     description: str
-    step_number: int
+    #step_number: int
 
 class WorkflowCreate(BaseModel):
     course: str 

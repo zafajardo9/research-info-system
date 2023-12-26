@@ -37,9 +37,9 @@ class WorkflowService:
         return db_workflow
 
     @staticmethod
-    async def create_workflow_step(step_data: WorkflowStepCreate, workflow_id: str):
+    async def create_workflow_step(step_data: WorkflowStepCreate, increment: int, workflow_id: str):
         step_id = str(uuid.uuid4())  # Generate UUID for step_id
-        db_workflow_step = WorkflowStep(id=step_id, **step_data.dict(), workflow_id=workflow_id)
+        db_workflow_step = WorkflowStep(id=step_id, **step_data.dict(), step_number= increment, workflow_id=workflow_id)
         db.add(db_workflow_step)
         await db.commit()
         await db.refresh(db_workflow_step)

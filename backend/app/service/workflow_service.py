@@ -175,31 +175,52 @@ class WorkflowService:
 
         return workflows_with_steps
     
+    
     @staticmethod
-    async def get_workflow_all_by_type():
-        workflows_query = select(Workflow)
+    async def get_workflow_all_by_type(type: str):
+        workflows_query = select(Workflow).where(Workflow.type == type)
         workflows = await db.execute(workflows_query)
         workflows = workflows.scalars().all()
 
         if not workflows:
-            return [] # Return an empty list when no workflows are found
+            return []  # Return an empty list when no workflows are found
 
-        # Sort workflows by type
-        workflows.sort(key=attrgetter('type'))
+        workflows_with_steps = []
+        for workflow in workflows:
+            steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+            steps = await db.execute(steps_query)
+            steps = steps.scalars().all()
 
-        # Group workflows by type
-        workflow_groups = []
-        for key, group in groupby(workflows, key=attrgetter('type')):
-            for workflow in group:
-                steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
-                steps = await db.execute(steps_query)
-                steps = steps.scalars().all()
+            workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+            workflows_with_steps.append(workflow_detail)
 
-                workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
-                workflow_group = WorkflowGroupbyType(type=key, workflows=[workflow_detail])
-                workflow_groups.append(workflow_group)
+        return workflows_with_steps
+    
+    # @staticmethod
+    # async def get_workflow_all_by_type(type: str):
+    #     workflows_query = select(Workflow)
+    #     workflows = await db.execute(workflows_query)
+    #     workflows = workflows.scalars().all()
 
-        return workflow_groups
+    #     if not workflows:
+    #         return [] # Return an empty list when no workflows are found
+
+    #     # Sort workflows by type
+    #     workflows.sort(key=attrgetter('type'))
+
+    #     # Group workflows by type
+    #     workflow_groups = []
+    #     for key, group in groupby(workflows, key=attrgetter('type')):
+    #         for workflow in group:
+    #             steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+    #             steps = await db.execute(steps_query)
+    #             steps = steps.scalars().all()
+
+    #             workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+    #             workflow_group = WorkflowGroupbyType(type=key, workflows=[workflow_detail])
+    #             workflow_groups.append(workflow_group)
+
+    #     return workflow_groups
 
     @staticmethod
     async def get_my_workflow(user_course: str, user_section: str):

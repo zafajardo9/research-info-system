@@ -172,15 +172,15 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=404, detail="No Workflow Found")
     return workflow
 
-@router.get("/list-all/type", response_model=List[WorkflowGroupbyType])
-async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+@router.get("/{type}", response_model=List[WorkflowDetail])
+async def read_workflow(type: str, credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     roles = token.get('role', [])
 
     if "research professor" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
-    workflow = await WorkflowService.get_workflow_all_by_type()
+    workflow = await WorkflowService.get_workflow_all_by_type(type)
     
     if not workflow:
         raise HTTPException(status_code=404, detail="No Workflow Found")

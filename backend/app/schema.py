@@ -416,14 +416,12 @@ class DisplayAllByUser(BaseModel):
 
 
 # ==================================RESEARCH PROF =======================
-
-
-
 class WorkflowStepDetail(BaseModel):
     id: str
     name: str
     description: str
     step_number: int
+
 
 class WorkflowDetail(BaseModel):
     id: str
@@ -433,6 +431,10 @@ class WorkflowDetail(BaseModel):
     user_id: str
     steps: List[WorkflowStepDetail]
 
+
+class WorkflowGroupbyType(BaseModel):
+    type: str
+    workflows: List[WorkflowDetail]
 
 class WorkflowAllDetails(BaseModel):
     id: str
@@ -460,7 +462,6 @@ class WorkflowCreateWithSteps(BaseModel):
     workflow_steps: List[WorkflowStepCreate]
     
 
-    
 # ============ ASSIGN SECTION COURSE to a user based in research type
 class AssignedResearchTypeCreate(BaseModel):
     user_id: str

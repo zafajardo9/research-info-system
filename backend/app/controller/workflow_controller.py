@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowStepCreate, WorkflowStepDetail
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate, WorkflowStepDetail
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.repository.workflow_repo import WorkflowRepository
 from app.repository.workflowsteps_repo import WorkflowStepRepository
@@ -159,6 +159,7 @@ async def read_workflow_made_by_user(credentials: HTTPAuthorizationCredentials =
         raise HTTPException(status_code=404, detail="Workflow not found")
     return workflow
 
+
 @router.get("/list/all", response_model=List[WorkflowDetail])
 async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
@@ -171,7 +172,21 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
     workflow = await WorkflowService.get_workflow_all()
     
     if not workflow:
-        raise HTTPException(status_code=404, detail="Workflow not found")
+        raise HTTPException(status_code=404, detail="No Workflow Found")
+    return workflow
+
+@router.get("/list-all/type", response_model=List[WorkflowGroupbyType])
+async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    roles = token.get('role', [])
+
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
+
+    workflow = await WorkflowService.get_workflow_all_by_type()
+    
+    if not workflow:
+        raise HTTPException(status_code=404, detail="No Workflow Found")
     return workflow
 
 @router.get("/{workflow_id}", response_model=WorkflowDetail)

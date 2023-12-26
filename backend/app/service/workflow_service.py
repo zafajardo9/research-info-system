@@ -1,4 +1,6 @@
 from datetime import datetime
+from itertools import groupby
+from operator import attrgetter
 import uuid
 from sqlalchemy import delete, join, and_, update
 from sqlalchemy.orm import joinedload
@@ -18,7 +20,7 @@ from app.model.workflowprocess import NavigationTab, Workflow
 from app.model.workflowprocess import WorkflowStep
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
-from app.schema import NavigationTabCreate, WorkflowCreate, WorkflowDetail, WorkflowStepCreate
+from app.schema import NavigationTabCreate, WorkflowCreate, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate
 
 
 
@@ -42,6 +44,12 @@ class WorkflowService:
         await db.commit()
         await db.refresh(db_workflow_step)
         return db_workflow_step
+    
+    
+    @staticmethod
+    async def check_if_workflow_exists(type: str, year: str, course: str):
+        workflow = await db.execute(select(Workflow).filter(Workflow.type == type, Workflow.year == year, Workflow.course == course))
+        return workflow.scalar() is not None
     
     @staticmethod
     async def get_workflow_by_id_with_steps(workflow_id: str):
@@ -167,6 +175,31 @@ class WorkflowService:
 
         return workflows_with_steps
     
+    @staticmethod
+    async def get_workflow_all_by_type():
+        workflows_query = select(Workflow)
+        workflows = await db.execute(workflows_query)
+        workflows = workflows.scalars().all()
+
+        if not workflows:
+            return [] # Return an empty list when no workflows are found
+
+        # Sort workflows by type
+        workflows.sort(key=attrgetter('type'))
+
+        # Group workflows by type
+        workflow_groups = []
+        for key, group in groupby(workflows, key=attrgetter('type')):
+            for workflow in group:
+                steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+                steps = await db.execute(steps_query)
+                steps = steps.scalars().all()
+
+                workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+                workflow_group = WorkflowGroupbyType(type=key, workflows=[workflow_detail])
+                workflow_groups.append(workflow_group)
+
+        return workflow_groups
 
     @staticmethod
     async def get_my_workflow(user_course: str, user_section: str):

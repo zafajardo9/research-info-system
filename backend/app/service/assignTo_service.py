@@ -370,21 +370,19 @@ class AssignToSection:
     
     
     @staticmethod
-    async def student_get_adviser_list(user_course: str, user_section: str):
+    async def student_get_adviser_list(class_id: str):
         query = (
             select(
                 Users.faculty_id,
                 Faculty.name,
                 AssignedResearchType.research_type_name,
-                AssignedSections.section,
-                AssignedSections.course
+                AssignedSections.class_id
             )
             .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
             .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
             .join(Faculty, Users.faculty_id == Faculty.id)
             .where(
-                (AssignedSections.section == user_section) &
-                (AssignedSections.course == user_course)
+                (AssignedSections.class_id == class_id)
             )
         )
         users_with_assignments = await db.execute(query)
@@ -416,19 +414,17 @@ class AssignToSection:
     
     
     @staticmethod
-    async def student_get_prof_list(user_course: str, user_section: str):
+    async def student_get_prof_list(class_id: str):
         query = (
             select(
                 distinct(Users.faculty_id).label('faculty_id'),
                 Faculty.name,
                 (Users.id).label('user_id'),
-                AssignedSectionsToProf.section,
-                AssignedSectionsToProf.course
+                AssignedSectionsToProf.class_id,
             )
             .join(Faculty, Users.faculty_id == Faculty.id)  
             .where(
-                (AssignedSectionsToProf.section == user_section) &
-                (AssignedSectionsToProf.course == user_course)
+                (AssignedSectionsToProf.class_id == class_id)
             )
         )
         users_with_assignments = await db.execute(query)

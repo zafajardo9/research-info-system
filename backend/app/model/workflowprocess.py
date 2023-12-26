@@ -27,13 +27,15 @@ class Workflow(SQLModel, table=True):
     __tablename__ = "workflow"
 
     id: str = Field(primary_key=True)
-    course: Course
-    year: str
     type: str
+    class_id: str = Field(foreign_key="class.id")
     user_id: str = Field(foreign_key="users.id") #user na nag set nung flow
 
     steps: List["WorkflowStep"] = Relationship(back_populates="workflow")
+    
+    
     users: "Users" = Relationship(back_populates="workflow")
+    class_: "Class" = Relationship(back_populates="workflows") 
 
     
 class WorkflowStep(SQLModel, table=True):

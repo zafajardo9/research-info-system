@@ -5,8 +5,10 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 DB_CONFIG = f"postgresql+asyncpg://postgres:fCBCc*G3Ce4geF*c1gFDgB24BCgg234g@viaduct.proxy.rlwy.net:28889/railway"
 
-# "postgresql+asyncpg://postgres:-4g3BDAEcbE-22eG5GcDcGcbFG-63Fdd@monorail.proxy.rlwy.net:21896/railway"
-
+#MAIN
+#postgresql+asyncpg://postgres:fCBCc*G3Ce4geF*c1gFDgB24BCgg234g@viaduct.proxy.rlwy.net:28889/railway
+#SECOND
+#postgresql+asyncpg://postgres:dDbeEdFc54a2dFd1123F3Ab*-GbfEf6g@monorail.proxy.rlwy.net:28241/railway
 
 SECRET_KEY = "zack1234"
 ALGORITHM = "HS256"

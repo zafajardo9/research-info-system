@@ -17,6 +17,7 @@ from app.repository.auth_repo import JWTRepo
 from app.model.users import Users, UsersRole, Role
 
 from app.config import db
+from app.service.section_service import SectionService
 
 # Encrypt password
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -29,19 +30,20 @@ class AuthService:
         _users_id = str(uuid4())
         birth_date = datetime.strptime(register.birth, '%d-%m-%Y')
 
+        _section = await SectionService.find_section_course(register.section,register.course)
 
         # Mapping request data to class entity table
         _student = Student(
                         id=_student_id,
                         name=register.name,
                         birth=birth_date,
-                        year=register.year, 
-                        section=register.section,  
-                        course=register.course, 
+                        year=register.year,
                         student_number=register.student_number,
                         phone_number=register.phone_number,
+                        class_id=_section.id
                         )
         _role = await RoleRepository.find_by_role_name("student")
+        
         _users_role = UsersRole(users_id=_users_id, role_id=_role.id)
         _users = Users(
                         id=_users_id,

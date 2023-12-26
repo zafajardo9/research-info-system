@@ -169,39 +169,5 @@ async def get_all_list():
         raise HTTPException(status_code=404, detail="User profile not found")
 
 
-course_descriptions = {
-    "BSIT": "Bachelor of Science in Information Technology",
-    "BSENTREP": "Bachelor of Science in Entrepreneurship",
-    "BTLEDICT": "Bachelor of Technical and Livelihood Education",
-    "BSBAMM": "Bachelor of Science in Business Administration",
-    "BBTLEDHE": "Bachelor of Business Technology and Livelihood Education",
-    "BSBAHRM": "Bachelor of Science in Business Administration in Human Resource Management",
-    "BPAPFM": "Bachelor of Public Administration and Public Finance Management",
-    "DOMTMOM": "Doctor of Management and Organizational Management"
-}
-
-
-
-
-@router.get("/course_list")
-async def get_courses():
-    """
-    Get all courses with their descriptions
-    """
-    return course_descriptions
-
-
-@router.get("/course_with_year_list")
-async def get_courses():
-    """
-    Mga nasa Table lang for now
-    """
-    
-    result = await UsersRepository.filter_student_year_course()
-    if result:
-        return ResponseSchema(detail="Successfully fetch all year and course!", result=result)
-    else:
-        raise HTTPException(status_code=404, detail="No data found")
-
 
 # todo for putting research adviser to a particular ang section

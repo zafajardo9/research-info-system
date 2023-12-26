@@ -1,5 +1,5 @@
 from sqlalchemy import func, or_, outerjoin, select, and_
-from app.model.users import Role, Users, UsersRole
+from app.model import Role, Users, UsersRole, Class
 from app.model.student import Student  # Import the Student model
 from app.model.faculty import Faculty  # Import the Faculty model
 from app.config import db
@@ -16,15 +16,16 @@ class UserService:
                 Student.name,
                 Student.birth,
                 Student.year,
-                Student.section,
-                Student.course,
                 Student.student_number,
-                Student.phone_number
+                Student.phone_number,
+                Class.section,
+                Class.course
             )
-            .join_from(Users, Student)
+            .join(Student, Users.student_id == Student.id)
+            .join(Class, Student.class_id == Class.id)
             .where(Users.username == username)
         )
-        return (await db.execute(query)).mappings().one()
+        return (await db.execute(query)).mappings().one_or_none()
     
     @staticmethod
     async def get_faculty_profile(username: str):
@@ -52,12 +53,13 @@ class UserService:
                 Student.name,
                 Student.birth,
                 Student.year,
-                Student.section,
-                Student.course,
                 Student.student_number,
-                Student.phone_number
+                Student.phone_number,
+                Class.section,
+                Class.course
             )
-            .join_from(Users, Student)
+            .join(Student, Users.student_id == Student.id)
+            .join(Class, Student.class_id == Class.id)
             .where(Users.id == user_id)
         )
         return (await db.execute(query)).mappings().one()
@@ -101,19 +103,17 @@ class UserService:
                 Users.id,
                 Users.username,
                 Users.email,
-                Users.student_id,
-                Student.student_number,
                 Student.name,
-                Student.section,
-                Student.course,
+                Student.birth,
+                Student.year,
+                Student.student_number,
+                Student.phone_number,
+                Class.section,
+                Class.course
             )
-            .select_from(
-                outerjoin(Users, Student).join(UsersRole).join(Role, and_(
-                    UsersRole.users_id == Users.id,
-                    UsersRole.role_id == Role.id,
-                    Role.role_name == "student",
-                ))
-            )
+            .join(Student, Users.student_id == Student.id)
+            .join(Class, Student.class_id == Class.id)
+            .where(Role.role_name == "student")
         )
 
         result = await db.execute(query)

@@ -6,6 +6,9 @@ from .workflowprocess import WorkflowStep
 
 
 from .student import Student
+from .student import Class
+
+
 from .faculty import Faculty
 from .mixins import TimeMixin
 

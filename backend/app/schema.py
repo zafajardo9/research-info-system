@@ -94,6 +94,11 @@ class ResponseSchema(BaseModel):
 class AuthorSchema(BaseModel):
     user_id: int
     research_paper_id: int
+
+# ++++++++++============ SECTION ===============++++++
+class ClassCreate(BaseModel):
+    section: str
+    course: str
     
     
 # ================================================================
@@ -425,8 +430,7 @@ class WorkflowStepDetail(BaseModel):
 
 class WorkflowDetail(BaseModel):
     id: str
-    course: str
-    year: str
+    class_id: str
     type: str
     user_id: str
     steps: List[WorkflowStepDetail]
@@ -438,8 +442,7 @@ class WorkflowGroupbyType(BaseModel):
 
 class WorkflowAllDetails(BaseModel):
     id: str
-    course: str
-    year: str
+    class_id: str
     type: str
     user_id: str
     steps: List[WorkflowStepDetail]
@@ -454,8 +457,7 @@ class WorkflowStepCreate(BaseModel):
     #step_number: int
 
 class WorkflowCreate(BaseModel):
-    course: str 
-    year: str
+    class_id: str
     type: str
 class WorkflowCreateWithSteps(BaseModel):
     workflow_data: WorkflowCreate
@@ -468,13 +470,11 @@ class AssignedResearchTypeCreate(BaseModel):
     research_type_name: str
 
 class AssignedSectionsCreate(BaseModel):
-    section: str
-    course: str
+    class_id: str
     
 class AssignedSectionsWithID(BaseModel):
     id: str
-    section: str
-    course: str
+    class_id: str
 
 class AssignWhole(BaseModel):
     id: str
@@ -512,8 +512,7 @@ class UserWithAssignments(BaseModel):
 #======================
 class AssignedSectionsCreateWithID(BaseModel):
     id: str
-    section: str
-    course: str
+    class_id: str
 
 class Assignment(BaseModel):
     id:str 

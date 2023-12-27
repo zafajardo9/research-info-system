@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 from itertools import groupby
 from operator import attrgetter
@@ -159,6 +160,37 @@ class WorkflowService:
 
         return display_processes
     
+    
+    # @staticmethod
+    # async def display_process_by_type():
+    #     # Fetch all processes and their corresponding section and course information
+    #     processes = await db.execute(
+    #         (select(NavigationTab))
+    #     )
+        
+    #     processes = processes.scalars().all()
+        
+
+    #     # Convert SQLAlchemy models to Pydantic models and group by type in one pass
+    #     display_processes_by_type = defaultdict(list)
+    #     for process in processes:
+    #         display_process = NavigationProcessDisplay(
+    #             role=process.role,
+    #             type=process.type,
+    #             class_id=process.class_id,
+    #             course=process.class_info.course,
+    #             section=process.class_info.section,
+    #             has_submitted_proposal=process.has_submitted_proposal,
+    #             has_pre_oral_defense_date=process.has_pre_oral_defense_date,
+    #             has_submitted_ethics_protocol=process.has_submitted_ethics_protocol,
+    #             has_submitted_full_manuscript=process.has_submitted_full_manuscript,
+    #             has_set_final_defense_date=process.has_set_final_defense_date,
+    #             has_submitted_copyright=process.has_submitted_copyright,
+    #         )
+    #         display_processes_by_type[process.type].append(display_process)
+
+    #     return display_processes_by_type
+    
     @staticmethod
     async def display_process_by_type():
         # Default ordering by id, you can change it to any column you want
@@ -169,12 +201,13 @@ class WorkflowService:
         grouped_processes = {key: list(group) for key, group in groupby(processes, key=attrgetter('type'))}
 
         # Convert SQLAlchemy models to Pydantic models for each type
-        display_processes_by_type = {
-            type_: [
-                await WorkflowService.get_display_process_with_info(process)
-                for process in processes
-            ] for type_, processes in grouped_processes.items()
-        }
+        display_processes_by_type = {}
+
+        for type_, processes in grouped_processes.items():
+            display_processes_by_type[type_] = []
+            for process in processes:
+                display_process = await WorkflowService.get_display_process_with_info(process)
+                display_processes_by_type[type_].append(display_process)
 
         return display_processes_by_type
 

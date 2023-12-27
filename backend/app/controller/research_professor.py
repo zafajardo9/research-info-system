@@ -378,6 +378,8 @@ async def display_by_filter(research_type: str):
     return result
 
 
+
+# todo FIX
 @router.get("/adviser-with-assigned")
 async def get_users_with_assignments():
     try:

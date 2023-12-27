@@ -15,12 +15,13 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.assignTo_repo import AssignedResearchTypeRepository, AssignedSectionsRepository
-from app.schema import AssignUserProfileNoID, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse, UpdateAssign
+from app.schema import AssignedSectionsCreate
 from app.service.users_service import UserService
 from app.model import AssignedSectionsToProf
 from app.model.users import Users
 from app.model.faculty import Faculty
 from app.service.section_service import SectionService
+from app.model.student import Class
 
 class AssignToProf:
     
@@ -148,62 +149,100 @@ class AssignToProf:
             raise HTTPException(status_code=500, detail=str(e))
     
             
+    # @staticmethod
+    # async def get_prof_with_assigned():
+    #     try:
+    #         query = (
+    #             select(Users, AssignedSectionsToProf, Faculty)
+    #             .join(Faculty, Users.faculty_id == Faculty.id)
+    #             .join(AssignedSectionsToProf, Users.id == AssignedSectionsToProf.user_id)
+    #         )
+
+    #         users_with_assignments = await db.execute(query)
+    #         results = users_with_assignments.fetchall()
+
+    #         organized_results = []
+    #         current_user = None
+
+    #         for row in results:
+    #             if current_user is None or current_user.id != row[0].id:
+    #                 if current_user is not None:
+    #                     organized_results.append(UserData(**current_user.dict()))
+
+    #                 current_user = row[0]
+    #                 current_user.faculty_name = row[0].faculty.name if row[0].faculty else None
+    #                 current_user.assignments = []
+
+    #             assignment_data = AssignmentData(class_id=row[1].class_id, id=row[1].id)
+
+    #             # Get section and course information from the class_id
+    #             section_course_info = await SectionService.what_section_course(row[1].class_id)
+
+    #             assignment_data.section = section_course_info.section
+    #             assignment_data.course = section_course_info.course
+
+    #             current_user.assignments.append(assignment_data)
+
+    #         if current_user is not None:
+    #             organized_results.append(UserData(**current_user.dict()))
+
+    #         response_data = ProfWithAssignedResponse(users=organized_results)
+    #         return response_data.dict()
+
+    #     except Exception as e:
+    #         print(f"Error in get_prof_with_assigned: {e}")
+    #         raise HTTPException(status_code=500, detail=str(e))
+    
+    
     @staticmethod
     async def get_prof_with_assigned():
         try:
             query = (
-                select(Users, AssignedSectionsToProf, Faculty)
-                .join(Faculty, Users.faculty_id == Faculty.id)
+                select(
+                    Users.id,
+                    Users.faculty_id,
+                    Faculty.name,
+                    AssignedSectionsToProf.class_id,
+                    AssignedSectionsToProf.id.label("assigned_id"),
+                    Class.section,
+                    Class.course
+                    
+                )
                 .join(AssignedSectionsToProf, Users.id == AssignedSectionsToProf.user_id)
+                .join(Faculty, Users.faculty_id == Faculty.id)
+                .join(Class, AssignedSectionsToProf.class_id == Class.id)
             )
 
             users_with_assignments = await db.execute(query)
             results = users_with_assignments.fetchall()
 
-            # Organize the results as a list of dictionaries with selected fields
-            organized_results = []
-            current_user = None
-            user_data = None
-
-            for row in results:
-                if current_user is None or current_user.id != row[0].id:
-                    # New user, start a new dictionary
-                    if user_data is not None:
-                        organized_results.append(user_data)
-
-                    current_user = row[0]
-                    user_data = {
-                        "id": current_user.id,
-                        "username": current_user.username,
-                        "email": current_user.email,
-                        "faculty_name": None,  # Initialize faculty_name to None
-                        "assignments": []
+            user_assignments_dict = {}
+            
+            for result in results:
+                user_id, faculty_id, faculty_name, class_id, assigned_id, section, course = result
+                
+                if user_id not in user_assignments_dict:
+                    user_assignments_dict[user_id] = {
+                        "Faculty": {
+                            "id": user_id,
+                            "faculty_id": faculty_id,
+                            "faculty_name": faculty_name,
+                        },
+                        "AssignedTo": []
                     }
 
-                    # Check if faculty data is available
-                    if row[0].faculty:
-                        user_data['faculty_name'] = row[0].faculty.name
+                user_assignments_dict[user_id]["AssignedTo"].append({
+                    "assigned_id": assigned_id,
+                    "class_id": class_id,
+                    "course": course,
+                    "section": section,
+                    
+                })
 
-                # Add assignment data to the current user's dictionary
-                assignment_data = {
-                    "class_id": row[1].class_id,
-                    "id": row[1].id
-                }
-
-                # Get section and course information from the class_id
-                section_course_info = await SectionService.what_section_course(row[1].class_id)
-                
-                # Update assignment_data with section and course information
-                assignment_data.update(section_course_info)
-
-                user_data['assignments'].append(assignment_data)
-
-            # Add the last user's data to the list
-            if user_data is not None:
-                organized_results.append(user_data)
-
-            return organized_results
+            final_result = list(user_assignments_dict.values())
+            
+            return final_result
 
         except Exception as e:
-            print(f"Error in get_prof_with_assigned: {e}")
+            print(f"Error in get_users_with_assignments: {e}")
             raise HTTPException(status_code=500, detail=str(e))

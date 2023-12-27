@@ -237,9 +237,9 @@ async def assign_section(
 
     return assigned_sections
 
-@router.delete("/delete-assigned-sections/{section_id}")
+@router.delete("/delete-assigned-sections/{assigned_id}")
 async def delete_assignment(
-    section_id: str,
+    assigned_id: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
     token = JWTRepo.extract_token(credentials)
@@ -250,10 +250,10 @@ async def delete_assignment(
 
     # Delete section and course assignment
     try:
-        deleted_section = await AssignToProf.delete_section_assignment(section_id)
+        deleted_section = await AssignToProf.delete_section_assignment(assigned_id)
         if deleted_section is None:
             raise HTTPException(status_code=404, detail="Section not found")
-        return {"message": f"Section assignment deleted {section_id}"}
+        return {"message": f"Section assignment deleted {assigned_id}"}
     except Exception as e:
         print(f"Error deleting section assignment: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")

@@ -78,7 +78,8 @@ async def remove_role(
     return {"message": f"Role removed from user with ID {user_id}"}
 
 
-
+# ASSIGNING RESEACH PROF AREA =======================================================================
+#=============================
 @router.post("/assign-research-professor/{user_id}")
 async def assign_role(
     user_id: str,
@@ -227,7 +228,7 @@ async def assign_section(
     token = JWTRepo.extract_token(credentials)
     roles = token.get('role', [])
     if "admin" not in roles:
-       raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
 
     assigned_sections = []
     for each in assign_section:

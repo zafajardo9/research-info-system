@@ -76,37 +76,6 @@ async def display_process_by_type():
     results = await WorkflowService.display_process_by_type()
     return results
 
-# @router.get("/display-process-all/user_role")
-# async def display_process_role():
-#     '''Ito may Format pero pwede ka mag req ano pinakamaganda'''
-#     results = await WorkflowService.display_process()
-#     grouped_results = group_by_role(results)
-#     return grouped_results
-
-# def group_by_type(results):
-#     # Sort the results by type and section
-#     sorted_results = sorted(results, key=lambda x: (x.type, x.section))
-
-#     # Group the sorted results by type
-#     grouped_results = {}
-#     for research_type, type_group in groupby(sorted_results, key=lambda x: x.type):
-#         type_list = list(type_group)
-#         grouped_results[research_type] = type_list
-
-#     return grouped_results
-
-# def group_by_role(results):
-#     # Sort the results by role and section
-#     sorted_results = sorted(results, key=lambda x: (x.role, x.section))
-
-#     # Group the sorted results by role
-#     grouped_results = {}
-#     for role, role_group in groupby(sorted_results, key=lambda x: x.role):
-#         role_list = list(role_group)
-#         grouped_results[role] = role_list
-
-#     return grouped_results
-
 # ==========================ASSIGNING=============================================================
 
 

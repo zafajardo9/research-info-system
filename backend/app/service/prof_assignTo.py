@@ -20,6 +20,7 @@ from app.service.users_service import UserService
 from app.model import AssignedSectionsToProf
 from app.model.users import Users
 from app.model.faculty import Faculty
+from app.service.section_service import SectionService
 
 class AssignToProf:
     
@@ -185,10 +186,16 @@ class AssignToProf:
 
                 # Add assignment data to the current user's dictionary
                 assignment_data = {
-                    "section": row[1].section,
-                    "course": row[1].course,
+                    "class_id": row[1].class_id,
                     "id": row[1].id
                 }
+
+                # Get section and course information from the class_id
+                section_course_info = await SectionService.what_section_course(row[1].class_id)
+                
+                # Update assignment_data with section and course information
+                assignment_data.update(section_course_info)
+
                 user_data['assignments'].append(assignment_data)
 
             # Add the last user's data to the list

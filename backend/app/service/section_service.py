@@ -35,6 +35,12 @@ class SectionService:
         return (await db.execute(query)).scalar_one_or_none()
     
     @staticmethod
+    async def what_section_course(class_id: str):
+        query = select(Class).where(Class.id == class_id)
+        result = await db.execute(query)
+        return result.scalar_one_or_none()
+    
+    @staticmethod
     async def check_and_input_section_course(class_create: ClassCreate):
         # Check if the section and course already exist
         query = select(Class).where(Class.course == class_create.course).where(Class.section == class_create.section)

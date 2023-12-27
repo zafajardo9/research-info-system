@@ -430,8 +430,10 @@ class WorkflowStepDetail(BaseModel):
 
 class WorkflowDetail(BaseModel):
     id: str
-    class_id: str
     type: str
+    class_id: str
+    section: str
+    course: str
     user_id: str
     steps: List[WorkflowStepDetail]
 
@@ -457,8 +459,9 @@ class WorkflowStepCreate(BaseModel):
     #step_number: int
 
 class WorkflowCreate(BaseModel):
-    class_id: str
     type: str
+    class_id: List[str]
+    
 class WorkflowCreateWithSteps(BaseModel):
     workflow_data: WorkflowCreate
     workflow_steps: List[WorkflowStepCreate]

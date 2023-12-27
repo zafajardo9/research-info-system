@@ -21,6 +21,7 @@ from app.model.workflowprocess import WorkflowStep
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
 from app.schema import NavigationTabCreate, WorkflowCreate, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate
+from app.service.section_service import SectionService
 
 
 
@@ -28,9 +29,9 @@ from app.schema import NavigationTabCreate, WorkflowCreate, WorkflowDetail, Work
 class WorkflowService:
 
     @staticmethod
-    async def create_workflow(workflow_data: WorkflowCreate, user_id: str):
+    async def create_workflow(workflow_type: str, class_id: str, user_id: str):
         workflow_id = str(uuid.uuid4())  # Generate UUID for workflow_id
-        db_workflow = Workflow(id=workflow_id, **workflow_data.dict(), user_id=user_id)
+        db_workflow = Workflow(id=workflow_id, type=workflow_type, class_id=class_id, user_id=user_id)
         db.add(db_workflow)
         await db.commit()
         await db.refresh(db_workflow)
@@ -47,8 +48,8 @@ class WorkflowService:
     
     
     @staticmethod
-    async def check_if_workflow_exists(type: str, year: str, course: str):
-        workflow = await db.execute(select(Workflow).filter(Workflow.type == type, Workflow.year == year, Workflow.course == course))
+    async def check_if_workflow_exists(type: str, class_id: str):
+        workflow = await db.execute(select(Workflow).filter(Workflow.type == type, Workflow.class_id == class_id))
         return workflow.scalar() is not None
     
     @staticmethod
@@ -149,12 +150,21 @@ class WorkflowService:
         steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
         steps = await db.execute(steps_query)
         steps = steps.scalars().all()
+        
+        class_data = await SectionService.what_section_course(workflow.class_id)
 
-        workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+        workflow_detail = WorkflowDetail(
+                id=workflow.id, 
+                type=workflow.type, 
+                class_id= workflow.class_id,
+                course=class_data.course, 
+                section=class_data.section,
+                user_id=workflow.user_id, 
+                steps=steps)
         
         return workflow_detail
     
-    
+
     @staticmethod
     async def get_workflow_all():
         workflows_query = select(Workflow)
@@ -169,8 +179,17 @@ class WorkflowService:
             steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
             steps = await db.execute(steps_query)
             steps = steps.scalars().all()
-
-            workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+            class_data = await SectionService.what_section_course(workflow.class_id)
+            
+            
+            workflow_detail = WorkflowDetail(
+                    id=workflow.id, 
+                    class_id=workflow.class_id, 
+                    section=class_data.section, 
+                    course=class_data.course, 
+                    type=workflow.type, 
+                    user_id=workflow.user_id, 
+                    steps=steps)
             workflows_with_steps.append(workflow_detail)
 
         return workflows_with_steps
@@ -190,8 +209,17 @@ class WorkflowService:
             steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
             steps = await db.execute(steps_query)
             steps = steps.scalars().all()
+            
+            class_data = await SectionService.what_section_course(workflow.class_id)
 
-            workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+            workflow_detail = WorkflowDetail(
+                        id=workflow.id, 
+                        type=workflow.type, 
+                        class_id=workflow.class_id,
+                        course=class_data.course,
+                        section=class_data.section,
+                        user_id=workflow.user_id, 
+                        steps=steps)
             workflows_with_steps.append(workflow_detail)
 
         return workflows_with_steps
@@ -222,6 +250,9 @@ class WorkflowService:
 
     #     return workflow_groups
 
+
+    #CHECK 
+    # todo FIX THE IDEA LUMA TO
     @staticmethod
     async def get_my_workflow(user_course: str, user_section: str):
 

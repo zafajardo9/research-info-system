@@ -45,7 +45,7 @@ async def list_of_process_for_faculty():
     return faculty_process_name
 
 @router.post("/assign-process/")
-async def create_process_role(navigation_tab: NavigationTabCreate,):
+async def create_process_role(navigation_tab: NavigationTabCreate):
     create_process = await WorkflowService.create_process_role(navigation_tab)
     return create_process
 

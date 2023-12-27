@@ -583,6 +583,8 @@ class NavigationProcessDisplay(BaseModel):
     role: str
     type: str
     class_id: str
+    course: str
+    section: str
     has_submitted_proposal: bool
     has_pre_oral_defense_date: bool
     has_submitted_ethics_protocol: bool

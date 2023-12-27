@@ -135,20 +135,27 @@ class WorkflowService:
         result = await db.execute(select(NavigationTab))
         update_process = result.scalars().all()
         
-        
-            # Convert SQLAlchemy models to Pydantic models
-        display_processes = [NavigationProcessDisplay(
-            role=process.role,
-            type=process.type,
-            class_id=process.class_id,
-            has_submitted_proposal=process.has_submitted_proposal,
-            has_pre_oral_defense_date=process.has_pre_oral_defense_date,
-            has_submitted_ethics_protocol=process.has_submitted_ethics_protocol,
-            has_submitted_full_manuscript=process.has_submitted_full_manuscript,
-            has_set_final_defense_date=process.has_set_final_defense_date,
-            has_submitted_copyright=process.has_submitted_copyright,
-        ) for process in update_process]
+        display_processes = []
+        for process in update_process:
+            # Fetch section and course information for each class_id
+            class_info = await SectionService.what_section_course(process.class_id)
 
+            # Convert SQLAlchemy models to Pydantic models
+            display_process = NavigationProcessDisplay(
+                role=process.role,
+                type=process.type,
+                class_id=process.class_id,
+                course=class_info.course,  # Include course information
+                section=class_info.section,  # Include section information
+                has_submitted_proposal=process.has_submitted_proposal,
+                has_pre_oral_defense_date=process.has_pre_oral_defense_date,
+                has_submitted_ethics_protocol=process.has_submitted_ethics_protocol,
+                has_submitted_full_manuscript=process.has_submitted_full_manuscript,
+                has_set_final_defense_date=process.has_set_final_defense_date,
+                has_submitted_copyright=process.has_submitted_copyright,
+            )
+
+            display_processes.append(display_process)
 
         return display_processes
     
@@ -163,20 +170,35 @@ class WorkflowService:
 
         # Convert SQLAlchemy models to Pydantic models for each type
         display_processes_by_type = {
-            type_: [NavigationProcessDisplay(
-                role=process.role,
-                type=process.type,
-                class_id=process.class_id,
-                has_submitted_proposal=process.has_submitted_proposal,
-                has_pre_oral_defense_date=process.has_pre_oral_defense_date,
-                has_submitted_ethics_protocol=process.has_submitted_ethics_protocol,
-                has_submitted_full_manuscript=process.has_submitted_full_manuscript,
-                has_set_final_defense_date=process.has_set_final_defense_date,
-                has_submitted_copyright=process.has_submitted_copyright,
-            ) for process in processes] for type_, processes in grouped_processes.items()
+            type_: [
+                await WorkflowService.get_display_process_with_info(process)
+                for process in processes
+            ] for type_, processes in grouped_processes.items()
         }
 
         return display_processes_by_type
+
+    @staticmethod
+    async def get_display_process_with_info(process):
+        # Fetch section and course information for each class_id
+        class_info = await SectionService.what_section_course(process.class_id)
+
+        # Convert SQLAlchemy model to Pydantic model
+        display_process = NavigationProcessDisplay(
+            role=process.role,
+            type=process.type,
+            class_id=process.class_id,
+            course=class_info.course,  # Include course information
+            section=class_info.section,  # Include section information
+            has_submitted_proposal=process.has_submitted_proposal,
+            has_pre_oral_defense_date=process.has_pre_oral_defense_date,
+            has_submitted_ethics_protocol=process.has_submitted_ethics_protocol,
+            has_submitted_full_manuscript=process.has_submitted_full_manuscript,
+            has_set_final_defense_date=process.has_set_final_defense_date,
+            has_submitted_copyright=process.has_submitted_copyright,
+        )
+
+        return display_process
 
 # =================================================
     @staticmethod

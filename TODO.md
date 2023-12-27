@@ -12,9 +12,12 @@ Project Description
 
 ### In Progress
 
+- [ ] change the structure of getting research and sections  
 
 ### Done ✓
 
+- [x] Displaying Section and course in the workflow  
+- [x] Display Section Course in the Process (navigation Tab)  
 - [x] Displaying the navigation process with section grouped by Type  
 - [x] implementing list for section and types for process for faculty  
 

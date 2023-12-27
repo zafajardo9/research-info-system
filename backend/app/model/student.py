@@ -16,10 +16,11 @@ class Class(SQLModel, table=True):
     # Add a relationship back to Students through the association table
     students: List["Student"] = Relationship(back_populates="classes")
     workflows: List["Workflow"] = Relationship(back_populates="class_")
+    #navigation_tab: List["NavigationTab"] = Relationship(back_populates="class_")
     
+    assigned_sections: List["AssignedSections"] = Relationship(back_populates="class_")
     
     assign_section_prof: List["AssignedSectionsToProf"] = Relationship(back_populates="class_")
-    assigned_sections: List["AssignedSections"] = Relationship(back_populates="class_")
         
 class Student(SQLModel, TimeMixin, table=True):
     __tablename__ = "student"

@@ -15,4 +15,6 @@ Project Description
 
 ### Done ✓
 
+- [x] Displaying the navigation process with section grouped by Type  
+- [x] implementing list for section and types for process for faculty  
 

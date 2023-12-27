@@ -67,8 +67,8 @@ class NavigationTab(SQLModel, table=True):
 
     id: str = Field(primary_key=True, index=True, unique=True)
     role: str
-    section: str
-    course: str
+    #class_id: str = Field(foreign_key="class.id")
+    class_id: str
     type: str
     has_submitted_proposal: bool = Field(default=False)
     has_pre_oral_defense_date: bool = Field(default=False)
@@ -76,6 +76,9 @@ class NavigationTab(SQLModel, table=True):
     has_submitted_full_manuscript: bool = Field(default=False)
     has_set_final_defense_date: bool = Field(default=False)
     has_submitted_copyright: bool = Field(default=False)
+    
+    #Relationship
+    #class_: "Class" = Relationship(back_populates="navigation_tab") 
 
 
 #if role research adviser assigned research type and section course... dito sa navigation tab checker nung role then section course tapos type

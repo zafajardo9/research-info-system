@@ -569,11 +569,9 @@ class AnnouncementDisplay(BaseModel):
 # ======================ASSIGNING A PROCESS FOR A ROLE ====================
 
 class NavigationTabCreate(BaseModel):
-
     role: str
-    section: str
-    course: str
     type: str
+    class_id: List[str]
     has_submitted_proposal: bool
     has_pre_oral_defense_date: bool
     has_submitted_ethics_protocol: bool
@@ -581,6 +579,16 @@ class NavigationTabCreate(BaseModel):
     has_set_final_defense_date: bool
     has_submitted_copyright: bool
     
+class NavigationProcessDisplay(BaseModel):
+    role: str
+    type: str
+    class_id: str
+    has_submitted_proposal: bool
+    has_pre_oral_defense_date: bool
+    has_submitted_ethics_protocol: bool
+    has_submitted_full_manuscript: bool
+    has_set_final_defense_date: bool
+    has_submitted_copyright: bool
 
 
 #FOR THE DISPLAY OF LIST IN PAGE

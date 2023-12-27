@@ -9,9 +9,9 @@ origins= [
 ]
 
 app = FastAPI(
-        title= "PUP-RIZ",
+        title= "PUP-RIS",
         description= "Research Information System",
-        version= "1.3",
+        version= "1.5",
 )
 
 def init_app():

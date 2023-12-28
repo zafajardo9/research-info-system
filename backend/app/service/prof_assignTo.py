@@ -133,7 +133,11 @@ class AssignToProf:
     async def display_assigned_sections(user_id: str):
         try:
             # Fetch assigned sections for the user
-            first_query = select(AssignedSectionsToProf).where(AssignedSectionsToProf.user_id == user_id)
+            first_query = select(
+                        AssignedSectionsToProf.id, 
+                        AssignedSectionsToProf.class_id, 
+                        Class.course, 
+                        Class.section).join(Class, AssignedSectionsToProf.class_id == Class.id).where(AssignedSectionsToProf.user_id == user_id)
             assigns = await db.execute(first_query)
             assigns = assigns.fetchall()
 

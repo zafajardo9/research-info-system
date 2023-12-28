@@ -17,6 +17,7 @@ from itertools import groupby
 from app.config import db
 from app.model.faculty import Faculty
 from app.model.workflowprocess import NavigationTab
+from app.model.student import Class
 
 #from app.schema import WorkflowCreate
 
@@ -270,12 +271,12 @@ async def assign_section(
 
 
 
-    
-@router.get("/adviser/{user_id}/assigned", response_model=AssignUserProfile)
+    # TODO BABALIKAN NATIN TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+@router.get("/adviser/{user_id}/assigned")
 async def read_user_assignments(user_id: str):
     try:
         # Get user profile
-        user_profile = await UserService.get_faculty_profile_by_ID(user_id)
+        user_profile = await UserService.faculty_info_needed(user_id)
         if user_profile is None:
             raise HTTPException(status_code=404, detail="User profile not found")
 
@@ -296,86 +297,38 @@ async def read_user_assignments(user_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# @router.get("/adviser-with-assigned")
-# async def get_users_with_assignments():
-#     try:
-#         users_with_assignments = await AssignToSection.get_users_with_assignments()
-#         result_list = [dict(row) for row in users_with_assignments]
-            
-#         return result_list
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-    
-
-# @router.get("/adviser-with-assigned")
-# async def get_users_with_assignments():
-#     try:
-#             # Fetch all AssignedResearchType and their sections
-#             assigned_research_types = await db.execute(select(AssignedResearchType))
-#             assigned_research_types = assigned_research_types.scalars().all()
-
-#             # Get profiles for each user in the list
-#             result_list = []
-#             for assign in assigned_research_types:
-#                 # Get sections for the current AssignedResearchType
-#                 assign_sections = await db.execute(select(AssignedSections).where(AssignedSections.research_type_id == assign.id))
-#                 assign_sections = assign_sections.scalars().all()
-
-#                 # Get user profile using user_id from the current AssignedResearchType
-#                 profile = await UserService.getprofile(assign.user_id)
-
-#                 # Create the response structure
-#                 assign_details = {
-#                     "research_type_id": assign.id,
-#                     "research_type_name": assign.research_type_name,
-#                     "assign_sections": [
-#                         {
-#                         "id": section.id,
-#                         "section": section.section, 
-#                         "course": section.course
-#                          } 
-                        
-#                         for section in assign_sections]
-#                 }
-
-#                 result_list.append({"user_profile": profile, "assignments": assign_details})
-            
-#             return result_list
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-
 
 # dfgdf
 
-@router.get("/adviser/{research_type}/list")
-async def display_by_filter(research_type: str):
+# @router.get("/adviser/{research_type}/list")
+# async def display_by_filter(research_type: str):
     
-    query = (select(AssignedResearchType)
-            .filter(AssignedResearchType.research_type_name == research_type))
+#     query = (select(AssignedResearchType)
+#             .filter(AssignedResearchType.research_type_name == research_type))
     
-    assigned_research_types = await db.execute(query)
-    assigned_research_types = assigned_research_types.scalars().all()
+#     assigned_research_types = await db.execute(query)
+#     assigned_research_types = assigned_research_types.scalars().all()
 
-    result = []
-    for assigned_research_type in assigned_research_types:
-        user_profile = await UserService.getprofile(assigned_research_type.user_id)
+#     result = []
+#     for assigned_research_type in assigned_research_types:
+#         user_profile = await UserService.getprofile(assigned_research_type.user_id)
         
-        # Query the AssignedSections table to get the list of assigned sections
-        sections_query = (select(AssignedSections)
-                        .filter(AssignedSections.research_type_id == assigned_research_type.id))
-        assigned_sections = await db.execute(sections_query)
-        assigned_sections = assigned_sections.scalars().all()
+#         # Query the AssignedSections table to get the list of assigned sections
+#         sections_query = (select(AssignedSections)
+#                         .filter(AssignedSections.research_type_id == assigned_research_type.id))
+#         assigned_sections = await db.execute(sections_query)
+#         assigned_sections = assigned_sections.scalars().all()
         
-        # Create a new dictionary that only includes the fields you want
-        assigned_research_type_dict = {k: v for k, v in vars(assigned_research_type).items() if k != 'user_id'}
+#         # Create a new dictionary that only includes the fields you want
+#         assigned_research_type_dict = {k: v for k, v in vars(assigned_research_type).items() if k != 'user_id'}
         
-        result.append({
-            "assigned_research_type": assigned_research_type_dict,
-            "user_profile": user_profile,
-            "assigned_sections": [{"id": section.id, "course": section.course, "section": section.section} for section in assigned_sections]
-        })
+#         result.append({
+#             "assigned_research_type": assigned_research_type_dict,
+#             "user_profile": user_profile,
+#             "assigned_sections": [{"id": section.id, "course": section.course, "section": section.section} for section in assigned_sections]
+#         })
     
-    return result
+#     return result
 
 
 
@@ -397,8 +350,14 @@ async def get_users_with_assignments():
                     }
                 
                 # Get sections for the current AssignedResearchType
-                assign_sections = await db.execute(select(AssignedSections).where(AssignedSections.research_type_id == assign.id))
-                assign_sections = assign_sections.scalars().all()
+                assign_sections = await db.execute(select(
+                    AssignedSections.id.label("assignment_id"),
+                    AssignedSections.class_id,
+                    Class.course,
+                    Class.section
+                    ).where(AssignedSections.research_type_id == assign.id).outerjoin(Class, AssignedSections.class_id == Class.id))
+                assign_sections = assign_sections.fetchall()
+                
 
                 # Create the assignment details
                 assign_details = {
@@ -406,11 +365,12 @@ async def get_users_with_assignments():
                     "research_type_name": assign.research_type_name,
                     "assign_sections": [
                         {
-                            "id": section.id,
-                            "section": section.section,
-                            "course": section.course
+                            "id": assignment_id,
+                            "class_id": class_id,
+                            "course": course,
+                            "section": section
                         }
-                        for section in assign_sections
+                        for assignment_id, class_id, course, section in assign_sections
                     ]
                 }
 

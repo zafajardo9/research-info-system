@@ -485,6 +485,11 @@ class AssignWhole(BaseModel):
     research_type_name: str
     assignsection: List[AssignedSectionsCreate]
     
+
+class AssignedSectionsWHOLE(BaseModel):
+    class_id: str
+    course: str
+    section: str
     
 
 
@@ -498,7 +503,7 @@ class UpdateAssign(BaseModel):
 
 class AssignUserProfileNoID(BaseModel):
     research_type_name: str
-    assignsection: List[AssignedSectionsCreate]
+    assignsection: List[AssignedSectionsWHOLE]
     
 # class AssignUserProfileForOVERALL(BaseModel):
 #     research_type_name: str

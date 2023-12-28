@@ -21,6 +21,7 @@ from app.model import AssignedSections, AssignedResearchType
 from app.model.users import Users
 from app.model.faculty import Faculty
 from app.model.assignedTo import AssignedSectionsToProf
+from app.model.student import Class
 
 class AssignToSection:
     
@@ -61,7 +62,7 @@ class AssignToSection:
     
 
     
-    #Display the user assign based on the user_id
+    # Display the user assign based on the user_id
     @staticmethod
     async def display_assignments_by_user(user_id: str):
         first_query = select(AssignedResearchType).where(AssignedResearchType.user_id == user_id)
@@ -73,18 +74,35 @@ class AssignToSection:
 
         assignments_list = []
         for assign in assigns:
-            second_query = select(AssignedSections).where(AssignedSections.research_type_id == assign.id)
-            assign_sections = await db.execute(second_query)
-            assign_sections = assign_sections.scalars().all()
-
-            assign_details = AssignUserProfileNoID(
-                research_type_name=assign.research_type_name,
-                assignsection=assign_sections
+            second_query = (select(
+                    AssignedSections.id.label("assignment_id"),
+                    AssignedSections.class_id,
+                    Class.course,
+                    Class.section
+                    ).where(AssignedSections.research_type_id == assign.id).outerjoin(Class, AssignedSections.class_id == Class.id)
             )
+            assign_sections = await db.execute(second_query)
+            assign_sections = assign_sections.fetchall()
+            
+            print(assign_sections)
+            
+            assign_details = {
+                "assigned_type_id": assign.id,
+                "research_type_name": assign.research_type_name,
+                "assignsection": []
+            }
+            
+            for section in assign_sections:
+                assign_details["assignsection"].append({
+                    "id": section[0],
+                    "class_id": section[1],
+                    "course": section[2],
+                    "section": section[3]
+                })
+
             assignments_list.append(assign_details)
 
         return assignments_list
-    
     
     @staticmethod
     async def display_assignments_by_type(research_type: str):

@@ -80,6 +80,18 @@ class UserService:
             .where(Users.id == user_id)
         )
         return (await db.execute(query)).mappings().one()
+    
+    @staticmethod
+    async def faculty_info_needed(user_id: str):
+        query = (
+            select(
+                Users.id,
+                Faculty.name,
+            )
+            .join_from(Users, Faculty)
+            .where(Users.id == user_id)
+        )
+        return (await db.execute(query)).mappings().one()
 
     @staticmethod
     async def getprofile(user_id: str):

@@ -36,6 +36,32 @@ async def assign_section(
 
     return assignUser
 
+
+@router.get("/announcement/{announcement_id}", response_model=AnnouncementUpdate)
+async def assign_section(
+        announcement_id: str,
+        credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+    ):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+    roles = token.get('role', [])
+    if "admin" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
+    
+    display_announcement = await AnnouncementService.get_announcement_id(announcement_id)
+    
+    
+        # Create an instance of AnnouncementUpdate using the retrieved data
+    announcement_schema= AnnouncementUpdate(
+        user_role_target=display_announcement.user_role_target,
+        announcement_type=display_announcement.announcement_type,
+        title=display_announcement.title,
+        content=display_announcement.content,
+        other_details=display_announcement.other_details,
+    )
+
+    return announcement_schema
+
 @router.put("/update_announcement/{id}", response_model=Announcement)
 async def update_announcement_by_id(
         id: str,

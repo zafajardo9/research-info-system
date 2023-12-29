@@ -57,6 +57,19 @@ class AnnouncementService:
 
 
     @staticmethod
+    async def get_announcement_id(announcement_id: str):
+        
+        query = (
+            select(
+                Announcement
+            ).where(Announcement.id == announcement_id)
+        )
+        result = await db.execute(query)
+        announcement = result.scalar()
+        
+        return announcement
+
+    @staticmethod
     async def get_announcements_with_user_names():
         
         query = (

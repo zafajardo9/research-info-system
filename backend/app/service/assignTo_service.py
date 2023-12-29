@@ -40,6 +40,7 @@ class AssignToSection:
     
     @staticmethod
     async def assign_user_researchh_type(assign_data: AssignedResearchTypeCreate):
+        
         assign_research_type_id = str(uuid.uuid4()) 
         db_assign_research = AssignedResearchType(id=assign_research_type_id, **assign_data.dict())
         db.add(db_assign_research)
@@ -52,6 +53,7 @@ class AssignToSection:
     
     @staticmethod
     async def assign_user_section(assign_data: AssignedSectionsCreate, research_type_id: str):
+        
         assign_section_id = str(uuid.uuid4())
         db_assign_section = AssignedSections(id=assign_section_id, **assign_data.dict(), research_type_id=research_type_id)
         db.add(db_assign_section)
@@ -87,7 +89,7 @@ class AssignToSection:
             print(assign_sections)
             
             assign_details = {
-                "assigned_type_id": assign.id,
+                "assigned_type_id": assign.id   ,
                 "research_type_name": assign.research_type_name,
                 "assignsection": []
             }

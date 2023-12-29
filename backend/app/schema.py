@@ -475,6 +475,10 @@ class AssignedResearchTypeCreate(BaseModel):
 class AssignedSectionsCreate(BaseModel):
     class_id: str
     
+class AssignedSectionsWhole(BaseModel):
+    user_id: str
+    class_id: List[AssignedSectionsCreate]
+    
 class AssignedSectionsWithID(BaseModel):
     id: str
     class_id: str

@@ -1,13 +1,14 @@
 from typing import List, Union
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
+from sqlalchemy import select
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 
 from app.service.research_service import ResearchService
 from app.config import db
 from app.repository.users import UsersRepository
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, ResponseSchema, UpdateAssign
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AssignedSectionsWhole, ResponseSchema, UpdateAssign
 
 
 from app.service.users_service import UserService
@@ -234,6 +235,22 @@ async def assign_section(
     for each in assign_section:
         assigned_section = await AssignToProf.assign_prof_section(each, user_id)
         assigned_sections.append(assigned_section)
+
+    return assigned_sections
+
+
+@router.post("/assign-sections", response_model=List[AssignedSectionsCreate])
+async def assign_sections(assignments: List[AssignedSectionsWhole]):
+    """
+    Assign sections to multiple users.
+    """
+    assigned_sections = []
+
+    for assignment in assignments:
+        user_id = assignment.user_id
+        class_assignments = assignment.class_id
+        user_assigned_sections = await AssignToProf.assign_sections_to_user(user_id, class_assignments)
+        assigned_sections.extend(user_assigned_sections)
 
     return assigned_sections
 

@@ -250,35 +250,56 @@ async def read_user_assignments(user_id: str):
 
 # dfgdf
 
-# @router.get("/adviser/{research_type}/list")
-# async def display_by_filter(research_type: str):
+@router.get("/adviser/{research_type}/list")
+async def display_by_filter(research_type: str):
     
-#     query = (select(AssignedResearchType)
-#             .filter(AssignedResearchType.research_type_name == research_type))
-    
-#     assigned_research_types = await db.execute(query)
-#     assigned_research_types = assigned_research_types.scalars().all()
+    try:
+            # Fetch all AssignedResearchType and their sections
+            assigned_research_types = await db.execute(select(AssignedResearchType).where(AssignedResearchType.research_type_name == research_type))
+            assigned_research_types = assigned_research_types.scalars().all()
 
-#     result = []
-#     for assigned_research_type in assigned_research_types:
-#         user_profile = await UserService.getprofile(assigned_research_type.user_id)
-        
-#         # Query the AssignedSections table to get the list of assigned sections
-#         sections_query = (select(AssignedSections)
-#                         .filter(AssignedSections.research_type_id == assigned_research_type.id))
-#         assigned_sections = await db.execute(sections_query)
-#         assigned_sections = assigned_sections.scalars().all()
-        
-#         # Create a new dictionary that only includes the fields you want
-#         assigned_research_type_dict = {k: v for k, v in vars(assigned_research_type).items() if k != 'user_id'}
-        
-#         result.append({
-#             "assigned_research_type": assigned_research_type_dict,
-#             "user_profile": user_profile,
-#             "assigned_sections": [{"id": section.id, "course": section.course, "section": section.section} for section in assigned_sections]
-#         })
-    
-#     return result
+            # Group assignments by user
+            user_assignments = {}
+            for assign in assigned_research_types:
+                if assign.user_id not in user_assignments:
+                    user_assignments[assign.user_id] = {
+                        "user_profile": await UserService.getprofile(assign.user_id),
+                        "assignments": []
+                    }
+                
+                # Get sections for the current AssignedResearchType
+                assign_sections = await db.execute(select(
+                    AssignedSections.id.label("assignment_id"),
+                    AssignedSections.class_id,
+                    Class.course,
+                    Class.section
+                    ).where(AssignedSections.research_type_id == assign.id).outerjoin(Class, AssignedSections.class_id == Class.id))
+                assign_sections = assign_sections.fetchall()
+                
+
+                # Create the assignment details
+                assign_details = {
+                    "research_type_id": assign.id,
+                    "research_type_name": assign.research_type_name,
+                    "assign_sections": [
+                        {
+                            "id": assignment_id,
+                            "class_id": class_id,
+                            "course": course,
+                            "section": section
+                        }
+                        for assignment_id, class_id, course, section in assign_sections
+                    ]
+                }
+
+                user_assignments[assign.user_id]["assignments"].append(assign_details)
+
+            # Convert dictionary values to a list for the final response
+            result_list = list(user_assignments.values())
+            
+            return result_list
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 

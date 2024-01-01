@@ -125,8 +125,9 @@ async def assign_section(
     return assigned_sections
 
 
+# SA totoo di need dito user_id.. kinuha ko lang talaga
 
-@router.put("/update-assign-adviser-section/{research_type_id}/{user_id}", response_model=List[AssignedSections])
+@router.put("/update-assign-adviser-section/{research_type_id}", response_model=List[AssignedSections])
 async def update_assign_section(
         update_section: List[AssignedSectionsCreate], 
         research_type_id: str,

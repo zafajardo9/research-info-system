@@ -70,6 +70,7 @@ class AssignToSection:
         if not existing_section:
             return None
 
+        # Only update fields that are specified in update_data
         for var, value in update_data.dict().items():
             if value is not None:
                 setattr(existing_section, var, value)

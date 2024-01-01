@@ -127,31 +127,28 @@ async def assign_section(
 
 # SA totoo di need dito user_id.. kinuha ko lang talaga
 
-@router.put("/update-assign-adviser-section/{research_type_id}", response_model=List[AssignedSections])
+@router.put("/update-assign-adviser-section/{research_type_id}/{section_id}")
 async def update_assign_section(
-        update_section: List[AssignedSectionsCreate], 
+        section_id: str,
         research_type_id: str,
-        user_id: str,
+        new_class_id: str,
         credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
+    # Extract and validate user roles from JWT token
     token = JWTRepo.extract_token(credentials)
-    roles = token.get('role', [])
-    if "research professor" not in roles:
+    user_roles = token.get('role', [])
+    
+    # Check if the user has the required role
+    if "research professor" not in user_roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
 
-    # Delete the existing sections for the user
-    await AssignToSection.delete_user_sections(research_type_id)
+    # Call the service function to update the section
+    updated_section_dict = await AssignToSection.update_section(section_id, research_type_id, new_class_id)
 
-    # Assign the new sections
-    assigned_sections = []
-    for each in update_section:
-        assigned_section = await AssignToSection.assign_user_section(each, research_type_id)
-        assigned_sections.append(assigned_section)
+    # Return the response as per the AssignedSectionsCreate model
+    return updated_section_dict
 
-    return assigned_sections
-
-
-
+    
 @router.delete("/delete-all-assigned/{user_id}")
 async def delete_all_assignment(
     user_id: str,

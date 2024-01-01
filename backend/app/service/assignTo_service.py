@@ -63,21 +63,46 @@ class AssignToSection:
     
     
     #UPDATE
-    #DI NAGAMIT OR DI GAGAMITIN
     @staticmethod
-    async def update_section_assignment(section_id: str, update_data: AssignedSectionsCreate):
-        existing_section = await db.get(AssignedSections, section_id)
-        if not existing_section:
-            return None
+    async def assign_user_section(assign_data: AssignedSectionsCreate, research_type_id: str, section_id: Optional[str] = None):
+        if section_id:
+            # Update the existing section
+            statement = (
+                update(AssignedSections)
+                .where(AssignedSections.id == section_id)
+                .values(**assign_data.dict(), research_type_id=research_type_id)
+                .returning(AssignedSections)
+            )
+            db_assign_section = await db.execute(statement)
+        else:
+            # Create a new section
+            assign_section_id = str(uuid.uuid4())
+            db_assign_section = AssignedSections(id=assign_section_id, **assign_data.dict(), research_type_id=research_type_id)
+            db.add(db_assign_section)
+            await db.commit()
+            await db.refresh(db_assign_section)
 
-        # Only update fields that are specified in update_data
-        for var, value in update_data.dict().items():
-            if value is not None:
-                setattr(existing_section, var, value)
-
-        await db.commit()
-        return existing_section
+        return db_assign_section
     
+    
+    @staticmethod
+    async def update_section(section_id: str, research_type_id: str, new_class_id: str) -> dict:
+        # Update the existing section's class_id
+        statement = (
+            update(AssignedSections)
+            .where(AssignedSections.id == section_id)
+            .where(AssignedSections.research_type_id == research_type_id)
+            .values(class_id=new_class_id)
+            .returning(AssignedSections)
+        )
+
+        updated_section = await db.execute(statement)
+        await db.commit()
+
+        # Convert the SQLAlchemy model to a dictionary
+        updated_section_dict = dict(updated_section.first())  # Assuming .first() gets the first result
+
+        return updated_section_dict
 
     
     # Display the user assign based on the user_id

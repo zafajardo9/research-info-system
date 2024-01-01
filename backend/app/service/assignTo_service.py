@@ -62,6 +62,21 @@ class AssignToSection:
         return db_assign_section
     
     
+    #UPDATE
+    #DI NAGAMIT OR DI GAGAMITIN
+    @staticmethod
+    async def update_section_assignment(section_id: str, update_data: AssignedSectionsCreate):
+        existing_section = await db.get(AssignedSections, section_id)
+        if not existing_section:
+            return None
+
+        for var, value in update_data.dict().items():
+            if value is not None:
+                setattr(existing_section, var, value)
+
+        await db.commit()
+        return existing_section
+    
 
     
     # Display the user assign based on the user_id
@@ -130,31 +145,31 @@ class AssignToSection:
         return assignments_list
     
     
-    @staticmethod
-    async def update_research_type_assignment(research_type_id: str, update_data: AssignedResearchTypeCreate):
-        existing_research_type = await db.get(AssignedResearchType, research_type_id)
-        if not existing_research_type:
-            return None
+    # @staticmethod
+    # async def update_research_type_assignment(research_type_id: str, update_data: AssignedResearchTypeCreate):
+    #     existing_research_type = await db.get(AssignedResearchType, research_type_id)
+    #     if not existing_research_type:
+    #         return None
 
-        for var, value in vars(update_data).items():
-            if value is not None:
-                setattr(existing_research_type, var, value)
+    #     for var, value in vars(update_data).items():
+    #         if value is not None:
+    #             setattr(existing_research_type, var, value)
 
-        await db.commit()
-        return existing_research_type
+    #     await db.commit()
+    #     return existing_research_type
 
-    @staticmethod
-    async def update_section_assignment(section_id: str, update_data: AssignedSectionsCreate):
-        existing_section = await db.get(AssignedSections, section_id)
-        if not existing_section:
-            return None
+    # @staticmethod
+    # async def update_section_assignment(section_id: str, update_data: AssignedSectionsCreate):
+    #     existing_section = await db.get(AssignedSections, section_id)
+    #     if not existing_section:
+    #         return None
 
-        for var, value in vars(update_data).items():
-            if value is not None:
-                setattr(existing_section, var, value)
+    #     for var, value in vars(update_data).items():
+    #         if value is not None:
+    #             setattr(existing_section, var, value)
 
-        await db.commit()
-        return existing_section
+    #     await db.commit()
+    #     return existing_section
     
     @staticmethod
     async def delete_research_type_assignment(research_type_id: str):
@@ -169,6 +184,13 @@ class AssignToSection:
             return False 
 
         return True
+    
+    @staticmethod
+    async def delete_user_sections(research_type_id: str):
+
+        one = delete(AssignedSections).where(AssignedSections.research_type_id == research_type_id)
+        await db.execute(one)
+        await db.commit()
         
 
 
@@ -450,4 +472,4 @@ class AssignToSection:
         users_with_assignments = await db.execute(query)
         results = users_with_assignments.fetchall()
 
-        return results
+        return results# D

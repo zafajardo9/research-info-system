@@ -105,7 +105,7 @@ async def assign_section(
 
 
 
-@router.post("/assign-adviser-section/{research_type_id}", response_model=List[AssignedSectionsCreate])
+@router.post("/assign-adviser-section/{research_type_id}/", response_model=List[AssignedSectionsCreate])
 async def assign_section(
         assign_section: List[AssignedSectionsCreate], 
         research_type_id: str,
@@ -119,6 +119,31 @@ async def assign_section(
     assigned_sections = []
 
     for each in assign_section:
+        assigned_section = await AssignToSection.assign_user_section(each, research_type_id)
+        assigned_sections.append(assigned_section)
+
+    return assigned_sections
+
+
+
+@router.put("/update-assign-adviser-section/{research_type_id}/{user_id}", response_model=List[AssignedSections])
+async def update_assign_section(
+        update_section: List[AssignedSectionsCreate], 
+        research_type_id: str,
+        user_id: str,
+        credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+    roles = token.get('role', [])
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
+
+    # Delete the existing sections for the user
+    await AssignToSection.delete_user_sections(research_type_id)
+
+    # Assign the new sections
+    assigned_sections = []
+    for each in update_section:
         assigned_section = await AssignToSection.assign_user_section(each, research_type_id)
         assigned_sections.append(assigned_section)
 
@@ -196,32 +221,9 @@ async def delete_assignment(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-@router.post("/add-section-to-research-assign/{research_type_id}", response_model=List[AssignedSectionsCreate])
-async def assign_section(
-    assign_section: List[AssignedSectionsCreate], 
-    research_type_id: str,
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-    ):
-
-    '''
-    Once nag delete nung mga section and course pwede naman magdagdag pero need ikabit si research type id
-    and need din si user id
-    '''
-    token = JWTRepo.extract_token(credentials)
-    roles = token.get('role', [])
-    if "research professor" not in roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to assign.")
-
-    assigned_sections = []
-    for each in assign_section:
-        assigned_section = await AssignToSection.assign_user_section(each, research_type_id)
-        assigned_sections.append(assigned_section)
-
-    return assigned_sections
 
 
-
-    # TODO BABALIKAN NATIN TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+# todo babalikan
 @router.get("/adviser/{user_id}/assigned")
 async def read_user_assignments(user_id: str):
     try:

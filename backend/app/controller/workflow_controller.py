@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate, WorkflowStepDetail
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UpdateWorkflowData, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate, WorkflowStepDetail
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.repository.workflow_repo import WorkflowRepository
 from app.repository.workflowsteps_repo import WorkflowStepRepository
@@ -68,24 +68,6 @@ async def create_workflows2(workflow_data: WorkflowCreate, workflow_steps: List[
     return created_workflows
 #==========================UPDATE
 
-@router.put("/update/{workflow_id}")
-async def update_workflow_with_steps(
-    workflow_id: str,
-    workflow_data: WorkflowCreate,
-    steps_data: List[WorkflowStepCreate],
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-):
-    '''Nangyare dito sa update is get the workflow, then ma uupdate tapos si step delete muna lahat then insert new one'''
-    token = JWTRepo.extract_token(credentials)
-    roles = token.get('role', [])
-    if "research professor" not in roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to update workflows.")
-
-    updated_workflow = await WorkflowService.update_workflow_with_steps(workflow_id, workflow_data, steps_data)
-    if updated_workflow:
-        return updated_workflow
-    raise HTTPException(status_code=404, detail="Workflow not found")
-
 # @router.put("/update/{workflow_id}")
 # async def update_workflow_with_steps(
 #     workflow_id: str,
@@ -103,6 +85,34 @@ async def update_workflow_with_steps(
 #     if updated_workflow:
 #         return updated_workflow
 #     raise HTTPException(status_code=404, detail="Workflow not found")
+
+@router.put("/update", response_model=List[Workflow])
+async def update_workflows(update_data: UpdateWorkflowData, credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+    roles = token.get('role', [])
+    
+    # Check if the user has the necessary role to update workflows
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to update workflows.")
+
+    updated_workflows = []
+    
+    for workflow_id in update_data.workflow_id:
+        db_workflow = await WorkflowService.get_workflow_by_id(workflow_id)
+        
+        if db_workflow:
+            # Clear existing steps and add new steps
+            await WorkflowService.clear_workflow_steps(workflow_id)
+            
+            for increment, step_data in enumerate(update_data.steps_data, start=1):
+                created_workflow_step = await WorkflowService.create_workflow_step(step_data, increment, workflow_id)
+
+            updated_workflows.append(db_workflow)
+    
+    return updated_workflows
+
+
 
 
 # ===================================END

@@ -124,6 +124,18 @@ class WorkflowService:
         else:
             raise HTTPException(status_code=404, detail="Process set not found")
         
+
+    @staticmethod
+    async def get_workflow_by_id(workflow_id: str):
+        result = await db.execute(select(Workflow).filter(Workflow.id == workflow_id))
+        return result.scalar()
+
+    @staticmethod
+    async def clear_workflow_steps(workflow_id: str):
+        await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id))
+        await db.commit()
+
+        
     @staticmethod
     async def delete_process_by_id(id: str):
             # Delete workflow steps
@@ -424,24 +436,64 @@ class WorkflowService:
         return steps
 
     
+    # @staticmethod
+    # async def update_workflow_with_steps(workflow_id: str, workflow_data: WorkflowCreate, steps_data: List[WorkflowStepCreate]):
+    #     workflow = await WorkflowService.get_workflow_id(workflow_id)
+    #     if workflow:
+    #         for key, value in dict(workflow_data).items():
+    #             setattr(workflow, key, value)
+
+    #         # Delete all existing steps
+    #         await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id))
+
+    #         # Insert new steps
+    #         for step_data in steps_data:
+    #             await WorkflowService.create_workflow_step(step_data, workflow.id)
+
+    #         await db.commit()
+    #         await db.refresh(workflow)
+    #         return workflow
+    #     return None
+    
+    
     @staticmethod
     async def update_workflow_with_steps(workflow_id: str, workflow_data: WorkflowCreate, steps_data: List[WorkflowStepCreate]):
-        workflow = await WorkflowService.get_workflow_id(workflow_id)
-        if workflow:
-            for key, value in dict(workflow_data).items():
-                setattr(workflow, key, value)
+        async with db.transaction():
+            workflow = await WorkflowService.get_workflow_id(workflow_id)
+            if workflow:
+                # Update workflow data
+                for key, value in dict(workflow_data).items():
+                    setattr(workflow, key, value)
 
-            # Delete all existing steps
-            await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id))
+                # Get existing steps for the workflow
+                existing_steps = await db.execute(select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id))
+                existing_steps = existing_steps.scalars().all()
 
-            # Insert new steps
-            for step_data in steps_data:
-                await WorkflowService.create_workflow_step(step_data, workflow.id)
+                # Create a dictionary for quick access to existing steps by ID
+                existing_steps_dict = {step.id: step for step in existing_steps}
 
-            await db.commit()
-            await db.refresh(workflow)
-            return workflow
-        return None
+                # Update existing steps or insert new steps
+                for step_data in steps_data:
+                    # Check if the step ID is provided
+                    if step_data.id:
+                        # Update existing step
+                        existing_step = existing_steps_dict.get(step_data.id)
+                        if existing_step:
+                            for key, value in dict(step_data).items():
+                                setattr(existing_step, key, value)
+                        else:
+                            # Handle the case where the provided step ID does not match any existing step
+                            raise HTTPException(status_code=400, detail=f"Invalid step ID: {step_data.id}")
+
+                    else:
+                        # Insert new step
+                        await WorkflowService.create_workflow_step(step_data, workflow.id)
+
+                await db.commit()
+                await db.refresh(workflow)
+                return workflow
+
+            return None
 #==============deleting
 
 

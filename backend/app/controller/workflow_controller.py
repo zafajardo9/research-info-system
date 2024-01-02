@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UpdateWorkflowData, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate, WorkflowStepDetail
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UpdateWorkflowData, UpdateWorkflowsByType, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate, WorkflowStepDetail
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.repository.workflow_repo import WorkflowRepository
 from app.repository.workflowsteps_repo import WorkflowStepRepository
@@ -112,7 +112,31 @@ async def update_workflows(update_data: UpdateWorkflowData, credentials: HTTPAut
     
     return updated_workflows
 
+@router.put("/update_by_type", response_model=List[Workflow])
+async def update_workflows_by_type(update_data: UpdateWorkflowsByType, credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+    roles = token.get('role', [])
+    
+    # Check if the user has the necessary role to update workflows
+    if "research professor" not in roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to update workflows.")
 
+    updated_workflows = []
+    
+    # Query workflows by type
+    workflows = await WorkflowService.get_workflows_by_type(update_data.research_type)
+    
+    for workflow in workflows:
+        # Clear existing steps and add new steps
+        await WorkflowService.clear_workflow_steps(workflow.id)
+        
+        for increment, step_data in enumerate(update_data.steps_data, start=1):
+            created_workflow_step = await WorkflowService.create_workflow_step(step_data, increment, workflow.id)
+
+        updated_workflows.append(workflow)
+    
+    return updated_workflows
 
 
 # ===================================END

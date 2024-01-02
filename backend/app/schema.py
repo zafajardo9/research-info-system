@@ -471,6 +471,10 @@ class UpdateWorkflowData(BaseModel):
     workflow_id: List[str]
     steps_data: List[WorkflowStepCreate]
     
+class UpdateWorkflowsByType(BaseModel):
+    research_type: str
+    steps_data: List[WorkflowStepCreate]
+    
 
 # ============ ASSIGN SECTION COURSE to a user based in research type
 class AssignedResearchTypeCreate(BaseModel):

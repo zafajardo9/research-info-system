@@ -126,6 +126,11 @@ class WorkflowService:
         
 
     @staticmethod
+    async def get_workflows_by_type(research_type: str):
+        result = await db.execute(select(Workflow).filter(Workflow.type == research_type))
+        return result.scalars().all()
+
+    @staticmethod
     async def get_workflow_by_id(workflow_id: str):
         result = await db.execute(select(Workflow).filter(Workflow.id == workflow_id))
         return result.scalar()

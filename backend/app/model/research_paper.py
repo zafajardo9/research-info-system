@@ -57,3 +57,18 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     full_manuscript: "FullManuscript" = Relationship(back_populates="research_paper")
     copyright: "CopyRight" = Relationship(back_populates="research_paper")
 
+
+
+class FacultyResearchPaper(SQLModel, TimeMixin, table=True):
+    __tablename__ = 'faculty_research_papers'
+
+    id: str = Field(primary_key=True)
+    title: str
+    content: str
+    abstract: str
+    file_path: str
+    user_id: Optional[str] = Field(default=None, foreign_key="users.id")
+
+    user: Optional["Users"] = Relationship(back_populates="faculty_research_papers")
+    
+    

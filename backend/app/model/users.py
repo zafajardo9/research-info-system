@@ -32,6 +32,8 @@ class Users(SQLModel, TimeMixin, table=True):
 
     student: Optional["Student"] = Relationship(back_populates="users")
     faculty: Optional["Faculty"] = Relationship(back_populates="users")
+    
+    
 
     roles: List["Role"] = Relationship(back_populates="users", link_model=UsersRole)
 
@@ -44,7 +46,11 @@ class Users(SQLModel, TimeMixin, table=True):
     
     notifications: Optional[List["Notification"]] = Relationship(back_populates="user")
     
-
+    
+    #reltionship to faculty research papers:
+    faculty_research_papers: List["FacultyResearchPaper"] = Relationship(back_populates="user")
+    
+    #iba to ewan
     research_types: Optional[List["AssignedResearchType"]] = Relationship(back_populates="users")
    
     # research_type_assigned_prof: Optional[List["AssignedResearchTypeToProf"]] = Relationship(back_populates="users")

@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import join
+from sqlalchemy import delete, join, update
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
@@ -11,13 +11,15 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.research_repo import ResearchPaperRepository
-from app.schema import AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse
+from app.schema import AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse
 from app.service.users_service import UserService
 from app.model import Users, ResearchPaper, Ethics, FullManuscript, CopyRight, Student
-from app.model.research_paper import Author, Status
+from app.model.research_paper import Author, FacultyResearchPaper, Status
 from app.repository.author_repo import AuthorRepository
 from app.model.research_status import Comment
 from app.repository.comment_repo import CommentRepository
+from app.repository.faculty_research_paper import FacultyResearchRepository
+from app.model.faculty import Faculty
 
 class ResearchService:
 
@@ -485,3 +487,57 @@ class ResearchService:
 
         return await CommentRepository.create(db, **_comment.dict())
     
+
+
+
+
+    @staticmethod
+    async def upload_faculty_paper(user_id: str, research_paper_data: FacultyResearchPaperCreate) -> FacultyResearchPaper:
+        _research_paper_id = str(uuid4())
+
+        research_paper = await FacultyResearchRepository.create(
+            db,
+            model=FacultyResearchPaper,
+            id=_research_paper_id,
+            **research_paper_data.dict(),
+            user_id=user_id,
+        )
+        return research_paper
+    
+    
+    @staticmethod
+    async def get_faculty_research_papers(user_id: str):
+        query = select(FacultyResearchPaper).where(FacultyResearchPaper.user_id == user_id)
+        
+        result = await db.execute(query)
+        return result.scalars().all()
+    
+    
+    @staticmethod
+    async def get_faculty_research_papers_with_user_info():
+        query = (
+            select(FacultyResearchPaper, Faculty.name, Users.id, Users.email)
+            .join(Users, FacultyResearchPaper.user_id == Users.id)
+            .join(Faculty, Users.faculty_id == Faculty.id)
+        )
+        result = await db.execute(query)
+        return result.fetchall()
+
+    @staticmethod
+    async def get_faculty_research_papers_by_id(faculty_paper_id: str):
+        query = select(FacultyResearchPaper).where(FacultyResearchPaper.id == faculty_paper_id)
+        
+        result = await db.execute(query)
+        return result.scalars().first()
+    
+    @staticmethod
+    async def delete_faculty_research_paper(faculty_paper_id: str):
+        query = delete(FacultyResearchPaper).where(FacultyResearchPaper.id == faculty_paper_id)
+        await db.execute(query)
+        await db.commit()
+
+    @staticmethod
+    async def update_faculty_research_paper(research_paper_id: str, research_paper_data: FacultyResearchPaperUpdate):
+        query = update(FacultyResearchPaper).where(FacultyResearchPaper.id == research_paper_id).values(research_paper_data.dict())
+        await db.execute(query)
+        await db.commit()

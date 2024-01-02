@@ -14,6 +14,7 @@ from .mixins import TimeMixin
 
 from .research_paper import ResearchPaper
 from .research_paper import Author
+from .research_paper import FacultyResearchPaper
 
 from .research_status import Comment
 

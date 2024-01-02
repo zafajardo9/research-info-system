@@ -613,6 +613,17 @@ class NavigationProcessDisplay(BaseModel):
 
 
 # SOLUTIONS FOR PROBLEMS NOW +======================
+class FacultyResearchPaperCreate(BaseModel):
+    title: str
+    content: str
+    abstract: str
+    file_path: str
+    
+class FacultyResearchPaperUpdate(BaseModel):
+    title: str
+    content: str
+    abstract: str
+    file_path: str
 
 
 # END =============================
@@ -625,3 +636,6 @@ class PageResponse(GenericModel, Generic[T]):
     total_pages: int
     total_record: int
     content: List[T]
+
+
+

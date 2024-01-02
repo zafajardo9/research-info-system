@@ -1,14 +1,15 @@
-from typing import List, Union
+from typing import List, Optional, Union
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 
-from app.schema import AssignUserProfile, CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FullManuscriptWithResearchResponse, ResearchPaperResponse, ResponseSchema, StatusUpdate
+from app.schema import AssignUserProfile, CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptWithResearchResponse, ResearchPaperResponse, ResponseSchema, StatusUpdate
 from app.service.research_service import ResearchService
 from app.config import db
 from app.service.assignTo_service import AssignToSection
 from app.service.users_service import UserService
+from app.model.research_paper import FacultyResearchPaper
 
 router = APIRouter(
     prefix="/faculty",
@@ -283,3 +284,109 @@ async def update_research_paper_status(
 
 
 # todo 
+# ======================================= FAULTY UPLOAD OF PAPERS
+
+#progress making research repo for faculty
+
+
+@router.get("/faculty-papers/list")
+async def get_faculty_research_papers():
+    try:
+        research_papers = await ResearchService.get_faculty_research_papers_with_user_info()
+        if research_papers:
+            return research_papers
+        else:
+            return None
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+
+
+@router.post("/upload-my-papers")
+async def upload_faculty_paper(
+    research_paper_data: FacultyResearchPaperCreate,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+
+    try:
+        faculty_paper = await ResearchService.upload_faculty_paper(current_user, research_paper_data)
+        return ResponseSchema(detail=f"Research paper {faculty_paper.id} created successfully", result=faculty_paper.dict())
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
+    
+    
+    
+    
+@router.post("/upload-my-papers")
+async def upload_faculty_paper(
+    research_paper_data: FacultyResearchPaperCreate,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+
+    try:
+        faculty_paper = await ResearchService.upload_faculty_paper(current_user, research_paper_data)
+        return ResponseSchema(detail=f"Research paper {faculty_paper.id} created successfully", result=faculty_paper.dict())
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
+    
+@router.get("/my-research-papers", response_model=Optional[List[FacultyResearchPaper]], response_model_exclude_none=True)
+async def get_faculty_research_papers(
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+    current_user_id = token['user_id']
+
+    try:
+        research_papers = await ResearchService.get_faculty_research_papers(current_user_id)
+        if research_papers:
+            return research_papers
+        else:
+            return None
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+    
+    
+@router.get("/my-research-papers/{research_paper_id}", response_model=Optional[FacultyResearchPaper], response_model_exclude_none=True)
+async def get_faculty_research_papers(
+    research_paper_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+
+    try:
+        research_papers = await ResearchService.get_faculty_research_papers_by_id(research_paper_id)
+        if research_papers:
+            return research_papers
+        else:
+            return None
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+    
+    
+@router.delete("/delete-my-research-papers/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def delete_faculty_research_paper(
+    research_paper_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+
+    try:
+        await ResearchService.delete_faculty_research_paper(research_paper_id)
+        return ResponseSchema(detail=f"Research paper {research_paper_id} deleted successfully", result=None)
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error deleting research paper: {str(e)}", result=None)
+    
+    
+@router.put("/my-research-papers/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def update_faculty_research_paper(
+    research_paper_id: str,
+    research_paper_data: FacultyResearchPaperUpdate,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+
+    try:
+        await ResearchService.update_faculty_research_paper(research_paper_id, research_paper_data)
+        return ResponseSchema(detail=f"Research paper {research_paper_id} updated successfully", result=None)
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error updating research paper: {str(e)}", result=None)

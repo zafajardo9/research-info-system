@@ -45,34 +45,6 @@ async def list_of_process_for_student():
 
 
 
-# @router.post("/create/1", response_model=List[Workflow])
-# async def create_workflows1(workflows_data: List[WorkflowCreateWithSteps], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-#     token = JWTRepo.extract_token(credentials)
-#     current_user = token['user_id']
-#     roles = token.get('role', [])
-#     if "research professor" not in roles:
-#         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
-
-#     created_workflows = []
-
-#     for workflow_data_with_steps in workflows_data:
-#         workflow_data = workflow_data_with_steps.workflow_data
-#         workflow_steps_data = workflow_data_with_steps.workflow_steps
-        
-#         # Check if workflow already exists
-#         if await WorkflowService.check_if_workflow_exists(workflow_data.type, workflow_data.year, workflow_data.course):
-#             raise HTTPException(status_code=400, detail="A workflow with the same type, section, and course already exists.")
-
-#         created_workflow = await WorkflowService.create_workflow(workflow_data, current_user)
-
-#         for increment, step_data in enumerate(workflow_steps_data, start=1):
-#             created_workflow_step = await WorkflowService.create_workflow_step(step_data, increment, created_workflow.id)
-
-#         created_workflows.append(created_workflow)
-
-#     return created_workflows
-
-
 @router.post("/create", response_model=List[Workflow])
 async def create_workflows2(workflow_data: WorkflowCreate, workflow_steps: List[WorkflowStepCreate], credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
@@ -84,7 +56,7 @@ async def create_workflows2(workflow_data: WorkflowCreate, workflow_steps: List[
     created_workflows = []
     for class_id in workflow_data.class_id:
         if await WorkflowService.check_if_workflow_exists(workflow_data.type, class_id):
-            raise HTTPException(status_code=400, detail="A workflow with the same type, section, and course already exists.")
+            continue
         
         created_workflow = await WorkflowService.create_workflow(workflow_data.type, class_id, current_user)
 

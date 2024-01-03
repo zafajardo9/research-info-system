@@ -71,10 +71,10 @@ class WorkflowService:
         return workflow_class
     
 
-    @staticmethod
-    async def check_if_workflow_exists(type: str, class_id: str):
-        workflow = await db.execute(select(Workflow).filter(Workflow.type == type, Workflow.class_id == class_id))
-        return workflow.scalar() is not None
+    # @staticmethod
+    # async def check_if_workflow_exists(type: str, class_id: str):
+    #     workflow = await db.execute(select(Workflow).filter(Workflow.type == type, Workflow.class_id == class_id))
+    #     return workflow.scalar() is not None
     
     @staticmethod
     async def check_if_workflow_type_exist(type: str):

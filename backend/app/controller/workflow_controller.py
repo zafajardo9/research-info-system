@@ -55,13 +55,16 @@ async def create_workflows(workflow_data: WorkflowCreate, workflow_steps: List[W
     if "research professor" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
-    # Create workflow
-    created_workflow = await WorkflowService.create_workflow(workflow_data.type, current_user)
+
 
     # Check if the workflow type already exists
     existing_workflow = await WorkflowService.check_if_workflow_type_exist(workflow_data.type)
     if existing_workflow:
         raise HTTPException(status_code=400, detail=f"A workflow with type '{workflow_data.type}' already exists. Please choose a different type.")
+
+
+    # Create workflow
+    created_workflow = await WorkflowService.create_workflow(workflow_data.type, current_user)
 
 
     # Create steps

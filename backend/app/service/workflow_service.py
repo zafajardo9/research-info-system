@@ -55,11 +55,12 @@ class WorkflowService:
         existing_association = await db.execute(
             select(WorkflowClass).filter_by(workflow_id=workflow_id, class_id=class_id)
         )
-        
-        asoc = existing_association.scalar() 
+
+        asoc = existing_association.scalar()
 
         if asoc:
             logging.warning(f"Association already exists for workflow {workflow_id} and class {class_id}")
+            return asoc  # Return the existing association instead of creating a new one
 
         # Create a new association if it doesn't exist
         id_class = str(uuid.uuid4())

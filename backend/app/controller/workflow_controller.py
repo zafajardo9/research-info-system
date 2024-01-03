@@ -266,8 +266,6 @@ async def update_workflow(
 
 # ===================================END
 
-
-# todo FIX THIS to show section and course
 @router.get("/created-workflow-by-user", response_model=List[WorkflowDetail])
 async def read_workflow_made_by_user(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     '''Hindi ito magagamit ata.. pero ginawa ko lang sana para ma display yung mga ginawa na workflow na ginawa ng research prof talaga'''

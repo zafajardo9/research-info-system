@@ -541,17 +541,13 @@ class WorkflowService:
 
     @staticmethod
     async def delete_workflow_by_id(workflow_id: str):
-        workflow = await WorkflowService.get_workflow_by_id_with_steps(workflow_id)
-
-        if not workflow:
-            return False  # Return False when the workflow is not found
 
 
             # Delete workflow steps
-        await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id))
-        await db.execute(delete(WorkflowClass).where(WorkflowClass.workflow_id == workflow.id))
+        await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id))
+        await db.execute(delete(WorkflowClass).where(WorkflowClass.workflow_id == workflow_id))
             # Delete the workflow itself
-        await db.execute(delete(Workflow).where(Workflow.id == workflow.id))
+        await db.execute(delete(Workflow).where(Workflow.id == workflow_id))
 
         return True
     

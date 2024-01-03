@@ -1,5 +1,6 @@
 from operator import itemgetter
 from typing import Dict, List
+import uuid
 from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
@@ -85,41 +86,59 @@ async def update_workflow(
 
 
 
-# @router.put("/update-steps/{workflow_id}", response_model=list[WorkflowStep])
-# async def update_workflow_steps(workflow_id: str, updated_steps: List[WorkflowStepCreate]):
-#     try:
-#         # Fetch the existing steps
-#         existing_steps = await db.execute(
-#             select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
-#         )
-#         existing_steps = existing_steps.scalars().all()
+@router.put("/update-steps/{workflow_id}", response_model=List[WorkflowStep])
+async def update_workflow_steps(
+    workflow_id: str,
+    updated_steps: List[WorkflowStepCreate]
+):
+    try:
+        # Check if the workflow exists
+        workflow = await db.get(Workflow, workflow_id)
+        if not workflow:
+            raise HTTPException(status_code=404, detail="Workflow not found")
 
-#         # Map step_id to existing step for quick lookup
-#         existing_steps_mapping = {step.id: step for step in existing_steps}
+        # Fetch the existing steps
+        existing_steps = await db.execute(
+            select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
+        )
+        existing_steps = existing_steps.scalars().all()
 
-#         # Update the existing steps based on the provided data
-#         for updated_step_data in updated_steps:
-#             step_id = updated_step_data.id
-#             existing_step = existing_steps_mapping.get(step_id)
-            
-#             if existing_step:
-#                 for key, value in updated_step_data.dict().items():
-#                     setattr(existing_step, key, value)
+        # Update existing steps and add new steps
+        updated_steps_mapping = {step.name: step for step in updated_steps}
+        for existing_step in existing_steps:
+            if existing_step.name in updated_steps_mapping:
+                # Update existing step
+                updated_step_data = updated_steps_mapping[existing_step.name]
+                for key, value in updated_step_data.dict().items():
+                    setattr(existing_step, key, value)
+                # Remove updated step from the mapping to handle new steps later
+                del updated_steps_mapping[existing_step.name]
 
-#         await db.commit()
+        # Add new steps
+        new_steps = [
+            WorkflowStep(
+                id=str(uuid.uuid4()),
+                workflow_id=workflow_id,
+                **step.dict()
+            ) for step in updated_steps_mapping.values()
+        ]
+        db.add_all(new_steps)
 
-#         # Fetch the updated steps
-#         updated_steps = await db.execute(
-#             select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
-#         )
-#         updated_steps = updated_steps.scalars().all()
+        await db.commit()
 
-#         return updated_steps
+        # Fetch the updated steps
+        updated_steps = await db.execute(
+            select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
+        )
+        updated_steps = updated_steps.scalars().all()
 
-#     except Exception as e:
-#         # Rollback in case of any error
-#         await db.rollback()
-#         raise HTTPException(status_code=500, detail=str(e))
+        return updated_steps
+
+    except Exception as e:
+        # Rollback in case of any error
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 

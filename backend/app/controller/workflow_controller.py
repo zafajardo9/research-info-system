@@ -20,6 +20,7 @@ from sqlalchemy.orm import selectinload
 from app.config import db
 from app.model.faculty import Faculty
 from app.model.workflowprocess import NavigationTab, WorkflowClass
+from app.model.student import Class
 
 #from app.schema import WorkflowCreate
 
@@ -83,6 +84,82 @@ async def update_workflow(
         created_workflow_steps.append(created_step)
 
     return created_workflow_steps
+
+
+@router.post("/add_class/{workflow_id}", response_model=List[WorkflowClass])
+async def add_class(
+    workflow_id: str,
+    workflow_data: List[str]
+):
+    created = []
+    for class_id in workflow_data:
+        created_class = await WorkflowService.create_workflow_class_association(workflow_id, class_id)
+        created.append(created_class)
+
+
+    return created
+
+
+
+
+
+# @router.put("/update/{workflow_id}", response_model=List[Workflow])
+# async def update_workflow(
+#     workflow_id: str,
+#     updated_data: WorkflowUpdate,
+#     updated_steps: List[WorkflowStepCreate],
+#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+# ):
+#     try:
+#         # Check if the workflow exists
+#         workflow = await db.get(Workflow, workflow_id)
+#         if not workflow:
+#             raise HTTPException(status_code=404, detail="Workflow not found")
+
+#         # Update workflow data
+#         for key, value in updated_data.dict().items():
+#             setattr(workflow, key, value)
+
+#         # Fetch existing steps
+#         existing_steps = await db.execute(
+#             select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
+#         )
+#         existing_steps = existing_steps.scalars().all()
+
+#         # Update existing steps and add new steps
+#         updated_steps_mapping = {step.name: step for step in updated_steps}
+#         for existing_step in existing_steps:
+#             if existing_step.name in updated_steps_mapping:
+#                 # Update existing step
+#                 updated_step_data = updated_steps_mapping[existing_step.name]
+#                 for key, value in updated_step_data.dict().items():
+#                     setattr(existing_step, key, value)
+#                 # Remove updated step from the mapping to handle new steps later
+#                 del updated_steps_mapping[existing_step.name]
+
+#         # Add new steps
+#         new_steps = [
+#             WorkflowStep(
+#                 id=str(uuid.uuid4()),
+#                 workflow_id=workflow_id,
+#                 **step.dict()
+#             ) for step in updated_steps_mapping.values()
+#         ]
+#         db.add_all(new_steps)
+
+#         await db.commit()
+
+#         # Fetch the updated workflow
+#         updated_workflow = await db.get(Workflow, workflow_id)
+
+#         return [updated_workflow]
+
+#     except Exception as e:
+#         # Rollback in case of any error
+#         await db.rollback()
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
 
 
 

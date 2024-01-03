@@ -1,6 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
 from itertools import groupby
+import logging
 from operator import attrgetter
 import uuid
 from sqlalchemy import delete, join, and_, update
@@ -51,13 +52,24 @@ class WorkflowService:
     
     @staticmethod
     async def create_workflow_class_association(workflow_id: str, class_id: str):
-        id_class = str(uuid.uuid4())  # Generate UUID for step_id
-        workflow_class = WorkflowClass(id = id_class, workflow_id=workflow_id, class_id=class_id)
+        existing_association = await db.execute(
+            select(WorkflowClass).filter_by(workflow_id=workflow_id, class_id=class_id)
+        )
+        
+        asoc = existing_association.scalar() 
+
+        if asoc:
+            logging.warning(f"Association already exists for workflow {workflow_id} and class {class_id}")
+
+        # Create a new association if it doesn't exist
+        id_class = str(uuid.uuid4())
+        workflow_class = WorkflowClass(id=id_class, workflow_id=workflow_id, class_id=class_id)
         db.add(workflow_class)
         await db.commit()
         await db.refresh(workflow_class)
         return workflow_class
     
+
     @staticmethod
     async def check_if_workflow_exists(type: str, class_id: str):
         workflow = await db.execute(select(Workflow).filter(Workflow.type == type, Workflow.class_id == class_id))

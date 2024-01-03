@@ -480,7 +480,6 @@ class ResearchService:
         _comment = Comment(
             id=_comment_id,
             text=text,
-            name=user_name,
             user_id=user_id,
             research_paper_id=research_id
             )

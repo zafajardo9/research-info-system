@@ -17,12 +17,13 @@ from fastapi import HTTPException
 
 
 from app.repository.workflow_repo import WorkflowRepository
-from app.model.workflowprocess import NavigationTab, Workflow
+from app.model.workflowprocess import NavigationTab, Workflow, WorkflowClass
 from app.model.workflowprocess import WorkflowStep
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
-from app.schema import NavigationProcessDisplay, NavigationTabCreate, WorkflowCreate, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate
+from app.schema import NavigationProcessDisplay, NavigationTabCreate, WorkflowCreate, WorkflowDetail, WorkflowGroupbyType, WorkflowResponse, WorkflowStepCreate, WorkflowUpdate
 from app.service.section_service import SectionService
+from app.model.student import Class
 
 
 
@@ -30,18 +31,18 @@ from app.service.section_service import SectionService
 class WorkflowService:
 
     @staticmethod
-    async def create_workflow(workflow_type: str, class_id: str, user_id: str):
+    async def create_workflow(workflow_type: str, user_id: str):
         workflow_id = str(uuid.uuid4())  # Generate UUID for workflow_id
-        db_workflow = Workflow(id=workflow_id, type=workflow_type, class_id=class_id, user_id=user_id)
+        db_workflow = Workflow(id=workflow_id, type=workflow_type, user_id=user_id)
         db.add(db_workflow)
         await db.commit()
         await db.refresh(db_workflow)
         return db_workflow
 
     @staticmethod
-    async def create_workflow_step(step_data: WorkflowStepCreate, increment: int, workflow_id: str):
+    async def create_workflow_step(step_data: WorkflowStepCreate, workflow_id: str):
         step_id = str(uuid.uuid4())  # Generate UUID for step_id
-        db_workflow_step = WorkflowStep(id=step_id, **step_data.dict(), step_number= increment, workflow_id=workflow_id)
+        db_workflow_step = WorkflowStep(id=step_id, **step_data.dict(), workflow_id=workflow_id)
         db.add(db_workflow_step)
         await db.commit()
         await db.refresh(db_workflow_step)
@@ -49,33 +50,165 @@ class WorkflowService:
     
     
     @staticmethod
+    async def create_workflow_class_association(workflow_id: str, class_id: str):
+        id_class = str(uuid.uuid4())  # Generate UUID for step_id
+        workflow_class = WorkflowClass(id = id_class, workflow_id=workflow_id, class_id=class_id)
+        db.add(workflow_class)
+        await db.commit()
+        await db.refresh(workflow_class)
+        return workflow_class
+    
+    @staticmethod
     async def check_if_workflow_exists(type: str, class_id: str):
         workflow = await db.execute(select(Workflow).filter(Workflow.type == type, Workflow.class_id == class_id))
         return workflow.scalar() is not None
     
     @staticmethod
-    async def get_workflow_by_id_with_steps(workflow_id: str):
-        workflow_query = select(Workflow).where(Workflow.id == workflow_id)
-        workflow = await db.execute(workflow_query)
-        workflow = workflow.scalar()
+    async def update_workflow(workflow_id: str, update_data: WorkflowUpdate):
+        db_workflow = await Workflow.get(workflow_id)
+        if not db_workflow:
+            raise HTTPException(status_code=404, detail="Workflow not found")
 
-        if not workflow:
-            return None  # Return None when the workflow is not found
+        update_dict = update_data.dict(exclude_unset=True)
+        for key, value in update_dict.items():
+            setattr(db_workflow, key, value)
 
-        steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
-        steps = await db.execute(steps_query)
-        steps = steps.scalars().all()
+        db.add(db_workflow)
+        await db.commit()
+        await db.refresh(db_workflow)
+        return db_workflow
+    
+    
+    @staticmethod
+    async def get_workflow_all():
+        workflows_query = select(Workflow)
+        workflows = await db.execute(workflows_query)
+        workflows = workflows.scalars().all()
 
-        workflow_detail = WorkflowDetail(
-            id=workflow.id,
-            course=workflow.course,
-            year=workflow.year,
-            type=workflow.type,
-            user_id=workflow.user_id,
-            steps=steps
-        )
+        if not workflows:
+            return [] # Return an empty list when no workflows are found
 
-        return workflow_detail
+        workflows_with_details = []
+        for workflow in workflows:
+            # Get class data
+            class_query = (select(WorkflowClass.id, WorkflowClass.class_id, Class.section, Class.course)
+                        .join(Class, WorkflowClass.class_id == Class.id)
+                        .where(WorkflowClass.workflow_id == workflow.id))
+            class_data = await db.execute(class_query)
+            class_data = class_data.fetchall()
+            
+
+            # Get steps data
+            steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+            steps_data = await db.execute(steps_query)
+            steps_data = steps_data.scalars().all()
+            
+            print(steps_data)
+            steps_data = [{
+                "id": row.id,
+                "name": row.name,
+                "description": row.description
+            } for row in steps_data]
+
+            workflow_detail = {
+                "id": workflow.id,
+                "type": workflow.type,
+                "user_id": workflow.user_id,
+                "class_": class_data,
+                "steps": steps_data
+                
+            }
+            workflows_with_details.append(workflow_detail)
+
+        return workflows_with_details
+    
+    
+    @staticmethod
+    async def get_workflow_all_by_type(type: str):
+        workflows_query = select(Workflow).where(Workflow.type == type)
+        workflows = await db.execute(workflows_query)
+        workflows = workflows.scalars().all()
+
+        if not workflows:
+            return [] # Return an empty list when no workflows are found
+
+        workflows_with_details = []
+        for workflow in workflows:
+            # Get class data
+            class_query = (select(WorkflowClass.id, WorkflowClass.class_id, Class.section, Class.course)
+                        .join(Class, WorkflowClass.class_id == Class.id)
+                        .where(WorkflowClass.workflow_id == workflow.id))
+            class_data = await db.execute(class_query)
+            class_data = class_data.fetchall()
+            
+
+            # Get steps data
+            steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+            steps_data = await db.execute(steps_query)
+            steps_data = steps_data.scalars().all()
+            
+            print(steps_data)
+            steps_data = [{
+                "id": row.id,
+                "name": row.name,
+                "description": row.description
+            } for row in steps_data]
+
+            workflow_detail = {
+                "id": workflow.id,
+                "type": workflow.type,
+                "user_id": workflow.user_id,
+                "class_": class_data,
+                "steps": steps_data
+                
+            }
+            workflows_with_details.append(workflow_detail)
+
+        return workflows_with_details
+    
+    @staticmethod
+    async def get_workflow_all_by_id(id: str):
+        workflows_query = select(Workflow).where(Workflow.id == id)
+        workflows = await db.execute(workflows_query)
+        workflows = workflows.scalars().all()
+
+        if not workflows:
+            return [] # Return an empty list when no workflows are found
+
+        workflows_with_details = []
+        for workflow in workflows:
+            # Get class data
+            class_query = (select(WorkflowClass.id, WorkflowClass.class_id, Class.section, Class.course)
+                        .join(Class, WorkflowClass.class_id == Class.id)
+                        .where(WorkflowClass.workflow_id == workflow.id))
+            class_data = await db.execute(class_query)
+            class_data = class_data.fetchall()
+
+            # Get steps data
+            steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+            steps_data = await db.execute(steps_query)
+            steps_data = steps_data.scalars().all()
+            
+            print(steps_data)
+            steps_data = [{
+                "id": row.id,
+                "name": row.name,
+                "description": row.description
+            } for row in steps_data]
+
+            workflow_detail = {
+                "id": workflow.id,
+                "type": workflow.type,
+                "user_id": workflow.user_id,
+                "class_": class_data,
+                "steps": steps_data
+                
+            }
+            workflows_with_details.append(workflow_detail)
+
+        return workflows_with_details
+    
+    
 # ================================================ FOR NAVIGATIONS
     # @staticmethod
     # async def create_process_role(navigation_tab: NavigationTabCreate):
@@ -272,118 +405,10 @@ class WorkflowService:
         return workflows_with_steps
     
     
-    #Ginamit lang para sa update para mas makuha ang mga data
-    @staticmethod
-    async def get_workflow_by_id_with_steps(workflow_id: str):
-        workflow_query = select(Workflow).where(Workflow.id == workflow_id)
-        workflow = await db.execute(workflow_query)
-        workflow = workflow.scalars().first()
 
-        if not workflow:
-            return None
 
-        steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
-        steps = await db.execute(steps_query)
-        steps = steps.scalars().all()
-        
-        class_data = await SectionService.what_section_course(workflow.class_id)
-
-        workflow_detail = WorkflowDetail(
-                id=workflow.id, 
-                type=workflow.type, 
-                class_id= workflow.class_id,
-                course=class_data.course, 
-                section=class_data.section,
-                user_id=workflow.user_id, 
-                steps=steps)
-        
-        return workflow_detail
     
 
-    @staticmethod
-    async def get_workflow_all():
-        workflows_query = select(Workflow)
-        workflows = await db.execute(workflows_query)
-        workflows = workflows.scalars().all()
-
-        if not workflows:
-            return []  # Return an empty list when no workflows are found
-
-        workflows_with_steps = []
-        for workflow in workflows:
-            steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
-            steps = await db.execute(steps_query)
-            steps = steps.scalars().all()
-            class_data = await SectionService.what_section_course(workflow.class_id)
-            
-            
-            workflow_detail = WorkflowDetail(
-                    id=workflow.id, 
-                    class_id=workflow.class_id, 
-                    section=class_data.section, 
-                    course=class_data.course, 
-                    type=workflow.type, 
-                    user_id=workflow.user_id, 
-                    steps=steps)
-            workflows_with_steps.append(workflow_detail)
-
-        return workflows_with_steps
-    
-    
-    @staticmethod
-    async def get_workflow_all_by_type(type: str):
-        workflows_query = select(Workflow).where(Workflow.type == type)
-        workflows = await db.execute(workflows_query)
-        workflows = workflows.scalars().all()
-
-        if not workflows:
-            return []  # Return an empty list when no workflows are found
-
-        workflows_with_steps = []
-        for workflow in workflows:
-            steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
-            steps = await db.execute(steps_query)
-            steps = steps.scalars().all()
-            
-            class_data = await SectionService.what_section_course(workflow.class_id)
-
-            workflow_detail = WorkflowDetail(
-                        id=workflow.id, 
-                        type=workflow.type, 
-                        class_id=workflow.class_id,
-                        course=class_data.course,
-                        section=class_data.section,
-                        user_id=workflow.user_id, 
-                        steps=steps)
-            workflows_with_steps.append(workflow_detail)
-
-        return workflows_with_steps
-    
-    # @staticmethod
-    # async def get_workflow_all_by_type(type: str):
-    #     workflows_query = select(Workflow)
-    #     workflows = await db.execute(workflows_query)
-    #     workflows = workflows.scalars().all()
-
-    #     if not workflows:
-    #         return [] # Return an empty list when no workflows are found
-
-    #     # Sort workflows by type
-    #     workflows.sort(key=attrgetter('type'))
-
-    #     # Group workflows by type
-    #     workflow_groups = []
-    #     for key, group in groupby(workflows, key=attrgetter('type')):
-    #         for workflow in group:
-    #             steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
-    #             steps = await db.execute(steps_query)
-    #             steps = steps.scalars().all()
-
-    #             workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
-    #             workflow_group = WorkflowGroupbyType(type=key, workflows=[workflow_detail])
-    #             workflow_groups.append(workflow_group)
-
-    #     return workflow_groups
 
 
     #CHECK 
@@ -512,9 +537,15 @@ class WorkflowService:
 
             # Delete workflow steps
         await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id))
-
+        await db.execute(delete(WorkflowClass).where(WorkflowClass.workflow_id == workflow.id))
             # Delete the workflow itself
         await db.execute(delete(Workflow).where(Workflow.id == workflow.id))
+
+        return True
+    
+    @staticmethod
+    async def delete_class_id(id: str):
+        await db.execute(delete(WorkflowClass).where(WorkflowClass.id == id))
 
         return True
     

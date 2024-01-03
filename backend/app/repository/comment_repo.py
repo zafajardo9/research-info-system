@@ -31,7 +31,7 @@ class CommentRepository(BaseRepo):
     async def get_comments_by_research_id(research_paper_id: str):
         """ get all comments by research id """
         try:
-            query = select(Comment).where(Comment.research_paper_id == research_paper_id)
+            query = (select(Comment).where(Comment.research_paper_id == research_paper_id))
 
 
             result = await db.execute(query)

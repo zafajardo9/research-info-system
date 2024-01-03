@@ -12,6 +12,7 @@ from sqlalchemy import false
 
 from app.model.research_paper import Author, Status
 from app.model.workflowprocess import Workflow, WorkflowStep
+from app.model.student import Class
 
 
 T = TypeVar('T')
@@ -183,7 +184,6 @@ class ResearchCommentResponse(BaseModel):
     id: str
     text: str
     user_id: str
-    name: str
     research_paper_id: str
 
     class Config:
@@ -466,14 +466,17 @@ class WorkflowCreateWithSteps(BaseModel):
     workflow_data: WorkflowCreate
     workflow_steps: List[WorkflowStepCreate]
     
+class WorkflowUpdate(BaseModel):
+    type: Optional[str]
+    class_id: Optional[List[str]]
     
-class UpdateWorkflowData(BaseModel):
-    workflow_id: List[str]
-    steps_data: List[WorkflowStepCreate]
+class WorkflowResponse(BaseModel):
+    id: str
+    type: str
+    user_id: str
+    class_: List[Class]
+    steps: List[WorkflowStep]
     
-class UpdateWorkflowsByType(BaseModel):
-    research_type: str
-    steps_data: List[WorkflowStepCreate]
     
 
 # ============ ASSIGN SECTION COURSE to a user based in research type

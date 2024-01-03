@@ -101,66 +101,76 @@ async def add_class(
 
 
 
+@router.put("/update/{workflow_id}", response_model=Workflow)
+async def update_workflow(
+    workflow_id: str,
+    updated_workflow_data: WorkflowUpdate,
+    updated_steps: List[WorkflowStepCreate],
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    try:
+        # Check if the workflow exists
+        workflow = await db.get(Workflow, workflow_id)
+        if not workflow:
+            raise HTTPException(status_code=404, detail="Workflow not found")
 
 
-# @router.put("/update/{workflow_id}", response_model=List[Workflow])
-# async def update_workflow(
-#     workflow_id: str,
-#     updated_data: WorkflowUpdate,
-#     updated_steps: List[WorkflowStepCreate],
-#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-# ):
-#     try:
-#         # Check if the workflow exists
-#         workflow = await db.get(Workflow, workflow_id)
-#         if not workflow:
-#             raise HTTPException(status_code=404, detail="Workflow not found")
+        # Update workflow details
+        workflow.type = updated_workflow_data.type
+        await db.commit()
 
-#         # Update workflow data
-#         for key, value in updated_data.dict().items():
-#             setattr(workflow, key, value)
+        # Fetch the existing steps
+        existing_steps = await db.execute(
+            select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
+        )
+        existing_steps = existing_steps.scalars().all()
 
-#         # Fetch existing steps
-#         existing_steps = await db.execute(
-#             select(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id)
-#         )
-#         existing_steps = existing_steps.scalars().all()
+        # Update existing steps and add new steps
+        updated_steps_mapping = {step.name: step for step in updated_steps}
+        for existing_step in existing_steps:
+            if existing_step.name in updated_steps_mapping:
+                # Update existing step
+                updated_step_data = updated_steps_mapping[existing_step.name]
+                for key, value in updated_step_data.dict().items():
+                    setattr(existing_step, key, value)
+                # Remove updated step from the mapping to handle new steps later
+                del updated_steps_mapping[existing_step.name]
 
-#         # Update existing steps and add new steps
-#         updated_steps_mapping = {step.name: step for step in updated_steps}
-#         for existing_step in existing_steps:
-#             if existing_step.name in updated_steps_mapping:
-#                 # Update existing step
-#                 updated_step_data = updated_steps_mapping[existing_step.name]
-#                 for key, value in updated_step_data.dict().items():
-#                     setattr(existing_step, key, value)
-#                 # Remove updated step from the mapping to handle new steps later
-#                 del updated_steps_mapping[existing_step.name]
+        # Add new steps
+        new_steps = [
+            WorkflowStep(
+                id=str(uuid.uuid4()),
+                workflow_id=workflow_id,
+                **step.dict()
+            ) for step in updated_steps_mapping.values()
+        ]
+        db.add_all(new_steps)
 
-#         # Add new steps
-#         new_steps = [
-#             WorkflowStep(
-#                 id=str(uuid.uuid4()),
-#                 workflow_id=workflow_id,
-#                 **step.dict()
-#             ) for step in updated_steps_mapping.values()
-#         ]
-#         db.add_all(new_steps)
+        # Update associated classes
+        existing_associations = await db.execute(
+            select(WorkflowClass).where(WorkflowClass.workflow_id == workflow_id)
+        )
+        existing_associations = existing_associations.scalars().all()
 
-#         await db.commit()
+        # Remove existing associations
+        for association in existing_associations:
+            db.delete(association)
 
-#         # Fetch the updated workflow
-#         updated_workflow = await db.get(Workflow, workflow_id)
+        # Add new associations
+        for class_id in updated_workflow_data.class_id:
+            workflow_class = WorkflowClass(id=str(uuid.uuid4()), workflow_id=workflow_id, class_id=class_id)
+            db.add(workflow_class)
 
-#         return [updated_workflow]
+        await db.commit()
 
-#     except Exception as e:
-#         # Rollback in case of any error
-#         await db.rollback()
-#         raise HTTPException(status_code=500, detail=str(e))
+        # Fetch and return the updated workflow
+        updated_workflow = await db.get(Workflow, workflow_id)
+        return updated_workflow
 
-
-
+    except Exception as e:
+        # Rollback in case of any error
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.put("/update-steps/{workflow_id}", response_model=List[WorkflowStep])

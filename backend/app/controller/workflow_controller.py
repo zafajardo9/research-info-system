@@ -58,6 +58,12 @@ async def create_workflows(workflow_data: WorkflowCreate, workflow_steps: List[W
     # Create workflow
     created_workflow = await WorkflowService.create_workflow(workflow_data.type, current_user)
 
+    # Check if the workflow type already exists
+    existing_workflow = await WorkflowService.check_if_workflow_type_exist(workflow_data.type)
+    if existing_workflow:
+        raise HTTPException(status_code=400, detail=f"A workflow with type '{workflow_data.type}' already exists. Please choose a different type.")
+
+
     # Create steps
     for step_data in workflow_steps:
         await WorkflowService.create_workflow_step(step_data, created_workflow.id)

@@ -77,6 +77,14 @@ class WorkflowService:
         return workflow.scalar() is not None
     
     @staticmethod
+    async def check_if_workflow_type_exist(type: str):
+        workflow = await db.execute(select(Workflow).filter(Workflow.type == type))
+        return workflow.scalar() is not None
+    
+
+    
+    
+    @staticmethod
     async def update_workflow(workflow_id: str, update_data: WorkflowUpdate):
         db_workflow = await Workflow.get(workflow_id)
         if not db_workflow:

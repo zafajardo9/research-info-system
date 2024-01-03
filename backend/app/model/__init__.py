@@ -33,6 +33,7 @@ from .assignedTo import AssignedSections
 from .assignedTo import AssignedSectionsToProf
 
 from .workflowprocess import NavigationTab
+from .workflowprocess import NavigationClass
 
 
 

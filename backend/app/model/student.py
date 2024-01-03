@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlalchemy import Enum
 from sqlmodel import SQLModel, Field, Relationship
 from app.model.mixins import TimeMixin
-from app.model.workflowprocess import WorkflowClass
+from app.model.workflowprocess import NavigationClass, WorkflowClass
 
 
     
@@ -25,6 +25,7 @@ class Class(SQLModel, table=True):
     
     #connection to the workflow table
     workflows: List["Workflow"] = Relationship(back_populates="class_", link_model=WorkflowClass)
+    navigation_role: List["NavigationTab"] = Relationship(back_populates="class_id", link_model=NavigationClass)
         
 class Student(SQLModel, TimeMixin, table=True):
     __tablename__ = "student"

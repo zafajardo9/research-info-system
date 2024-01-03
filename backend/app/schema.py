@@ -600,10 +600,21 @@ class NavigationTabCreate(BaseModel):
     has_set_final_defense_date: bool
     has_submitted_copyright: bool
     
+    
+class NavigationTabUpdate(BaseModel):
+    role: str
+    type: str
+    has_submitted_proposal: Optional[bool] = True
+    has_pre_oral_defense_date: Optional[bool] = True
+    has_submitted_ethics_protocol: Optional[bool] = True
+    has_submitted_full_manuscript: Optional[bool] = True
+    has_set_final_defense_date: Optional[bool] = True
+    has_submitted_copyright: Optional[bool] = True
+    
 class NavigationProcessDisplay(BaseModel):
     role: str
     type: str
-    class_id: str
+    class_: List[str]
     course: str
     section: str
     has_submitted_proposal: bool

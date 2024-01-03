@@ -63,14 +63,19 @@ class WorkflowStep(SQLModel, table=True):
 
 
 # ==========================================
+class NavigationClass(SQLModel, table=True):
+    __tablename__ = "navigation_class"
+    
+    id: str = Field(primary_key=True)
+
+    navigation_id: str = Field(default=None, foreign_key="navigation_role.id", primary_key=True)
+    class_id: str = Field(default=None, foreign_key="class.id", primary_key=True)
 
 class NavigationTab(SQLModel, table=True):
     __tablename__ = "navigation_role"
 
     id: str = Field(primary_key=True, index=True, unique=True)
     role: str
-    #class_id: str = Field(foreign_key="class.id")
-    class_id: str
     type: str
     has_submitted_proposal: bool = Field(default=False)
     has_pre_oral_defense_date: bool = Field(default=False)
@@ -78,6 +83,7 @@ class NavigationTab(SQLModel, table=True):
     has_submitted_full_manuscript: bool = Field(default=False)
     has_set_final_defense_date: bool = Field(default=False)
     has_submitted_copyright: bool = Field(default=False)
+    class_id: List["Class"] = Relationship(back_populates="navigation_role", link_model= NavigationClass)
     
     #Relationship
     #class_: "Class" = Relationship(back_populates="navigation_tab") 

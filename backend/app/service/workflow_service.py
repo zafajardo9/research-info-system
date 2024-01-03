@@ -18,11 +18,11 @@ from fastapi import HTTPException
 
 
 from app.repository.workflow_repo import WorkflowRepository
-from app.model.workflowprocess import NavigationTab, Workflow, WorkflowClass
+from app.model.workflowprocess import NavigationClass, NavigationTab, Workflow, WorkflowClass
 from app.model.workflowprocess import WorkflowStep
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
-from app.schema import NavigationProcessDisplay, NavigationTabCreate, WorkflowCreate, WorkflowDetail, WorkflowGroupbyType, WorkflowResponse, WorkflowStepCreate, WorkflowUpdate
+from app.schema import NavigationProcessDisplay, NavigationTabCreate, NavigationTabUpdate, WorkflowCreate, WorkflowDetail, WorkflowGroupbyType, WorkflowResponse, WorkflowStepCreate, WorkflowUpdate
 from app.service.section_service import SectionService
 from app.model.student import Class
 
@@ -243,41 +243,56 @@ class WorkflowService:
     
     @staticmethod
     async def create_process_role(navigation_tab: NavigationTabCreate):
+        # Create a single NavigationTab entry
+        process_id = str(uuid.uuid4())
+        db_process = NavigationTab(
+            id=process_id,
+            role=navigation_tab.role,
+            type=navigation_tab.type,
+            has_submitted_proposal=navigation_tab.has_submitted_proposal,
+            has_pre_oral_defense_date=navigation_tab.has_pre_oral_defense_date,
+            has_submitted_ethics_protocol=navigation_tab.has_submitted_ethics_protocol,
+            has_submitted_full_manuscript=navigation_tab.has_submitted_full_manuscript,
+            has_set_final_defense_date=navigation_tab.has_set_final_defense_date,
+            has_submitted_copyright=navigation_tab.has_submitted_copyright,
+        )
+        db.add(db_process)
+        await db.commit()
+        await db.refresh(db_process)
+
+        # Create NavigationClass entries for each class_id
         created_processes = []
         for class_id in navigation_tab.class_id:
-            process_id = str(uuid.uuid4())
-            # Create a process for each class_id
-            db_process = NavigationTab(id=process_id, role=navigation_tab.role, type=navigation_tab.type, class_id=class_id,
-                                    has_submitted_proposal=navigation_tab.has_submitted_proposal,
-                                    has_pre_oral_defense_date=navigation_tab.has_pre_oral_defense_date,
-                                    has_submitted_ethics_protocol=navigation_tab.has_submitted_ethics_protocol,
-                                    has_submitted_full_manuscript=navigation_tab.has_submitted_full_manuscript,
-                                    has_set_final_defense_date=navigation_tab.has_set_final_defense_date,
-                                    has_submitted_copyright=navigation_tab.has_submitted_copyright)
-            db.add(db_process)
+            navigation_class_entry = NavigationClass(
+                id=str(uuid.uuid4()),  # Use a new id for each NavigationClass entry
+                navigation_id=process_id,
+                class_id=class_id,
+            )
+            db.add(navigation_class_entry)
             await db.commit()
-            await db.refresh(db_process)
-            created_processes.append(db_process)
+            await db.refresh(navigation_class_entry)
+            created_processes.append(navigation_class_entry)
+
         return created_processes
     
     
     
     @staticmethod
-    async def update_process_role(id: str, navigation_tab: NavigationTabCreate):
-        result = await db.execute(select(NavigationTab).where(NavigationTab.id == id))
-        update_process = result.scalar_one_or_none()
-
-        if update_process:
-            # Update the fields with new values
-            for key, value in navigation_tab.dict().items():
-                setattr(update_process, key, value)
-
-            await db.commit()
-            await db.refresh(update_process)
-            return update_process
-        else:
-            raise HTTPException(status_code=404, detail="Process set not found")
+    async def update_process_role(id: str, navigation_tab_update: NavigationTabUpdate):
+        # Get the NavigationTab entry
+        navigation_tab = await db.get(NavigationTab, id)
         
+        if not navigation_tab:
+            raise HTTPException(status_code=404, detail=f"Navigation with id {id} not found.")
+
+        # Update the fields based on the received data
+        for field, value in navigation_tab_update.dict(exclude_unset=True).items():
+            setattr(navigation_tab, field, value)
+
+        await db.commit()
+        await db.refresh(navigation_tab)
+
+        return navigation_tab
 
     @staticmethod
     async def get_workflows_by_type(research_type: str):
@@ -301,86 +316,91 @@ class WorkflowService:
         await db.execute(delete(NavigationTab).where(NavigationTab.id == id))
 
         return True
+    
+    @staticmethod
+    async def delete_assign_class(id: str):
+        # Delete navigation class entry
+        delete_query = delete(NavigationClass).where(NavigationClass.id == id)
+        await db.execute(delete_query)
+
+        # Commit the changes to persist the deletion
+        await db.commit()
+
+        return True
         
     @staticmethod
     async def display_process():
-        result = await db.execute(select(NavigationTab))
-        update_process = result.scalars().all()
-        
-        display_processes = []
-        for process in update_process:
-            # Fetch section and course information for each class_id
-            class_info = await SectionService.what_section_course(process.class_id)
+        query = select(NavigationTab)
+        result = await db.execute(query)
+        navigation_records = result.scalars().all()
 
-            # Convert SQLAlchemy models to Pydantic models
-            display_process = NavigationProcessDisplay(
-                role=process.role,
-                type=process.type,
-                class_id=process.class_id,
-                course=class_info.course,  # Include course information
-                section=class_info.section,  # Include section information
-                has_submitted_proposal=process.has_submitted_proposal,
-                has_pre_oral_defense_date=process.has_pre_oral_defense_date,
-                has_submitted_ethics_protocol=process.has_submitted_ethics_protocol,
-                has_submitted_full_manuscript=process.has_submitted_full_manuscript,
-                has_set_final_defense_date=process.has_set_final_defense_date,
-                has_submitted_copyright=process.has_submitted_copyright,
+        if not navigation_records:
+            return []  # Return an empty list when no navigation records are found
+
+        navigation_with_details = []
+        for navigation in navigation_records:
+            # Get class data
+            class_query = (
+                select(NavigationClass.id, NavigationClass.class_id, Class.section, Class.course)
+                .join(Class, NavigationClass.class_id == Class.id)
+                .where(NavigationClass.navigation_id == navigation.id)
             )
+            class_data = await db.execute(class_query)
+            class_data = class_data.fetchall()
 
-            display_processes.append(display_process)
+            navigation_detail = {
+                "id": navigation.id,
+                "role": navigation.role,  # Adjust the variable name
+                "type": navigation.type,
+                "class_": class_data,
+                "has_submitted_proposal": navigation.has_submitted_proposal,  # Adjust the variable name
+                "has_pre_oral_defense_date": navigation.has_pre_oral_defense_date,
+                "has_submitted_ethics_protocol": navigation.has_submitted_ethics_protocol,
+                "has_submitted_full_manuscript": navigation.has_submitted_full_manuscript,
+                "has_set_final_defense_date": navigation.has_set_final_defense_date,
+                "has_submitted_copyright": navigation.has_submitted_copyright,
+            }
+            navigation_with_details.append(navigation_detail)
 
-        return display_processes
+        return navigation_with_details
     
     
-    # @staticmethod
-    # async def display_process_by_type():
-    #     # Fetch all processes and their corresponding section and course information
-    #     processes = await db.execute(
-    #         (select(NavigationTab))
-    #     )
-        
-    #     processes = processes.scalars().all()
-        
-
-    #     # Convert SQLAlchemy models to Pydantic models and group by type in one pass
-    #     display_processes_by_type = defaultdict(list)
-    #     for process in processes:
-    #         display_process = NavigationProcessDisplay(
-    #             role=process.role,
-    #             type=process.type,
-    #             class_id=process.class_id,
-    #             course=process.class_info.course,
-    #             section=process.class_info.section,
-    #             has_submitted_proposal=process.has_submitted_proposal,
-    #             has_pre_oral_defense_date=process.has_pre_oral_defense_date,
-    #             has_submitted_ethics_protocol=process.has_submitted_ethics_protocol,
-    #             has_submitted_full_manuscript=process.has_submitted_full_manuscript,
-    #             has_set_final_defense_date=process.has_set_final_defense_date,
-    #             has_submitted_copyright=process.has_submitted_copyright,
-    #         )
-    #         display_processes_by_type[process.type].append(display_process)
-
-    #     return display_processes_by_type
     
     @staticmethod
-    async def display_process_by_type():
-        # Default ordering by id, you can change it to any column you want
-        result = await db.execute(select(NavigationTab))
-        processes = result.scalars().all()
+    async def display_process_by_type(type: str):
+        query = select(NavigationTab).where(NavigationTab.type == type)
+        result = await db.execute(query)
+        navigation_records = result.scalars().all()
 
-        # Group processes by type
-        grouped_processes = {key: list(group) for key, group in groupby(processes, key=attrgetter('type'))}
+        if not navigation_records:
+            return []  # Return an empty list when no navigation records are found
 
-        # Convert SQLAlchemy models to Pydantic models for each type
-        display_processes_by_type = {}
+        navigation_with_details = []
+        for navigation in navigation_records:
+            # Get class data
+            class_query = (
+                select(NavigationClass.id, NavigationClass.class_id, Class.section, Class.course)
+                .join(Class, NavigationClass.class_id == Class.id)
+                .where(NavigationClass.navigation_id == navigation.id)
+            )
+            class_data = await db.execute(class_query)
+            class_data = class_data.fetchall()
 
-        for type_, processes in grouped_processes.items():
-            display_processes_by_type[type_] = []
-            for process in processes:
-                display_process = await WorkflowService.get_display_process_with_info(process)
-                display_processes_by_type[type_].append(display_process)
+            navigation_detail = {
+                "id": navigation.id,
+                "role": navigation.role,  # Adjust the variable name
+                "type": navigation.type,
+                "class_": class_data,
+                "has_submitted_proposal": navigation.has_submitted_proposal,  # Adjust the variable name
+                "has_pre_oral_defense_date": navigation.has_pre_oral_defense_date,
+                "has_submitted_ethics_protocol": navigation.has_submitted_ethics_protocol,
+                "has_submitted_full_manuscript": navigation.has_submitted_full_manuscript,
+                "has_set_final_defense_date": navigation.has_set_final_defense_date,
+                "has_submitted_copyright": navigation.has_submitted_copyright,
+            }
+            navigation_with_details.append(navigation_detail)
 
-        return display_processes_by_type
+        return navigation_with_details
 
     @staticmethod
     async def get_display_process_with_info(process):

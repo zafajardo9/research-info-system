@@ -1,9 +1,10 @@
 from operator import itemgetter
 from typing import List
+import uuid
 from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate, WorkflowStepDetail
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, NavigationTabUpdate, ResponseSchema, UpdateAssign, UpdateResearchTypeAssign, UserWithAssignments, WorkflowCreate, WorkflowCreateWithSteps, WorkflowDetail, WorkflowGroupbyType, WorkflowStepCreate, WorkflowStepDetail
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.repository.workflow_repo import WorkflowRepository
 from app.repository.workflowsteps_repo import WorkflowStepRepository
@@ -18,7 +19,7 @@ from itertools import groupby
 
 from app.config import db
 from app.model.faculty import Faculty
-from app.model.workflowprocess import NavigationTab
+from app.model.workflowprocess import NavigationClass, NavigationTab
 
 #from app.schema import WorkflowCreate
 
@@ -52,10 +53,33 @@ async def create_process_role(navigation_tab: NavigationTabCreate):
 
 
 @router.put("/update-assigned-process/{id}")
-async def update_process_role(id: str, navigation_tab: NavigationTabCreate):
-    updated_process = await WorkflowService.update_process_role(id, navigation_tab)
+async def update_process_role(id: str, navigation_tab_update: NavigationTabUpdate):
+    updated_process = await WorkflowService.update_process_role(id, navigation_tab_update)
     return updated_process
 
+@router.post("/add-more-class/{nav_id}")
+async def insert_more(nav_id: str, class_ids: List[str]):
+    try:
+        # Retrieve the navigation record
+        navigation_record = await db.execute(select(NavigationTab).where(NavigationTab.id == nav_id))
+        navigation_record = navigation_record.scalar()
+
+        if not navigation_record:
+            raise HTTPException(status_code=404, detail=f"Navigation with id {nav_id} not found.")
+
+        # Insert new class entries for the navigation
+        for class_id in class_ids:
+            navigation_class_entry = NavigationClass(id=str(uuid.uuid4()), navigation_id=nav_id, class_id=class_id)
+            db.add(navigation_class_entry)
+
+        await db.commit()
+
+        return {"message": f"Classes added to navigation with id {nav_id} successfully."}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+# =====================================
 @router.delete("/delete-assigned-process/{id}")
 async def update_process_role(id: str):
     delete = await WorkflowService.delete_process_by_id(id)
@@ -64,6 +88,15 @@ async def update_process_role(id: str):
 
     return {"message": "Process deleted successfully"}
 
+
+@router.delete("/delete-assigned-class/{id}")
+async def update_process_role(id: str):
+    delete = await WorkflowService.delete_assign_class(id)
+    if not delete:
+        raise HTTPException(status_code=404, detail="Class not found")
+
+    return {"message": "Process deleted successfully"}
+# ==============================================
     
 @router.get("/display-all/")
 async def display_process_all():
@@ -71,8 +104,10 @@ async def display_process_all():
     results = await WorkflowService.display_process()
     return results
     
-@router.get("/display-process-all/type")
-async def display_process_by_type():
+@router.get("/display-process-all/{type}")
+async def display_process_by_type(
+    type: str
+):
     '''Ito may Format pero pwede ka mag req ano pinakamaganda'''
-    results = await WorkflowService.display_process_by_type()
+    results = await WorkflowService.display_process_by_type(type)
     return results

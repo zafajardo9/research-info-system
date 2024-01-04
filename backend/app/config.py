@@ -34,13 +34,13 @@ class AsyncDatabaseSession:
             
     @property
     def is_active(self):
-        return self.session.is_active if self.session else False  # Check if the session is active
+        return self.session.is_active if self.session else False 
 
 
 db = AsyncDatabaseSession()
 
 async def commit_rollback():
-    if db.is_active:  # Check if the session is active
+    if db.is_active: 
         try:
             await db.commit()
         except Exception:

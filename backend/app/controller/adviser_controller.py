@@ -314,21 +314,18 @@ async def upload_faculty_paper(
     except HTTPException as e:
         return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
     
-    
-    
-    
-@router.post("/upload-my-papers")
-async def upload_faculty_paper(
-    research_paper_data: FacultyResearchPaperCreate,
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    token = JWTRepo.extract_token(credentials)
-    current_user = token['user_id']
+# @router.post("/upload-my-papers")
+# async def upload_faculty_paper(
+#     research_paper_data: FacultyResearchPaperCreate,
+#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+#     token = JWTRepo.extract_token(credentials)
+#     current_user = token['user_id']
 
-    try:
-        faculty_paper = await ResearchService.upload_faculty_paper(current_user, research_paper_data)
-        return ResponseSchema(detail=f"Research paper {faculty_paper.id} created successfully", result=faculty_paper.dict())
-    except HTTPException as e:
-        return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
+#     try:
+#         faculty_paper = await ResearchService.upload_faculty_paper(current_user, research_paper_data)
+#         return ResponseSchema(detail=f"Research paper {faculty_paper.id} created successfully", result=faculty_paper.dict())
+#     except HTTPException as e:
+#         return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
     
 @router.get("/my-research-papers", response_model=Optional[List[FacultyResearchPaper]], response_model_exclude_none=True)
 async def get_faculty_research_papers(

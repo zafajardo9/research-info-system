@@ -257,8 +257,6 @@ class WorkflowService:
             has_submitted_copyright=navigation_tab.has_submitted_copyright,
         )
         db.add(db_process)
-        await db.commit()
-        await db.refresh(db_process)
 
         # Create NavigationClass entries for each class_id
         created_processes = []
@@ -269,13 +267,14 @@ class WorkflowService:
                 class_id=class_id,
             )
             db.add(navigation_class_entry)
-            await db.commit()
-            await db.refresh(navigation_class_entry)
             created_processes.append(navigation_class_entry)
 
+        await db.commit()
+        await db.refresh(db_process)
+        for created_process in created_processes:
+            await db.refresh(created_process)
+
         return created_processes
-    
-    
     
     @staticmethod
     async def update_process_role(id: str, navigation_tab_update: NavigationTabUpdate):

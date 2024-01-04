@@ -24,20 +24,27 @@ class AsyncDatabaseSession:
         return getattr(self.session,name)
 
     def init(self):
-        self.engine = create_async_engine(DB_CONFIG, future=True, echo=True)
-        #self.engine = create_async_engine(DB_CONFIG, echo=True)
+        #self.engine = create_async_engine(DB_CONFIG, future=True, echo=True)
+        self.engine = create_async_engine(DB_CONFIG, future=True, echo=True,pool_size=10, max_overflow=20)
         self.session = sessionmaker(self.engine, expire_on_commit=False, class_=AsyncSession)()
 
     async def create_all(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(SQLModel.metadata.create_all)
+            
+    @property
+    def is_active(self):
+        return self.session.is_active if self.session else False  # Check if the session is active
 
 
 db = AsyncDatabaseSession()
 
 async def commit_rollback():
-    try:
-        await db.commit()
-    except Exception:
-        await db.rollback()
-        raise
+    if db.is_active:  # Check if the session is active
+        try:
+            await db.commit()
+        except Exception:
+            await db.rollback()
+            raise
+        
+        

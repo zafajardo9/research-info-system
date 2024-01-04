@@ -19,11 +19,6 @@ def init_app():
 
     global app
 
-    # app = FastAPI(
-    #     title= "PUP-RIZ",
-    #     description= "Login Student Page",
-    #     version= "1",
-    # )
 
     app.add_middleware(
         CORSMiddleware,

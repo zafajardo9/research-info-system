@@ -452,35 +452,43 @@ class WorkflowService:
 
 
 
-    #CHECK 
-    # todo FIX THE IDEA LUMA TO
     @staticmethod
-    async def get_my_workflow(user_course: str, user_section: str):
-
+    async def get_my_workflow(user_class: str):
         query = (
-            select(Workflow, WorkflowStep)
-            .join(WorkflowStep, Workflow.id == WorkflowStep.workflow_id)
-            .where(and_(Workflow.course == user_course, Workflow.year == user_section))
-            .distinct(Workflow.id, Workflow.course, Workflow.year, Workflow.type, Workflow.user_id)
+            select(Workflow, Class.course, Class.section)
+            .join(WorkflowClass, Workflow.id == WorkflowClass.workflow_id)
+            .join(Class, WorkflowClass.class_id == Class.id)
+            .where(WorkflowClass.class_id == user_class)
         )
 
-        workflows = await db.execute(query)
-        workflows = workflows.scalars().all()
+        result = await db.execute(query)
+        rows = result.mappings().all()
 
-        if not workflows:
+        if not rows:
             return []  # Return an empty list when no workflows are found
 
         workflows_with_steps = []
-        for workflow in workflows:
+        for row in rows:
+            workflow = row[Workflow]
+            course = row[Class.course]
+            section = row[Class.section]
+
             steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
             steps = await db.execute(steps_query)
             steps = steps.scalars().all()
 
-            workflow_detail = WorkflowDetail(id=workflow.id, course=workflow.course, year=workflow.year, type=workflow.type, user_id=workflow.user_id, steps=steps)
+            workflow_detail = WorkflowDetail(
+                id=workflow.id,
+                class_id=user_class,
+                type=workflow.type,
+                user_id=workflow.user_id,
+                course=course,
+                section=section,
+                steps=steps
+            )
             workflows_with_steps.append(workflow_detail)
 
-        return workflows_with_steps    
-    
+        return workflows_with_steps
     
     
         

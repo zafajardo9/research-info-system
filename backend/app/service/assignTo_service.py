@@ -498,4 +498,27 @@ class AssignToSection:
         users_with_assignments = await db.execute(query)
         results = users_with_assignments.fetchall()
 
-        return results# D
+        return results
+
+
+    @staticmethod
+    async def get_list_my_adviser(class_id: str):
+        query = (
+            select(
+                Users.faculty_id,
+                Faculty.name,
+                AssignedResearchType.research_type_name,
+                AssignedSections.class_id
+            )
+            .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
+            .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
+            .join(Faculty, Users.faculty_id == Faculty.id)
+            .where(
+                (AssignedSections.class_id == class_id)
+            )
+        )
+        users_with_assignments = await db.execute(query)
+        results = users_with_assignments.fetchall()
+
+
+        return results

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 from fastapi import APIRouter, Depends, Security, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
@@ -30,14 +30,11 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
 
-    result = await UserService.get_student_profile(username)
+    result = await UserService.get_class_id(username)
+    user_class = result['class_id']
 
-    user_course = result['course']
-    user_section = result['section']
-
-    workflow = await WorkflowService.get_my_workflow(user_course, user_section)
+    workflow = await WorkflowService.get_my_workflow(user_class)
     
-    print(workflow) # Add this line
     if not workflow:
         raise HTTPException(status_code=404, detail="Workflow not found")
     return workflow
@@ -53,12 +50,10 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
 
-    result = await UserService.get_student_profile(username)
+    result = await UserService.get_class_id(username)
+    user_class = result['class_id']
 
-    user_course = result['course']
-    user_section = result['section']
-
-    workflow = await WorkflowService.get_my_workflow(user_course, user_section)
+    workflow = await WorkflowService.get_my_workflow(user_class)
     
 
     if not workflow:
@@ -76,12 +71,10 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
 
-    result = await UserService.get_student_profile(username)
+    result = await UserService.get_class_id(username)
+    user_class = result['class_id']
 
-    user_course = result['course']
-    user_section = result['section']
-
-    advisers_assigned = await AssignToSection.student_get_adviser_list(user_course, user_section)
+    advisers_assigned = await AssignToSection.get_list_my_adviser(user_class)
     
     print(advisers_assigned) # Add this line
     if not advisers_assigned:
@@ -101,10 +94,10 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
 
     result = await UserService.get_student_profile(username)
 
-    user_course = result['course']
-    user_section = result['section']
+    result = await UserService.get_class_id(username)
+    user_class = result['class_id']
 
-    advisers_assigned = await AssignToSection.student_get_prof_list(user_course, user_section)
+    advisers_assigned = await AssignToSection.student_get_prof_list(user_class)
     
     print(advisers_assigned) # Add this line
     if not advisers_assigned:

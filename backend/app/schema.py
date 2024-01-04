@@ -425,16 +425,15 @@ class WorkflowStepDetail(BaseModel):
     id: str
     name: str
     description: str
-    step_number: int
 
 
 class WorkflowDetail(BaseModel):
     id: str
     type: str
     class_id: str
-    section: str
-    course: str
     user_id: str
+    course: str
+    section: str
     steps: List[WorkflowStepDetail]
 
 

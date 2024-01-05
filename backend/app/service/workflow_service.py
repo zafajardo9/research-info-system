@@ -243,7 +243,6 @@ class WorkflowService:
     
     @staticmethod
     async def create_process_role(navigation_tab: NavigationTabCreate):
-        # Create a single NavigationTab entry
         process_id = str(uuid.uuid4())
         db_process = NavigationTab(
             id=process_id,
@@ -257,24 +256,34 @@ class WorkflowService:
             has_submitted_copyright=navigation_tab.has_submitted_copyright,
         )
         db.add(db_process)
+        await db.commit()
+        await db.refresh(db_process)
 
         # Create NavigationClass entries for each class_id
         created_processes = []
         for class_id in navigation_tab.class_id:
-            navigation_class_entry = NavigationClass(
-                id=str(uuid.uuid4()),  # Use a new id for each NavigationClass entry
-                navigation_id=process_id,
-                class_id=class_id,
-            )
-            db.add(navigation_class_entry)
+            navigation_class_entry = await WorkflowService.create_process_role_class_assoc(process_id, class_id)
             created_processes.append(navigation_class_entry)
 
-        await db.commit()
-        await db.refresh(db_process)
-        for created_process in created_processes:
-            await db.refresh(created_process)
-
         return created_processes
+    
+    @staticmethod
+    async def create_process_role_class_assoc(process_id: str, class_id: str):
+        try:
+            # Retrieve the navigation record
+            navigation_record = await db.execute(select(NavigationTab).where(NavigationTab.id == process_id))
+            navigation_record = navigation_record.scalar()
+
+            if not navigation_record:
+                raise HTTPException(status_code=404, detail=f"Navigation with id {process_id} not found.")
+
+
+            navigation_class_entry = NavigationClass(id=str(uuid.uuid4()), navigation_id=process_id, class_id=class_id)
+            db.add(navigation_class_entry)
+            await db.commit()
+            return navigation_class_entry
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
     
     @staticmethod
     async def update_process_role(id: str, navigation_tab_update: NavigationTabUpdate):

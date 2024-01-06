@@ -4,7 +4,7 @@ from datetime import datetime
 from fastapi import HTTPException
 import logging
 import re
-from typing import Any, Dict, List, TypeVar, Optional, Generic
+from typing import Any, Dict, List, TypeVar, Optional, Generic, Union
 
 from pydantic.generics import GenericModel
 from pydantic import BaseModel, Field, validator, constr
@@ -179,15 +179,19 @@ class ResearchComment(BaseModel):
     text: str
     research_id: str
 
+class FacultyInfo(BaseModel):
+    name: str
+
+class StudentInfo(BaseModel):
+    name: str
+
 class ResearchCommentResponse(BaseModel):
     created_at: datetime
     id: str
     text: str
     user_id: str
     research_paper_id: str
-
-    class Config:
-        orm_mode = True
+    user_info: Optional[Union[FacultyInfo, StudentInfo]]
 
 #==================STATUS
 

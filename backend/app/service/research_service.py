@@ -515,7 +515,7 @@ class ResearchService:
 #============================ WILL PUT RESEARCH COMMENTS HERE ==================#
     
     @staticmethod
-    async def post_comment(db: Session, user_id: str, user_name: str, research_id: str, text: str):
+    async def post_comment(db: Session, user_id: str, research_id: str, text: str):
         _comment_id = str(uuid4())
         _comment = Comment(
             id=_comment_id,

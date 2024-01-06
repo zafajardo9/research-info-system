@@ -20,6 +20,7 @@ from app.model.research_status import Comment
 from app.repository.comment_repo import CommentRepository
 from app.repository.faculty_research_paper import FacultyResearchRepository
 from app.model.faculty import Faculty
+from app.model.student import Class
 
 class ResearchService:
 
@@ -77,106 +78,143 @@ class ResearchService:
 
 
     @staticmethod
-    async def get_all_with_authors(db: Session):
-        query = (
-            select(Users, ResearchPaper, Author, Student)
-            .join(Author, Users.id == Author.user_id)
-            .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-            .join(Student, Users.student_id == Student.id)
-        )
+    async def get_all_with_authors():
+        try:
+            # Query to get research paper details
+            research_paper_query = select(ResearchPaper)
+            research_paper_result = await db.execute(research_paper_query)
+            research_papers = research_paper_result.scalars().all()
 
-        # Execute the query and fetch all results
-        result = await db.execute(query)
-        query_result = result.fetchall()
+            # List to store all research papers with authors
+            research_papers_with_authors = []
 
-        # Check if there are any results
-        if not query_result:
-            return []
+            for research_paper in research_papers:
+                # Query to get authors' details for each research paper
+                authors_query = (
+                    select(Users.id, Student.name, Student.student_number, Class.section, Class.course)
+                    .join(Author, Users.id == Author.user_id)
+                    .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+                    .join(Student, Users.student_id == Student.id)
+                    .join(Class, Class.id == Student.class_id)
+                    .where(ResearchPaper.id == research_paper.id)
+                )
 
-        # Assuming you have a function to map the result to the desired response model
-        response_dict = {}
-        for item in query_result:
-            research_paper_id = item[1].id  # Assuming the second element is ResearchPaper
+                authors_result = await db.execute(authors_query)
+                authors_details = authors_result.fetchall()
 
-            if research_paper_id not in response_dict:
-                response_dict[research_paper_id] = {
-                    "research_paper": ResearchPaperRepository.map_to_research_paper_model(item),
-                    "authors": []
+                # Create a dictionary for each research paper with its authors
+                result_dict = {
+                    "research_paper": research_paper,
+                    "authors": authors_details,
                 }
 
-            # Map the author for the current row
-            author = ResearchPaperRepository.map_to_author_model(item)
-            response_dict[research_paper_id]["authors"].append(author)
+                research_papers_with_authors.append(result_dict)
 
-        # Convert the dictionary values to a list for the final response
-        response_list = list(response_dict.values())
-        return response_list
+            return research_papers_with_authors
 
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 
     @staticmethod
-    async def get_research_paper_with_authors(db: Session, research_paper_id: str):
-        query = (
-            select(Users, ResearchPaper, Author, Student)
-            .join(Author, Users.id == Author.user_id)
-            .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-            .join(Student, Users.student_id == Student.id)
-            .where(ResearchPaper.id == research_paper_id)
-        )
+    async def get_research_paper_with_authors(research_paper_id: str):
+        try:
+            research_paper_query = (select(
+                                ResearchPaper.id,
+                                ResearchPaper.research_type,
+                                ResearchPaper.submitted_date,
+                                ResearchPaper.status,
+                                ResearchPaper.file_path,
+                                Faculty.name
+                                )
+                        .join(Users, ResearchPaper.research_adviser == Users.id)
+                        .join(Faculty, Users.faculty_id == Faculty.id)
+                        .where(ResearchPaper.id == research_paper_id)
+                        )
+            research_paper_result = await db.execute(research_paper_query)
+            research_paper = research_paper_result.fetchall()
 
-        # Execute the query and fetch all results
-        result = await db.execute(query)
-        query_result = result.fetchall()
 
-        # Assuming you have a function to map the result to the desired response model
-        response = ResearchService.map_to_response_model(query_result)
-        return response
+            print(research_paper)
+            if not research_paper:
+                raise HTTPException(status_code=404, detail=f"Research paper with id {research_paper_id} not found.")
+
+            # Query to get authors' details
+            authors_query = (
+                select(Users.id, Student.name, Student.student_number, Class.section, Class.course)
+                .join(Author, Users.id == Author.user_id)
+                .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+                .join(Student, Users.student_id == Student.id)
+                .join(Class, Class.id == Student.class_id)
+                .where(ResearchPaper.id == research_paper_id)
+            )
+
+            authors_result = await db.execute(authors_query)
+            authors_details = authors_result.fetchall()
+            
+            print(authors_details)
+
+            # Create a dictionary to hold the results
+            result_dict = {
+                "research_paper": research_paper,
+                "authors": authors_details,
+            }
+
+            return result_dict
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
     
 
 
 
 
-    @staticmethod
-    def map_to_response_model(query_result):
+    # @staticmethod
+    # def map_to_response_model(query_result):
 
-        if query_result is None or not query_result:
-            return None
+    #     if query_result is None or not query_result:
+    #         return None
 
-        user, research_paper, author, student = query_result[0]
+    #     user, research_paper, author, student = query_result[0]
 
-        # Map research paper details
-        research_paper_data = ResearchPaperShow(
-            id=str(research_paper.id),
-            title=str(research_paper.title),
-            research_type=str(research_paper.research_type),
-            submitted_date=str(research_paper.submitted_date),
-            status=str(research_paper.status),
-            file_path=str(research_paper.file_path),
-            research_adviser=str(research_paper.research_adviser)
-        )
+    #     # Map research paper details
+    #     research_paper_data = ResearchPaperShow(
+    #         id=str(research_paper.id),
+    #         title=str(research_paper.title),
+    #         research_type=str(research_paper.research_type),
+    #         submitted_date=str(research_paper.submitted_date),
+    #         status=str(research_paper.status),
+    #         file_path=str(research_paper.file_path),
+    #         research_adviser=str(research_paper.research_adviser)
+    #     )
 
-        # Map authors
-        authors_data = [
-            AuthorShow(
-                user_id=str(author.user_id),
-                student_name=str(student.name),
-                student_year=str(student.year),
-                student_section=str(student.section),
-                student_course=str(student.course),
-                student_number=str(student.student_number),
-                student_phone_number=str(student.phone_number)
-            )
-            for _, _, author, student in query_result
-        ]
-        if research_paper_data is None or authors_data is None:
-            return None
-        # Create the response model
-        response_model = ResearchPaperWithAuthorsResponse(
-            research_paper=research_paper_data,
-            authors=authors_data
-        )
+    #     # Map authors
+    #     authors_data = [
+    #         AuthorShow(
+    #             user_id=str(author.user_id),
+    #             student_name=str(student.name),
+    #             student_year=str(student.year),
+    #             student_section=str(student.section),
+    #             student_course=str(student.course),
+    #             student_number=str(student.student_number),
+    #             student_phone_number=str(student.phone_number)
+    #         )
+    #         for _, _, author, student in query_result
+    #     ]
+    #     if research_paper_data is None or authors_data is None:
+    #         return None
+    #     # Create the response model
+    #     response_model = ResearchPaperWithAuthorsResponse(
+    #         research_paper=research_paper_data,
+    #         authors=authors_data
+    #     )
 
-        return response_model
+    #     return response_model
 
 
     
@@ -201,11 +239,11 @@ class ResearchService:
         return research_papers
     
     @staticmethod
-    async def get_research_papers_by_user(db: Session, user_id: str) -> List[ResearchPaper]:
+    async def get_research_papers_by_user(user_id: str, research_type: str) -> List[ResearchPaper]:
         query = (
             select(ResearchPaper)
             .join(Author, ResearchPaper.id == Author.research_paper_id)
-            .where(Author.user_id == user_id)
+            .where((Author.user_id == user_id) & (ResearchPaper.research_type == research_type))
         )
         result = await db.execute(query)
         research_papers = result.scalars().all()

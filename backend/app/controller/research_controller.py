@@ -38,10 +38,10 @@ async def upload_research_paper(
 
 
 
-@router.get("/all_with_authors", response_model=List[ResearchPaperWithAuthorsResponse])
+@router.get("/all_with_authors")
 async def get_all_research_papers_with_authors():
     try:
-        research_papers = await ResearchService.get_all_with_authors(db)
+        research_papers = await ResearchService.get_all_with_authors()
         if research_papers is None:
             return []
         return research_papers
@@ -50,12 +50,14 @@ async def get_all_research_papers_with_authors():
 
 
 @router.get("/user", response_model=List[ResearchPaperResponse], response_model_exclude_none=True)
-async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+async def get_user_research_papers(
+    type: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_papers_by_user(db, current_user)
+        research_papers = await ResearchService.get_research_papers_by_user(current_user, type)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")
@@ -80,30 +82,8 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
 
 
 
-# @router.get("/{research_paper_id}", response_model=ResearchPaperResponse)
-# async def read_research_paper(research_paper_id: str):
 
-#     try:
-#         get_paper = await ResearchService.get_research_paper(db, research_paper_id)
-#         if get_paper is None:
-#             raise HTTPException(status_code=404, detail="Research paper not found")
-        
-#         # Convert ResearchPaper to ResearchPaperResponse
-#         response_paper = ResearchPaperResponse(
-#             id=get_paper.id,
-#             title=get_paper.title,
-#             research_type=get_paper.research_type,
-#             submitted_date=str(get_paper.submitted_date),
-#             status=get_paper.status,
-#             file_path=get_paper.file_path,
-#             research_adviser=get_paper.research_adviser,
-#         )
-
-#         return response_paper
-#     except Exception as e:
-#         return ResponseSchema(detail=f"Error reading or getting research paper: {str(e)}", result=None)
-
-@router.get("/{research_paper_id}", response_model=ResearchPaperWithAuthorsResponse)
+@router.get("/{research_paper_id}",)
 async def get_research_paper_with_authors(
         research_paper_id: str = Path(..., alias="research_paper_id"),
 ):
@@ -111,7 +91,7 @@ async def get_research_paper_with_authors(
     This part kasi more on di ko na alam paano ko i-coconnect tong mga table pero try nyo nalang na didisplay naman na din data
     '''
     try:
-        research_paper = await ResearchService.get_research_paper_with_authors(db, research_paper_id)
+        research_paper = await ResearchService.get_research_paper_with_authors(research_paper_id)
         return research_paper
     except HTTPException as e:
         return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)

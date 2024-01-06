@@ -505,7 +505,7 @@ class AssignToSection:
     async def get_list_my_adviser(class_id: str, research_type: str):
         query = (
             select(
-                Users.faculty_id,
+                Users.id,
                 Faculty.name,
                 AssignedResearchType.research_type_name,
                 AssignedSections.class_id

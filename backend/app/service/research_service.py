@@ -122,22 +122,23 @@ class ResearchService:
     async def get_research_paper_with_authors(research_paper_id: str):
         try:
             research_paper_query = (select(
-                                ResearchPaper.id,
-                                ResearchPaper.research_type,
-                                ResearchPaper.submitted_date,
-                                ResearchPaper.status,
-                                ResearchPaper.file_path,
-                                Faculty.name
+                                    ResearchPaper.id,
+                                    ResearchPaper.title,
+                                    ResearchPaper.submitted_date,
+                                    ResearchPaper.status,
+                                    ResearchPaper.file_path,
+                                    ResearchPaper.research_adviser,
+                                    Faculty.name.label("faculty_name")
                                 )
-                        .join(Users, ResearchPaper.research_adviser == Users.id)
-                        .join(Faculty, Users.faculty_id == Faculty.id)
-                        .where(ResearchPaper.id == research_paper_id)
-                        )
+                                .join(Users, ResearchPaper.research_adviser == Users.id)
+                                .join(Faculty, Users.faculty_id == Faculty.id)
+                                .where(ResearchPaper.id == research_paper_id)
+                                )
             research_paper_result = await db.execute(research_paper_query)
             research_paper = research_paper_result.fetchall()
-
-
             print(research_paper)
+
+
             if not research_paper:
                 raise HTTPException(status_code=404, detail=f"Research paper with id {research_paper_id} not found.")
 
@@ -154,7 +155,7 @@ class ResearchService:
             authors_result = await db.execute(authors_query)
             authors_details = authors_result.fetchall()
             
-            print(authors_details)
+
 
             # Create a dictionary to hold the results
             result_dict = {

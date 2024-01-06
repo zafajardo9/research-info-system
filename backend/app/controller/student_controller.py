@@ -128,3 +128,13 @@ async def get_workflow_details(workflow_id: str, research_paper_id: str):
         raise HTTPException(status_code=404, detail="Workflow not found")
     
     return workflow
+
+
+@router.get("/flow-info-status/{workflow_id}/")
+async def get_workflow_details(workflow_id: str, research_paper_id: str):
+    workflow = await WorkflowService.get_status_of_every_step(workflow_id, research_paper_id)
+    
+    if not workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    
+    return workflow

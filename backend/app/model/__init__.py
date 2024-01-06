@@ -18,6 +18,9 @@ from .research_paper import FacultyResearchPaper
 
 from .research_status import Comment
 
+
+from .researchdef import ResearchDefense
+
 from .ethics import Ethics
 from .full_manuscript import FullManuscript
 from .copyright import CopyRight

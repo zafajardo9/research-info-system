@@ -56,6 +56,7 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
     ethics: "Ethics" = Relationship(back_populates="research_paper")
     full_manuscript: "FullManuscript" = Relationship(back_populates="research_paper")
     copyright: "CopyRight" = Relationship(back_populates="research_paper")
+    research_defense: List["ResearchDefense"] = Relationship(back_populates="research_paper")
 
 
 

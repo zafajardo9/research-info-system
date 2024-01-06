@@ -59,6 +59,7 @@ class WorkflowStep(SQLModel, table=True):
     ethics: List["Ethics"] = Relationship(back_populates="workflow_step")
     copyright:  List["CopyRight"] = Relationship(back_populates="workflow_step")
     full_manuscript: List["FullManuscript"] = Relationship(back_populates="workflow_step")
+    research_defense: List["ResearchDefense"] = Relationship(back_populates="workflow_step")
 
 
 

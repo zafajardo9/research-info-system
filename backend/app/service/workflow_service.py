@@ -22,9 +22,10 @@ from app.model.workflowprocess import NavigationClass, NavigationTab, Workflow, 
 from app.model.workflowprocess import WorkflowStep
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
-from app.schema import NavigationProcessDisplay, NavigationTabCreate, NavigationTabUpdate, WorkflowCreate, WorkflowDetail, WorkflowGroupbyType, WorkflowResponse, WorkflowStepCreate, WorkflowUpdate
+from app.schema import NavigationProcessDisplay, NavigationTabCreate, NavigationTabUpdate, WorkflowCreate, WorkflowDetail, WorkflowDetailSpecific, WorkflowDetailWithStatus, WorkflowGroupbyType, WorkflowResponse, WorkflowStepCreate, WorkflowStepDetailWithStatus, WorkflowUpdate
 from app.service.section_service import SectionService
 from app.model.student import Class
+from app.model.researchdef import ResearchDefense
 
 
 
@@ -455,11 +456,6 @@ class WorkflowService:
     
     
 
-
-    
-
-
-
     @staticmethod
     async def get_my_workflow(user_class: str):
         query = (
@@ -497,6 +493,124 @@ class WorkflowService:
             workflows_with_steps.append(workflow_detail)
 
         return workflows_with_steps
+    
+    
+    @staticmethod
+    async def get_workflowdata_by_id(workflow_id: str):
+        query = (
+            select(Workflow)
+            .where(Workflow.id == workflow_id)
+        )
+
+        result = await db.execute(query)
+        workflow = result.scalar()
+
+        if not workflow:
+            return []  # Return an empty list when no workflows are found
+
+        steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+        steps_result = await db.execute(steps_query)
+        steps = steps_result.scalars().all()
+
+        workflow_detail = WorkflowDetailSpecific(
+            id=workflow.id,
+            type=workflow.type,
+            steps=steps
+        )
+
+        return [workflow_detail]
+    
+    @staticmethod
+    async def get_status_of_every_step(workflow_id: str, research_paper_id: str):
+        query = (
+            select(Workflow)
+            .where(Workflow.id == workflow_id)
+        )
+
+        result = await db.execute(query)
+        workflow = result.scalar()
+
+        if not workflow:
+            return []  # Return an empty list when no workflows are found
+
+        steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+        steps_result = await db.execute(steps_query)
+        steps = steps_result.scalars().all()
+
+        workflow_detail = WorkflowDetailWithStatus(
+            id=workflow.id,
+            type=workflow.type,
+            steps=[]
+        )
+
+        for step in steps:
+            step_name = step.name
+            status = await WorkflowService.get_status_by_step_name(step_name, research_paper_id, step.id)
+            step_detail = WorkflowStepDetailWithStatus(
+                id=step.id,
+                name=step_name,
+                description=step.description,
+                status=status
+            )
+            workflow_detail.steps.append(step_detail)
+
+        return [workflow_detail]
+    
+
+    @staticmethod
+    async def get_status_by_step_name(step_name: str, research_paper_id: str, workflowstep_id: str):
+        if step_name == "Ethics":
+            ethics_query = select(Ethics.status).where(
+                (Ethics.workflow_step_id == workflowstep_id) &
+                (Ethics.research_paper_id == research_paper_id)
+            )
+            ethics_status = await db.execute(ethics_query)
+            return ethics_status.scalar()
+        
+        elif step_name == "Proposal":
+            proposal_query = select(ResearchPaper.status).where(
+                (ResearchPaper.workflow_step_id == workflowstep_id) &
+                (ResearchPaper.id == research_paper_id)
+            )
+            _status = await db.execute(proposal_query)
+            return _status.scalar()
+
+        elif step_name == "CopyRight":
+            copyright_query = select(CopyRight.status).where(
+                (CopyRight.workflow_step_id == workflowstep_id) &
+                (CopyRight.research_paper_id == research_paper_id)
+            )
+            copyright_status = await db.execute(copyright_query)
+            return copyright_status.scalar()
+        
+        elif step_name == "Pre-Oral Defense":
+            def_query = select(ResearchDefense).where(
+                (ResearchDefense.workflow_step_id == workflowstep_id) &
+                (ResearchDefense.research_paper_id == research_paper_id) & 
+                (ResearchDefense.type == 'pre-oral')
+            )
+            status = await db.execute(def_query)
+            return "Good" if status.scalar() else None
+        
+        elif step_name == "Full Manuscript":
+            manu_query = select(FullManuscript.status).where(
+                (FullManuscript.workflow_step_id == workflowstep_id) &
+                (FullManuscript.research_paper_id == research_paper_id)
+            )
+            manu_status = await db.execute(manu_query)
+            return manu_status.scalar()
+        
+        elif step_name == "Final Defense":
+            def2_query = select(ResearchDefense).where(
+                (ResearchDefense.workflow_step_id == workflowstep_id) &
+                (ResearchDefense.research_paper_id == research_paper_id) & 
+                (ResearchDefense.type == 'final')
+            )
+            status = await db.execute(def2_query)
+            return "Good" if status.scalar() else None
+
+
+        return None
     
     
         
@@ -675,6 +789,23 @@ class WorkflowService:
         else:
             return None
         
+    @staticmethod
+    async def get_defense_by_workflow_step_id(workflow_step_id: str, research_paper_id: str):
+        defense_result = await db.execute(
+            select(ResearchDefense)
+            .filter(ResearchDefense.workflow_step_id == workflow_step_id)
+            .filter(ResearchDefense.research_paper_id == research_paper_id)
+        )
+        defense = defense_result.scalars().first() # Extract the Ethics object from the ChunkedIteratorResult object
+        if defense:
+            return {
+                "id": defense.id,
+                "type": defense.letter_of_intent,
+                "date": defense.urec_9
+            }
+        else:
+            return None
+
         
     @staticmethod
     async def get_copyright_by_workflow_step_id(workflow_step_id: str, research_paper_id: str):

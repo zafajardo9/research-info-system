@@ -435,6 +435,26 @@ class WorkflowDetail(BaseModel):
     course: str
     section: str
     steps: List[WorkflowStepDetail]
+    
+class WorkflowDetailSpecific(BaseModel):
+    id: str
+    type: str
+    steps: List[WorkflowStepDetail]
+
+# sa may status na
+class WorkflowStepDetailWithStatus(BaseModel):
+    id: str
+    name: str
+    description: str
+    status: Optional[str]
+    
+    
+    #connect to here (below)
+class WorkflowDetailWithStatus(BaseModel):
+    id: str
+    type: str
+    steps: List[WorkflowStepDetailWithStatus]
+
 
 
 class WorkflowGroupbyType(BaseModel):
@@ -638,6 +658,19 @@ class FacultyResearchPaperUpdate(BaseModel):
     abstract: str
     file_path: str
 
+
+
+class DefenseCreate(BaseModel):
+    type: str
+    date: str
+    workflow_step_id: str
+    research_paper_id: str
+    
+    
+class DefenseUpdate(BaseModel):
+    type: str
+    date: str
+    
 
 # END =============================
 #FOR THE DISPLAY OF LIST IN PAGE

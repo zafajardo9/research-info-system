@@ -112,8 +112,17 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
 
 @router.get("/workflow/{workflow_id}")
 async def get_workflow_details(workflow_id: str):
-    workflow = await WorkflowService.get_my_workflow_by_id(workflow_id)
-    #workflowstep_id = workflow['woq']
+    workflow = await WorkflowService.get_workflowdata_by_id(workflow_id)
+    
+    if not workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    
+    return workflow
+
+
+@router.get("/workflow-status/{workflow_id}/")
+async def get_workflow_details(workflow_id: str, research_paper_id: str):
+    workflow = await WorkflowService.get_status_of_every_step(workflow_id, research_paper_id)
     
     if not workflow:
         raise HTTPException(status_code=404, detail="Workflow not found")

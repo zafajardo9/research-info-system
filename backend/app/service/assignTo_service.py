@@ -502,7 +502,7 @@ class AssignToSection:
 
 
     @staticmethod
-    async def get_list_my_adviser(class_id: str):
+    async def get_list_my_adviser(class_id: str, research_type: str):
         query = (
             select(
                 Users.faculty_id,
@@ -514,7 +514,8 @@ class AssignToSection:
             .join(AssignedSections, AssignedResearchType.id == AssignedSections.research_type_id)
             .join(Faculty, Users.faculty_id == Faculty.id)
             .where(
-                (AssignedSections.class_id == class_id)
+                (AssignedSections.class_id == class_id) &
+                (AssignedResearchType.research_type_name == research_type)
             )
         )
         users_with_assignments = await db.execute(query)

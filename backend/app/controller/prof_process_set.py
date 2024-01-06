@@ -20,6 +20,7 @@ from itertools import groupby
 from app.config import db
 from app.model.faculty import Faculty
 from app.model.workflowprocess import NavigationClass, NavigationTab
+from app.service.navigation_process_service import NavigationProcessService
 
 #from app.schema import WorkflowCreate
 
@@ -48,7 +49,11 @@ async def list_of_process_for_faculty():
 
 @router.post("/assign-process/")
 async def create_process_role(navigation_tab: NavigationTabCreate):
-    create_process = await WorkflowService.create_process_role(navigation_tab)
+    create_process = await NavigationProcessService.create_process_role(navigation_tab)
+    
+    for class_id in navigation_tab.class_id:
+        await NavigationProcessService.create_process_role_class_assoc(create_process.id, class_id)
+    
     return create_process
 
 

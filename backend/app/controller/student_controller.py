@@ -61,8 +61,10 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
     return workflow
 
 
-@router.get("/my-adviser-list"  )
-async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+@router.get("/my-adviser-list/{research_type}" )
+async def read_workflow(
+    research_type: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
     username = token['username']
     roles = token.get('role', [])
@@ -74,7 +76,7 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
     result = await UserService.get_class_id(username)
     user_class = result['class_id']
 
-    advisers_assigned = await AssignToSection.get_list_my_adviser(user_class)
+    advisers_assigned = await AssignToSection.get_list_my_adviser(user_class, research_type)
     
     print(advisers_assigned) # Add this line
     if not advisers_assigned:

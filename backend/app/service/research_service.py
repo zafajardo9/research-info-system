@@ -126,6 +126,7 @@ class ResearchService:
                                     ResearchPaper.title,
                                     ResearchPaper.submitted_date,
                                     ResearchPaper.status,
+                                    ResearchPaper.research_type,
                                     ResearchPaper.file_path,
                                     ResearchPaper.research_adviser,
                                     Faculty.name.label("faculty_name")

@@ -4,7 +4,7 @@ from datetime import datetime
 from fastapi import HTTPException
 import logging
 import re
-from typing import Dict, List, TypeVar, Optional, Generic
+from typing import Any, Dict, List, TypeVar, Optional, Generic
 
 from pydantic.generics import GenericModel
 from pydantic import BaseModel, Field, validator, constr
@@ -454,7 +454,21 @@ class WorkflowDetailWithStatus(BaseModel):
     id: str
     type: str
     steps: List[WorkflowStepDetailWithStatus]
-
+    
+# XPERIMENTAL=========================================================
+class WorkflowResearchInfoStep(BaseModel):
+    id: str
+    name: str
+    description: str
+    info: Optional[Dict[str, Any]]
+    
+    
+    #connect to here (below)
+class WorkflowResearchInfo(BaseModel):
+    id: str
+    type: str
+    steps: List[WorkflowResearchInfoStep]
+# END ============================================================
 
 
 class WorkflowGroupbyType(BaseModel):

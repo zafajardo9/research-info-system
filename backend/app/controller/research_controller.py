@@ -181,3 +181,4 @@ async def get_research_paper_by_step_and_id(workflowstep_id: str,research_id: st
         return research_result
     except Exception as e:
         return ResponseSchema(detail=f"Error getting ethics related to paper: {str(e)}", result=None)
+

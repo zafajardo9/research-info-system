@@ -681,6 +681,7 @@ class FacultyResearchPaperUpdate(BaseModel):
 class DefenseCreate(BaseModel):
     type: str
     date: str
+    time: str
     workflow_step_id: str
     research_paper_id: str
     
@@ -688,6 +689,7 @@ class DefenseCreate(BaseModel):
 class DefenseUpdate(BaseModel):
     type: str
     date: str
+    time: str
     
 
 # END =============================

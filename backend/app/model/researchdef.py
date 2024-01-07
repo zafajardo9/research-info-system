@@ -3,7 +3,7 @@ from app.model.mixins import TimeMixin
 from sqlalchemy import Column, String, Integer
 from sqlmodel import SQLModel, Field, Relationship
 
-from datetime import date
+from datetime import date, time
 
 
 
@@ -14,6 +14,7 @@ class ResearchDefense(SQLModel, TimeMixin, table=True):
     research_paper_id: str = Field(foreign_key="research_papers.id")
     type: str
     date: date
+    time: time
     
     workflow_step_id: str = Field(foreign_key="workflow_steps.id")
     

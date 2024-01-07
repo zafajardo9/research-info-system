@@ -19,7 +19,7 @@ router = APIRouter(
 )
 
 
-@router.post("/post", response_model=ResponseSchema)
+@router.post("/post", response_model=ResearchDefense)
 async def submit_def(data: DefenseCreate):
     try:
         return await DefenseService.create_defense(data)
@@ -32,6 +32,13 @@ async def submit_def(data: DefenseCreate):
 async def get_def_by_linked_res_step(research_paper_id: str, workflowstep_id: str):
     try:
         return await DefenseService.display_by_research_step(research_paper_id, workflowstep_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+    
+@router.get("/defense-info/{defense_id}")
+async def get_def_by_linked_res_step(defense_id: str):
+    try:
+        return await DefenseService.display_by_id(defense_id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 

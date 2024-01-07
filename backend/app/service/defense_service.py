@@ -25,12 +25,25 @@ class DefenseService:
         
     @staticmethod
     async def create_defense(data: DefenseCreate):
-        gen_id = str(uuid.uuid4()) 
-        db_make = ResearchDefense(id=gen_id, **data.dict())
+        
+        gen_id = str(uuid.uuid4())
+        # Parse the date and time strings into date and time objects
+        defense_date = datetime.strptime(data.date, "%Y-%m-%d").date()
+        defense_time = datetime.strptime(data.time, "%H:%M:%S").time()
+        # Create the ResearchDefense instance with the parsed date and time
+        db_make = ResearchDefense(
+            id=gen_id, 
+            type=data.type, 
+            date=defense_date, 
+            time=defense_time, 
+            research_paper_id=data.research_paper_id,
+            workflow_step_id = data.workflow_step_id
+            )
         db.add(db_make)
         await db.commit()
         await db.refresh(db_make)
         return db_make
+    
     
     @staticmethod
     async def display_by_research_step(research_paper_id: str, workflowstep_id: str):
@@ -47,6 +60,17 @@ class DefenseService:
         return defense
     
     @staticmethod
+    async def display_by_id(defense_id: str):
+        query = (
+            select(ResearchDefense)
+            .where(ResearchDefense.id == defense_id)
+        )
+        result = await db.execute(query)
+        defense = result.scalar()
+        
+        return defense
+    
+    @staticmethod
     async def update_defense(defense_id: str, data: DefenseUpdate):
         query = select(ResearchDefense).filter_by(id=defense_id)
         
@@ -56,17 +80,18 @@ class DefenseService:
         if not defense:
             raise HTTPException(status_code=404, detail="Defense not found")
 
-        # Update the defense fields
         update_data = data.dict(exclude_unset=True)
-        for field, value in update_data.items():
-            setattr(defense, field, value)
-
-        # Commit the changes to the database
+        
+        if 'date' in update_data:
+            update_data['date'] = datetime.strptime(update_data['date'], "%Y-%m-%d").date()
+        if 'time' in update_data:
+            update_data['time'] = datetime.strptime(update_data['time'], "%H:%M:%S").time()
+    
+        for key, value in update_data.items():
+            setattr(defense, key, value)
         await db.commit()
-
-        # Refresh the defense to reflect the changes
         await db.refresh(defense)
-
+        
         return defense
     
     
@@ -77,7 +102,7 @@ class DefenseService:
         query = delete(ResearchDefense).where(ResearchDefense.id == defense_id)
         
         result = await db.execute(query)
-        
+        await db.commit()
         if result.rowcount > 0:
             return True 
         else:

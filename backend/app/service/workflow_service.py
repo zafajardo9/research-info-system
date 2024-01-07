@@ -25,8 +25,11 @@ from app.model.workflowprocess import WorkflowStep
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
 from app.schema import NavigationProcessDisplay, NavigationTabCreate, NavigationTabUpdate, WorkflowCreate, WorkflowDetail, WorkflowDetailSpecific, WorkflowDetailWithStatus, WorkflowGroupbyType, WorkflowResearchInfo, WorkflowResearchInfoStep, WorkflowResponse, WorkflowStepCreate, WorkflowStepDetailWithStatus, WorkflowUpdate
 from app.service.section_service import SectionService
-from app.model.student import Class
+from app.model.student import Class, Student
 from app.model.researchdef import ResearchDefense
+from app.model.faculty import Faculty
+from app.model.research_paper import Author
+from app.model.users import Users
 
 
 
@@ -672,7 +675,6 @@ class WorkflowService:
             print(result)
             return result
         
-
         elif step_name == "CopyRight":
             copyright_query = select(CopyRight).where(
                 (CopyRight.workflow_step_id == workflowstep_id) &

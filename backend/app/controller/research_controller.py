@@ -97,18 +97,20 @@ async def get_research_paper_with_authors(
         return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
 
 
-# @router.get("/all_ethics_manu_copyright_user", response_model=List[DisplayAllByUser])
-# async def get_all_for_user(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-#     """
-#     Get all research papers from the database.
-#     """
-#     token = JWTRepo.extract_token(credentials)
-#     current_user = token['user_id']
-#     try:
-#         research_paper = await ResearchService.all_by_current_user(db, current_user)
-#         return research_paper
-#     except HTTPException as e:
-#         return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
+@router.get("/paper-author-list/{research_paper_id}",)
+async def show_paper_author_list(
+        research_paper_id: str = Path(..., alias="research_paper_id"),
+):
+    '''
+    This part kasi more on di ko na alam paano ko i-coconnect tong mga table pero try nyo nalang na didisplay naman na din data
+    '''
+    try:
+        research_paper = await ResearchService.show_paper_author_list(research_paper_id)
+        return research_paper
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research paper: {str(e)}", result=None)
+
+
 
 
 

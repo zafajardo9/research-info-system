@@ -451,6 +451,7 @@ class WorkflowStepDetailWithStatus(BaseModel):
     name: str
     description: str
     status: Optional[str]
+    #record_id: Optional[str]
     
     
     #connect to here (below)

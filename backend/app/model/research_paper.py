@@ -30,7 +30,6 @@ class Status(str, Enum):
     Revise = "Revise" # if magpapa revise si faculty
     Revised = "Revised" #pag ang student nag revise nung pinasa
     
-    #Student 
     Approved = "Approved"
     Rejected = "Rejected"
     

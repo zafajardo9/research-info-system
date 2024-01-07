@@ -171,7 +171,33 @@ class ResearchService:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
-    
+    @staticmethod
+    async def show_paper_author_list(research_paper_id: str):
+        try:
+
+            authors_query = (
+                select(Users.id, Student.name, Student.student_number, Class.section, Class.course)
+                .join(Author, Users.id == Author.user_id)
+                .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+                .join(Student, Users.student_id == Student.id)
+                .join(Class, Class.id == Student.class_id)
+                .where(ResearchPaper.id == research_paper_id)
+            )
+
+            authors_result = await db.execute(authors_query)
+            authors_details = authors_result.fetchall()
+            
+
+            result_dict = {
+                "authors": authors_details,
+            }
+
+            return result_dict
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 
 

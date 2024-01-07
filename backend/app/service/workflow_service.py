@@ -15,6 +15,7 @@ from app.config import db
 
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 
 
 from app.repository.workflow_repo import WorkflowRepository
@@ -812,11 +813,17 @@ class WorkflowService:
     
     @staticmethod
     async def delete_workflowstep_by_id(workflow_step_id: str):
+        try:
             # Delete workflow steps
-        await db.execute(delete(WorkflowStep).where(WorkflowStep.id == workflow_step_id))
-        return True
+            await db.execute(delete(WorkflowStep).where(WorkflowStep.id == workflow_step_id))
+            return True
 
-# 28914385-40fd-43f2-ad5c-898b9263f08f
+        except IntegrityError as integrity_error:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unable to delete workflow step. There is a submitted record in step. Please contact the student that submitted in this step",
+            )
+
 
 
     @staticmethod

@@ -43,7 +43,6 @@ class CommentRepository(BaseRepo):
             result = await db.execute(query)
             comments_with_users = result.fetchall()
 
-            print(comments_with_users)
 
 
             comments = []

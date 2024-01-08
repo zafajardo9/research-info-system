@@ -29,6 +29,7 @@ class ManuscriptService:
                 abstract=manuscript_data.abstract,
                 file=manuscript_data.file,
                 status=manuscript_data.status,
+                workflow_step_id = manuscript_data.workflow_step_id
             )
 
             await ManuscriptRepository.create(db, **_manuscript_paper.dict())

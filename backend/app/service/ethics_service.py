@@ -32,6 +32,7 @@ class EthicsService:
             urec_12 = ethics_data.urec_12,
             certificate_of_validation = ethics_data.certificate_of_validation,
             co_authorship = ethics_data.co_authorship,
+            workflow_step_id=ethics_data.workflow_step_id
         )
 
         await EthicsRepository.create(db, **_research_paper.dict())

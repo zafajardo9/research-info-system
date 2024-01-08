@@ -23,6 +23,7 @@ class CopyrightService:
         _copyright_paper = CopyRight(
             id = _copyright_id,
             research_paper_id = copyright_data.research_paper_id,
+            workflow_step_id= copyright_data.workflow_step_id,
             co_authorship = copyright_data.co_authorship,
             affidavit_co_ownership = copyright_data.affidavit_co_ownership,
             joint_authorship = copyright_data.joint_authorship,

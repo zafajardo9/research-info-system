@@ -1,51 +1,141 @@
 [
-    {
-      "course": "BSIT",
-      "section": "3-1"
-    },
-    {
-      "course": "BSIT",
-      "section": "3-2"
-    },
-    {
-      "course": "BSIT",
-      "section": "4-1"
-    },
-    {
-      "course": "BSIT",
-      "section": "4-2"
-    },
-    {
-      "course": "BTLED-ICT",
-      "section": "3-1"
-    },
-    {
-      "course": "BTLED-ICT",
-      "section": "3-2"
-    },
-    {
-      "course": "BTLED-ICT",
-      "section": "4-1"
-    },
-    {
-      "course": "BTLED-ICT",
-      "section": "4-2"
-    },
-    {
-      "course": "BSENT",
-      "section": "3-1"
-    },
-    {
-      "course": "BSENT",
-      "section": "3-2"
-    },
-    {
-      "course": "BSENT",
-      "section": "4-1"
-    },
-    {
-      "course": "BSENT",
-      "section": "4-2"
-    },
-  ]
-  
+  {
+    "id": "c9a78819-3dc9-49c1-8f05-f9b14d43f265",
+    "type": "Research",
+    "steps": [
+      {
+        "id": "fd968aca-ac3a-406a-9d3b-a78c1e80d0e3",
+        "name": "Proposal",
+        "description": "Proposal",
+        "info": {
+          "whole-info": [
+            {
+              "modified_at": "2024-01-08T23:02:09.115508",
+              "id": "1472eaec-92c1-4df9-a63b-1a474d547b6e",
+              "research_type": "asdf",
+              "status": "Pending",
+              "research_adviser": "e23d8982-f3f1-4e71-9304-15254c468ce3",
+              "created_at": "2024-01-08T23:02:09.114509",
+              "title": "sample",
+              "submitted_date": "2001-12-12",
+              "file_path": "asdf",
+              "workflow_step_id": "fd968aca-ac3a-406a-9d3b-a78c1e80d0e3"
+            }
+          ]
+        }
+      },
+      {
+        "id": "58683ae7-ff46-455b-a668-393278369794",
+        "name": "Pre-Oral Defense",
+        "description": "Pre-Oral Defense Date",
+        "info": {
+          "whole-info": [
+            {
+              "modified_at": "2024-01-08T23:04:55.154048",
+              "created_at": "2024-01-08T23:04:55.154048",
+              "research_paper_id": "1472eaec-92c1-4df9-a63b-1a474d547b6e",
+              "date": "2020-12-12",
+              "workflow_step_id": "58683ae7-ff46-455b-a668-393278369794",
+              "id": "d8e8e350-eb6b-4e25-bd01-81a200f0e4f9",
+              "type": "pre-oral",
+              "time": "14:00:00"
+            }
+          ]
+        }
+      },
+      {
+        "id": "42d87339-ccf9-4106-82c5-72a8c73106d1",
+        "name": "Ethics",
+        "description": "Ethics/Protocol",
+        "info": {
+          "whole-info": [
+            {
+              "modified_at": "2024-01-08T23:07:41.397398",
+              "created_at": "2024-01-08T23:07:41.393383",
+              "research_paper_id": "1472eaec-92c1-4df9-a63b-1a474d547b6e",
+              "urec_9": "asdf",
+              "urec_11": "asdf",
+              "certificate_of_validation": "asdf",
+              "status": "Pending",
+              "id": "f45b28cc-56a2-4ef6-9edb-fa5b2aae9db1",
+              "letter_of_intent": "asdf",
+              "urec_10": "asdf",
+              "urec_12": "asdf",
+              "co_authorship": "adsf",
+              "workflow_step_id": "42d87339-ccf9-4106-82c5-72a8c73106d1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "988a542d-adbf-4cdd-8dc2-28fe9bec893c",
+        "name": "Full Manuscript",
+        "description": "Full Manuscript",
+        "info": {
+          "whole-info": [
+            {
+              "created_at": "2024-01-08T23:08:25.561934",
+              "modified_at": "2024-01-08T23:08:25.566936",
+              "research_paper_id": "1472eaec-92c1-4df9-a63b-1a474d547b6e",
+              "keywords": "asdf",
+              "abstract": "asdf",
+              "workflow_step_id": "988a542d-adbf-4cdd-8dc2-28fe9bec893c",
+              "id": "4208dd2e-c357-40ad-9049-c0848c9a6258",
+              "content": "asdf",
+              "file": "asdf",
+              "status": "asdf"
+            }
+          ]
+        }
+      },
+      {
+        "id": "19ca579e-6fac-4b4a-a0d4-a220e4f23842",
+        "name": "Final Defense",
+        "description": "Final Defense",
+        "info": {
+          "whole-info": [
+            {
+              "modified_at": "2024-01-08T23:05:18.902026",
+              "created_at": "2024-01-08T23:05:18.901027",
+              "research_paper_id": "1472eaec-92c1-4df9-a63b-1a474d547b6e",
+              "date": "2021-12-12",
+              "workflow_step_id": "19ca579e-6fac-4b4a-a0d4-a220e4f23842",
+              "id": "1b134d3c-b7aa-4fce-ae55-f81a5bf74741",
+              "type": "final",
+              "time": "14:00:00"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1aa3864c-7302-4204-982b-be07fd204aa5",
+        "name": "Copyright",
+        "description": "Copyright",
+        "info": {
+          "whole-info": [
+            {
+              "co_authorship": "asdfasdf",
+              "recordal_template": "dfghdfgh",
+              "affidavit_co_ownership": "asdfasdf",
+              "ureb_18": "dfghdfgh",
+              "modified_at": "2024-01-08T23:09:09.165129",
+              "joint_authorship": "asdfasdf",
+              "journal_publication": "dfghdfgh",
+              "approval_sheet": "asdfasdf",
+              "copyright_manuscript": "hjklhjklhjkl",
+              "created_at": "2024-01-08T23:09:09.161133",
+              "receipt_payment": "sfghdfgh",
+              "status": "Pending",
+              "id": "6da7ee30-5370-4436-9d95-1b41696e5f3a",
+              "recordal_slip": "dfghdfgh",
+              "workflow_step_id": "1aa3864c-7302-4204-982b-be07fd204aa5",
+              "research_paper_id": "1472eaec-92c1-4df9-a63b-1a474d547b6e",
+              "acknowledgement_receipt": "dfghdfgh",
+              "certificate_copyright": "dfghdfgh"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

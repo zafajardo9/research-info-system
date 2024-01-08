@@ -675,7 +675,7 @@ class WorkflowService:
             print(result)
             return result
         
-        elif step_name == "CopyRight":
+        elif step_name == "Copyright":
             copyright_query = select(CopyRight).where(
                 (CopyRight.workflow_step_id == workflowstep_id) &
                 (CopyRight.research_paper_id == research_paper_id)
@@ -798,14 +798,18 @@ class WorkflowService:
     @staticmethod
     async def delete_workflow_by_id(workflow_id: str):
 
-
+        try:
             # Delete workflow steps
-        await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id))
-        await db.execute(delete(WorkflowClass).where(WorkflowClass.workflow_id == workflow_id))
-            # Delete the workflow itself
-        await db.execute(delete(Workflow).where(Workflow.id == workflow_id))
-
-        return True
+            await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow_id))
+            await db.execute(delete(WorkflowClass).where(WorkflowClass.workflow_id == workflow_id))
+                # Delete the workflow itself
+            await db.execute(delete(Workflow).where(Workflow.id == workflow_id))
+            return True
+        except IntegrityError as integrity_error:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unable to delete workflow. There is a submitted record in step. Please contact the student that submitted in this step",
+            )
     
     @staticmethod
     async def delete_class_id(id: str):

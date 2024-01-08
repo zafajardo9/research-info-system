@@ -14,7 +14,6 @@ class Class(SQLModel, table=True):
     section: str
     course: str
     
-    # Add a relationship back to Students through the association table
     students: List["Student"] = Relationship(back_populates="classes")
     
     #navigation_tab: List["NavigationTab"] = Relationship(back_populates="class_")

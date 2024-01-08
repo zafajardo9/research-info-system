@@ -27,7 +27,7 @@ class Users(SQLModel, TimeMixin, table=True):
     password: str
 
     student_number: Optional[str] = Field(sa_column=Column("student_number", String))
-    student_id: Optional[str] = Field(default=None, foreign_key="student.id")  # Change the type to String
+    student_id: Optional[str] = Field(default=None, foreign_key="student.id") 
     faculty_id: Optional[str] = Field(default=None, foreign_key="faculty.id")
 
     student: Optional["Student"] = Relationship(back_populates="users")
@@ -37,11 +37,11 @@ class Users(SQLModel, TimeMixin, table=True):
 
     roles: List["Role"] = Relationship(back_populates="users", link_model=UsersRole)
 
-        # Define the relationship to Author and Comment
+    
     author: Optional[List["Author"]] = Relationship(back_populates="user")
     comments: Optional[List["Comment"]] = Relationship(back_populates="user")
 
-        #Setting relation to workflow na magagawa ng user
+      
     workflow: List["Workflow"] = Relationship(back_populates="users")
     
     notifications: Optional[List["Notification"]] = Relationship(back_populates="user")

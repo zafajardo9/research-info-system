@@ -41,6 +41,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
         
         response_ethics = EthicsResponse(
             id=ethics_data.id,
+            workflow_step_id=ethics_data.workflow_step_id,
             modified_at = ethics_data.modified_at,
             created_at = ethics_data.created_at,
             letter_of_intent=ethics_data.letter_of_intent,
@@ -51,6 +52,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
             co_authorship = ethics_data.co_authorship,
             certificate_of_validation=ethics_data.certificate_of_validation,
             research_paper_id=ethics_data.research_paper_id,
+            status=ethics_data.status
         )
 
         return response_ethics

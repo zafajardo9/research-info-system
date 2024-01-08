@@ -42,6 +42,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
             id = copyright_data.id,
             modified_at=copyright_data.modified_at,
             created_at = copyright_data.created_at,
+            workflow_step_id=copyright_data.workflow_step_id,
             research_paper_id = copyright_data.research_paper_id,
             co_authorship = copyright_data.co_authorship,
             affidavit_co_ownership = copyright_data.affidavit_co_ownership,

@@ -39,6 +39,7 @@ async def get_ethics_by_research_paper_id(research_paper_id: str):
         
         response_ethics = FullManuscriptResponse(
             id=manuscript_data.id,
+            workflow_step_id=manuscript_data.workflow_step_id,
             modified_at=manuscript_data.modified_at,
             created_at = manuscript_data.created_at,
             research_paper_id=manuscript_data.research_paper_id,

@@ -228,7 +228,7 @@ class EthicsResponse(BaseModel):
     certificate_of_validation: Optional[str]
     co_authorship: Optional[str]
     research_paper_id: Optional[str]
-    status: str
+    status: Optional[str]
 
 class EthicsWithResearchResponse(BaseModel):
     id: Optional[str]
@@ -338,6 +338,7 @@ class CopyRightUpdate(BaseModel):
 
 class CopyRightResponse(BaseModel):
     id: Optional[str]
+    workflow_step_id: str
     modified_at: Optional[datetime]
     created_at: Optional[datetime]
     research_paper_id: Optional[str]

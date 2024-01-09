@@ -23,14 +23,14 @@ router = APIRouter(
 @router.get("/myflow", response_model=List[WorkflowDetail])
 async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
-    username = token['username']
+    user_id = token['user_id']
     roles = token.get('role', [])
 
     if "student" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
 
-    result = await UserService.get_class_id(username)
+    result = await UserService.get_class_id(user_id)
     user_class = result['class_id']
 
     workflow = await WorkflowService.get_my_workflow(user_class)
@@ -66,14 +66,14 @@ async def read_workflow(
     research_type: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
-    username = token['username']
+    user_id = token['user_id']
     roles = token.get('role', [])
 
     if "student" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
 
-    result = await UserService.get_class_id(username)
+    result = await UserService.get_class_id(user_id)
     user_class = result['class_id']
 
     advisers_assigned = await AssignToSection.get_list_my_adviser(user_class, research_type)
@@ -87,16 +87,16 @@ async def read_workflow(
 @router.get("/my-research-professor-list")
 async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
-    username = token['username']
+    user_id = token['user_id']
     roles = token.get('role', [])
 
     if "student" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
 
-    result = await UserService.get_student_profile(username)
+    result = await UserService.get_student_profile(user_id)
 
-    result = await UserService.get_class_id(username)
+    result = await UserService.get_class_id(user_id)
     user_class = result['class_id']
 
     advisers_assigned = await AssignToSection.student_get_prof_list(user_class)

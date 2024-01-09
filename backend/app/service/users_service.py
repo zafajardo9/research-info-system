@@ -27,7 +27,7 @@ class UserService:
         return (await db.execute(query)).mappings().one_or_none()
     
     @staticmethod
-    async def get_class_id(username: str):
+    async def get_class_id(user_id: str):
         query = (
             select(
                 Users.id,
@@ -39,7 +39,7 @@ class UserService:
             )
             .join(Student, Users.student_id == Student.id)
             .join(Class, Student.class_id == Class.id)
-            .where(Users.username == username)
+            .where(Users.id == user_id)
         )
         return (await db.execute(query)).mappings().one_or_none()
     

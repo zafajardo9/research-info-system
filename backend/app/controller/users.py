@@ -19,13 +19,13 @@ router = APIRouter(
 @router.get("/profile/student", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_student_profile(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
-    username = token['username']
+    _id = token['user_id']
     roles = token.get('role', [])
 
     if "student" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only students are allowed.")
 
-    result = await UserService.get_student_profile(username)
+    result = await UserService.get_student_profile(_id)
     if result:
         return ResponseSchema(detail="Successfully fetch student profile!", result=result)
     else:
@@ -34,10 +34,9 @@ async def get_student_profile(credentials: HTTPAuthorizationCredentials = Securi
 @router.get("/profile/faculty", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
-    username = token['username']
     user_id = token['user_id']
     roles = await UsersRepository.get_user_roles(user_id)
-    result = await UserService.get_faculty_profile(username)
+    result = await UserService.get_faculty_profile(user_id)
 
     if "faculty" not in roles and "research professor" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only faculty members are allowed.")

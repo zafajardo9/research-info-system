@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class RegisterSchema(BaseModel):
 
-    username: str
+    #username: str
     email: str
     name: str
     password: str
@@ -51,7 +51,7 @@ class RegisterSchema(BaseModel):
 
 class RegisterSchemaFaculty(BaseModel):
 
-    username: str
+    #username: str
     email: str
     name: str
     password: str

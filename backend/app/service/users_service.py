@@ -7,11 +7,10 @@ from app.config import db
 class UserService:
 
     @staticmethod
-    async def get_student_profile(username: str):
+    async def get_student_profile(user_id: str):
         query = (
             select(
                 Users.id,
-                Users.username,
                 Users.email,
                 Student.name,
                 Student.birth,
@@ -23,7 +22,7 @@ class UserService:
             )
             .join(Student, Users.student_id == Student.id)
             .join(Class, Student.class_id == Class.id)
-            .where(Users.username == username)
+            .where(Users.id == user_id)
         )
         return (await db.execute(query)).mappings().one_or_none()
     
@@ -45,18 +44,17 @@ class UserService:
         return (await db.execute(query)).mappings().one_or_none()
     
     @staticmethod
-    async def get_faculty_profile(username: str):
+    async def get_faculty_profile(user_id: str):
         query = (
             select(
                 Users.id,
-                Users.username,
                 Users.email,
                 Faculty.name,
                 Faculty.birth,
                 Faculty.phone_number
             )
             .join_from(Users, Faculty)
-            .where(Users.username == username)
+            .where(Users.id == user_id)
         )
         return (await db.execute(query)).mappings().one()
     
@@ -87,7 +85,6 @@ class UserService:
         query = (
             select(
                 Users.id,
-                Users.username,
                 Users.email,
                 Faculty.name,
                 Faculty.birth,
@@ -115,7 +112,6 @@ class UserService:
         query = (
             select(
                 Users.id,
-                Users.username,
                 Users.email,
                 Faculty.name
             )
@@ -130,7 +126,6 @@ class UserService:
         query = (
             select(
                 Users.id,
-                Users.username,
                 Users.email,
                 Student.name,
                 Student.birth,
@@ -155,7 +150,7 @@ class UserService:
     @staticmethod
     async def get_all_faculty():
         query = (
-            select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -178,7 +173,7 @@ class UserService:
     @staticmethod
     async def get_all_research_adviser():
         query = (
-            select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -196,7 +191,7 @@ class UserService:
     @staticmethod
     async def get_all_research_prof():
         query = (
-            select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -214,7 +209,7 @@ class UserService:
     @staticmethod
     async def get_all_admin():
         query = (
-            select(Users.id, Users.username, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -247,7 +242,6 @@ class UserService:
         query = (
             select(
                 Users.id,
-                Users.username,
                 Users.email,
                 Users.faculty_id,
                 Faculty.name.label("faculty_name"),
@@ -285,7 +279,6 @@ class UserService:
                 # Initialize user entry if not exists
                 formatted_result[user_id] = {
                     "id": user_role["id"],
-                    "username": user_role["username"],
                     "email": user_role["email"],
                     # "faculty_id": user_role["faculty_id"],
                     "faculty_name": user_role["faculty_name"],

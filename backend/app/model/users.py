@@ -22,7 +22,7 @@ class Users(SQLModel, TimeMixin, table=True):
     __tablename__ = "users"
 
     id: Optional[str] = Field(primary_key=True, nullable=False)
-    username: str = Field(sa_column=Column("username", String, unique=True))
+    #username: str = Field(sa_column=Column("username", String, unique=True))
     email: str = Field(sa_column=Column("email", String, unique=True))
     password: str
 

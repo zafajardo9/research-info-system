@@ -47,7 +47,6 @@ class AuthService:
         _users_role = UsersRole(users_id=_users_id, role_id=_role.id)
         _users = Users(
                         id=_users_id,
-                        username=register.username,
                         email=register.email,
                         password=pwd_context.hash(register.password),
                         student_id=_student_id,
@@ -77,7 +76,6 @@ class AuthService:
         _users_role = UsersRole(users_id=_users_id, role_id=_role.id)
         _users = Users(
             id=_users_id,
-            username=register.username,
             email=register.email,
             password=pwd_context.hash(register.password),
             faculty_id=_faculty_id,
@@ -117,7 +115,7 @@ class AuthService:
                 raise HTTPException(status_code=400, detail="Invalid Password!")
 
             # Generate and return the JWT token
-            return JWTRepo(data={"username": _user_by_student_number.username, "user_id": _user_by_student_number.id, "role": user_roles}).generate_token()
+            return JWTRepo(data={"user_id": _user_by_student_number.id, "role": user_roles}).generate_token()
 
         raise HTTPException(status_code=404, detail="Student not found or invalid role!")
 
@@ -158,7 +156,7 @@ class AuthService:
                 raise HTTPException(status_code=400, detail="Invalid Password!")
 
             # Generate and return the JWT token
-            return JWTRepo(data={"username": _user_by_email.username, "user_id": _user_by_email.id, "role": user_roles}).generate_token()
+            return JWTRepo(data={"user_id": _user_by_email.id, "role": user_roles}).generate_token()
 
         raise HTTPException(status_code=404, detail="Faculty not found or invalid role!")
 
@@ -192,7 +190,7 @@ class AuthService:
                 raise HTTPException(status_code=400, detail="Invalid Password!")
 
             # Generate and return the JWT token
-            return JWTRepo(data={"username": _user_by_email.username, "user_id": _user_by_email.id, "role": user_roles}).generate_token()
+            return JWTRepo(data={"user_id": _user_by_email.id, "role": user_roles}).generate_token()
 
         raise HTTPException(status_code=404, detail="Faculty not found or invalid role!")
 

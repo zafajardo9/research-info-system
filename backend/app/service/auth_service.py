@@ -93,23 +93,16 @@ class AuthService:
     @staticmethod
     async def login_student(login: LoginSchema):
         # Check the Users table for a username match
-        _user_by_username = await UsersRepository.find_by_username(login.username)
+        # _user_by_username = await UsersRepository.find_by_username(login.username)
 
-        if _user_by_username is not None:
-            # Check if the user has the "student" role
-            user_roles = await UsersRepository.get_user_roles(_user_by_username.id)
-
-            if "student" not in user_roles:
-                raise HTTPException(status_code=403, detail="Access forbidden. Only students are allowed.")
-
-            # Check the password
-            if not pwd_context.verify(login.password, _user_by_username.password):
-                raise HTTPException(status_code=400, detail="Invalid Password!")
-
-            # Generate and return the JWT token
-            return JWTRepo(data={"username": _user_by_username.username, "user_id": _user_by_username.id, "role": user_roles}).generate_token()
-
-        # Check the Users table for a student number match
+        # if _user_by_username is not None:
+        #     user_roles = await UsersRepository.get_user_roles(_user_by_username.id)
+        #     if "student" not in user_roles:
+        #         raise HTTPException(status_code=403, detail="Access forbidden. Only students are allowed.")
+        #     if not pwd_context.verify(login.password, _user_by_username.password):
+        #         raise HTTPException(status_code=400, detail="Invalid Password!")
+        #     return JWTRepo(data={"username": _user_by_username.username, "user_id": _user_by_username.id, "role": user_roles}).generate_token()
+        
         _user_by_student_number = await UsersRepository.find_by_student_number(login.username)
 
         if _user_by_student_number is not None:
@@ -133,22 +126,22 @@ class AuthService:
     #  NEED BALIKAN DAPAT KASI PWEDE EMAIL
     @staticmethod
     async def login_faculty(login: LoginSchema):
-        # Check the Users table for a username match
-        _user_by_username = await UsersRepository.find_by_username(login.username)
+        # _user_by_username = await UsersRepository.find_by_username(login.username)
 
-        if _user_by_username is not None:
-            # Check if the user has the "faculty" role
-            user_roles = await UsersRepository.get_user_roles(_user_by_username.id)
+        # if _user_by_username is not None:
+        #     # Check if the user has the "faculty" role
+        #     user_roles = await UsersRepository.get_user_roles(_user_by_username.id)
 
-            if "faculty" not in user_roles:
-                raise HTTPException(status_code=403, detail="Access forbidden. Only faculty members are allowed.")
+        #     if "faculty" not in user_roles:
+        #         raise HTTPException(status_code=403, detail="Access forbidden. Only faculty members are allowed.")
 
-            # Check the password
-            if not pwd_context.verify(login.password, _user_by_username.password):
-                raise HTTPException(status_code=400, detail="Invalid Password!")
+        #     # Check the password
+        #     if not pwd_context.verify(login.password, _user_by_username.password):
+        #         raise HTTPException(status_code=400, detail="Invalid Password!")
 
-            # Generate and return the JWT token
-            return JWTRepo(data={"username": _user_by_username.username, "user_id": _user_by_username.id, "role": user_roles}).generate_token()
+        #     # Generate and return the JWT token
+        #     return JWTRepo(data={"username": _user_by_username.username, "user_id": _user_by_username.id, "role": user_roles}).generate_token()
+
 
         # Check the Users table for a student number match
         _user_by_email = await UsersRepository.find_by_email(login.username)
@@ -173,23 +166,18 @@ class AuthService:
     @staticmethod
     async def login_admin(login: LoginSchema):
         # Check the Users table for a username match
-        _user_by_username = await UsersRepository.find_by_username(login.username)
+        # _user_by_username = await UsersRepository.find_by_username(login.username)
 
-        if _user_by_username is not None:
-            # Check if the user has the "faculty" role
-            user_roles = await UsersRepository.get_user_roles(_user_by_username.id)
+        # if _user_by_username is not None:
+        #     user_roles = await UsersRepository.get_user_roles(_user_by_username.id)
 
-            if "admin" not in user_roles:
-                raise HTTPException(status_code=403, detail="Access forbidden. Only admin are allowed.")
+        #     if "admin" not in user_roles:
+        #         raise HTTPException(status_code=403, detail="Access forbidden. Only admin are allowed.")
+        #     if not pwd_context.verify(login.password, _user_by_username.password):
+        #         raise HTTPException(status_code=400, detail="Invalid Password!")
+        #     return JWTRepo(data={"username": _user_by_username.username, "user_id": _user_by_username.id, "role": user_roles}).generate_token()
 
-            # Check the password
-            if not pwd_context.verify(login.password, _user_by_username.password):
-                raise HTTPException(status_code=400, detail="Invalid Password!")
-
-            # Generate and return the JWT token
-            return JWTRepo(data={"username": _user_by_username.username, "user_id": _user_by_username.id, "role": user_roles}).generate_token()
-
-        # Check the Users table for a student number match
+        
         _user_by_email = await UsersRepository.find_by_email(login.username)
 
         if _user_by_email is not None:

@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 import uuid
-from sqlalchemy import insert, join
+from sqlalchemy import func, insert, join
 from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.orm import joinedload
@@ -75,11 +75,11 @@ class AnnouncementService:
         query = (
             select(
                 Announcement,
-                Users.email,
-                Faculty.name,
+                Faculty.Email.label('email'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
             )
             .join(Users, Announcement.user_id == Users.id)
-            .join(Faculty, Users.faculty_id == Faculty.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
         )
         result = await db.execute(query)
         announcements = result.fetchall()
@@ -136,11 +136,11 @@ class AnnouncementService:
         query = (
             select(
                 Announcement,
-                Users.email,
-                Faculty.name,
+                Faculty.Email.label('email'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
             )
             .join(Users, Announcement.user_id == Users.id)
-            .join(Faculty, Users.faculty_id == Faculty.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
             .where((Announcement.user_role_target == "student") & (Announcement.announcement_type == "funding opportunity"))
         )
         result = await db.execute(query)
@@ -172,11 +172,11 @@ class AnnouncementService:
         query = (
             select(
                 Announcement,
-                Users.email,
-                Faculty.name,
+                Faculty.Email.label('email'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
             )
             .join(Users, Announcement.user_id == Users.id)
-            .join(Faculty, Users.faculty_id == Faculty.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
             .where((Announcement.user_role_target == "student") & (Announcement.announcement_type == "training and workshop"))
         )
         result = await db.execute(query)
@@ -209,11 +209,11 @@ class AnnouncementService:
         query = (
             select(
                 Announcement,
-                Users.email,
-                Faculty.name,
+                Faculty.Email.label('email'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
             )
             .join(Users, Announcement.user_id == Users.id)
-            .join(Faculty, Users.faculty_id == Faculty.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
             .where((Announcement.user_role_target == "faculty") & (Announcement.announcement_type == "funding opportunity"))
         )
         result = await db.execute(query)
@@ -245,11 +245,11 @@ class AnnouncementService:
         query = (
             select(
                 Announcement,
-                Users.email,
-                Faculty.name,
+                Faculty.Email.label('email'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
             )
             .join(Users, Announcement.user_id == Users.id)
-            .join(Faculty, Users.faculty_id == Faculty.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
             .where((Announcement.user_role_target == "faculty") & (Announcement.announcement_type == "training and workshop"))
         )
         result = await db.execute(query)

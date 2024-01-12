@@ -119,12 +119,13 @@ class AuthService:
             if not check_password_hash(_user_by_email.Password, login.password):
                 raise HTTPException(status_code=400, detail="Invalid Password!")
 
-
+            user_id = await UsersRepository.get_faculty_user_table_id(_user_by_email.FacultyId)
+            user_roles = await UsersRepository.get_user_roles(user_id.id)
+            
             # Generate and return the JWT token
-            return JWTRepo(data={"user_id": _user_by_email.id}).generate_token()
+            return JWTRepo(data={"user_id": user_id.id,"faculty_id": _user_by_email.FacultyId, "role": user_roles}).generate_token()
 
         raise HTTPException(status_code=404, detail="Faculty not found or invalid role!")
-
     
 
 

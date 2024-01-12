@@ -584,9 +584,13 @@ class ResearchService:
     @staticmethod
     async def get_faculty_research_papers_with_user_info():
         query = (
-            select(FacultyResearchPaper, Faculty.name, Users.id, Users.email)
+            select(
+                FacultyResearchPaper, 
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
+                Users.id, 
+                Faculty.Email.label('email'),)
             .join(Users, FacultyResearchPaper.user_id == Users.id)
-            .join(Faculty, Users.faculty_id == Faculty.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
         )
         result = await db.execute(query)
         return result.fetchall()

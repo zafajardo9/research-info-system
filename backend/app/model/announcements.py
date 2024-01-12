@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, Field, Relationship
 
 
 class Announcement(SQLModel, TimeMixin, table=True):
-    __tablename__ = "announcements"
+    __tablename__ = "RISannouncements"
 
     id: Optional[str] = Field(primary_key=True, nullable=False)
     user_id: str = Field(nullable=True)

@@ -8,10 +8,10 @@ from sqlmodel import SQLModel, Field, Relationship
 
 
 class Notification(SQLModel, TimeMixin, table=True):
-    __tablename__ = "notifications"
+    __tablename__ = "RISnotifications"
 
     id: str = Field(primary_key=True)
-    user_id: str = Field(foreign_key="users.id") 
+    user_id: str = Field(foreign_key="RISUsers.id") 
     message: str
     isRead: bool
 

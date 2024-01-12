@@ -8,15 +8,15 @@ from datetime import date, time
 
 
 class ResearchDefense(SQLModel, TimeMixin, table=True):
-    __tablename__ = "research_defense"
+    __tablename__ = "RISresearch_defense"
 
     id: Optional[str] = Field(primary_key=True, nullable=False)
-    research_paper_id: str = Field(foreign_key="research_papers.id")
+    research_paper_id: str = Field(foreign_key="RISresearch_papers.id")
     type: str
     date: date
     time: time
     
-    workflow_step_id: str = Field(foreign_key="workflow_steps.id")
+    workflow_step_id: str = Field(foreign_key="RISworkflow_steps.id")
     
     
     

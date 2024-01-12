@@ -1,57 +1,91 @@
-from sqlalchemy import func, or_, outerjoin, select, and_
-from app.model import Role, Users, UsersRole, Class
-from app.model.student import Student  # Import the Student model
+from sqlalchemy import distinct, func, or_, outerjoin, select, and_
+from app.model import Users
+
+
+from app.model.student import Class, Student  # Import the Student model
 from app.model.faculty import Faculty  # Import the Faculty model
 from app.config import db
-
+from app.model.users import Role, UsersRole, Users
+from app.model.connected_SPS import SPSStudentClassSubjectGrade, SPSClassSubject, SPSClass, SPSMetadata, SPSCourse, SPSCourseEnrolled
 class UserService:
 
+
+    # BABAGUTIN
     @staticmethod
     async def get_student_profile(user_id: str):
         query = (
             select(
                 Users.id,
-                Users.email,
-                Student.name,
-                Student.birth,
-                Student.year,
-                Student.student_number,
-                Student.phone_number,
-                Class.section,
-                Class.course
+                Student.Email.label('email'),
+                func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                Student.DateOfBirth.label('birth'),
+                Student.StudentNumber.label('student_number'),
+                Student.MobileNumber.label('phone_number'),
+                SPSCourse.CourseCode.label('course'),
+                func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('section'),
+                
             )
-            .join(Student, Users.student_id == Student.id)
-            .join(Class, Student.class_id == Class.id)
+            .select_from(SPSStudentClassSubjectGrade)
+            .join(SPSClassSubject, SPSClassSubject.ClassSubjectId == SPSStudentClassSubjectGrade.ClassSubjectId)
+            .join(SPSClass, SPSClass.ClassId == SPSClassSubject.ClassId)
+            .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+            .join(SPSCourse, SPSCourse.CourseId == SPSMetadata.CourseId)
+            .join(SPSCourseEnrolled, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+            .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
+            .join(Users, Student.StudentId == Users.student_id)
             .where(Users.id == user_id)
         )
-        return (await db.execute(query)).mappings().one_or_none()
+        return (await db.execute(query)).mappings().first()
     
     @staticmethod
     async def get_class_id(user_id: str):
-        query = (
+        
+        user_class = (
             select(
-                Users.id,
-                Student.id,
-                Student.student_number,
-                Class.id.label("class_id"),
+                SPSCourse.CourseCode.label('course'),
+                func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('section'),
+                
+            )
+            .select_from(SPSStudentClassSubjectGrade)
+            .join(SPSClassSubject, SPSClassSubject.ClassSubjectId == SPSStudentClassSubjectGrade.ClassSubjectId)
+            .join(SPSClass, SPSClass.ClassId == SPSClassSubject.ClassId)
+            .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+            .join(SPSCourse, SPSCourse.CourseId == SPSMetadata.CourseId)
+            .join(SPSCourseEnrolled, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+            .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
+            .join(Users, Student.StudentId == Users.student_id)
+            .where(Users.id == user_id)
+        )
+        result = await db.execute(user_class)
+        user_class_data = result.mappings().first()
+        
+        result_section = user_class_data.section
+        result_course = user_class_data.course
+        
+        query_class_id_ris = (
+            select(
+                Class.id,
                 Class.section,
                 Class.course
             )
-            .join(Student, Users.student_id == Student.id)
-            .join(Class, Student.class_id == Class.id)
-            .where(Users.id == user_id)
+            .where(Class.section == result_section)
+            .where(Class.course == result_course)
         )
-        return (await db.execute(query)).mappings().one_or_none()
+        
+        result_class_id = await db.execute(query_class_id_ris)
+        result_last = result_class_id.scalars().all()
+        
+        return result_last
     
     @staticmethod
     async def get_faculty_profile(user_id: str):
         query = (
             select(
                 Users.id,
-                Users.email,
-                Faculty.name,
-                Faculty.birth,
-                Faculty.phone_number
+                Faculty.Email.label('email'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
+                Faculty.BirthDate.label('birth'),
+                Faculty.MobileNumber.label('phone_number')
             )
             .join_from(Users, Faculty)
             .where(Users.id == user_id)
@@ -85,10 +119,10 @@ class UserService:
         query = (
             select(
                 Users.id,
-                Users.email,
-                Faculty.name,
-                Faculty.birth,
-                Faculty.phone_number
+                Faculty.Email.label('email'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
+                Faculty.BirthDate.label('birth'),
+                Faculty.MobileNumber.label('phone_number'),
             )
             .join_from(Users, Faculty)
             .where(Users.id == user_id)
@@ -121,22 +155,23 @@ class UserService:
         return (await db.execute(query)).mappings().first()
 #asdfasdfadf
 
+
+#FOR NOW OKS LANG TO
     @staticmethod
     async def get_all_student():
         query = (
             select(
                 Users.id,
-                Users.email,
-                Student.name,
-                Student.birth,
-                Student.year,
-                Student.student_number,
-                Student.phone_number,
-                Class.section,
-                Class.course
+                Student.Email.label('email'),
+                func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                Student.DateOfBirth.label('birth'),
+                Student.StudentNumber.label('student_number'),
+                Student.MobileNumber.label('phone_number')
+                # Class.section,
+                # Class.course
             )
-            .join(Student, Users.student_id == Student.id)
-            .join(Class, Student.class_id == Class.id)
+            .join(Student, Users.student_id == Student.StudentId)
+            #.join(Class, Student.class_id == Class.id)
             .where(Role.role_name == "student")
         )
 
@@ -150,7 +185,11 @@ class UserService:
     @staticmethod
     async def get_all_faculty():
         query = (
-            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, 
+                   Faculty.Email.label('email'), 
+                   Users.faculty_id, 
+                   func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
+                   )
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -173,7 +212,10 @@ class UserService:
     @staticmethod
     async def get_all_research_adviser():
         query = (
-            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, 
+                   Faculty.Email.label('email'), 
+                   Users.faculty_id, 
+                   func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),)
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -191,7 +233,10 @@ class UserService:
     @staticmethod
     async def get_all_research_prof():
         query = (
-            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, 
+                   Faculty.Email.label('email'), 
+                   Users.faculty_id, 
+                   func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),)
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -209,7 +254,10 @@ class UserService:
     @staticmethod
     async def get_all_admin():
         query = (
-            select(Users.id, Users.email, Users.faculty_id, Faculty.name)
+            select(Users.id, 
+                   Faculty.Email.label('email'), 
+                   Users.faculty_id, 
+                   func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),)
             .select_from(
                 outerjoin(Users, Faculty).join(UsersRole).join(Role, and_(
                     UsersRole.users_id == Users.id,
@@ -242,9 +290,9 @@ class UserService:
         query = (
             select(
                 Users.id,
-                Users.email,
+                Faculty.Email.label('email'), 
                 Users.faculty_id,
-                Faculty.name.label("faculty_name"),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('faculty_name'),
                 Role.role_name
             )
             .select_from(
@@ -280,7 +328,6 @@ class UserService:
                 formatted_result[user_id] = {
                     "id": user_role["id"],
                     "email": user_role["email"],
-                    # "faculty_id": user_role["faculty_id"],
                     "faculty_name": user_role["faculty_name"],
                     "role_names": [user_role["role_name"]],
                 }

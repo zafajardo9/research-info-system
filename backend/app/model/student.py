@@ -1,22 +1,21 @@
 from datetime import date
 from typing import List, Optional
 from sqlalchemy import Enum
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship, Column
 from app.model.mixins import TimeMixin
 from app.model.workflowprocess import NavigationClass, WorkflowClass
 
 
     
 class Class(SQLModel, table=True):
-    __tablename__ = "class"
+    __tablename__ = "RISClass"
 
     id: str = Field(primary_key=True, nullable=False)
     section: str
     course: str
     
-    students: List["Student"] = Relationship(back_populates="classes")
+    #students: List["Student"] = Relationship(back_populates="classes")
     
-    #navigation_tab: List["NavigationTab"] = Relationship(back_populates="class_")
     
     assigned_sections: List["AssignedSections"] = Relationship(back_populates="class_")
     
@@ -26,18 +25,20 @@ class Class(SQLModel, table=True):
     workflows: List["Workflow"] = Relationship(back_populates="class_", link_model=WorkflowClass)
     navigation_role: List["NavigationTab"] = Relationship(back_populates="class_id", link_model=NavigationClass)
         
-class Student(SQLModel, TimeMixin, table=True):
-    __tablename__ = "student"
+class Student(SQLModel, table=True):
+    __tablename__ = "SPSStudent"
 
-    id: Optional[str] = Field(primary_key=True, nullable=False)
-    name: str
-    birth: date
-    year: int
-    student_number: str
-    phone_number: str
-
+    StudentId: Optional[int] = Field(primary_key=True, nullable=False)
+    FirstName: str
+    LastName: str
+    MiddleName: str
+    DateOfBirth: date
+    StudentNumber: str
+    MobileNumber: str
+    Email: str
+    Password: str
+    
+    
     users: Optional["Users"] = Relationship(sa_relationship_kwargs={'uselist': False}, back_populates="student")
     
-    #referencing to the Class table
-    class_id: Optional[str] = Field(foreign_key="class.id")
-    classes: List["Class"] = Relationship(back_populates="students")
+    #classes: List["Class"] = Relationship(back_populates="students")

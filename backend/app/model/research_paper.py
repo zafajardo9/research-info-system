@@ -11,11 +11,11 @@ from sqlmodel import SQLModel, Field, Relationship
 
 
 class Author(SQLModel, table=True):
-    __tablename__ = "authors"
+    __tablename__ = "RISauthors"
 
     id: Optional[str] = Field(primary_key=True)
-    user_id: str = Field(foreign_key="users.id")
-    research_paper_id: str = Field(foreign_key="research_papers.id")
+    user_id: str = Field(foreign_key="RISUsers.id")
+    research_paper_id: str = Field(foreign_key="RISresearch_papers.id")
 
     # Define the relationship to Users
     user: Optional["Users"] = Relationship(back_populates="author", sa_relationship_kwargs={'uselist': False})
@@ -35,7 +35,7 @@ class Status(str, Enum):
     
 
 class ResearchPaper(SQLModel, TimeMixin, table=True):
-    __tablename__ = 'research_papers'
+    __tablename__ = 'RISresearch_papers'
 
     id: Optional[str] = Field(primary_key=True)
     title: str
@@ -46,7 +46,7 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
 
     file_path: str
     research_adviser: str
-    workflow_step_id: str = Field(foreign_key="workflow_steps.id")
+    workflow_step_id: str = Field(foreign_key="RISworkflow_steps.id")
     workflow_step: "WorkflowStep" = Relationship(back_populates="research_paper")
 
     authors: Optional[List["Author"]] = Relationship(back_populates="research_paper")
@@ -60,14 +60,14 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
 
 
 class FacultyResearchPaper(SQLModel, TimeMixin, table=True):
-    __tablename__ = 'faculty_research_papers'
+    __tablename__ = 'RISfaculty_research_papers'
 
     id: str = Field(primary_key=True)
     title: str
     content: str
     abstract: str
     file_path: str
-    user_id: Optional[str] = Field(default=None, foreign_key="users.id")
+    user_id: Optional[str] = Field(default=None, foreign_key="RISUsers.id")
 
     user: Optional["Users"] = Relationship(back_populates="faculty_research_papers")
     

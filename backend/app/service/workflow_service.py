@@ -734,25 +734,6 @@ class WorkflowService:
         return steps
 
     
-    # @staticmethod
-    # async def update_workflow_with_steps(workflow_id: str, workflow_data: WorkflowCreate, steps_data: List[WorkflowStepCreate]):
-    #     workflow = await WorkflowService.get_workflow_id(workflow_id)
-    #     if workflow:
-    #         for key, value in dict(workflow_data).items():
-    #             setattr(workflow, key, value)
-
-    #         # Delete all existing steps
-    #         await db.execute(delete(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id))
-
-    #         # Insert new steps
-    #         for step_data in steps_data:
-    #             await WorkflowService.create_workflow_step(step_data, workflow.id)
-
-    #         await db.commit()
-    #         await db.refresh(workflow)
-    #         return workflow
-    #     return None
-    
     
     @staticmethod
     async def update_workflow_with_steps(workflow_id: str, workflow_data: WorkflowCreate, steps_data: List[WorkflowStepCreate]):

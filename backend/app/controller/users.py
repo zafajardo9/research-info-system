@@ -8,7 +8,7 @@ from app.service.users_service import UserService
 from app.model.student import Student  
 from app.model.faculty import Faculty
 from app.repository.users import UsersRepository
-from app.model.workflowprocess import Course
+#from app.model.workflowprocess import Course
 
 router = APIRouter(
     prefix="/users",

@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import delete, join, update
+from sqlalchemy import delete, func, join, update
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
@@ -84,17 +84,20 @@ class ResearchService:
             research_paper_query = select(ResearchPaper)
             research_paper_result = await db.execute(research_paper_query)
             research_papers = research_paper_result.scalars().all()
-
-            # List to store all research papers with authors
             research_papers_with_authors = []
 
             for research_paper in research_papers:
-                # Query to get authors' details for each research paper
                 authors_query = (
-                    select(Users.id, Student.name, Student.student_number, Class.section, Class.course)
+                    select(
+                        Users.id, 
+                        func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                        Student.StudentNumber, 
+                        # Class.section, 
+                        # Class.course
+                        )
                     .join(Author, Users.id == Author.user_id)
                     .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-                    .join(Student, Users.student_id == Student.id)
+                    .join(Student, Users.student_id == Student.StudentId)
                     .join(Class, Class.id == Student.class_id)
                     .where(ResearchPaper.id == research_paper.id)
                 )

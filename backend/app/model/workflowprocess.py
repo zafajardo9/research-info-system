@@ -22,22 +22,22 @@ class Course(str, Enum):
 
 class WorkflowClass(SQLModel, table=True):
     #HANDLES ONE TO MANY
-    __tablename__ = "workflow_class"
+    __tablename__ = "RISworkflow_class"
 
 
     id: str = Field(primary_key=True)
 
-    workflow_id: str = Field(default=None, foreign_key="workflow.id", primary_key=True)
-    class_id: str = Field(default=None, foreign_key="class.id", primary_key=True)
+    workflow_id: str = Field(default=None, foreign_key="RISworkflow.id", primary_key=True)
+    class_id: str = Field(default=None, foreign_key="RISClass.id", primary_key=True)
 
 
 
 class Workflow(SQLModel, table=True):
-    __tablename__ = "workflow"
+    __tablename__ = "RISworkflow"
 
     id: str = Field(primary_key=True)
     type: str
-    user_id: str = Field(foreign_key="users.id") #user na nag set nung flow
+    user_id: str = Field(foreign_key="RISUsers.id") #user na nag set nung flow
 
     steps: List["WorkflowStep"] = Relationship(back_populates="workflow")
     
@@ -47,12 +47,12 @@ class Workflow(SQLModel, table=True):
 
     
 class WorkflowStep(SQLModel, table=True):
-    __tablename__ = "workflow_steps"
+    __tablename__ = "RISworkflow_steps"
 
     id: str = Field(primary_key=True)
     name: str
     description: str
-    workflow_id: str = Field(foreign_key="workflow.id")
+    workflow_id: str = Field(foreign_key="RISworkflow.id")
     workflow: "Workflow" = Relationship(back_populates="steps")
     
     research_paper: List["ResearchPaper"] = Relationship(back_populates="workflow_step")
@@ -65,15 +65,15 @@ class WorkflowStep(SQLModel, table=True):
 
 # ==========================================
 class NavigationClass(SQLModel, table=True):
-    __tablename__ = "navigation_class"
+    __tablename__ = "RISnavigation_class"
     
     id: str = Field(primary_key=True)
 
-    navigation_id: str = Field(default=None, foreign_key="navigation_role.id", primary_key=True)
-    class_id: str = Field(default=None, foreign_key="class.id", primary_key=True)
+    navigation_id: str = Field(default=None, foreign_key="RISnavigation_role.id", primary_key=True)
+    class_id: str = Field(default=None, foreign_key="RISClass.id", primary_key=True)
 
 class NavigationTab(SQLModel, table=True):
-    __tablename__ = "navigation_role"
+    __tablename__ = "RISnavigation_role"
 
     id: str = Field(primary_key=True, index=True, unique=True)
     role: str

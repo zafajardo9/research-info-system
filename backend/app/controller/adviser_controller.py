@@ -47,17 +47,14 @@ async def read_user_assignments(credentials: HTTPAuthorizationCredentials = Secu
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
     try:
-        # Get user profile
         user_profile = await UserService.get_faculty_profile_by_ID(current_user)
         if user_profile is None:
             raise HTTPException(status_code=404, detail="User profile not found")
 
-        # Get user assignments
         assignments = await AssignToSection.display_assignments_by_user(user_profile["id"])
         if assignments is None:
             raise HTTPException(status_code=404, detail="Assignments not found")
 
-        # Combine user profile and assignments
         response_data = {
             "user_profile": user_profile,
             "assignments": assignments.dict(),

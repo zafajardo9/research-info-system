@@ -14,16 +14,6 @@ async def generate_roles():
         return ResponseSchema(detail=f"Error generating role: {str(e)}", result=None)
 
 
-@router.post("/register/student", response_model=ResponseSchema, response_model_exclude_none=True)
-async def register_student(request_body: RegisterSchema):
-    await AuthService.register_student(request_body)
-    return ResponseSchema(detail="Student registration successful!")
-
-@router.post("/register/faculty", response_model=ResponseSchema, response_model_exclude_none=True)
-async def register_faculty(request_body: RegisterSchemaFaculty):
-    await AuthService.register_faculty(request_body)
-    return ResponseSchema(detail="Faculty registration successful!")
-
 @router.post("/login/student", response_model=ResponseSchema)
 async def login_student(request_body: LoginSchema):
     token = await AuthService.login_student(request_body)

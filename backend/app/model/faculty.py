@@ -1,16 +1,22 @@
 from datetime import date
 from typing import Optional
 from sqlalchemy import Enum
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship, Column
 from app.model.mixins import TimeMixin
 
-class Faculty(SQLModel, TimeMixin, table=True):
-    __tablename__ = "faculty"
+class Faculty(SQLModel, table=True):
+    __tablename__ = "FISFaculty"
 
-    id: Optional[str] = Field(None, primary_key=True, nullable=False)
-    name: str
-    birth: date
-    phone_number: str
+    FacultyId: Optional[int] = Field(None, primary_key=True, nullable=False)
+    FirstName: str = Column(name="FirstName")
+    LastName: str = Column(name="LastName")
+    MiddleName: str = Column(name="MiddleName")
+    BirthDate: date = Column(name="BirthDate")
+    MobileNumber: str = Column(name="MobileNumber")
+    
+    
+    Email: str = Column(name="Email")
+    Password: str = Column(name="Password")
 
     users: Optional["Users"] = Relationship(
         sa_relationship_kwargs={'uselist': False}, back_populates="faculty")

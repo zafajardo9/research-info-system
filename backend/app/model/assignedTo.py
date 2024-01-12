@@ -6,10 +6,10 @@ from sqlmodel import SQLModel, Field, Relationship
 
 
 class AssignedResearchType(SQLModel, table=True):
-    __tablename__ = "research_types_assigned"
+    __tablename__ = "RISresearch_types_assigned"
 
     id: Optional[str] = Field(primary_key=True, nullable=False)
-    user_id: str = Field(default=None, foreign_key="users.id")
+    user_id: str = Field(default=None, foreign_key="RISUsers.id")
     research_type_name: str
 
     users: List["Users"] = Relationship(back_populates="research_types")
@@ -17,11 +17,11 @@ class AssignedResearchType(SQLModel, table=True):
 
     
 class AssignedSections(SQLModel, table=True):
-    __tablename__ = "sections_course_assigned"
+    __tablename__ = "RISsections_course_assigned"
 
     id: Optional[str] = Field(primary_key=True, nullable=False)
-    class_id: str = Field(foreign_key="class.id")
-    research_type_id: Optional[str] = Field(default=None, foreign_key="research_types_assigned.id")
+    class_id: str = Field(foreign_key="RISClass.id")
+    research_type_id: Optional[str] = Field(default=None, foreign_key="RISresearch_types_assigned.id")
 
     research_type: Optional["AssignedResearchType"] = Relationship(back_populates="course_section")
     
@@ -32,12 +32,12 @@ class AssignedSections(SQLModel, table=True):
 
 
 class AssignedSectionsToProf(SQLModel, table=True):
-    __tablename__ = "section_assigned_prof"
+    __tablename__ = "RISsection_assigned_prof"
 
     id: Optional[str] = Field(primary_key=True, nullable=False)
-    class_id: str = Field(foreign_key="class.id")
+    class_id: str = Field(foreign_key="RISClass.id")
     
-    user_id: str = Field(default=None, foreign_key="users.id")
+    user_id: str = Field(default=None, foreign_key="RISUsers.id")
     users: List["Users"] = Relationship(back_populates="section_assigned_prof")
     
     

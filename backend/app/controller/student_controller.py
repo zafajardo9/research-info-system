@@ -31,8 +31,9 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
 
 
     result = await UserService.get_class_id(user_id)
-    user_class = result['class_id']
-
+    
+    user_class = result[0] if result else None
+ 
     workflow = await WorkflowService.get_my_workflow(user_class)
     
     if not workflow:
@@ -74,7 +75,8 @@ async def read_workflow(
 
 
     result = await UserService.get_class_id(user_id)
-    user_class = result['class_id']
+    
+    user_class = result[0] if result else None
 
     advisers_assigned = await AssignToSection.get_list_my_adviser(user_class, research_type)
     
@@ -94,10 +96,11 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
 
-    result = await UserService.get_student_profile(user_id)
+    #result = await UserService.get_student_profile(user_id)
 
     result = await UserService.get_class_id(user_id)
-    user_class = result['class_id']
+    
+    user_class = result[0] if result else None
 
     advisers_assigned = await AssignToSection.student_get_prof_list(user_class)
     

@@ -10,12 +10,12 @@ from app.model.research_paper import Status
 
 
 class CopyRight(SQLModel, TimeMixin, table=True):
-    __tablename__ = "copyright"
+    __tablename__ = "RIScopyright"
 
 
     id: Optional[str] = Field(primary_key=True)
 
-    research_paper_id: str = Field(foreign_key="research_papers.id")
+    research_paper_id: str = Field(foreign_key="RISresearch_papers.id")
 
     co_authorship: Optional[str] = Field(default=None)
     affidavit_co_ownership: Optional[str] = Field(default=None)
@@ -32,7 +32,7 @@ class CopyRight(SQLModel, TimeMixin, table=True):
 
     copyright_manuscript: Optional[str] = Field(default=None)
     status: Status = Status.Pending
-    workflow_step_id: str = Field(foreign_key="workflow_steps.id")
+    workflow_step_id: str = Field(foreign_key="RISworkflow_steps.id")
     workflow_step: "WorkflowStep" = Relationship(back_populates="copyright")
 
     research_paper: "ResearchPaper" = Relationship(back_populates="copyright")

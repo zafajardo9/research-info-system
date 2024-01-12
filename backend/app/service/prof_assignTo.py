@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 import uuid
-from sqlalchemy import and_, insert, join
+from sqlalchemy import and_, func, insert, join
 from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.orm import joinedload
@@ -219,7 +219,7 @@ class AssignToProf:
                 select(
                     Users.id,
                     Users.faculty_id,
-                    Faculty.name,
+                    func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('faculty_name'),
                     AssignedSectionsToProf.class_id,
                     AssignedSectionsToProf.id.label("assigned_id"),
                     Class.section,
@@ -227,7 +227,7 @@ class AssignToProf:
                     
                 )
                 .join(AssignedSectionsToProf, Users.id == AssignedSectionsToProf.user_id)
-                .join(Faculty, Users.faculty_id == Faculty.id)
+                .join(Faculty, Users.faculty_id == Faculty.FacultyId)
                 .join(Class, AssignedSectionsToProf.class_id == Class.id)
             )
 

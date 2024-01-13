@@ -134,10 +134,10 @@ class ResearchService:
                                     ResearchPaper.research_type,
                                     ResearchPaper.file_path,
                                     ResearchPaper.research_adviser,
-                                    Faculty.name.label("faculty_name")
+                                    func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('faculty_name'),
                                 )
                                 .join(Users, ResearchPaper.research_adviser == Users.id)
-                                .join(Faculty, Users.faculty_id == Faculty.id)
+                                .join(Faculty, Users.faculty_id == Faculty.FacultyId)
                                 .where(ResearchPaper.id == research_paper_id)
                                 )
             research_paper_result = await db.execute(research_paper_query)
@@ -150,11 +150,15 @@ class ResearchService:
 
             # Query to get authors' details
             authors_query = (
-                select(Users.id, Student.name, Student.student_number, Class.section, Class.course)
+                select(Users.id, 
+                       func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                       Student.StudentNumber.label('student_number'),
+                    #    Class.section, Class.course
+                       )
                 .join(Author, Users.id == Author.user_id)
                 .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-                .join(Student, Users.student_id == Student.id)
-                .join(Class, Class.id == Student.class_id)
+                .join(Student, Users.student_id == Student.StudentId)
+                #.join(Class, Class.id == Student.class_id)
                 .where(ResearchPaper.id == research_paper_id)
             )
 

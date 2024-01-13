@@ -100,9 +100,9 @@ class AuthService:
 
             user_id = await UsersRepository.get_faculty_user_table_id(_user_by_email.FacultyId)
             user_roles = await UsersRepository.get_user_roles(user_id.id)
-            
-            # Generate and return the JWT token
-            return JWTRepo(data={"user_id": user_id.id,"faculty_id": _user_by_email.FacultyId, "role": user_roles}).generate_token()
+            if "faculty" in user_roles:
+                # Generate and return the JWT token
+                return JWTRepo(data={"user_id": user_id.id,"faculty_id": _user_by_email.FacultyId, "role": user_roles}).generate_token()
 
         raise HTTPException(status_code=404, detail="Faculty not found or invalid role!")
 
@@ -121,9 +121,8 @@ class AuthService:
 
             user_id = await UsersRepository.get_faculty_user_table_id(_user_by_email.FacultyId)
             user_roles = await UsersRepository.get_user_roles(user_id.id)
-            
-            # Generate and return the JWT token
-            return JWTRepo(data={"user_id": user_id.id,"faculty_id": _user_by_email.FacultyId, "role": user_roles}).generate_token()
+            if "admin" in user_roles:
+                return JWTRepo(data={"user_id": user_id.id,"faculty_id": _user_by_email.FacultyId, "role": user_roles}).generate_token()
 
         raise HTTPException(status_code=404, detail="Faculty not found or invalid role!")
     

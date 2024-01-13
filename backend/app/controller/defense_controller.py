@@ -43,7 +43,7 @@ async def get_def_by_linked_res_step(defense_id: str):
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 
-@router.put("/update/{defense_id}", response_model=ResponseSchema)
+@router.put("/update/{defense_id}", response_model=ResearchDefense)
 async def update_defense(
     defense_id: str,
     data: DefenseUpdate

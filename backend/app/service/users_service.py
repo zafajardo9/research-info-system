@@ -134,7 +134,7 @@ class UserService:
         query = (
             select(
                 Users.id,
-                Faculty.name,
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
             )
             .join_from(Users, Faculty)
             .where(Users.id == user_id)

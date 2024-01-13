@@ -22,7 +22,7 @@ from app.repository.faculty_research_paper import FacultyResearchRepository
 from app.model.faculty import Faculty
 from app.model.student import Class
 from app.model.connected_SPS import SPSClass, SPSCourse, SPSMetadata
-
+from app.service.notif_service import NotificationService
 class ResearchService:
 
     @staticmethod
@@ -42,6 +42,8 @@ class ResearchService:
         )
         for author_id in author_ids:
             await AuthorRepository.create_author(db, author_id, _research_paper_id)
+            await NotificationService.create_notif(author_id, "You have been selected as one of the authors in research study")
+        await NotificationService.create_notif(research_paper_data.research_adviser, "You have a new research paper to advise")
         return research_paper
 
     @staticmethod

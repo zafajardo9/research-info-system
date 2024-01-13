@@ -1,6 +1,6 @@
 from datetime import datetime
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy import insert
 from sqlalchemy import update
 from sqlalchemy import delete
@@ -13,6 +13,8 @@ from typing import List, Dict
 from sqlalchemy.orm import joinedload
 
 from app.schema import FacultyInfo, ResearchCommentResponse, StudentInfo
+from app.model.faculty import Faculty
+from app.model.student import Student
 
 
 class CommentRepository(BaseRepo):
@@ -34,8 +36,12 @@ class CommentRepository(BaseRepo):
         try:
             # Join Users with Faculty and Student
             query = (
-                select(Comment, Users)
+                select(Comment, Users,
+                       func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('student_name'),
+                       func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('faculty_name'))
                 .join(Users, Comment.user_id == Users.id)
+                .outerjoin(Student, Users.student_id == Student.StudentId)
+                .outerjoin(Faculty, Users.faculty_id == Faculty.FacultyId)
                 .options(joinedload(Users.faculty), joinedload(Users.student))
                 .where(Comment.research_paper_id == research_paper_id)
             )
@@ -43,16 +49,14 @@ class CommentRepository(BaseRepo):
             result = await db.execute(query)
             comments_with_users = result.fetchall()
 
-
-
             comments = []
-            for comment, user in comments_with_users:
+            for comment, user, student_name, faculty_name in comments_with_users:
                 user_info = None
 
                 if user.faculty:
-                    user_info = FacultyInfo(name=user.faculty.name)
+                    user_info = FacultyInfo(name=faculty_name)
                 elif user.student:
-                    user_info = StudentInfo(name=user.student.name)
+                    user_info = StudentInfo(name=student_name)
 
                 # Add user info to the comment
                 comment_dict = {

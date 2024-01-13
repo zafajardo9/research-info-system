@@ -21,6 +21,7 @@ from app.repository.comment_repo import CommentRepository
 from app.repository.faculty_research_paper import FacultyResearchRepository
 from app.model.faculty import Faculty
 from app.model.student import Class
+from app.model.connected_SPS import SPSClass, SPSCourse, SPSMetadata
 
 class ResearchService:
 
@@ -85,26 +86,27 @@ class ResearchService:
             research_paper_result = await db.execute(research_paper_query)
             research_papers = research_paper_result.scalars().all()
             research_papers_with_authors = []
-
+            print(research_paper_query)
             for research_paper in research_papers:
                 authors_query = (
                     select(
                         Users.id, 
                         func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
-                        Student.StudentNumber, 
+                        Student.StudentNumber.label('student_number'),
                         # Class.section, 
                         # Class.course
                         )
                     .join(Author, Users.id == Author.user_id)
                     .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
                     .join(Student, Users.student_id == Student.StudentId)
-                    .join(Class, Class.id == Student.class_id)
                     .where(ResearchPaper.id == research_paper.id)
                 )
 
                 authors_result = await db.execute(authors_query)
+                
+                
                 authors_details = authors_result.fetchall()
-
+                print(authors_details)
                 # Create a dictionary for each research paper with its authors
                 result_dict = {
                     "research_paper": research_paper,
@@ -179,11 +181,16 @@ class ResearchService:
         try:
 
             authors_query = (
-                select(Users.id, Student.name, Student.student_number, Class.section, Class.course)
+                select(
+                    Users.id, 
+                    func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'), 
+                    Student.StudentNumber.label('student_number'), 
+                    # SPSCourse.CourseCode.label('course'),
+                    # func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('section'),
+                    )
                 .join(Author, Users.id == Author.user_id)
                 .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-                .join(Student, Users.student_id == Student.id)
-                .join(Class, Class.id == Student.class_id)
+                .join(Student, Users.student_id == Student.StudentId)
                 .where(ResearchPaper.id == research_paper_id)
             )
 
@@ -335,7 +342,7 @@ class ResearchService:
             join(Ethics, Ethics.research_paper_id == ResearchPaper.id).
             join(FullManuscript, FullManuscript.research_paper_id == ResearchPaper.id).
             join(CopyRight, CopyRight.research_paper_id == ResearchPaper.id).
-            join(Student, Users.student_id == Student.id).
+            join(Student, Users.student_id == Student.StudentId).
             where(Author.id == user_id).
             options(
                 contains_eager(ResearchPaper.authors),

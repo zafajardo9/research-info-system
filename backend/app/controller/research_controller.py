@@ -49,6 +49,23 @@ async def get_all_research_papers_with_authors():
         return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
 
 
+@router.get("/display-all")
+async def get_all_papers_student_faculty(
+    user_type: str,
+    type_paper: str = Query(None, alias="type")
+    ):
+    try:
+        research_papers = await ResearchPaperRepository.pagination_all_papers(user_type, type_paper)
+        if research_papers is None:
+            return []
+        return research_papers
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
+
+
+
+
+
 @router.get("/user", response_model=List[ResearchPaperResponse], response_model_exclude_none=True)
 async def get_user_research_papers(
     type: str,

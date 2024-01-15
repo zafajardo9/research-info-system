@@ -168,5 +168,20 @@ async def get_all_list():
         raise HTTPException(status_code=404, detail="User profile not found")
 
 
+def get_courses():
+    return ["BSIT", "BBTLEDHE", "BTLEDICT", "BSBAHRM", "BSBA-MM", "BSENTREP", "BPAPFM", "DOMTMOM"]
+
+
+@router.get("/course_list",)
+async def get_list_of_courses():
+    """
+    Get all user in USER TABLE
+    """
+    courses = get_courses()
+    return {"courses": courses}
+
+
+
+
 
 # todo for putting research adviser to a particular ang section

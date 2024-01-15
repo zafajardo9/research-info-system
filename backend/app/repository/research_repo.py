@@ -9,7 +9,7 @@ from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 from app.config import commit_rollback, db
-from app.model.research_paper import Author, ResearchPaper, Status
+from app.model.research_paper import Author, FacultyResearchPaper, ResearchPaper, Status
 from app.repository.base_repo import BaseRepo
 from app.schema import AuthorShow, DisplayAllByUser, PageResponse, ResearchPaperCreate, ResearchPaperShow, ResearchPaperWithAuthorsResponse
 from sqlalchemy.orm import joinedload
@@ -161,3 +161,29 @@ class ResearchPaperRepository(BaseRepo):
             student_number=str(student.student_number),
             student_phone_number=str(student.phone_number)
         )
+        
+        
+        
+    @staticmethod
+    async def pagination_all_papers(user_type: str, type_paper: str = None):
+        
+        if user_type == "faculty":
+            research_paper_query = select(FacultyResearchPaper)
+            research_paper_result = await db.execute(research_paper_query)
+            return research_paper_result.scalars().all()
+            
+        elif user_type == "student":
+            research_paper_query = (
+            select(
+                ResearchPaper.title,
+                FullManuscript.content,
+                FullManuscript.abstract,
+                FullManuscript.modified_at
+            )
+            .join(FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+            )
+            if type_paper:
+                research_paper_query = research_paper_query.where(ResearchPaper.research_type == type_paper)
+
+            research_paper_result = await db.execute(research_paper_query)
+            return research_paper_result.scalars().all()

@@ -273,6 +273,10 @@ class ResearchService:
         
     @staticmethod
     async def get_research_papers_by_adviser(db: Session, user_id: str) -> List[ResearchPaper]:
+        
+        
+        
+        
         query = (
             select(ResearchPaper)
             .filter(ResearchPaper.research_adviser == user_id)
@@ -575,13 +579,20 @@ class ResearchService:
     @staticmethod
     async def upload_faculty_paper(user_id: str, research_paper_data: FacultyResearchPaperCreate) -> FacultyResearchPaper:
         _research_paper_id = str(uuid4())
-
+        date_published = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
+        
+        # Convert to dictionary and remove 'date_publish' since it's already handled separately
+        research_paper_data_dict = research_paper_data.dict()
+        research_paper_data_dict.pop('date_publish', None)
+        
+        # Pass the dictionary as keyword arguments, excluding 'date_publish'
         research_paper = await FacultyResearchRepository.create(
             db,
             model=FacultyResearchPaper,
             id=_research_paper_id,
-            **research_paper_data.dict(),
+            date_publish=date_published,
             user_id=user_id,
+            **research_paper_data_dict,
         )
         return research_paper
     

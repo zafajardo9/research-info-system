@@ -671,12 +671,14 @@ class FacultyResearchPaperCreate(BaseModel):
     content: str
     abstract: str
     file_path: str
+    date_publish: str
     
 class FacultyResearchPaperUpdate(BaseModel):
     title: str
     content: str
     abstract: str
     file_path: str
+    date_publish: str
 
 
 

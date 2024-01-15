@@ -43,9 +43,9 @@ async def update_research_paper_status(
 
 @router.get("/my-assigned-research-section", response_model=AssignUserProfile)
 async def read_user_assignments(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
+
     try:
         user_profile = await UserService.get_faculty_profile_by_ID(current_user)
         if user_profile is None:
@@ -57,19 +57,38 @@ async def read_user_assignments(credentials: HTTPAuthorizationCredentials = Secu
 
         response_data = {
             "user_profile": user_profile,
-            "assignments": assignments.dict(),
+            "assignments": [],  # Initialize as an empty list
         }
 
-        return response_data
+        for assign in assignments:
+            assign_details = {
+                "research_type_name": assign["research_type_name"],
+                "assignsection": [],
+            }
+
+            for section in assign["assignsection"]:
+                assign_details["assignsection"].append({
+                    "class_id": section["class_id"],
+                    "course": section["course"],
+                    "section": section["section"],
+                })
+
+            response_data["assignments"].append(assign_details)
+
+        return AssignUserProfile(**response_data)
+
+    except HTTPException as http_exc:
+        raise http_exc  # Re-raise FastAPI HTTP exceptions
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Internal Server Error: {e}")  # Print error details
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 @router.get("/adviser", response_model=List[ResearchPaperResponse], response_model_exclude_none=True)
 async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     '''
-        Faculty lang para malaman nila yung mga research paper na adviser sila
+        Faculty lang para malaman nila yung mga research prop na assigned
     '''
     
     token = JWTRepo.extract_token(credentials)
@@ -80,8 +99,6 @@ async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = S
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")
-        
-        # Convert each ResearchPaper to ResearchPaperResponse
         response_papers = []
         for paper in research_papers:
             response_paper = ResearchPaperResponse(
@@ -308,6 +325,8 @@ async def upload_faculty_paper(
     try:
         faculty_paper = await ResearchService.upload_faculty_paper(current_user, research_paper_data)
         return ResponseSchema(detail=f"Research paper {faculty_paper.id} created successfully", result=faculty_paper.dict())
+    except ValueError as ve:
+        return ResponseSchema(detail=f"Error creating research paper: Invalid date format. Please use 'dd-mm-yyyy'.", result=None)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
     

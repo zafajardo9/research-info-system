@@ -111,6 +111,8 @@ class AssignToSection:
         first_query = select(AssignedResearchType).where(AssignedResearchType.user_id == user_id)
         assigns = await db.execute(first_query)
         assigns = assigns.scalars().all()
+        
+        print(assigns)
 
         if not assigns:
             return None  # Return None when the workflow is not found

@@ -16,6 +16,7 @@ from app.repository.users import UsersRepository
 from app.service.assignTo_service import AssignToSection
 from app.model import AssignedSectionsToProf
 from app.service.prof_assignTo import AssignToProf
+from app.service.notif_service import NotificationService
 
 router = APIRouter(
     prefix="/admin",
@@ -51,7 +52,7 @@ async def assign_roles(
 
         # Assign role to the user
     await UsersRepository.assign_role(user_id, assigned_role)
-
+    await NotificationService.create_notif(user_id, "You have been assigned as a Research Head/Admin")
 
     return {"message": f"Admin assigned to user with ID {user_id}"}
 
@@ -75,6 +76,7 @@ async def remove_role(
 
     # Remove role from the user
     await UsersRepository.remove_role(user_id, removed_role)
+    await NotificationService.create_notif(user_id, "You have been removed as a Research Head/Admin")
 
     return {"message": f"Role removed from user with ID {user_id}"}
 
@@ -105,6 +107,7 @@ async def assign_role(
 
         # Assign role to the user
     await UsersRepository.assign_role(user_id, assigned_role)
+    await NotificationService.create_notif(user_id, "You have been assigned as a Research Professor")
 
     return {"message": f"Role assigned to user with ID {user_id}"}
 
@@ -128,6 +131,7 @@ async def remove_role(
 
     # Remove role from the user
     await UsersRepository.remove_role(user_id, removed_role)
+    await NotificationService.create_notif(user_id, "You have been removed as a Research Professor")
 
     return {"message": f"Role removed from user with ID {user_id}"}
 

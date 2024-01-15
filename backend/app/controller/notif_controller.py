@@ -27,15 +27,23 @@ async def get_all_my_notif(credentials: HTTPAuthorizationCredentials = Security(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Zero Notifications: {str(e)}")
 
+@router.delete("/delete-all")
+async def get_all_my_notif(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    token = JWTRepo.extract_token(credentials)
+    user_id = token['user_id']
+    try:
+        return await NotificationService.delete_all_user_notif(user_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Zero Notifications: {str(e)}")
+    
 
-
-# @router.post("/create-step")
-# async def create(
-#     user_id: str,
-#     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-#     ):
-#     try:
-#         await NotificationService.create_notif(user_id, "Problem natin 1")
-#         return {"Success": "Notification created successfully."}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Zero Notifications: {str(e)}")
+@router.delete("/delete/{notif_id}")
+async def get_all_my_notif(notif_id: str,
+                           credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+                           ):
+    token = JWTRepo.extract_token(credentials)
+    user_id = token['user_id']
+    try:
+        return await NotificationService.delete_selected(notif_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Zero Notifications: {str(e)}")

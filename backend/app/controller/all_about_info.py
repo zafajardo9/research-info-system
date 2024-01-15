@@ -71,32 +71,35 @@ async def get_research_status_by_course_section(course: str = Path(..., title="T
 
 #FOR RESEARCH ADVISER ================= INFOR ABOUT THE RESEARCH  papers they are under to
 
-# @router.get("/adviser/number-of-my-advisory")
-# async def get_research_status_by_course_section(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    
-#     token = JWTRepo.extract_token(credentials)
-#     current_user = token['user_id']
-#     count = await AllInformationService.get_number_of_my_advisory(db, current_user)
-#     return {"My advisory count": count}
 
 @router.get("/number-of-advisory-by-status/{status}")
 async def get_number_of_advisory_by_status(
     status: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
-    token = JWTRepo.extract_token(credentials)
-    current_user = token['user_id']
-    count = await AllInformationService.get_number_of_advisory_by_status(db, current_user, status)
+    '''
+    As a research adviser
+    '''
     
-    ## dagdagan to base sa status dapat
-    return {"Status": status, "Count" : count}
+    try: 
+        token = JWTRepo.extract_token(credentials)
+        current_user = token['user_id']
+        count = await AllInformationService.get_number_of_advisory_by_status(db, current_user, status)
+        
+        ## dagdagan to base sa status dapat
+        return {"Status": status, "Count" : count}
+    except Exception as e:
+        return ResponseSchema(detail=f"You have no number of research paper as an adviser: {str(e)}", result=None)
+    
+
 
 
 @router.get("/number-of-advisory-by-status")
 async def get_number_of_advisory_by_status(
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
-    '''Shows data about research paper under'''
+    '''FOR RESEARCH ADVISER
+    Shows data about research paper under'''
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
     total_number = await AllInformationService.get_number_of_my_advisory(db, current_user)

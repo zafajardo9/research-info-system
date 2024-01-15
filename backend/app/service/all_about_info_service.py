@@ -1,13 +1,17 @@
 from typing import List
 from uuid import uuid4
+from sqlalchemy import func, select
 
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 
 from app.repository.author_repo import AuthorRepository
 from app.schema import AuthorSchema
 from app.model import Users, Author
 from app.model.research_paper import Status
+
+from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight, Student, Faculty
 
 class AllInformationService:
 
@@ -129,13 +133,13 @@ class AllInformationService:
     
     #FOR RESEARCH ADVISER ================= INFOR ABOUT THE RESEARCH  papers they are under to
     @staticmethod
-    async def get_number_of_my_advisory(db: Session, adviser_id: str):
+    async def get_number_of_my_advisory(db: AsyncSession, adviser_id: str):
         # Get the number of research papers with a specific adviser
         query = (
-            f"SELECT COUNT(*) "
-            f"FROM research_papers "
-            f"WHERE research_papers.research_adviser = '{adviser_id}';"
+            select(func.count())
+            .where(ResearchPaper.research_adviser == adviser_id)
         )
+
         result = await db.execute(query)
         count = result.scalar()
         return count
@@ -144,11 +148,10 @@ class AllInformationService:
     async def get_number_of_advisory_by_status(db: Session, adviser_id: str, status: str):
         # Get the number of research papers with a specific adviser and status
         query = (
-            f"SELECT COUNT(*) "
-            f"FROM research_papers "
-            f"WHERE research_papers.research_adviser = '{adviser_id}' "
-            f"AND research_papers.status = '{status}';"
+            select(func.count())
+            .where((ResearchPaper.research_adviser == adviser_id) & (ResearchPaper.status == status))
         )
+        
         result = await db.execute(query)
         count = result.scalar()
         return count
@@ -157,65 +160,69 @@ class AllInformationService:
     async def get_number_of_ethics_by_adviser(db: Session, adviser_id: str):
         # Get the number of Ethics associated with research papers for a specific adviser
         query = (
-            f"SELECT COUNT(ethics.id) "
-            f"FROM research_papers "
-            f"JOIN ethics ON research_papers.id = ethics.research_paper_id "
-            f"WHERE research_papers.research_adviser = '{adviser_id}';"
+            select(func.count(Ethics.id))
+            .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
+            .where(ResearchPaper.research_adviser == adviser_id)
         )
-        result = await db.execute(query)
-        count = result.scalar()
-        return count
+        
+        count = await db.execute(query)
+        return count.scalar()
     
     @staticmethod
     async def get_number_of_copyright_by_adviser(db: Session, adviser_id: str):
         # Get the number of Ethics associated with research papers for a specific adviser
         query = (
-            f"SELECT COUNT(copyright.id) "
-            f"FROM research_papers "
-            f"JOIN copyright ON research_papers.id = copyright.research_paper_id "
-            f"WHERE research_papers.research_adviser = '{adviser_id}';"
+            select(func.count(CopyRight.id))
+            .join(ResearchPaper, CopyRight.research_paper_id == ResearchPaper.id)
+            .where(ResearchPaper.research_adviser == adviser_id)
         )
-        result = await db.execute(query)
-        count = result.scalar()
-        return count
+        
+        count = await db.execute(query)
+        return count.scalar()
     
     @staticmethod
     async def get_number_of_full_manuscript_by_adviser(db: Session, adviser_id: str):
         # Get the number of Ethics associated with research papers for a specific adviser
         query = (
-            f"SELECT COUNT(full_manuscript.id) "
-            f"FROM research_papers "
-            f"JOIN full_manuscript ON research_papers.id = full_manuscript.research_paper_id "
-            f"WHERE research_papers.research_adviser = '{adviser_id}';"
+            select(func.count(FullManuscript.id))
+            .join(ResearchPaper, FullManuscript.research_paper_id == ResearchPaper.id)
+            .where(ResearchPaper.research_adviser == adviser_id)
         )
-        result = await db.execute(query)
-        count = result.scalar()
-        return count
+        
+        count = await db.execute(query)
+        return count.scalar()
     
     @staticmethod
     async def get_status_count_of_proposal_by_adviser(db: Session, adviser_id: str):
         # Get the number of research papers with a specific adviser and status
         query = (
-            f"SELECT research_papers.status, COUNT(*) as count "
-            f"FROM research_papers "
-            f"WHERE research_papers.research_adviser = '{adviser_id}' "
-            f"GROUP BY research_papers.status "
-            f"HAVING COUNT(*) > 0;"
+            select(
+                ResearchPaper.status,
+                func.count().label("count")
+            )
+            .where(ResearchPaper.research_adviser == adviser_id)
+            .group_by(ResearchPaper.status)
+            .having(func.count() > 0)
         )
+
         result = await db.execute(query)
         status_counts = result.fetchall()
         return status_counts
     
     @staticmethod
     async def get_status_count_of_ethics_by_adviser(db: Session, adviser_id: str):
+        # Get the number of Ethics statuses associated with research papers for a specific adviser
         query = (
-            f"SELECT ethics.status, COUNT(*) as count "
-            f"FROM research_papers "
-            f"JOIN ethics ON research_papers.id = ethics.research_paper_id "
-            f"WHERE research_papers.research_adviser = '{adviser_id}' "
-            f"GROUP BY ethics.status "
-            f"HAVING COUNT(*) > 0;"
+            select(
+                Ethics.status,
+                func.count().label("count")
+            )
+            .join(ResearchPaper, ResearchPaper.id == Ethics.research_paper_id)
+            .where(ResearchPaper.research_adviser == adviser_id)
+            .group_by(Ethics.status)
+            .having(func.count() > 0)
         )
+
         result = await db.execute(query)
         status_counts = result.fetchall()
         return status_counts
@@ -223,13 +230,16 @@ class AllInformationService:
     @staticmethod
     async def get_status_count_of_copyright_by_adviser(db: Session, adviser_id: str):
         query = (
-            f"SELECT copyright.status, COUNT(*) as count "
-            f"FROM research_papers "
-            f"JOIN copyright ON research_papers.id = copyright.research_paper_id "
-            f"WHERE research_papers.research_adviser = '{adviser_id}' "
-            f"GROUP BY copyright.status "
-            f"HAVING COUNT(*) > 0;"
+            select(
+                CopyRight.status,
+                func.count().label("count")
+            )
+            .join(ResearchPaper, ResearchPaper.id == CopyRight.research_paper_id)
+            .where(ResearchPaper.research_adviser == adviser_id)
+            .group_by(CopyRight.status)
+            .having(func.count() > 0)
         )
+
         result = await db.execute(query)
         status_counts = result.fetchall()
         return status_counts
@@ -237,13 +247,36 @@ class AllInformationService:
     @staticmethod
     async def get_status_count_of_full_manuscript_by_adviser(db: Session, adviser_id: str):
         query = (
-            f"SELECT full_manuscript.status, COUNT(*) as count "
-            f"FROM research_papers "
-            f"JOIN full_manuscript ON research_papers.id = full_manuscript.research_paper_id "
-            f"WHERE research_papers.research_adviser = '{adviser_id}' "
-            f"GROUP BY full_manuscript.status "
-            f"HAVING COUNT(*) > 0;"
+            select(
+                FullManuscript.status,
+                func.count().label("count")
+            )
+            .join(ResearchPaper, ResearchPaper.id == FullManuscript.research_paper_id)
+            .where(ResearchPaper.research_adviser == adviser_id)
+            .group_by(FullManuscript.status)
+            .having(func.count() > 0)
         )
+
+        result = await db.execute(query)
+        status_counts = result.fetchall()
+        return status_counts
+    
+    
+    
+    #Mahirap na part kasi yung class information ng user sa db ni jocarl mahirap kunin
+    @staticmethod
+    async def get_research_status_by_course_section(db: Session, class_id: str):
+        query = (
+            select(
+                FullManuscript.status,
+                func.count().label("count")
+            )
+            .join(ResearchPaper, ResearchPaper.id == FullManuscript.research_paper_id)
+            .where(ResearchPaper.research_adviser == adviser_id)
+            .group_by(FullManuscript.status)
+            .having(func.count() > 0)
+        )
+
         result = await db.execute(query)
         status_counts = result.fetchall()
         return status_counts

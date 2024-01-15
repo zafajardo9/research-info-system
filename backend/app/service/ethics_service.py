@@ -15,7 +15,8 @@ from app.schema import EthicsCreate, EthicsResponse, EthicsUpdate
 from app.service.users_service import UserService
 from app.model import Ethics
 from app.repository.ethics_repo import EthicsRepository
-from app.model.research_paper import Author, ResearchPaper
+from app.model.research_paper import Author, ResearchPaper, Status
+from app.model import FullManuscript, CopyRight
 
 class EthicsService:
     
@@ -62,6 +63,27 @@ class EthicsService:
         except Exception as e:
             print(f"Error during update: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+    @staticmethod
+    async def update_ethics_status(db: Session, id: str, new_status: Status) -> Ethics:
+
+        research_paper = await EthicsRepository.update_status(db, id, new_status)
+        return research_paper
+    
+    @staticmethod
+    async def update_copyright_status(db: Session, id: str, new_status: Status) -> CopyRight:
+
+        research_paper = await EthicsRepository.update_status_copy(db, id, new_status)
+        return research_paper
+    
+    
+    @staticmethod
+    async def update_manuscript_status(db: Session, id: str, new_status: Status) -> FullManuscript:
+
+        research_paper = await EthicsRepository.update_status_manu(db, id, new_status)
+        return research_paper
+    
+    
 
 
     @staticmethod

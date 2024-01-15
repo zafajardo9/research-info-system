@@ -23,6 +23,7 @@ from app.model.faculty import Faculty
 from app.model.student import Class
 from app.model.connected_SPS import SPSClass, SPSCourse, SPSMetadata
 from app.service.notif_service import NotificationService
+from app.repository.ethics_repo import EthicsRepository
 class ResearchService:
 
     @staticmethod
@@ -534,27 +535,28 @@ class ResearchService:
         research_paper = await ResearchPaperRepository.update_status(db, research_paper_id, new_status)
         return research_paper
     
+    
+    
     # STATUS NG MGA PINAPASA RELATED SA PAPER
     @staticmethod
-    async def update_ethics_status(db: Session, ethics_id: str, new_status: Status) -> ResearchPaper:
+    async def update_ethics_status(db: Session, id: str, new_status: Status) -> Ethics:
 
-        ethics_paper = await ResearchPaperRepository.update_ethics_status(db, ethics_id, new_status)
-        return ethics_paper
-    
-
-    @staticmethod
-    async def update_manuscript_status(db: Session, manuscript_id: str, new_status: Status) -> ResearchPaper:
-
-        manuscript_paper = await ResearchPaperRepository.update_manuscript_status(db, manuscript_id, new_status)
-        return manuscript_paper
+        research_paper = await ResearchPaperRepository.update_ethics_status(db, id, new_status)
+        return research_paper
     
     @staticmethod
-    async def update_copyright_status(db: Session, copyright_id: str, new_status: Status) -> ResearchPaper:
+    async def update_copyright_status(db: Session, id: str, new_status: Status) -> CopyRight:
 
-        copyright_paper = await ResearchPaperRepository.update_copyright_status(db, copyright_id, new_status)
-        return copyright_paper
+        research_paper = await EthicsRepository.update_copyright_status(db, id, new_status)
+        return research_paper
+    
+    
+    @staticmethod
+    async def update_manuscript_status(db: Session, id: str, new_status: Status) -> FullManuscript:
 
-
+        research_paper = await EthicsRepository.update_manuscript_status(db, id, new_status)
+        return research_paper
+    
 
 
 

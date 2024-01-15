@@ -12,6 +12,8 @@ from app.config import commit_rollback, db
 
 from app.repository.base_repo import BaseRepo
 from app.model.ethics import Ethics
+from app.model.research_paper import ResearchPaper, Status
+from app.model import CopyRight, FullManuscript
 
 
 
@@ -50,3 +52,46 @@ class EthicsRepository(BaseRepo):
         result = await db.execute(query)
         await db.commit()
         return result.rowcount > 0
+    
+    
+    @staticmethod
+    async def update_status_ethics(db: Session, research_paper_id: str, new_status: Status) -> Ethics:
+        # Fetch the research paper
+        result = await db.execute(select(Ethics).where(Ethics.id == research_paper_id))
+        research_paper = result.scalar_one_or_none()
+
+        if research_paper:
+            research_paper.status = new_status
+            await db.commit()
+            db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Ethics not found")
+        
+    @staticmethod
+    async def update_status_manu(db: Session, id: str, new_status: Status) -> Ethics:
+        # Fetch the research paper
+        result = await db.execute(select(FullManuscript).where(FullManuscript.id == id))
+        research_paper = result.scalar_one_or_none()
+
+        if research_paper:
+            research_paper.status = new_status
+            await db.commit()
+            db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Manuscript not found")
+        
+    @staticmethod
+    async def update_status_copy(db: Session, id: str, new_status: Status) -> Ethics:
+        # Fetch the research paper
+        result = await db.execute(select(CopyRight).where(CopyRight.id == id))
+        research_paper = result.scalar_one_or_none()
+
+        if research_paper:
+            research_paper.status = new_status
+            await db.commit()
+            db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Copyright not found")

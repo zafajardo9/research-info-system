@@ -10,6 +10,7 @@ from app.config import db
 from app.service.assignTo_service import AssignToSection
 from app.service.users_service import UserService
 from app.model.research_paper import FacultyResearchPaper
+from app.repository.users import UsersRepository
 
 router = APIRouter(
     prefix="/faculty",
@@ -27,12 +28,12 @@ async def update_research_paper_status(
 ):
     # Extract the user role from the JWT token
     token = JWTRepo.extract_token(credentials)
-    current_user_role = token['role'] #this line will show what role the logged in user is
+    current_user = token['user_id'] 
 
-    is_allowed = await ResearchService.check_faculty_permission(current_user_role)
-    if not is_allowed:
-        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper. Your role is {current_user_role}.")
-    # Update the status
+    user_roles = await UsersRepository.get_user_roles(current_user)
+    if "faculty" not in user_roles:
+        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper.")
+    
     try:
         research_paper = await ResearchService.update_research_paper_status(db, research_paper_id, status_update.status)
         return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
@@ -229,63 +230,63 @@ async def get_faculty_copyright_info(credentials: HTTPAuthorizationCredentials =
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting faculty copyright information: {str(e)}")
 
-@router.put("/approve_ethics/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+@router.put("/approve_ethics/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_research_paper_status(
-    research_paper_id: str,
+    id: str,
     status_update: StatusUpdate,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
     # Extract the user role from the JWT token
     token = JWTRepo.extract_token(credentials)
-    current_user_role = token['role'] #this line will show what role the logged in user is
+    current_user = token['user_id']  # this line will show what role the logged-in user is
 
-    is_allowed = await ResearchService.check_faculty_permission(current_user_role)
-    if not is_allowed:
-        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper. Your role is {current_user_role}.")
-    # Update the status
+    user_roles = await UsersRepository.get_user_roles(current_user)
+    if "faculty" not in user_roles:
+        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper.")
+
     try:
-        research_paper = await ResearchService.update_research_paper_status(db, research_paper_id, status_update.status)
+        research_paper = await ResearchService.update_ethics_status(db, id, status_update.status)
         return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
     
 
-@router.put("/approve_manuscript/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+@router.put("/approve_manuscript/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_research_paper_status(
-    research_paper_id: str,
+    id: str,
     status_update: StatusUpdate,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
     # Extract the user role from the JWT token
     token = JWTRepo.extract_token(credentials)
-    current_user_role = token['role'] #this line will show what role the logged in user is
+    current_user = token['user_id']  # this line will show what role the logged-in user is
 
-    is_allowed = await ResearchService.check_faculty_permission(current_user_role)
-    if not is_allowed:
-        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper. Your role is {current_user_role}.")
-    # Update the status
+    user_roles = await UsersRepository.get_user_roles(current_user)
+    if "faculty" not in user_roles:
+        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper.")
+
     try:
-        research_paper = await ResearchService.update_manuscript_status(db, research_paper_id, status_update.status)
+        research_paper = await ResearchService.update_manuscript_status(db, id, status_update.status)
         return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
 
-@router.put("/approve_copyright/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+@router.put("/approve_copyright/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_research_paper_status(
-    research_paper_id: str,
+    id: str,
     status_update: StatusUpdate,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
     # Extract the user role from the JWT token
     token = JWTRepo.extract_token(credentials)
-    current_user_role = token['role'] #this line will show what role the logged in user is
+    current_user = token['user_id']  # this line will show what role the logged-in user is
 
-    is_allowed = await ResearchService.check_faculty_permission(current_user_role)
-    if not is_allowed:
-        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper. Your role is {current_user_role}.")
-    # Update the status
+    user_roles = await UsersRepository.get_user_roles(current_user)
+    if "faculty" not in user_roles:
+        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper.")
+
     try:
-        research_paper = await ResearchService.update_copyright_status(db, research_paper_id, status_update.status)
+        research_paper = await ResearchService.update_copyright_status(db, id, status_update.status)
         return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)

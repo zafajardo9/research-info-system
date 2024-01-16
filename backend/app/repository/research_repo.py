@@ -3,7 +3,7 @@ import math
 from typing import List, Optional
 from uuid import uuid4
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import distinct, join, select
 from sqlalchemy import insert
 from sqlalchemy import update
 from sqlalchemy import delete
@@ -18,6 +18,8 @@ from app.model.research_status import Comment
 from app.model.ethics import Ethics
 from app.model.full_manuscript import FullManuscript
 from app.model.copyright import CopyRight
+from app.model.connected_SPS import SPSCourse, SPSCourseEnrolled
+from app.model.student import Student
 
 
 class ResearchPaperRepository(BaseRepo):
@@ -177,24 +179,32 @@ class ResearchPaperRepository(BaseRepo):
                 #FacultyResearchPaper.category
                 )
             research_paper_result = await db.execute(research_paper_query)
-            return research_paper_result.scalars().all()
+            return research_paper_result.fetchall()
             
-        elif user_type == "student":
+        else:
             research_paper_query = (
             select(
-                ResearchPaper.title,
+                distinct(ResearchPaper.title).label('title'),
                 FullManuscript.content,
                 FullManuscript.abstract,
                 FullManuscript.file.label('file_path'),
                 FullManuscript.modified_at.label('date_publish')
             )
-            .join(FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+            .select_from(
+                join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+                .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
+                .join(Users, Author.user_id == Users.id)
+                .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+            )
+            .where(SPSCourse.CourseCode == user_type)
             )
             if type_paper:
                 research_paper_query = research_paper_query.where(ResearchPaper.research_type == type_paper)
 
             research_paper_result = await db.execute(research_paper_query)
-            return research_paper_result.scalars().all()
+            return research_paper_result.fetchall()
     
     
     

@@ -1,5 +1,5 @@
 
-from typing import List
+from typing import List, Optional
 from sqlalchemy.sql import select
 from uuid import uuid4
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
@@ -15,7 +15,7 @@ from app.config import db
 from app.repository.research_repo import ResearchPaperRepository
 from app.model import Users, Author, ResearchPaper
 from app.service.users_service import UserService
-from app.model.research_paper import Status
+from app.model.research_paper import FacultyResearchPaper, Status
 from app.service.workflow_service import WorkflowService
 
 router = APIRouter(
@@ -61,6 +61,7 @@ async def get_all_papers_student_faculty(
         return research_papers
     except HTTPException as e:
         return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
+
 
 
 

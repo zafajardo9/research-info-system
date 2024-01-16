@@ -168,7 +168,13 @@ class ResearchPaperRepository(BaseRepo):
     async def pagination_all_papers(user_type: str, type_paper: str = None):
         
         if user_type == "faculty":
-            research_paper_query = select(FacultyResearchPaper)
+            research_paper_query = select(
+                FacultyResearchPaper.title,
+                FacultyResearchPaper.content,
+                FacultyResearchPaper.abstract,
+                FacultyResearchPaper.file_path,
+                FacultyResearchPaper.date_publish,
+                )
             research_paper_result = await db.execute(research_paper_query)
             return research_paper_result.scalars().all()
             
@@ -178,7 +184,8 @@ class ResearchPaperRepository(BaseRepo):
                 ResearchPaper.title,
                 FullManuscript.content,
                 FullManuscript.abstract,
-                FullManuscript.modified_at
+                FullManuscript.file.label('file_path'),
+                FullManuscript.modified_at.label('date_publish')
             )
             .join(FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
             )
@@ -187,3 +194,4 @@ class ResearchPaperRepository(BaseRepo):
 
             research_paper_result = await db.execute(research_paper_query)
             return research_paper_result.scalars().all()
+        

@@ -52,7 +52,7 @@ async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Securi
 async def get_student_profile_by_ID(user_id: str):
 
     roles = await UsersRepository.get_user_roles(user_id)
-    result = await UserService.get_student_profile_by_ID(user_id)
+    result = await UserService.get_student_profile(user_id)
     
     if result:
         result_dict = dict(result)

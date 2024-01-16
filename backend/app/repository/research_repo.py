@@ -174,6 +174,7 @@ class ResearchPaperRepository(BaseRepo):
                 FacultyResearchPaper.abstract,
                 FacultyResearchPaper.file_path,
                 FacultyResearchPaper.date_publish,
+                #FacultyResearchPaper.category
                 )
             research_paper_result = await db.execute(research_paper_query)
             return research_paper_result.scalars().all()
@@ -194,4 +195,6 @@ class ResearchPaperRepository(BaseRepo):
 
             research_paper_result = await db.execute(research_paper_query)
             return research_paper_result.scalars().all()
-        
+    
+    
+    

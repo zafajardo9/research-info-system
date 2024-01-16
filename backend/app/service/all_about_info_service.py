@@ -12,16 +12,154 @@ from app.model import Users, Author
 from app.model.research_paper import Status
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight, Student, Faculty
+from app.model.assignedTo import AssignedResearchType
+from app.model.users import Role, UsersRole
+from sqlalchemy import or_, and_
+
 
 class AllInformationService:
 
     # ALL ABOUT USER IN THE SYSTEM ========================
     @staticmethod
     async def get_student_count_all(db: Session):
-        query = f"SELECT COUNT(*) FROM student;"
+        query = (
+            select(func.count(Users.id))
+            .join(Student, Users.student_id == Student.StudentId)
+        )
         result = await db.execute(query)
         count = result.scalar()
         return count
+    
+    
+    @staticmethod
+    async def get_prof_count_all(db: Session):
+        query = (
+            select(func.count(Users.id))
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
+            .join(UsersRole)
+            .join(Role)
+            .where(Role.role_name == "research professor")
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def get_adviser_count_all(db: Session, type: str):
+        query = (
+            select(func.count(Users.id))
+            .join(AssignedResearchType, Users.id == AssignedResearchType.user_id)
+            .where(AssignedResearchType.research_type_name == type)
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    # ============================== DISPLAY NG NUMBERS OF PAPERS BASED ON STATUS ==============
+    @staticmethod
+    async def count_proposal(db: Session, type: str):
+        query = (
+            select(func.count(ResearchPaper.id))
+            .where((ResearchPaper.research_type == type) & (ResearchPaper.status == "Approved"))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def proposal_rejected(db: Session, type: str):
+        query = (
+            select(func.count(ResearchPaper.id))
+            .where(or_(
+                (ResearchPaper.research_type == type) & (ResearchPaper.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (ResearchPaper.status == "Pending")
+            ))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    ###################################
+    @staticmethod
+    async def approved_ethics(db: Session, type: str):
+        query = (
+            select(func.count(Ethics.id))
+            .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
+            .where(and_(ResearchPaper.research_type == type, Ethics.status == "Approved"))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def revision_ethics(db: Session, type: str):
+        query = (
+            select(func.count(Ethics.id))
+            .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
+            .where(and_(
+                (ResearchPaper.research_type == type) & (Ethics.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (Ethics.status == "Pending")
+            ))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    ######################################333
+    
+    @staticmethod
+    async def approved_copyright(db: Session, type: str):
+        query = (
+            select(func.count(CopyRight.id))
+            .join(ResearchPaper, CopyRight.research_paper_id == ResearchPaper.id)
+            .where(and_(ResearchPaper.research_type == type, CopyRight.status == "Approved"))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def revision_copyright(db: Session, type: str):
+        query = (
+            select(func.count(CopyRight.id))
+            .join(ResearchPaper, CopyRight.research_paper_id == ResearchPaper.id)
+            .where(and_(
+                (ResearchPaper.research_type == type) & (CopyRight.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (CopyRight.status == "Pending")
+            ))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    
+    ######################################
+    @staticmethod
+    async def approved_manuscript(db: Session, type: str):
+        query = (
+            select(func.count(FullManuscript.id))
+            .join(ResearchPaper, FullManuscript.research_paper_id == FullManuscript.id)
+            .where(and_(ResearchPaper.research_type == type, FullManuscript.status == "Approved"))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def revision_manuscript(db: Session, type: str):
+        query = (
+            select(func.count(FullManuscript.id))
+            .join(ResearchPaper, FullManuscript.research_paper_id == ResearchPaper.id)
+            .where(and_(
+                (ResearchPaper.research_type == type) & (FullManuscript.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (FullManuscript.status == "Pending")
+            ))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    
+    
 
     @staticmethod
     async def get_student_count_by_course(db: Session, course: str):

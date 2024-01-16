@@ -620,6 +620,23 @@ class ResearchService:
         )
         result = await db.execute(query)
         return result.fetchall()
+    
+    @staticmethod
+    async def for_FPS_integration():
+        query = (
+            select(
+                FacultyResearchPaper.title,
+                FacultyResearchPaper.content,
+                FacultyResearchPaper.date_publish,
+                FacultyResearchPaper.abstract,
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
+                Faculty.Email.label('email'),)
+            .join(Users, FacultyResearchPaper.user_id == Users.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
+        )
+        result = await db.execute(query)
+        return result.fetchall()
+    
 
     @staticmethod
     async def get_faculty_research_papers_by_id(faculty_paper_id: str):

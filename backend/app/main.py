@@ -38,7 +38,7 @@ def init_app():
     async def shutdown():
         await db.close()
 
-    from app.controller import authentication, notif_controller, workflow_controller, prof_process_set, section_controller, announcement_controller, faculty_workflow, student_controller, users, defense_controller, research_professor, research_controller, auth_controller, admin_power, comment, adviser_controller, ethics, manuscript_controller, copyright_controller, all_about_info
+    from app.controller import authentication, notif_controller, workflow_controller, prof_process_set, section_controller, announcement_controller, faculty_workflow, student_controller, users, defense_controller, research_professor, research_controller, auth_controller, admin_power, comment, adviser_controller, ethics, manuscript_controller, copyright_controller, all_about_info, FPS_integration
 
     app.include_router(authentication.router)
     app.include_router(users.router)
@@ -60,6 +60,9 @@ def init_app():
     app.include_router(manuscript_controller.router)
     app.include_router(copyright_controller.router)
     app.include_router(all_about_info.router)
+    
+    # FOR INTEGRATION API
+    app.include_router(FPS_integration.router)
 
 
     return app

@@ -12,40 +12,73 @@ from app.repository.users import UsersRepository
 router = APIRouter(
     prefix="/info",
     tags=['All Information For analytics'],
-    #dependencies=[Depends(JWTBearer())]
+    dependencies=[Depends(JWTBearer())]
 )
 
 
 #FOR ADMIN
 
-@router.get("/student_count/")
-async def read_student_count():
+@router.get("/faculty/dashboard-faculty/")
+async def read_student_count(type: str):
     total_count_student = await AllInformationService.get_student_count_all(db)
-    list_course = await UsersRepository.filter_student_year_course()
+    total_count_prof = await AllInformationService.get_prof_count_all(db)
+    total_count_adviser = await AllInformationService.get_adviser_count_all(db, type)
     
     
-    result = [{"Total Number of STUDENTS": total_count_student}]
-    for course_item in list_course:
-        count = await AllInformationService.read_student_count_by_course_section(db, course_item.course, course_item.section)
-        result.append({"course": course_item.course, "section": course_item.section, "student_count": count})
+    proposal_count = await AllInformationService.count_proposal(db, type)
+    proposal_rejected = await AllInformationService.proposal_rejected(db, type)
+    ethics_approved = await AllInformationService.approved_ethics(db, type)
+    ethics_revision = await AllInformationService.revision_ethics(db, type)
+    
+    copyright_approved = await AllInformationService.approved_copyright(db, type)
+    copyright_revision = await AllInformationService.revision_copyright(db, type)
+    
+    manu_approved = await AllInformationService.approved_manuscript(db, type)
+    manu_revision = await AllInformationService.revision_manuscript(db, type)
 
-
-
+    
+    result = [
+        {
+            "Students": total_count_student
+        },
+        
+        {
+            "Research Adviser": total_count_adviser
+        },
+        
+        {
+            "Research Professor": total_count_prof
+        },
+        
+        {
+            "Approved Proposal": proposal_count,
+            "For Revision Proposal": proposal_rejected
+        },
+        
+        {
+            "Approved Ethics": ethics_approved,
+            "For Revision Ethics": ethics_revision
+        },
+                
+        {
+            "Approved Copyright": copyright_approved,
+            "For Revision Copyright": copyright_revision
+        },
+        {
+            "Approved Full Manuscript": manu_approved,
+            "For Revision Full Manuscript": manu_revision
+        }
+        
+        ]
     return result
 
 
-
-@router.get("/research_count_by_type/all")
-async def read_research_count_by_type():
-    counts = await AllInformationService.get_number_of_research_by_type(db)
-    return counts
+#number ng mga naka assign na prof per research type
 
 
-
-@router.get("/research_proposal_count_based_status/all")
-async def read_research_count_all():
-    counts = await AllInformationService.get_number_of_research_proposal_by_approve(db)
-    return counts
+@router.get("/admin/dashboard-admin/")
+async def admin_info():
+    pass
 
 
 @router.get("/admin/count-research-info/all")
@@ -62,17 +95,10 @@ async def read_research_count_all():
         }
 
 
-@router.get("/research_status/{course}/{section}")
-async def get_research_status_by_course_section(course: str = Path(..., title="The course of the student", min_length=1),
-                                section: str = Path(..., title="The section of the student", min_length=1)):
-    status = await AllInformationService.get_research_status_by_course_section(db, course, section)
-    return {"Course": course, "Section": section, "Research Status": status}
 
 
 #FOR RESEARCH ADVISER ================= INFOR ABOUT THE RESEARCH  papers they are under to
-
-
-@router.get("/number-of-advisory-by-status/{status}")
+@router.get("/research-adviser/number-of-advisory-by-status/{status}")
 async def get_number_of_advisory_by_status(
     status: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
@@ -90,11 +116,8 @@ async def get_number_of_advisory_by_status(
         return {"Status": status, "Count" : count}
     except Exception as e:
         return ResponseSchema(detail=f"You have no number of research paper as an adviser: {str(e)}", result=None)
-    
 
-
-
-@router.get("/number-of-advisory-by-status")
+@router.get("/research-adviser/number-of-advisory-by-status")
 async def get_number_of_advisory_by_status(
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):

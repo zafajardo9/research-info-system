@@ -1,6 +1,6 @@
 from typing import List
 from uuid import uuid4
-from sqlalchemy import func, select
+from sqlalchemy import distinct, func, join, select
 
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,6 +15,8 @@ from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight, Student,
 from app.model.assignedTo import AssignedResearchType
 from app.model.users import Role, UsersRole
 from sqlalchemy import or_, and_
+
+from app.model.connected_SPS import SPSCourse, SPSCourseEnrolled
 
 
 class AllInformationService:
@@ -54,6 +56,9 @@ class AllInformationService:
         result = await db.execute(query)
         count = result.scalar()
         return count
+    
+    
+    
     
     # ============================== DISPLAY NG NUMBERS OF PAPERS BASED ON STATUS ==============
     @staticmethod
@@ -160,6 +165,47 @@ class AllInformationService:
     
     
     
+    @staticmethod
+    async def number_of_papers_by_course(db: Session, course:str):
+        count = (
+                select(
+                    func.count(distinct(ResearchPaper.title))
+                )
+                .select_from(
+                    join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Users, Author.user_id == Users.id)
+                    .join(Student, Users.student_id == Student.StudentId)
+                    .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                    .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                )
+                .where(SPSCourse.CourseCode == course)
+            )
+        result = await db.execute(count)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def total_number_of_papers(db: Session):
+        count = (
+                select(
+                    func.count(distinct(ResearchPaper.title))
+                )
+                .select_from(
+                    join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Users, Author.user_id == Users.id)
+                    .join(Student, Users.student_id == Student.StudentId)
+                    .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                    .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                )
+            )
+        result = await db.execute(count)
+        count = result.scalar()
+        return count
+    
+    
+    
 
     @staticmethod
     async def get_student_count_by_course(db: Session, course: str):
@@ -230,6 +276,8 @@ class AllInformationService:
                 Status.Revised: revised_count
             }
         }
+        
+    
     
     @staticmethod
     async def get_number_ethics(db: Session):

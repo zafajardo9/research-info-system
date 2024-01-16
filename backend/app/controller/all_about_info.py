@@ -74,11 +74,20 @@ async def read_student_count(type: str):
 
 
 #number ng mga naka assign na prof per research type
-
-
 @router.get("/admin/dashboard-admin/")
 async def admin_info():
-    pass
+    
+    return {
+        "Total number across all courses" : await AllInformationService.total_number_of_papers(db),
+        "BSIT" : await AllInformationService.number_of_papers_by_course(db, "BSIT"),
+        "BBTLEDHE" : await AllInformationService.number_of_papers_by_course(db, "BBTLEDHE"),
+        "BTLEDICT" : await AllInformationService.number_of_papers_by_course(db, "BTLEDICT"),
+        "BSBAHRM": await AllInformationService.number_of_papers_by_course(db, "BSBAHRM"),
+        "BSBA-MM": await AllInformationService.number_of_papers_by_course(db, "BSBA-MM"),
+        "BSENTREP": await AllInformationService.number_of_papers_by_course(db, "BSENTREP"),
+        "BPAPFM": await AllInformationService.number_of_papers_by_course(db, "BPAPFM"),
+        "DOMTMOM": await AllInformationService.number_of_papers_by_course(db, "DOMTMOM"),
+        }
 
 
 @router.get("/admin/count-research-info/all")

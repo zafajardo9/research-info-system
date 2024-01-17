@@ -672,6 +672,7 @@ class FacultyResearchPaperCreate(BaseModel):
     abstract: str
     file_path: str
     category: str
+    publisher: str
     date_publish: str
 
     
@@ -681,6 +682,7 @@ class FacultyResearchPaperUpdate(BaseModel):
     abstract: str
     file_path: str
     category: str
+    publisher: str
     date_publish: str
 
 

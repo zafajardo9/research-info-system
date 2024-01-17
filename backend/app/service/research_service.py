@@ -718,6 +718,8 @@ class ResearchService:
                 FacultyResearchPaper.content,
                 FacultyResearchPaper.date_publish,
                 FacultyResearchPaper.abstract,
+                FacultyResearchPaper.category,
+                FacultyResearchPaper.publisher,
                 func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
                 Faculty.Email.label('email'),)
             .join(Users, FacultyResearchPaper.user_id == Users.id)

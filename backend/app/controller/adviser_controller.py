@@ -20,28 +20,6 @@ router = APIRouter(
 
 # ========================== POWER NG FACULTY =================
 
-@router.put("/update_status/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
-async def update_research_paper_status(
-    research_paper_id: str,
-    status_update: StatusUpdate,
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
-):
-    # Extract the user role from the JWT token
-    token = JWTRepo.extract_token(credentials)
-    current_user = token['user_id'] 
-
-    user_roles = await UsersRepository.get_user_roles(current_user)
-    if "faculty" not in user_roles:
-        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper.")
-    
-    try:
-        research_paper = await ResearchService.update_research_paper_status(db, research_paper_id, status_update.status)
-        return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
-    except HTTPException as e:
-        return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
-
-
-
 @router.get("/my-assigned-research-section", response_model=AssignUserProfile)
 async def read_user_assignments(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
@@ -86,149 +64,155 @@ async def read_user_assignments(credentials: HTTPAuthorizationCredentials = Secu
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
-@router.get("/adviser", response_model=List[ResearchPaperResponse], response_model_exclude_none=True)
-async def get_user_research_papers(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+@router.get("/adviser/{course}/{year}",)
+async def get_user_research_papers(
+    course: str,
+    year: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     '''
-        Faculty lang para malaman nila yung mga research prop na assigned
+        ADVISER lang talaga
     '''
     
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_papers_by_adviser(db, current_user)
+        research_papers = await ResearchService.get_research_papers_by_adviser(db, current_user, course, year)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")
-        response_papers = []
-        for paper in research_papers:
-            response_paper = ResearchPaperResponse(
-                id=paper.id,
-                title=paper.title,
-                research_type=paper.research_type,
-                submitted_date=str(paper.submitted_date),
-                status=paper.status,
-                file_path=paper.file_path,
-                research_adviser=paper.research_adviser,
-            )
-            response_papers.append(response_paper)
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "research_type": paper.research_type,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
 
         return response_papers
     except Exception as e:
         return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
     
 
-@router.get("/adviser/ethics", response_model=List[EthicsWithResearchResponse], response_model_exclude_none=True)
+@router.get("/adviser/ethics/{course}/{year}")
 async def get_adviser_research_papers_and_ethics(
-    credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),
-):
-    """
-    Retrieve a list of research papers under the current adviser along with associated ethics.
-    """
-
-    # Extract user_id from the JWT token
+    course: str,
+    year: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    '''
+        ADVISER lang talaga
+    '''
+    
     token = JWTRepo.extract_token(credentials)
-    current_user_id = token['user_id']
+    current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_ethics_by_adviser(db, current_user_id)
+        research_papers = await ResearchService.get_research_ethics_by_adviser(db, current_user, course, year)
         
         if research_papers is None:
-            return [{"Ethic": "No list of ethics found under you"}]  # Return a list with a single item
-        
-        # Convert each ResearchPaper to ResearchPaperResponse
-        response_papers = []
-        for research_paper, ethics in research_papers:
-            response_paper = EthicsWithResearchResponse(
-                id=ethics.id,
-                modified_at=ethics.modified_at,
-                created_at=ethics.created_at,
-                letter_of_intent=ethics.letter_of_intent,
-                urec_9=ethics.urec_9,
-                urec_10=ethics.urec_10,
-                urec_11=ethics.urec_11,
-                urec_12=ethics.urec_12,
-                certificate_of_validation=ethics.certificate_of_validation,
-                co_authorship=ethics.co_authorship,
-                research_paper_id=ethics.research_paper_id,
-                status=ethics.status,
-                title=research_paper.title,
-            )
-            response_papers.append(response_paper)
-
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
         return response_papers
     except Exception as e:
-        return [{"Error": f"Error getting user research papers: {str(e)}"}]
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
     
 
-@router.get("/adviser/manuscript", response_model=List[FullManuscriptWithResearchResponse], response_model_exclude_none=True)
-async def get_user_research_manuscripts(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+@router.get("/adviser/manuscript/{course}/{year}", response_model=List[FullManuscriptWithResearchResponse], response_model_exclude_none=True)
+async def get_user_research_manuscripts(
+    course: str,
+    year: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    '''
+        ADVISER lang talaga
+    '''
+    
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        result = await ResearchService.get_research_manuscript_by_adviser(db, current_user)
-
-        # Convert each result row to a response model
-        response_papers = []
-        for research_paper, manuscript in result:
-            response_paper = FullManuscriptWithResearchResponse(
-                id=manuscript.id,
-                modified_at=manuscript.modified_at,
-                created_at=manuscript.created_at,
-                research_paper_id=manuscript.research_paper_id,
-                content=manuscript.content,
-                keywords=manuscript.keywords,
-                abstract=manuscript.abstract,
-                file=manuscript.file,
-                status=manuscript.status,
-                title=research_paper.title,
-            )
-            response_papers.append(response_paper)
-
-        # Return the list of response papers
+        research_papers = await ResearchService.get_research_manuscript_by_adviser(db, current_user, course, year)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
         return response_papers
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting user research manuscripts: {str(e)}")
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
 
 
-@router.get("/adviser/copyright", response_model=List[CopyRightWithResearchResponse], response_model_exclude_none=True)
-async def get_faculty_copyright_info(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+
+@router.get("/adviser/copyright/{course}/{year}", response_model=List[CopyRightWithResearchResponse], response_model_exclude_none=True)
+async def get_faculty_copyright_info(
+    course: str,
+    year: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    '''
+        ADVISER lang talaga
+    '''
+    
     token = JWTRepo.extract_token(credentials)
     current_user = token['user_id']
 
     try:
-        result = await ResearchService.get_research_copyright_by_adviser(db, current_user)
-
-        # Convert each result row to a response model
-        response_copyrights = []
-        for research_paper, copyright_info in result:
-            response_copyright = CopyRightWithResearchResponse(
-                id=copyright_info.id,
-                modified_at=copyright_info.modified_at,
-                created_at=copyright_info.created_at,
-                research_paper_id=copyright_info.research_paper_id,
-                co_authorship=copyright_info.co_authorship,
-                affidavit_co_ownership=copyright_info.affidavit_co_ownership,
-                joint_authorship=copyright_info.joint_authorship,
-                approval_sheet=copyright_info.approval_sheet,
-                receipt_payment=copyright_info.receipt_payment,
-                recordal_slip=copyright_info.recordal_slip,
-                acknowledgement_receipt=copyright_info.acknowledgement_receipt,
-                certificate_copyright=copyright_info.certificate_copyright,
-                recordal_template=copyright_info.recordal_template,
-                ureb_18=copyright_info.ureb_18,
-                journal_publication=copyright_info.journal_publication,
-                copyright_manuscript=copyright_info.copyright_manuscript,
-                status=copyright_info.status,
-                title=research_paper.title,
-            )
-            response_copyrights.append(response_copyright)
-
-        # Return the list of response copyrights
-        return response_copyrights
+        research_papers = await ResearchService.get_research_copyright_by_adviser(db, current_user, course, year)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
+        return response_papers
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting faculty copyright information: {str(e)}")
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+    
+    
+    # ==============================================  APPROVING SECTIONSSS ===================================================================
+    ##########################################################################################################################################
+
+
+@router.put("/update_status/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def update_research_paper_status(
+    research_paper_id: str,
+    status_update: StatusUpdate,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    # Extract the user role from the JWT token
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id'] 
+
+    user_roles = await UsersRepository.get_user_roles(current_user)
+    if "faculty" not in user_roles:
+        raise HTTPException(status_code=403, detail=f"You are not allowed to update the status of this research paper.")
+    
+    try:
+        research_paper = await ResearchService.update_research_paper_status(db, research_paper_id, status_update.status)
+        return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
+
+
+
 
 @router.put("/approve_ethics/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_research_paper_status(

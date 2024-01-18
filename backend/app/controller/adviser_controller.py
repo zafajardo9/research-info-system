@@ -112,7 +112,7 @@ async def get_adviser_research_papers_and_ethics(
         research_papers = await ResearchService.get_research_ethics_by_adviser(db, current_user, course, year)
         
         if research_papers is None:
-            raise HTTPException(status_code=404, detail="Research paper not found")
+            raise HTTPException(status_code=404, detail="Ethics not found")
         response_papers = [
             {
                 "id": paper.id,
@@ -123,10 +123,10 @@ async def get_adviser_research_papers_and_ethics(
         ]
         return response_papers
     except Exception as e:
-        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+        return ResponseSchema(detail=f"Error getting user ethics papers: {str(e)}", result=None)
     
 
-@router.get("/adviser/manuscript/{course}/{year}", response_model=List[FullManuscriptWithResearchResponse], response_model_exclude_none=True)
+@router.get("/adviser/manuscript/{course}/{year}")
 async def get_user_research_manuscripts(
     course: str,
     year: str,
@@ -157,7 +157,7 @@ async def get_user_research_manuscripts(
 
 
 
-@router.get("/adviser/copyright/{course}/{year}", response_model=List[CopyRightWithResearchResponse], response_model_exclude_none=True)
+@router.get("/adviser/copyright/{course}/{year}")
 async def get_faculty_copyright_info(
     course: str,
     year: str,

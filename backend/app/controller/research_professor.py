@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Path, Security, HTTPException, logger
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, NavigationTabCreate, ResponseSchema
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.model import AssignedResearchType, AssignedSections
 from app.service.workflow_service import WorkflowService
@@ -18,6 +18,7 @@ from app.config import db
 from app.model.faculty import Faculty
 from app.model.workflowprocess import NavigationTab
 from app.model.student import Class
+from app.service.research_service import ResearchService
 
 #from app.schema import WorkflowCreate
 
@@ -353,3 +354,100 @@ async def get_users_with_assignments():
             return result_list
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+    
+    
+# AS A RESEACH PROF NAMAN para makita:
+@router.get("/prof/proposal/{course}/{year}",)
+async def get_research_papers_by_prof(
+    course: str,
+    year: str):
+
+    try:
+        research_papers = await ResearchService.get_research_papers_by_prof(db, course, year)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "research_type": paper.research_type,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
+
+        return response_papers
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+
+
+@router.get("/prof/ethics/{course}/{year}")
+async def get_research_ethics_by_prof(
+    course: str,
+    year: str):
+
+    try:
+        research_papers = await ResearchService.get_research_ethics_by_prof(db, course, year)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Ethics not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
+        return response_papers
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting user ethics papers: {str(e)}", result=None)
+    
+    
+@router.get("/prof/copyright/{course}/{year}")
+async def get_research_copyright_by_prof(
+    course: str,
+    year: str):
+
+    try:
+        research_papers = await ResearchService.get_research_copyright_by_prof(db, course, year)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Ethics not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
+        return response_papers
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting user ethics papers: {str(e)}", result=None)
+    
+
+@router.get("/prof/manuscript/{course}/{year}")
+async def get_research_manu_by_prof(
+    course: str,
+    year: str):
+
+    try:
+        research_papers = await ResearchService.get_research_manu_by_prof(db, course, year)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Ethics not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "status": paper.status
+            }
+            for paper in research_papers
+        ]
+        return response_papers
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting user ethics papers: {str(e)}", result=None)
+    

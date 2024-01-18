@@ -747,3 +747,146 @@ class ResearchService:
         query = update(FacultyResearchPaper).where(FacultyResearchPaper.id == research_paper_id).values(research_paper_data.dict())
         await db.execute(query)
         await db.commit()
+
+
+
+
+
+
+# LIST OF PAPERS THAT WILL BE SHOWN FOR ADVISERS:
+    @staticmethod
+    async def get_research_papers_by_prof(db: Session, course: str, year: str):
+        values = year.split("-")
+        year_value = int(values[0])
+        section_value = int(values[1])
+
+        query = (
+            select(
+                distinct(ResearchPaper.id).label('id'),
+                ResearchPaper.title,
+                ResearchPaper.research_type,
+                ResearchPaper.status
+            )
+            .select_from(
+                join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id)
+                .join(Users, Author.user_id == Users.id)
+                .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
+                .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+            )
+            .where(
+                (SPSCourse.CourseCode == course)
+                & (SPSMetadata.Year == year_value)
+                & (SPSClass.Section == section_value)
+            )
+        )
+        result = await db.execute(query)
+        proposals = result.fetchall()
+        
+        return proposals
+    
+    
+    @staticmethod
+    async def get_research_ethics_by_prof(db: Session, course: str, year: str):
+        values = year.split("-")
+        year_value = int(values[0])
+        section_value = int(values[1])
+
+        query = (
+            select(
+                distinct(Ethics.id).label('id'),
+                ResearchPaper.title,
+                Ethics.status
+            )
+            .select_from(
+                join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id)
+                .join(Users, Author.user_id == Users.id)
+                .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
+                .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                .join(Ethics, ResearchPaper.id == Ethics.research_paper_id)
+            )
+            .where(
+                (SPSCourse.CourseCode == course)
+                & (SPSMetadata.Year == year_value)
+                & (SPSClass.Section == section_value)
+            )
+        )
+        result = await db.execute(query)
+        fetched_result = result.fetchall()
+
+        return fetched_result
+    
+    
+    @staticmethod
+    async def get_research_copyright_by_prof(db: Session, course: str, year: str):
+        values = year.split("-")
+        year_value = int(values[0])
+        section_value = int(values[1])
+
+        query = (
+            select(
+                distinct(Ethics.id).label('id'),
+                ResearchPaper.title,
+                CopyRight.status
+            )
+            .select_from(
+                join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id)
+                .join(Users, Author.user_id == Users.id)
+                .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
+                .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                .join(CopyRight, ResearchPaper.id == CopyRight.research_paper_id)
+            )
+            .where(
+                (SPSCourse.CourseCode == course)
+                & (SPSMetadata.Year == year_value)
+                & (SPSClass.Section == section_value)
+            )
+        )
+        result = await db.execute(query)
+        fetched_result = result.fetchall()
+
+        return fetched_result
+    
+    
+    
+    @staticmethod
+    async def get_research_manu_by_prof(db: Session, course: str, year: str):
+        values = year.split("-")
+        year_value = int(values[0])
+        section_value = int(values[1])
+
+        query = (
+            select(
+                distinct(Ethics.id).label('id'),
+                ResearchPaper.title,
+                FullManuscript.status
+            )
+            .select_from(
+                join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id)
+                .join(Users, Author.user_id == Users.id)
+                .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
+                .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                .join(FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+            )
+            .where(
+                (SPSCourse.CourseCode == course)
+                & (SPSMetadata.Year == year_value)
+                & (SPSClass.Section == section_value)
+            )
+        )
+        result = await db.execute(query)
+        fetched_result = result.fetchall()
+
+        return fetched_result
+    

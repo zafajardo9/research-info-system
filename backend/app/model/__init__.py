@@ -43,7 +43,7 @@ from .workflowprocess import NavigationClass
 
 #integrated tables:
 
-from .connected_SPS import SPSStudentClassSubjectGrade, SPSClassSubject, SPSClass, SPSMetadata, SPSCourse, SPSCourseEnrolled
+from .connected_SPS import SPSStudentClassSubjectGrade, SPSClassSubject, SPSClass, SPSMetadata, SPSCourse, SPSCourseEnrolled, SPSLatestBatchSemester
 
 
 

@@ -51,3 +51,13 @@ class SPSCourseEnrolled(SQLModel,table=True):
 
 
 
+class SPSLatestBatchSemester(SQLModel,table=True):
+    __tablename__= "SPSLatestBatchSemester"
+    
+    LatestBatchSemesterId: int = Field(primary_key=True, nullable=False)
+    Batch: int
+    Semester: int
+    isEnrollmentStarted: bool
+    isGradeFinalized: bool
+
+

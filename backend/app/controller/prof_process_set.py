@@ -49,12 +49,15 @@ async def list_of_process_for_faculty():
 
 @router.post("/assign-process/")
 async def create_process_role(navigation_tab: NavigationTabCreate):
-    create_process = await NavigationProcessService.create_process_role(navigation_tab)
-    
-    for class_id in navigation_tab.class_id:
-        await NavigationProcessService.create_process_role_class_assoc(create_process.id, class_id)
-    
-    return create_process
+    try:
+        create_process = await NavigationProcessService.create_process_role(navigation_tab)
+        
+        for class_id in navigation_tab.class_id:
+            await NavigationProcessService.create_process_role_class_assoc(create_process.id, class_id)
+        
+        return create_process
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 
 @router.put("/update-assigned-process/{id}")

@@ -7,6 +7,7 @@ from app.config import db
 from app.schema import FullManuscriptCreate, FullManuscriptResponse, FullManuscriptUpdate, ResponseSchema
 from app.service.manuscript_service import ManuscriptService
 from app.service.workflow_service import WorkflowService
+from app.repository.manuscript_repo import ManuscriptRepository
 
 
 router = APIRouter(
@@ -28,6 +29,22 @@ async def upload_ethics(
         return ResponseSchema(detail=f"Manuscript data for research paper uploaded successfully", result=ethics_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error uploading manuscript data: {str(e)}", result=None)
+
+
+@router.get("/get-manuscript/{id}",)
+async def get_manuscript_target(id: str):
+    try:
+        response = await ManuscriptRepository.get_manuscript_by_id(db, id)
+        if response is None:
+            raise HTTPException(status_code=404, detail="No Manuscript Found")
+
+        return response
+    except HTTPException as e:
+        return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)
+
+    except Exception as e:
+        print(f"Error retrieving manuscript data: {str(e)}")
+        return ResponseSchema(detail=f"Error retrieving manuscript data: {str(e)}", result=None)
 
 
 @router.get("/get_manuscript_by_research/{research_paper_id}", response_model=FullManuscriptResponse)

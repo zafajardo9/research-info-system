@@ -52,6 +52,12 @@ class CopyrightService:
         
         return research_paper
     
+    @staticmethod
+    async def get_copyright_by_id(db: Session,id: str) -> Optional[CopyRight]:
+        query = select(CopyRight).filter(CopyRight.id == id)
+        result = await db.execute(query)
+        return result.scalars().first()
+
 
     @staticmethod
     async def update_copyright(db: AsyncSession, copyright_data: CopyRightUpdate, manuscript_id: str) -> CopyRightResponse:

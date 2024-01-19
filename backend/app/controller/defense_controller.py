@@ -35,6 +35,8 @@ async def get_def_by_linked_res_step(research_paper_id: str, workflowstep_id: st
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
     
+    
+    
 @router.get("/defense-info/{defense_id}")
 async def get_def_by_linked_res_step(defense_id: str):
     try:

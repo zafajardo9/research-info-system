@@ -8,6 +8,7 @@ from app.config import db
 from app.schema import EthicsCreate, EthicsResponse, EthicsUpdate, ResponseSchema
 from app.service.ethics_service import EthicsService
 from app.service.workflow_service import WorkflowService
+from app.repository.ethics_repo import EthicsRepository
 
 router = APIRouter(
     prefix="/ethics",
@@ -29,6 +30,22 @@ async def upload_ethics(
     except HTTPException as e:
         return ResponseSchema(detail=f"Error uploading ethics data: {str(e)}", result=None)
 
+
+
+@router.get("/get-ethics/{id}",)
+async def get_ethics_target(id: str):
+    try:
+        response = await EthicsRepository.get_ethics_by_id(db, id)
+        if response is None:
+            raise HTTPException(status_code=404, detail="No Manuscript Found")
+
+        return response
+    except HTTPException as e:
+        return ResponseSchema(detail=f"HTTPException: {str(e)}", result=None)
+
+    except Exception as e:
+        print(f"Error retrieving manuscript data: {str(e)}")
+        return ResponseSchema(detail=f"Error retrieving manuscript data: {str(e)}", result=None)
 
 
 

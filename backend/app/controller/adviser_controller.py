@@ -377,3 +377,26 @@ async def update_faculty_research_paper(
         return ResponseSchema(detail=f"Research paper {research_paper_id} updated successfully", result=None)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper: {str(e)}", result=None)
+    
+    
+    
+def list_categories():
+    return ["CHED Recognized", "Scopus", "Peer Reviewed", "Web Science"]
+@router.get("/category_list",)
+async def get_list_categories():
+    """
+    Get all user in USER TABLE
+    """
+    category = list_categories()
+    return {"categories": category}
+
+
+def list_publisher():
+    return ["PUP Research Publication Office"]
+@router.get("/publisher_list",)
+async def get_list_publisher():
+    """
+    Get all user in USER TABLE
+    """
+    pub = list_categories()
+    return {"publishers": pub}

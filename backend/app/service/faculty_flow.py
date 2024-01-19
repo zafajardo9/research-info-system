@@ -31,7 +31,7 @@ class FacultyFlow:
         user_roles = await UsersRepository.get_user_roles(user_id)
 
         if "research professor" in user_roles:
-            assigned_sections = await AssignToProf.display_assigned_sections(user_id)
+            assigned_sections = await AssignToProf.kalahatan_ito_prof(user_id)
         else:
             assigned_sections = ["Nothing found assign as a research professor"]
         

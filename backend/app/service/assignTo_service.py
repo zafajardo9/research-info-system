@@ -229,6 +229,30 @@ class AssignToSection:
         return result
     
     
+    @staticmethod
+    async def booleans_prof(class_id: str, role: str):
+        query = (
+            select(
+                NavigationTab.type,
+                NavigationTab.role,
+                NavigationTab.has_submitted_proposal,
+                NavigationTab.has_pre_oral_defense_date,
+                NavigationTab.has_submitted_ethics_protocol,
+                NavigationTab.has_submitted_full_manuscript,
+                NavigationTab.has_set_final_defense_date,
+                NavigationTab.has_submitted_copyright,
+            )
+            .select_from(NavigationClass)
+            .join(Class, Class.id == NavigationClass.class_id)
+            .join(NavigationTab, NavigationTab.id == NavigationClass.navigation_id)
+            .filter((NavigationClass.class_id == class_id) & (NavigationTab.role == role))
+        )
+
+        result = await db.execute(query)
+        result = result.fetchall()
+
+        return result
+    
     
     
     

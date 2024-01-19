@@ -190,7 +190,7 @@ class AssignToProf:
             assignments_list = []
 
             for assign in assigns:
-                process_assigned = await AssignToSection.booleans(assign.class_id, "research professor", )
+                process_assigned = await AssignToSection.booleans_prof(assign.class_id, "research professor", )
 
                 assign_details = dict(assign)
                 assign_details["process"] = process_assigned

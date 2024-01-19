@@ -207,7 +207,7 @@ class AssignToSection:
     async def booleans(class_id: str, role: str, research_type_name: str):
         query = (
             select(
-                NavigationTab.id.label("navigation_role_id"),
+                #NavigationTab.id.label("navigation_role_id"),
                 NavigationTab.role,
                 NavigationTab.type,
                 NavigationTab.has_submitted_proposal,

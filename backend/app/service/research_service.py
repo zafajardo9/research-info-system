@@ -285,7 +285,7 @@ class ResearchService:
     
     
     @staticmethod
-    async def get_research_papers_by_adviser(db: Session, adviser: str, course: str, year: str):
+    async def get_research_papers_by_adviser(db: Session, research_type:str, adviser: str, course: str, year: str):
         values = year.split("-")
         year_value = int(values[0])
         section_value = int(values[1])
@@ -311,6 +311,7 @@ class ResearchService:
                 & (SPSMetadata.Year == year_value)
                 & (SPSClass.Section == section_value)
                 & (ResearchPaper.research_adviser == adviser)
+                & (ResearchPaper.research_type == research_type)
             )
         )
         result = await db.execute(query)
@@ -484,7 +485,7 @@ class ResearchService:
 #=============================MGA POWER NG FACULTY ========================#
     
     @staticmethod
-    async def get_research_ethics_by_adviser(db: Session, adviser: str, course: str, year: str):
+    async def get_research_ethics_by_adviser(db: Session, research_type: str, adviser: str, course: str, year: str):
         values = year.split("-")
         year_value = int(values[0])
         section_value = int(values[1])
@@ -510,6 +511,7 @@ class ResearchService:
                 & (SPSMetadata.Year == year_value)
                 & (SPSClass.Section == section_value)
                 & (ResearchPaper.research_adviser == adviser)
+                & (ResearchPaper.research_type == research_type)
             )
         )
         result = await db.execute(query)
@@ -519,7 +521,7 @@ class ResearchService:
     
     
     @staticmethod
-    async def get_research_manuscript_by_adviser(db: Session, adviser: str, course: str, year: str):
+    async def get_research_manuscript_by_adviser(db: Session, research_type: str, adviser: str, course: str, year: str):
         values = year.split("-")
         year_value = int(values[0])
         section_value = int(values[1])
@@ -545,6 +547,7 @@ class ResearchService:
                 & (SPSMetadata.Year == year_value)
                 & (SPSClass.Section == section_value)
                 & (ResearchPaper.research_adviser == adviser)
+                & (ResearchPaper.research_type == research_type)
             )
         )
         result = await db.execute(query)
@@ -554,7 +557,7 @@ class ResearchService:
     
 
     @staticmethod
-    async def get_research_copyright_by_adviser(db: Session, adviser: str, course: str, year: str):
+    async def get_research_copyright_by_adviser(db: Session, research_type: str, adviser: str, course: str, year: str):
         values = year.split("-")
         year_value = int(values[0])
         section_value = int(values[1])
@@ -580,6 +583,7 @@ class ResearchService:
                 & (SPSMetadata.Year == year_value)
                 & (SPSClass.Section == section_value)
                 & (ResearchPaper.research_adviser == adviser)
+                & (ResearchPaper.research_type == research_type)
             )
         )
         result = await db.execute(query)

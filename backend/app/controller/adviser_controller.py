@@ -66,8 +66,10 @@ async def read_user_assignments(credentials: HTTPAuthorizationCredentials = Secu
 
 @router.get("/adviser/{course}/{year}",)
 async def get_user_research_papers(
+    research_type: str,
     course: str,
     year: str,
+    
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     '''
         ADVISER lang talaga
@@ -77,7 +79,7 @@ async def get_user_research_papers(
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_papers_by_adviser(db, current_user, course, year)
+        research_papers = await ResearchService.get_research_papers_by_adviser(db, research_type, current_user, course, year)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")
@@ -98,6 +100,7 @@ async def get_user_research_papers(
 
 @router.get("/adviser/ethics/{course}/{year}")
 async def get_adviser_research_papers_and_ethics(
+    research_type: str,
     course: str,
     year: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
@@ -109,7 +112,7 @@ async def get_adviser_research_papers_and_ethics(
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_ethics_by_adviser(db, current_user, course, year)
+        research_papers = await ResearchService.get_research_ethics_by_adviser(db, research_type, current_user, course, year)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Ethics not found")
@@ -128,6 +131,7 @@ async def get_adviser_research_papers_and_ethics(
 
 @router.get("/adviser/manuscript/{course}/{year}")
 async def get_user_research_manuscripts(
+    research_type: str,
     course: str,
     year: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
@@ -139,7 +143,7 @@ async def get_user_research_manuscripts(
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_manuscript_by_adviser(db, current_user, course, year)
+        research_papers = await ResearchService.get_research_manuscript_by_adviser(db, research_type, current_user, course, year)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")
@@ -159,6 +163,7 @@ async def get_user_research_manuscripts(
 
 @router.get("/adviser/copyright/{course}/{year}")
 async def get_faculty_copyright_info(
+    research_type: str,
     course: str,
     year: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
@@ -170,7 +175,7 @@ async def get_faculty_copyright_info(
     current_user = token['user_id']
 
     try:
-        research_papers = await ResearchService.get_research_copyright_by_adviser(db, current_user, course, year)
+        research_papers = await ResearchService.get_research_copyright_by_adviser(db, research_type, current_user, course, year)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")

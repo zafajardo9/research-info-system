@@ -91,21 +91,26 @@ async def insert_more(nav_id: str, class_ids: List[str]):
 
 # =====================================
 @router.delete("/delete-assigned-process/{id}")
-async def update_process_role(id: str):
-    delete = await WorkflowService.delete_process_by_id(id)
-    if not delete:
-        raise HTTPException(status_code=404, detail="Process not found")
-
-    return {"message": "Process deleted successfully"}
+async def delete_process(id: str):
+    try:
+        deleted = await WorkflowService.delete_process_by_id(id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Process not found")
+        return {"message": "Process deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 
 @router.delete("/delete-assigned-class/{id}")
-async def update_process_role(id: str):
-    delete = await WorkflowService.delete_assign_class(id)
-    if not delete:
-        raise HTTPException(status_code=404, detail="Class not found")
+async def delete_process_class(id: str):
+    try:
+        deleted = await WorkflowService.delete_assign_class(id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Class not found")
+        return {"message": "Class deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
-    return {"message": "Process deleted successfully"}
 # ==============================================
     
 @router.get("/display-all/")

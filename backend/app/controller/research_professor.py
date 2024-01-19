@@ -360,11 +360,12 @@ async def get_users_with_assignments():
 # AS A RESEACH PROF NAMAN para makita:
 @router.get("/prof/proposal/{course}/{year}",)
 async def get_research_papers_by_prof(
+    research_type: str,
     course: str,
     year: str):
 
     try:
-        research_papers = await ResearchService.get_research_papers_by_prof(db, course, year)
+        research_papers = await ResearchService.get_research_papers_by_prof(db, research_type, course, year)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")
@@ -385,6 +386,7 @@ async def get_research_papers_by_prof(
 
 @router.get("/prof/ethics/{course}/{year}")
 async def get_research_ethics_by_prof(
+    research_type: str,
     course: str,
     year: str):
 
@@ -408,6 +410,7 @@ async def get_research_ethics_by_prof(
     
 @router.get("/prof/copyright/{course}/{year}")
 async def get_research_copyright_by_prof(
+    research_type: str,
     course: str,
     year: str):
 
@@ -431,6 +434,7 @@ async def get_research_copyright_by_prof(
 
 @router.get("/prof/manuscript/{course}/{year}")
 async def get_research_manu_by_prof(
+    research_type: str,
     course: str,
     year: str):
 

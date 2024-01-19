@@ -48,16 +48,21 @@ async def list_of_process_for_faculty():
     return faculty_process_name
 
 @router.post("/assign-process/")
-async def create_process_role(navigation_tab: NavigationTabCreate):
+async def create_process_roles(navigation_tabs: List[NavigationTabCreate]):
     try:
-        create_process = await NavigationProcessService.create_process_role(navigation_tab)
-        
-        # Check if class_id list is not empty before creating associations
-        if navigation_tab.class_id:
-            for class_id in navigation_tab.class_id:
-                await NavigationProcessService.create_process_role_class_assoc(create_process.id, class_id)
-        
-        return create_process
+        created_processes = []
+
+        for navigation_tab in navigation_tabs:
+            create_process = await NavigationProcessService.create_process_role(navigation_tab)
+            
+            # Check if class_id list is not empty before creating associations
+            if navigation_tab.class_id:
+                for class_id in navigation_tab.class_id:
+                    await NavigationProcessService.create_process_role_class_assoc(create_process.id, class_id)
+
+            created_processes.append(create_process)
+
+        return created_processes
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 

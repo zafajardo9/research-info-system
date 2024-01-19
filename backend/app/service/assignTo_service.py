@@ -22,6 +22,7 @@ from app.model.users import Users
 from app.model.faculty import Faculty
 from app.model.assignedTo import AssignedSectionsToProf
 from app.model.student import Class
+from app.model.workflowprocess import NavigationClass, NavigationTab
 
 class AssignToSection:
     
@@ -129,10 +130,11 @@ class AssignToSection:
             assign_sections = await db.execute(second_query)
             assign_sections = assign_sections.fetchall()
             
+            
             print(assign_sections)
             
             assign_details = {
-                "assigned_type_id": assign.id   ,
+                "assigned_type_id": assign.id,
                 "research_type_name": assign.research_type_name,
                 "assignsection": []
             }
@@ -143,11 +145,92 @@ class AssignToSection:
                     "class_id": section[1],
                     "course": section[2],
                     "section": section[3]
-                })
+                }
+            )
 
             assignments_list.append(assign_details)
 
         return assignments_list
+    
+    
+    
+    @staticmethod
+    async def kalahatan_ito_adviser(user_id: str):
+        first_query = select(AssignedResearchType).where(AssignedResearchType.user_id == user_id)
+        assigns = await db.execute(first_query)
+        assigns = assigns.scalars().all()
+        
+        print(assigns)
+
+        if not assigns:
+            return None  # Return None when the workflow is not found
+
+        assignments_list = []
+        for assign in assigns:
+            second_query = (select(
+                    AssignedSections.id.label("assignment_id"),
+                    AssignedSections.class_id,
+                    Class.course,
+                    Class.section
+                    ).where(AssignedSections.research_type_id == assign.id).outerjoin(Class, AssignedSections.class_id == Class.id)
+            )
+            assign_sections = await db.execute(second_query)
+            assign_sections = assign_sections.fetchall()
+            
+            
+            print(assign_sections)
+            
+            assign_details = {
+                "assigned_type_id": assign.id,
+                "research_type_name": assign.research_type_name,
+                "assignsection": []
+            }
+            
+            for section in assign_sections:
+                process_assigned = await AssignToSection.booleans(section[1], 'research adviser', assign.research_type_name)
+                assign_details["assignsection"].append({
+                    "id": section[0],
+                    "class_id": section[1],
+                    "course": section[2],
+                    "section": section[3],
+                    "process": process_assigned
+                }
+            )
+
+            assignments_list.append(assign_details)
+
+        return assignments_list
+    
+    
+    
+    @staticmethod
+    async def booleans(class_id: str, role: str, research_type_name: str):
+        query = (
+            select(
+                NavigationTab.id.label("navigation_role_id"),
+                NavigationTab.role,
+                NavigationTab.type,
+                NavigationTab.has_submitted_proposal,
+                NavigationTab.has_pre_oral_defense_date,
+                NavigationTab.has_submitted_ethics_protocol,
+                NavigationTab.has_submitted_full_manuscript,
+                NavigationTab.has_set_final_defense_date,
+                NavigationTab.has_submitted_copyright,
+            )
+            .select_from(NavigationClass)
+            .join(Class, Class.id == NavigationClass.class_id)
+            .join(NavigationTab, NavigationTab.id == NavigationClass.navigation_id)
+            .filter((NavigationClass.class_id == class_id) & (NavigationTab.role == role) & (NavigationTab.type == research_type_name))
+        )
+
+        result = await db.execute(query)
+        result = result.fetchall()
+
+        return result
+    
+    
+    
+    
     
     @staticmethod
     async def display_assignments_by_type(research_type: str):

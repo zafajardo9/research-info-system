@@ -1,6 +1,7 @@
 from typing import List, Union
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
+from sqlalchemy import distinct
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 from app.config import db
@@ -39,9 +40,27 @@ async def assign_process(
     user_id = token.get('user_id')
 
     resultz = await FacultyFlow.overall(user_id)
-
-
     return resultz
+
+
+
+@router.get("/boolean-process/")
+async def process_assigned(
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer()),
+):
+    
+    token = JWTRepo.extract_token(credentials)
+    user_id = token.get('user_id')
+    try:
+        result = await FacultyFlow.assigned_process_boolean(user_id)
+        processed_result = FacultyFlow.process_result(result)
+        return processed_result
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+
 
 
 # @router.get("/filtered-process-by-user-role/")

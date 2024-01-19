@@ -23,6 +23,7 @@ from app.model.users import Users
 from app.model.faculty import Faculty
 from app.service.section_service import SectionService
 from app.model.student import Class
+from app.service.assignTo_service import AssignToSection
 
 class AssignToProf:
     
@@ -160,6 +161,40 @@ class AssignToProf:
 
             # Convert SQLAlchemy result to a list of dictionaries
             assignments_list = [dict(assign) for assign in assigns]
+
+            return assignments_list
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        
+        
+    @staticmethod
+    async def kalahatan_ito_prof(user_id: str):
+        try:
+            # Fetch assigned sections for the user
+            first_query = select(
+                AssignedSectionsToProf.id,
+                AssignedSectionsToProf.class_id,
+                Class.course,
+                Class.section,
+            ).join(Class, AssignedSectionsToProf.class_id == Class.id).where(
+                AssignedSectionsToProf.user_id == user_id
+            )
+            assigns = await db.execute(first_query)
+            assigns = assigns.fetchall()
+
+            if not assigns:
+                return None  # Return None when no assignments are found
+
+            # Convert SQLAlchemy result to a list of dictionaries
+            assignments_list = []
+
+            for assign in assigns:
+                process_assigned = await AssignToSection.booleans(assign.class_id, "research professor", )
+
+                assign_details = dict(assign)
+                assign_details["process"] = process_assigned
+                assignments_list.append(assign_details)
 
             return assignments_list
 

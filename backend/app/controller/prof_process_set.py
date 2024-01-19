@@ -52,8 +52,10 @@ async def create_process_role(navigation_tab: NavigationTabCreate):
     try:
         create_process = await NavigationProcessService.create_process_role(navigation_tab)
         
-        for class_id in navigation_tab.class_id:
-            await NavigationProcessService.create_process_role_class_assoc(create_process.id, class_id)
+        # Check if class_id list is not empty before creating associations
+        if navigation_tab.class_id:
+            for class_id in navigation_tab.class_id:
+                await NavigationProcessService.create_process_role_class_assoc(create_process.id, class_id)
         
         return create_process
     except Exception as e:

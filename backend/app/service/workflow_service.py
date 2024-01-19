@@ -326,9 +326,9 @@ class WorkflowService:
     @staticmethod
     async def delete_process_by_id(id: str):
         try:
-            async with db.begin():
-                # Delete workflow steps
-                await db.execute(delete(NavigationTab).where(NavigationTab.id == id))
+            await db.execute(delete(NavigationTab).where(NavigationTab.id == id))
+            
+            await db.commit()
             return True
         except Exception as e:
             # Log the exception or handle it accordingly
@@ -337,13 +337,11 @@ class WorkflowService:
     @staticmethod
     async def delete_assign_class(id: str):
         try:
-            async with db.begin():
-                # Delete navigation class entry
-                delete_query = delete(NavigationClass).where(NavigationClass.id == id)
-                await db.execute(delete_query)
+            delete_query = delete(NavigationClass).where(NavigationClass.id == id)
+            await db.execute(delete_query)
+            await db.commit()
             return True
         except Exception as e:
-            # Log the exception or handle it accordingly
             raise e
         
     @staticmethod

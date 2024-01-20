@@ -694,14 +694,14 @@ class ResearchService:
     @staticmethod
     async def update_copyright_status(db: Session, id: str, new_status: Status) -> CopyRight:
 
-        research_paper = await EthicsRepository.update_copyright_status(db, id, new_status)
+        research_paper = await ResearchPaperRepository.update_copyright_status(db, id, new_status)
         return research_paper
     
     
     @staticmethod
     async def update_manuscript_status(db: Session, id: str, new_status: Status) -> FullManuscript:
 
-        research_paper = await EthicsRepository.update_manuscript_status(db, id, new_status)
+        research_paper = await ResearchPaperRepository.update_manuscript_status(db, id, new_status)
         return research_paper
     
 

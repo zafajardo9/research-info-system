@@ -3,6 +3,7 @@ import math
 from typing import List, Optional
 from uuid import uuid4
 from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import distinct, join, select
 from sqlalchemy import insert
 from sqlalchemy import update
@@ -20,6 +21,7 @@ from app.model.full_manuscript import FullManuscript
 from app.model.copyright import CopyRight
 from app.model.connected_SPS import SPSCourse, SPSCourseEnrolled
 from app.model.student import Student
+from app.model import ResearchDefense
 
 
 class ResearchPaperRepository(BaseRepo):
@@ -44,17 +46,27 @@ class ResearchPaperRepository(BaseRepo):
     async def delete(research_id: str, db: Session):
         """ delete research data by id """
 
-        #Way para i-delete lahat ng mga naka connect na table
-        await db.execute(delete(Author).where(Author.research_paper_id == research_id))
-        await db.execute(delete(Comment).where(Comment.research_paper_id == research_id))
-        await db.execute(delete(Ethics).where(Ethics.research_paper_id == research_id))
-        await db.execute(delete(FullManuscript).where(FullManuscript.research_paper_id == research_id))
-        await db.execute(delete(CopyRight).where(CopyRight.research_paper_id == research_id))
+        try:
+            # Delete records from related tables
+            await db.execute(delete(Author).where(Author.research_paper_id == research_id))
+            await db.execute(delete(Comment).where(Comment.research_paper_id == research_id))
+            await db.execute(delete(ResearchDefense).where(ResearchDefense.research_paper_id == research_id))
+            await db.execute(delete(Ethics).where(Ethics.research_paper_id == research_id))
+            await db.execute(delete(FullManuscript).where(FullManuscript.research_paper_id == research_id))
+            await db.execute(delete(CopyRight).where(CopyRight.research_paper_id == research_id))
 
-        # Now, delete the research paper
-        query = delete(ResearchPaper).where(ResearchPaper.id == research_id)
-        await db.execute(query)
-        await commit_rollback()
+            # Now, delete the research paper
+            query = delete(ResearchPaper).where(ResearchPaper.id == research_id)
+            await db.execute(query)
+
+            # Commit the changes
+            await commit_rollback()
+
+        except IntegrityError as e:
+            # Handle any integrity errors, such as foreign key constraints
+            # You can log the error or take appropriate action based on your requirements
+            print(f"IntegrityError: {str(e)}")
+            await commit_rollback()
                 
 
 

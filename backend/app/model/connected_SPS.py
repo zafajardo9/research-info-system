@@ -54,6 +54,11 @@ class SPSCourseEnrolled(SQLModel,table=True):
     StudentId: int
 
 
+class SPSStudentClassGrade(SQLModel,table=True):
+    __tablename__= "SPSStudentClassGrade"
+    
+    StudentId: int = Field(primary_key=True, nullable=False)
+    ClassId: int
 
 class SPSLatestBatchSemester(SQLModel,table=True):
     __tablename__= "SPSLatestBatchSemester"

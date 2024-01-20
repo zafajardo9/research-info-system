@@ -6,7 +6,7 @@ from app.model.student import Class, Student  # Import the Student model
 from app.model.faculty import Faculty  # Import the Faculty model
 from app.config import db
 from app.model.users import Role, UsersRole, Users
-from app.model.connected_SPS import SPSStudentClassSubjectGrade, SPSClassSubject, SPSClass, SPSMetadata, SPSCourse, SPSCourseEnrolled
+from app.model.connected_SPS import SPSStudentClassSubjectGrade, SPSClassSubject, SPSClass, SPSMetadata, SPSCourse, SPSCourseEnrolled, SPSStudentClassGrade, SPSLatestBatchSemester
 class UserService:
 
 
@@ -16,14 +16,15 @@ class UserService:
         query = (
             select(
                 Users.id,
+                Student.StudentId.label('student_id'),
                 Student.Email.label('email'),
                 func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
                 Student.DateOfBirth.label('birth'),
                 Student.StudentNumber.label('student_number'),
                 Student.MobileNumber.label('phone_number'),
                 SPSCourse.CourseCode.label('course'),
-                func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('section'),
-                
+                #func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('section'),
+                SPSClass.ClassId.label('class_id'),
             )
             .select_from(SPSStudentClassSubjectGrade)
             .join(SPSClassSubject, SPSClassSubject.ClassSubjectId == SPSStudentClassSubjectGrade.ClassSubjectId)
@@ -34,13 +35,35 @@ class UserService:
             .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
             .join(Users, Student.StudentId == Users.student_id)
             .where(Users.id == user_id)
-            .order_by(desc(SPSMetadata.Batch), desc(SPSMetadata.Semester))
-            .limit(1)  # Limit the result to 1 record
+            # .order_by(desc(SPSMetadata.Batch), desc(SPSMetadata.Semester))
+            # .limit(1)
         )
-        #section = (select(SPSClass))
+
         
         result = await db.execute(query)
         result = result.mappings().first()
+        
+        print(result)
+        
+        section = await db.execute(
+            select(SPSClass.Section)
+            .join(SPSStudentClassGrade, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+            .filter(SPSStudentClassGrade.StudentId == result.student_id)
+            .order_by(SPSClass.Section)
+        )
+        section_result = section.scalar()
+
+        year = await db.execute(
+            select(SPSMetadata.Year)
+            .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+            .join(SPSStudentClassGrade, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+            .filter(SPSStudentClassGrade.StudentId == result.student_id)
+            .order_by(desc(SPSMetadata.Year))
+        )
+        year_result = year.scalar()
+        
+        overall = f"{year_result}-{section_result}"
+        
         custom_result = {
             "id": result.id,
             "email": result.email,
@@ -49,7 +72,7 @@ class UserService:
             "student_number": result.student_number,
             "phone_number": result.phone_number,
             "course": result.course,
-            "section": result.section
+            "section": overall
         }
 
         return custom_result
@@ -57,26 +80,40 @@ class UserService:
     @staticmethod
     async def get_class_id(user_id: str):
         
-        user_class = (
+        query = (
             select(
-                SPSCourse.CourseCode.label('course'),
-                func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('section'),
-                
-            )
-            .select_from(SPSStudentClassSubjectGrade)
-            .join(SPSClassSubject, SPSClassSubject.ClassSubjectId == SPSStudentClassSubjectGrade.ClassSubjectId)
-            .join(SPSClass, SPSClass.ClassId == SPSClassSubject.ClassId)
-            .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
-            .join(SPSCourse, SPSCourse.CourseId == SPSMetadata.CourseId)
-            .join(SPSCourseEnrolled, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
-            .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
-            .join(Users, Student.StudentId == Users.student_id)
+                SPSCourse.CourseCode.label('course'), 
+                Student.StudentId.label('student_id'),
+                )
+            .select_from(Users)
+            .join(Student, Users.student_id == Student.StudentId)
+            .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+            .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
             .where(Users.id == user_id)
         )
-        result = await db.execute(user_class)
+
+        result = await db.execute(query)
         user_class_data = result.mappings().first()
+        print(user_class_data)
         
-        result_section = user_class_data.section
+        section = await db.execute(
+            select(SPSClass.Section)
+            .join(SPSStudentClassGrade, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+            .filter(SPSStudentClassGrade.StudentId == user_class_data.student_id)
+            .order_by(SPSClass.Section)
+        )
+        section_result = section.scalar()
+        year = await db.execute(
+            select(SPSMetadata.Year)
+            .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+            .join(SPSStudentClassGrade, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+            .filter(SPSStudentClassGrade.StudentId == user_class_data.student_id)
+            .order_by(desc(SPSMetadata.Year))
+        )
+        year_result = year.scalar()
+        
+        overall = f"{year_result}-{section_result}"
+    
         result_course = user_class_data.course.upper()
         
         query_class_id_ris = (
@@ -85,7 +122,7 @@ class UserService:
                 Class.section,
                 Class.course
             )
-            .where(Class.section == result_section)
+            .where(Class.section == overall)
             .where(Class.course == result_course)
         )
         

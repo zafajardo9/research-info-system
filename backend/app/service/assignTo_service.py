@@ -325,8 +325,9 @@ class AssignToSection:
             return False
 
         # Delete linked sections
-        delete_sections = AssignedSections.__table__.delete().where(AssignedSections.research_type_id == assigned_research_type.id)
-        await db.execute(delete_sections)
+        delete_statement = delete(AssignedSections).where(AssignedSections.research_type_id == assigned_research_type.id)
+
+        await db.execute(delete_statement)
 
         # Delete research type assignment
         await db.delete(assigned_research_type)

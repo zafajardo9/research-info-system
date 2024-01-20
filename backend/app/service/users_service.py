@@ -23,7 +23,6 @@ class UserService:
                 Student.StudentNumber.label('student_number'),
                 Student.MobileNumber.label('phone_number'),
                 SPSCourse.CourseCode.label('course'),
-                #func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('section'),
                 SPSClass.ClassId.label('class_id'),
             )
             .select_from(SPSStudentClassSubjectGrade)
@@ -76,6 +75,8 @@ class UserService:
         }
 
         return custom_result
+    
+    
     
     @staticmethod
     async def get_class_id(user_id: str):

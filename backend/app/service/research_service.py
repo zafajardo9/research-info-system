@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import delete, distinct, func, join, update
+from sqlalchemy import delete, desc, distinct, func, join, update
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
@@ -21,7 +21,7 @@ from app.repository.comment_repo import CommentRepository
 from app.repository.faculty_research_paper import FacultyResearchRepository
 from app.model.faculty import Faculty
 from app.model.student import Class
-from app.model.connected_SPS import SPSClass, SPSCourse, SPSCourseEnrolled, SPSMetadata
+from app.model.connected_SPS import SPSClass, SPSClassSubject, SPSCourse, SPSCourseEnrolled, SPSMetadata, SPSStudentClassGrade, SPSStudentClassSubjectGrade
 from app.service.notif_service import NotificationService
 from app.repository.ethics_repo import EthicsRepository
 class ResearchService:
@@ -287,8 +287,6 @@ class ResearchService:
     @staticmethod
     async def get_research_papers_by_adviser(db: Session, research_type:str, adviser: str, course: str, year: str):
         values = year.split("-")
-        year_value = int(values[0])
-        section_value = int(values[1])
 
         query = (
             select(
@@ -301,24 +299,26 @@ class ResearchService:
                 join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id)
                 .join(Users, Author.user_id == Users.id)
                 .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSStudentClassGrade, Student.StudentId == SPSStudentClassGrade.StudentId)
+                .join(SPSClass, SPSStudentClassGrade.ClassId == SPSClass.ClassId)
                 .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
                 .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
                 .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
-                .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                .join(SPSClassSubject, SPSClass.ClassId == SPSClassSubject.ClassId)
+                .join(SPSStudentClassSubjectGrade, SPSClassSubject.ClassSubjectId == SPSStudentClassSubjectGrade.ClassSubjectId)
             )
             .where(
                 (SPSCourse.CourseCode == course)
-                & (SPSMetadata.Year == year_value)
-                & (SPSClass.Section == section_value)
+                & (SPSMetadata.Year == int(values[0]))
+                & (SPSClass.Section == int(values[1]))
                 & (ResearchPaper.research_adviser == adviser)
                 & (ResearchPaper.research_type == research_type)
             )
         )
         result = await db.execute(query)
         proposals = result.fetchall()
-        
+
         return proposals
-    
     
         
     

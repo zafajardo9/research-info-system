@@ -508,7 +508,7 @@ class ResearchService:
                 .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
                 .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
                 .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
-                .join(Ethics, ResearchPaper.id == Ethics.research_paper_id)
+                .join(ResearchDefense, ResearchPaper.id == ResearchDefense.research_paper_id)
             )
             .where(
                 (SPSCourse.CourseCode == course)
@@ -855,7 +855,7 @@ class ResearchService:
                 .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
                 .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
                 .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
-                .join(Ethics, ResearchPaper.id == Ethics.research_paper_id)
+                .join(ResearchDefense, ResearchPaper.id == ResearchDefense.research_paper_id)
             )
             .where(
                 (SPSCourse.CourseCode == course)

@@ -34,6 +34,8 @@ class UserService:
             .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
             .join(Users, Student.StudentId == Users.student_id)
             .where(Users.id == user_id)
+            .order_by(SPSMetadata.updated_at)# Order by updated_at in descending order
+            .limit(1)  # Limit the result to 1 record
         )
         return (await db.execute(query)).mappings().first()
     

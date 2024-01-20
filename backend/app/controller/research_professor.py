@@ -385,7 +385,7 @@ async def get_research_papers_by_prof(
 
 
 
-@router.get("/adviser/defense/{course}/{year}",)
+@router.get("/defense/{course}/{year}",)
 async def get_user_research_papers(
     defense_type: str,
     research_type: str,
@@ -396,7 +396,7 @@ async def get_user_research_papers(
     '''
 
     try:
-        research_papers = await ResearchService.get_research_defense_by_adviser(db, research_type, course, year, defense_type)
+        research_papers = await ResearchService.get_research_defense_by_prof(db, research_type, course, year, defense_type)
         
         if research_papers is None:
             raise HTTPException(status_code=404, detail="Research paper not found")

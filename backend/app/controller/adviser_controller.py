@@ -121,8 +121,8 @@ async def get_user_research_papers(
             {
                 "id": paper.id,
                 "title": paper.title,
-                "time": paper.research_type,
-                "date": paper.status
+                "time": paper.time,
+                "date": paper.date
             }
             for paper in research_papers
         ]

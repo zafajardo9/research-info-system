@@ -386,7 +386,7 @@ async def get_research_papers_by_prof(
 
 
 @router.get("/defense/{course}/{year}",)
-async def get_user_research_papers(
+async def get_defense_by_prof(
     defense_type: str,
     research_type: str,
     course: str,
@@ -404,8 +404,8 @@ async def get_user_research_papers(
             {
                 "id": paper.id,
                 "title": paper.title,
-                "time": paper.research_type,
-                "date": paper.status
+                "time": paper.time,
+                "date": paper.date
             }
             for paper in research_papers
         ]

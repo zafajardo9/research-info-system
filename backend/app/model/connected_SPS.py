@@ -35,6 +35,8 @@ class SPSMetadata(SQLModel,table=True):
     __tablename__= "SPSMetadata"
     MetadataId: int = Field(primary_key=True, nullable=False)
     CourseId: int
+    Batch: str
+    Semester: str
     updated_at: datetime
     created_at: datetime
     Year: int

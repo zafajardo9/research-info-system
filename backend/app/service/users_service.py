@@ -1,4 +1,4 @@
-from sqlalchemy import distinct, func, or_, outerjoin, select, and_
+from sqlalchemy import desc, distinct, func, or_, outerjoin, select, and_
 from app.model import Users
 
 
@@ -34,10 +34,25 @@ class UserService:
             .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
             .join(Users, Student.StudentId == Users.student_id)
             .where(Users.id == user_id)
-            .order_by(SPSMetadata.updated_at)# Order by updated_at in descending order
+            .order_by(desc(SPSMetadata.Batch), desc(SPSMetadata.Semester))
             .limit(1)  # Limit the result to 1 record
         )
-        return (await db.execute(query)).mappings().first()
+        #section = (select(SPSClass))
+        
+        result = await db.execute(query)
+        result = result.mappings().first()
+        custom_result = {
+            "id": result.id,
+            "email": result.email,
+            "name": result.name,
+            "birth": result.birth,
+            "student_number": result.student_number,
+            "phone_number": result.phone_number,
+            "course": result.course,
+            "section": result.section
+        }
+
+        return custom_result
     
     @staticmethod
     async def get_class_id(user_id: str):

@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 import os
 
 
-load_dotenv()
-DB_CONFIG = os.getenv("DATABASE_URL")
-print(DB_CONFIG)
-# DB_CONFIG = f"postgresql+asyncpg://pupqc_cloud_user:1r7kf1cJ41wPBAfm88mF77LJNIUuW9jG@dpgcme4jv6n7f5s73f44qi0-a.singapore-postgres.render.com/pupqc_cloud"
+# load_dotenv()
+# DB_CONFIG = os.getenv("DATABASE_URL")
+# print(DB_CONFIG)
+DB_CONFIG = f"postgresql+asyncpg://pupqc_cloud_user:1r7kf1cJ41wPBAfm88mF77LJNIUuW9jG@dpgcme4jv6n7f5s73f44qi0-a.singapore-postgres.render.com/pupqc_cloud"
 
 # #MAIN
 # #postgresql+asyncpg://postgres:fCBCc*G3Ce4geF*c1gFDgB24BCgg234g@viaduct.proxy.rlwy.net:28889/railway

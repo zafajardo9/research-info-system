@@ -384,6 +384,37 @@ async def get_research_papers_by_prof(
         return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
 
 
+
+@router.get("/adviser/defense/{course}/{year}",)
+async def get_user_research_papers(
+    defense_type: str,
+    research_type: str,
+    course: str,
+    year: str):
+    '''
+        ADVISER lang talaga
+    '''
+
+    try:
+        research_papers = await ResearchService.get_research_defense_by_adviser(db, research_type, course, year, defense_type)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "time": paper.research_type,
+                "date": paper.status
+            }
+            for paper in research_papers
+        ]
+
+        return response_papers
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+
+
 @router.get("/prof/ethics/{course}/{year}")
 async def get_research_ethics_by_prof(
     research_type: str,

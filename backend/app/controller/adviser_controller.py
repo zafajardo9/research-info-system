@@ -97,6 +97,40 @@ async def get_user_research_papers(
     except Exception as e:
         return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
     
+@router.get("/adviser/defense/{course}/{year}",)
+async def get_user_research_papers(
+    defense_type: str,
+    research_type: str,
+    course: str,
+    year: str,
+    
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    '''
+        ADVISER lang talaga
+    '''
+    
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']
+
+    try:
+        research_papers = await ResearchService.get_research_defense_by_adviser(db, research_type, current_user, course, year, defense_type)
+        
+        if research_papers is None:
+            raise HTTPException(status_code=404, detail="Research paper not found")
+        response_papers = [
+            {
+                "id": paper.id,
+                "title": paper.title,
+                "time": paper.research_type,
+                "date": paper.status
+            }
+            for paper in research_papers
+        ]
+
+        return response_papers
+    except Exception as e:
+        return ResponseSchema(detail=f"Error getting user research papers: {str(e)}", result=None)
+
 
 @router.get("/adviser/ethics/{course}/{year}")
 async def get_adviser_research_papers_and_ethics(

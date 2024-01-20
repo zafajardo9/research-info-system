@@ -13,7 +13,7 @@ from fastapi import HTTPException
 from app.repository.research_repo import ResearchPaperRepository
 from app.schema import AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse
 from app.service.users_service import UserService
-from app.model import Users, ResearchPaper, Ethics, FullManuscript, CopyRight, Student
+from app.model import Users, ResearchPaper, Ethics, FullManuscript, CopyRight, Student, ResearchDefense
 from app.model.research_paper import Author, FacultyResearchPaper, Status
 from app.repository.author_repo import AuthorRepository
 from app.model.research_status import Comment
@@ -318,6 +318,8 @@ class ResearchService:
         proposals = result.fetchall()
         
         return proposals
+    
+    
         
     
     @staticmethod
@@ -483,6 +485,46 @@ class ResearchService:
 
 
 #=============================MGA POWER NG FACULTY ========================#
+    
+    
+    @staticmethod
+    async def get_research_defense_by_adviser(db: Session, research_type: str, adviser: str, course: str, year: str, defense_type: str):
+        values = year.split("-")
+        year_value = int(values[0])
+        section_value = int(values[1])
+
+        query = (
+            select(
+                distinct(ResearchDefense.id).label('id'),
+                ResearchPaper.title,
+                ResearchDefense.date,
+                ResearchDefense.time
+            )
+            .select_from(
+                join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id)
+                .join(Users, Author.user_id == Users.id)
+                .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
+                .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                .join(Ethics, ResearchPaper.id == Ethics.research_paper_id)
+            )
+            .where(
+                (SPSCourse.CourseCode == course)
+                & (SPSMetadata.Year == year_value)
+                & (SPSClass.Section == section_value)
+                & (ResearchPaper.research_adviser == adviser)
+                & (ResearchPaper.research_type == research_type)
+                & (ResearchDefense.type == defense_type)
+            )
+        )
+        result = await db.execute(query)
+        fetched_result = result.fetchall()
+
+        return fetched_result
+    
+    
     
     @staticmethod
     async def get_research_ethics_by_adviser(db: Session, research_type: str, adviser: str, course: str, year: str):
@@ -791,6 +833,43 @@ class ResearchService:
         proposals = result.fetchall()
         
         return proposals
+    
+    @staticmethod
+    async def get_research_defense_by_prof(db: Session, research_type: str, course: str, year: str, defense_type: str):
+        values = year.split("-")
+        year_value = int(values[0])
+        section_value = int(values[1])
+
+        query = (
+            select(
+                distinct(ResearchDefense.id).label('id'),
+                ResearchPaper.title,
+                ResearchDefense.date,
+                ResearchDefense.time
+            )
+            .select_from(
+                join(ResearchPaper, Author, ResearchPaper.id == Author.research_paper_id)
+                .join(Users, Author.user_id == Users.id)
+                .join(Student, Users.student_id == Student.StudentId)
+                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                .join(SPSMetadata, SPSCourse.CourseId == SPSMetadata.CourseId)
+                .join(SPSClass, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                .join(Ethics, ResearchPaper.id == Ethics.research_paper_id)
+            )
+            .where(
+                (SPSCourse.CourseCode == course)
+                & (SPSMetadata.Year == year_value)
+                & (SPSClass.Section == section_value)
+                & (ResearchPaper.research_type == research_type)
+                & (ResearchDefense.type == defense_type)
+            )
+        )
+        result = await db.execute(query)
+        fetched_result = result.fetchall()
+
+        return fetched_result
+    
     
     
     @staticmethod

@@ -60,7 +60,7 @@ class UserService:
         user_class_data = result.mappings().first()
         
         result_section = user_class_data.section
-        result_course = user_class_data.course
+        result_course = user_class_data.course.upper()
         
         query_class_id_ris = (
             select(

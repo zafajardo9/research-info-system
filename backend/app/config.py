@@ -2,17 +2,28 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlalchemy.ext.asyncio import create_async_engine
+from dotenv import load_dotenv
+import os
 
-DB_CONFIG = f"postgresql+asyncpg://pupqc_cloud_user:1r7kf1cJ41wPBAfm88mF77LJNIUuW9jG@dpgcme4jv6n7f5s73f44qi0-a.singapore-postgres.render.com/pupqc_cloud"
 
-#MAIN
-#postgresql+asyncpg://postgres:fCBCc*G3Ce4geF*c1gFDgB24BCgg234g@viaduct.proxy.rlwy.net:28889/railway
-#SECOND
-#postgresql+asyncpg://postgres:dDbeEdFc54a2dFd1123F3Ab*-GbfEf6g@monorail.proxy.rlwy.net:28241/railway
+load_dotenv()
+DB_CONFIG = os.getenv("DATABASE_URL")
+print(DB_CONFIG)
+# DB_CONFIG = f"postgresql+asyncpg://pupqc_cloud_user:1r7kf1cJ41wPBAfm88mF77LJNIUuW9jG@dpgcme4jv6n7f5s73f44qi0-a.singapore-postgres.render.com/pupqc_cloud"
+
+# #MAIN
+# #postgresql+asyncpg://postgres:fCBCc*G3Ce4geF*c1gFDgB24BCgg234g@viaduct.proxy.rlwy.net:28889/railway
+# #SECOND
+# #postgresql+asyncpg://postgres:dDbeEdFc54a2dFd1123F3Ab*-GbfEf6g@monorail.proxy.rlwy.net:28241/railway
 
 SECRET_KEY = "zack1234"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 600
+
+
+
+# Load environment variables from .env file
+load_dotenv()
 
 class AsyncDatabaseSession: 
 

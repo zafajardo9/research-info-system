@@ -39,8 +39,8 @@ Thumbs.db
 # /backend/poetry.lock
 # /backend/pyproject.toml
 /backend/venv
-
-
+/backend/.env
+/backend/app/.env
 
 # ==============FRONTEND===================
 

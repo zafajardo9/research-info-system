@@ -37,13 +37,21 @@ class UserService:
             # .order_by(desc(SPSMetadata.Batch), desc(SPSMetadata.Semester))
             # .limit(1)
         )
-
+        # display sa kung alumni or graduated na si student
         
         result = await db.execute(query)
         result = result.mappings().first()
         
         print(result)
         
+        alumni_checker = await db.execute(
+            select(SPSCourseEnrolled.Status)
+            .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
+            .filter(SPSCourseEnrolled.StudentId == result.student_id)
+        )
+        alumni_checker_result = alumni_checker.scalar()
+        status_label = "Alumni" if alumni_checker_result == 1 else "Student"
+
         section = await db.execute(
             select(SPSClass.Section)
             .join(SPSStudentClassGrade, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
@@ -71,7 +79,8 @@ class UserService:
             "student_number": result.student_number,
             "phone_number": result.phone_number,
             "course": result.course,
-            "section": overall
+            "section": overall,
+            "status": status_label
         }
 
         return custom_result

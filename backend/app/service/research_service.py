@@ -806,6 +806,54 @@ class ResearchService:
         await db.execute(query)
         await db.commit()
 
+    # ALUMNI INTEGRATION API
+    @staticmethod
+    async def get_alumni_papers(student_number: str):
+        
+        query = (
+            select(
+                SPSCourse.CourseCode.label('course'), 
+                Student.StudentId.label('student_id'),
+                )
+            .select_from(Student)
+            .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+            .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+            .where(Student.StudentNumber == student_number)
+        )
+
+        result = await db.execute(query)
+        user_class_data = result.mappings().first()
+        
+        alumni_checker = await db.execute(
+            select(SPSCourseEnrolled.Status)
+            .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
+            .filter(SPSCourseEnrolled.StudentId == user_class_data.student_id)
+        )
+        alumni_checker_result = alumni_checker.scalar()
+        if alumni_checker_result == 1:
+            alumni_info_query = (
+                select(
+                    ResearchPaper.title,
+                    ResearchPaper.submitted_date,
+                    ResearchPaper.created_at,
+                    ResearchPaper.file_path,
+                    ResearchPaper.research_type
+                    )
+                .distinct(ResearchPaper.id)
+                .join(Author, ResearchPaper.id == Author.research_paper_id)
+                .join(Users, Users.id == Author.user_id)
+                .join(Student, Student.StudentId == Users.student_id)
+                .where(Student.StudentNumber == student_number)
+            )
+            alumni_info_result = await db.execute(alumni_info_query)
+            alumni_info_data = alumni_info_result.mappings().all()
+
+            return {"status": "Alumni", "alumni_info": alumni_info_data}
+        else:
+            return {"status": "Student", "message": "This student is currently not an alumni."}
+        
+        
+        
 
 
 

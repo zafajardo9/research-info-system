@@ -52,6 +52,7 @@ class SPSCourseEnrolled(SQLModel,table=True):
     
     CourseId: int = Field(primary_key=True, nullable=False)
     StudentId: int
+    Status: int
 
 
 class SPSStudentClassGrade(SQLModel,table=True):

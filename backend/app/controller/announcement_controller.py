@@ -21,7 +21,7 @@ router = APIRouter(
 
 
 
-@router.post("/create/", response_model=Announcement)
+@router.post("/create/", response_model=AnnouncementCreate)
 async def assign_section(
         data: AnnouncementCreate,
         credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
@@ -58,11 +58,12 @@ async def assign_section(
         title=display_announcement.title,
         content=display_announcement.content,
         other_details=display_announcement.other_details,
+        upload_image=display_announcement.image
     )
 
     return announcement_schema
 
-@router.put("/update_announcement/{id}", response_model=Announcement)
+@router.put("/update_announcement/{id}", response_model=AnnouncementUpdate)
 async def update_announcement_by_id(
         id: str,
         data: AnnouncementUpdate,

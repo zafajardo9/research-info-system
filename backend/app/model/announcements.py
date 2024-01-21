@@ -15,5 +15,5 @@ class Announcement(SQLModel, TimeMixin, table=True):
     title: str
     content: str
     other_details: Optional[str]
-    
+    image: Optional[str]
 

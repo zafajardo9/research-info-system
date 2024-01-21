@@ -11,8 +11,8 @@ from app.repository.users import UsersRepository
 from app.service.research_service import ResearchService
 
 router = APIRouter(
-    prefix="/fps-integration",
-    tags=['All related to Faculty integration']
+    prefix="/integration",
+    tags=['All related to integration']
 )
 
 
@@ -28,3 +28,22 @@ async def list_of_papers():
             return None
     except HTTPException as e:
         return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+    
+
+
+
+@router.get("/alumni/{student_number}/papers/")
+async def list_of_papers(student_number: str):
+    try:
+        result = await ResearchService.get_alumni_papers(student_number)
+        if result:
+            return result
+        else:
+            return None
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+    
+    
+
+
+

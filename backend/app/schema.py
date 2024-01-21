@@ -602,14 +602,16 @@ class AnnouncementCreate(BaseModel):
     announcement_type: str
     title: str
     content: str
-    other_details: str
+    other_details: Optional[str]
+    upload_image: Optional[str]
     
 class AnnouncementUpdate(BaseModel):
     user_role_target: str
     announcement_type: str
     title: str
     content: str
-    other_details: str
+    other_details: Optional[str]
+    image: Optional[str]
 
 class AnnouncementDisplay(BaseModel):
     user_Name: str
@@ -620,6 +622,7 @@ class AnnouncementDisplay(BaseModel):
     other_details: str
     created_at: datetime
     modified_at: datetime
+    upload_image: str
 
 # =========================================
 

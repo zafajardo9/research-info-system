@@ -295,6 +295,32 @@ class AssignToSection:
         return True
     
     @staticmethod
+    async def delete_role_and_type(user_id: str, research_type:str):
+        
+        query = select(AssignedResearchType).filter(
+            AssignedResearchType.user_id == user_id,
+            AssignedResearchType.research_type_name == research_type
+        )
+    
+        users_with_assignments = await db.execute(query)
+        results = users_with_assignments.scalars().first()
+        
+        one = delete(AssignedSections).where(AssignedSections.research_type_id == results.id)
+        await db.execute(one)
+        
+        two = delete(AssignedResearchType).where((AssignedResearchType.user_id == user_id) & (AssignedResearchType.research_type_name == research_type))
+        
+        
+        result = await db.execute(two)
+        await db.commit()
+        if result.rowcount == 0:
+            return False 
+
+        return True
+    
+    
+    
+    @staticmethod
     async def delete_user_sections(research_type_id: str):
 
         one = delete(AssignedSections).where(AssignedSections.research_type_id == research_type_id)
@@ -315,7 +341,6 @@ class AssignToSection:
             print(f"Error in delete_section_assignment: {e}")
             raise
         
-        #asdfasdfasdf
     @staticmethod
     async def delete_all_assignment(user_id: str):
         assigned_research_type = await db.execute(select(AssignedResearchType).where(AssignedResearchType.user_id == user_id))
@@ -324,12 +349,10 @@ class AssignToSection:
         if not assigned_research_type:
             return False
 
-        # Delete linked sections
         delete_statement = delete(AssignedSections).where(AssignedSections.research_type_id == assigned_research_type.id)
 
         await db.execute(delete_statement)
 
-        # Delete research type assignment
         await db.delete(assigned_research_type)
         await db.commit()
 

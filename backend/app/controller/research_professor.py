@@ -173,6 +173,35 @@ async def delete_all_assignment(
 
     return {"message": f" User assigned all deleted {user_id}"}
 
+
+@router.delete("/delete-type-and-role/{user_id}/{research_type}")
+async def delete_role_and_type(
+    user_id: str,
+    research_type: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    '''
+    deleting all assigned 
+    Also delete all linkSed sections
+    '''
+    token = JWTRepo.extract_token(credentials)
+    user_roles = token.get('role', [])
+
+    if "research professor" not in user_roles:
+        raise HTTPException(status_code=403, detail="Access forbidden. Only Research Professors are allowed.")
+
+    # Delete research type assignment
+    deleted_research_type = await AssignToSection.delete_role_and_type(user_id, research_type)
+    removed_role = "research adviser"
+    await UsersRepository.remove_role(user_id, removed_role)
+
+    if not deleted_research_type:
+        raise HTTPException(status_code=404, detail="Research Type not found")
+
+    return {"message": f" User assigned all deleted {user_id}"}
+
+
+#asdf
 #asadfasdfasdf
 
 @router.delete("/delete-assigned-research-type/{research_type_id}")

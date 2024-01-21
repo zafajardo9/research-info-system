@@ -1,0 +1,532 @@
+[
+    {
+      "name": "Abalos, Karl Christian D.",
+      "title": "Quantum Computing in Healthcare",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Aquino, Rodolfo Y.  Jr.",
+      "title": "Urban Green Spaces Impact on Mental Health",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    // {
+    //   "name": "Aribon, Mark Anthony R. III",
+    //   "title": "AI-Powered Language Translation Advancements",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "Web of Science",
+    //   "date_publish": "2019-10-09"
+    // },
+    {
+      "name": "Bactasa, Melanie F.",
+      "title": "Renewable Energy Storage Solutions",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    // {
+    //   "name": "Baltazar, Mary Ann Micah R., CPA",
+    //   "title": "Impact of Social Media on Adolescents",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "CHED Recognize",
+    //   "date_publish": "2019-10-09"
+    // },
+    // {
+    //   "name": "Banate, Richard B., CPA",
+    //   "title": "Biodiversity Conservation Strategies",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "Peer Reviewed",
+    //   "date_publish": "2019-10-09"
+    // },
+    {
+      "name": "Bernardino, Abraham Seth R.",
+      "title": "Blockchain in Supply Chain Management",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Bernardino, Girlie F.",
+      "title": "Neuroplasticity and Learning Enhancement",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Bulawit, Berna A.",
+      "title": "Cybersecurity in the Internet of Things",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Calingasan, Francisco S.",
+      "title": "Gene Editing Ethics and Regulations",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Castillo, Eleazar E.",
+      "title": "Climate Change Adaptation in Coastal Cities",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Caturay, Norberto V., DEM",
+      "title": "Augmented Reality in Education",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Cecogo, Nieva M.",
+      "title": "Future of Autonomous Vehicles",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Cipriano, Erwin",
+      "title": "Human-Computer Interaction Evolution",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Clenuar, Ricardo H.",
+      "title": "Precision Medicine and Personalized Healthcare",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    // {
+    //   "name": "Cruz, Mary Grace I.",
+    //   "title": "Effects of Microplastics on Marine Life",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "Scopus",
+    //   "date_publish": "2019-10-09"
+    // },
+    // {
+    //   "name": "De Leon, Celeste L.",
+    //   "title": "Quantum Cryptography for Secure Communication",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "CHED Recognized",
+    //   "date_publish": "2019-10-09"
+    // },
+    // {
+    //   "name": "Delmo, Elijah Paul B.",
+    //   "title": "AI in Financial Markets Prediction",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "Peer Reviewed",
+    //   "date_publish": "2019-10-09"
+    // },
+    {
+      "name": "Dolorosa, Rodrigo S., DEM",
+      "title": "Sustainable Agriculture Techniques",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Domingo, Keinaz",
+      "title": "Psychological Impact of Virtual Reality",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    // {
+    //   "name": "Doromal, Cherry M.",
+    //   "title": "5G Technology and its Applications",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "CHED Recognized",
+    //   "date_publish": "2019-10-09"
+    // },
+    {
+      "name": "Doromal, Roberto B.",
+      "title": "Artificial Womb Technology",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Dungca, Leah A.",
+      "title": "Biodegradable Plastics Development",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Escober, Ain Gueul E.",
+      "title": "Cognitive Enhancements through Brain Stimulation",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Escober, Rosicar E., Ph.D.",
+      "title": "Renewable Energy Integration Challenges",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Esguerra, Firmo A.",
+      "title": "Social Robots for Elderly Care",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Esparagoza, Cherrylyn P.",
+      "title": "Health Implications of Air Pollution",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Estella, Zandro T.",
+      "title": "Cryptocurrencies and Global Economy",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Fabela, Noel F.",
+      "title": "Ethical Implications of AI in Warfare",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Fernandez, Alma C.",
+      "title": "Urbanization and Wildlife Conservation",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    // {
+    //   "name": "Fulleros, Richard M.",
+    //   "title": "Biofuels as an Alternative Energy Source",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "Web of Science",
+    //   "date_publish": "2019-10-09"
+    // },
+    // {
+    //   "name": "Fulleros, Jorgen Z.",
+    //   "title": "Mind-Uploading and Consciousness",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "Scopus",
+    //   "date_publish": "2019-10-09"
+    // },
+    // {
+    //   "name": "Gabasa, Asuncion V.",
+    //   "title": "Space Tourism Feasibility",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "CHED Recognized",
+    //   "date_publish": "2019-10-09"
+    // },
+    // {
+    //   "name": "Garcia, Maita C.",
+    //   "title": "Smart Cities for Sustainable Living",
+    //   "content": "put any sample values",
+    //   "abstract": "put any sample",
+    //   "file_path": "path/file.pdf",
+    //   "publisher": "PUP Research Publication Office",
+    //   "category": "Peer Reviewed",
+    //   "date_publish": "2019-10-09"
+    // },
+    {
+      "name": "Gardon, Harold Q.",
+      "title": "Effects of Artificial Light on Ecosystems",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Gatan, Leslie O.",
+      "title": "Future of Quantum Teleportation",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Gatchalian, Irynne P.",
+      "title": "Technological Unemployment Concerns",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Gulmatico, Esther S., Ph.D.",
+      "title": "Nanotechnology in Medicine",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Gutierrez, Jaime Jr. P.",
+      "title": "Education Reformation through Gamification",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Isip, John Robert F.",
+      "title": "Mental Health Impacts of Social Isolation",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Lara, Erwin Vicman",
+      "title": "Advancements in Quantum Biology",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Leynes, Jerome Chrstopher G.",
+      "title": "Food Security in a Changing Climate",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Monzon, Demelyn E. Ph.D",
+      "title": "Algorithmic Bias in AI Systems",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Monzon, Kezaiah M.",
+      "title": "Trends in Human Microbiome Research",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Morales, Sheryl R.",
+      "title": "Virtual Currencies and Central Banks",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Odpaga, Ernesto J., Jr.",
+      "title": "Cognitive Computing and Decision-Making",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Oliquino, Joanna Marie DC.",
+      "title": "Ocean Acidification and Marine Life",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Pineda, Jose Gil C.",
+      "title": "AI-Generated Art and Creativity",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Roxas, Rommel Y.",
+      "title": "Advances in Fusion Energy Technology",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Servigon, Cleotilde B.",
+      "title": "Aerospace Innovations for Space Exploration",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Peer Reviewed",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Soberano, Maricar O.",
+      "title": "Biometrics and Privacy Concerns",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Web of Science",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Soberano, Philip SJ.",
+      "title": "Regenerative Medicine Breakthroughs",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "Scopus",
+      "date_publish": "2019-10-09"
+    },
+    {
+      "name": "Umali, Antonius C., DPA",
+      "title": "Social Media Influence on Political Discourse",
+      "content": "put any sample values",
+      "abstract": "put any sample",
+      "file_path": "path/file.pdf",
+      "publisher": "PUP Research Publication Office",
+      "category": "CHED Recognized",
+      "date_publish": "2019-10-09"
+    }
+  ]

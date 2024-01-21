@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import delete, desc, distinct, func, join, update
+from sqlalchemy import delete, desc, distinct, func, join, literal, update
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
@@ -772,14 +772,15 @@ class ResearchService:
     async def for_FPS_integration():
         query = (
             select(
-                FacultyResearchPaper.title,
-                FacultyResearchPaper.content,
-                FacultyResearchPaper.date_publish,
-                FacultyResearchPaper.abstract,
-                FacultyResearchPaper.category,
-                FacultyResearchPaper.publisher,
-                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('name'),
-                Faculty.Email.label('email'),)
+                func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleName).label('Author'),
+                FacultyResearchPaper.title.label('Research Title'),
+                FacultyResearchPaper.date_publish.label('Publication Year'),
+                #FacultyResearchPaper.content,
+                #FacultyResearchPaper.abstract,
+                FacultyResearchPaper.publisher.label('Publisher'),
+                FacultyResearchPaper.category.label('Category'),
+                literal("Faculty").label("Author Type")
+                )
             .join(Users, FacultyResearchPaper.user_id == Users.id)
             .join(Faculty, Users.faculty_id == Faculty.FacultyId)
         )

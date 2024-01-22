@@ -44,6 +44,19 @@ async def list_of_papers(student_number: str):
         return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
     
     
+@router.get("/accre/list/papers")
+async def list_of_papers():
+    try:
+        result = await ResearchService.get_all_research_with_authors_info_integration()
+        if result:
+            return result
+        else:
+            return None
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+    
+    
+
 
 
 

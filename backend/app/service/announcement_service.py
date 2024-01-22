@@ -94,7 +94,8 @@ class AnnouncementService:
                     "other_details": announcement.other_details,
                     "modified_at": announcement.modified_at,
                     "user_role_target": announcement.user_role_target,
-                    "content": announcement.content
+                    "content": announcement.content,
+                    "image": announcement.image
                 },
                 "user_email": user,
                 "faculty_name": faculty
@@ -156,7 +157,8 @@ class AnnouncementService:
                     "other_details": announcement.other_details,
                     "modified_at": announcement.modified_at,
                     "user_role_target": announcement.user_role_target,
-                    "content": announcement.content
+                    "content": announcement.content,
+                    "image": announcement.image
                 },
                 "user_email": user,
                 "faculty_name": faculty
@@ -192,7 +194,8 @@ class AnnouncementService:
                     "other_details": announcement.other_details,
                     "modified_at": announcement.modified_at,
                     "user_role_target": announcement.user_role_target,
-                    "content": announcement.content
+                    "content": announcement.content,
+                    "image": announcement.image
                 },
                 "user_email": user,
                 "faculty_name": faculty
@@ -229,7 +232,8 @@ class AnnouncementService:
                     "other_details": announcement.other_details,
                     "modified_at": announcement.modified_at,
                     "user_role_target": announcement.user_role_target,
-                    "content": announcement.content
+                    "content": announcement.content,
+                    "image": announcement.image
                 },
                 "user_email": user,
                 "faculty_name": faculty
@@ -265,7 +269,8 @@ class AnnouncementService:
                     "other_details": announcement.other_details,
                     "modified_at": announcement.modified_at,
                     "user_role_target": announcement.user_role_target,
-                    "content": announcement.content
+                    "content": announcement.content,
+                    "image": announcement.image
                 },
                 "user_email": user,
                 "faculty_name": faculty

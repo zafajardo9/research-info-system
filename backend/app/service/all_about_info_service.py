@@ -242,8 +242,12 @@ class AllInformationService:
 
     @staticmethod
     async def get_number_of_research_proposal(db: Session):
-        query = f"SELECT COUNT(*) FROM research_papers;"
-        result = await db.execute(query)
+        count = (
+                select(
+                    func.count(distinct(ResearchPaper.title))
+                )
+            )
+        result = await db.execute(count)
         count = result.scalar()
         return count
     
@@ -281,22 +285,34 @@ class AllInformationService:
     
     @staticmethod
     async def get_number_ethics(db: Session):
-        query = f"SELECT COUNT(*) FROM ethics;"
-        result = await db.execute(query)
+        count = (
+                select(
+                    func.count(distinct(Ethics.id))
+                )
+            )
+        result = await db.execute(count)
         count = result.scalar()
         return count
     
     @staticmethod
     async def get_number_manuscript(db: Session):
-        query = f"SELECT COUNT(*) FROM full_manuscript;"
-        result = await db.execute(query)
+        count = (
+                select(
+                    func.count(distinct(FullManuscript.id))
+                )
+            )
+        result = await db.execute(count)
         count = result.scalar()
         return count
     
     @staticmethod
     async def get_number_copyright(db: Session):
-        query = f"SELECT COUNT(*) FROM copyright;"
-        result = await db.execute(query)
+        count = (
+                select(
+                    func.count(distinct(CopyRight.id))
+                )
+            )
+        result = await db.execute(count)
         count = result.scalar()
         return count
     

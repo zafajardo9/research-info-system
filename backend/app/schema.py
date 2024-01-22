@@ -605,7 +605,7 @@ class AnnouncementCreate(BaseModel):
     title: str
     content: str
     other_details: Optional[str]
-    upload_image: Optional[str]
+    image: Optional[str]
     
 class AnnouncementUpdate(BaseModel):
     user_role_target: str

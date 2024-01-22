@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.research_repo import ResearchPaperRepository
-from app.schema import AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse
+from app.schema import AuthorShow, CopyRightResponse, DisplayAllByUser, EthicsResponse, FPSTest, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptResponse, ResearchPaperCreate, ResearchPaperResponse, ResearchPaperShow, ResearchPaperWithAuthorsResponse
 from app.service.users_service import UserService
 from app.model import Users, ResearchPaper, Ethics, FullManuscript, CopyRight, Student, ResearchDefense
 from app.model.research_paper import Author, FacultyResearchPaper, Status
@@ -745,6 +745,29 @@ class ResearchService:
         )
         return research_paper
     
+    @staticmethod
+    async def upload_multiple_faculty_papers(research_papers_data: List[FPSTest]) -> List[FacultyResearchPaper]:
+        uploaded_papers = []
+
+        for research_paper_data in research_papers_data:
+            _research_paper_id = str(uuid4())
+            date_published = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
+
+            # Convert to dictionary and remove 'date_publish'
+            research_paper_data_dict = research_paper_data.dict()
+            research_paper_data_dict.pop('date_publish', None)
+
+            # Pass the dictionary as keyword arguments, excluding 'date_publish'
+            research_paper = await FacultyResearchRepository.create(
+                db,
+                model=FacultyResearchPaper,
+                id=_research_paper_id,
+                date_publish=date_published,
+                **research_paper_data_dict,
+            )
+            uploaded_papers.append(research_paper)
+
+        return uploaded_papers
     
     @staticmethod
     async def get_faculty_research_papers(user_id: str):

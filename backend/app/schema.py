@@ -677,6 +677,16 @@ class FacultyResearchPaperCreate(BaseModel):
     category: str
     publisher: str
     date_publish: str
+    
+class FPSTest(BaseModel):
+    user_id: str
+    title: str
+    content: str
+    abstract: str
+    file_path: str
+    category: str
+    publisher: str
+    date_publish: str
 
     
 class FacultyResearchPaperUpdate(BaseModel):

@@ -4,7 +4,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 
-from app.schema import AssignUserProfile, CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptWithResearchResponse, ResearchPaperResponse, ResponseSchema, StatusUpdate
+from app.schema import AssignUserProfile, CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FPSTest, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptWithResearchResponse, ResearchPaperResponse, ResponseSchema, StatusUpdate
 from app.service.research_service import ResearchService
 from app.config import db
 from app.service.assignTo_service import AssignToSection
@@ -325,6 +325,18 @@ async def update_research_paper_status(
 # ======================================= FAULTY UPLOAD OF PAPERS
 
 #progress making research repo for faculty
+
+# @router.post("/fps/upload-all")
+# async def testing_fps(research_paper_data: List[FPSTest]):
+
+#     try:
+#         faculty_papers = await ResearchService.upload_multiple_faculty_papers(research_paper_data)
+#         return ResponseSchema(detail="All research papers created successfully", result=[faculty_paper.dict() for faculty_paper in faculty_papers])
+#     except ValueError as ve:
+#         return ResponseSchema(detail=f"Error creating research paper: Invalid date format. Please use 'dd-mm-yyyy'.", result=None)
+#     except HTTPException as e:
+#         return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
+
 
 
 @router.get("/faculty-papers/list")

@@ -17,6 +17,7 @@ from app.model.users import Role, UsersRole
 from sqlalchemy import or_, and_
 
 from app.model.connected_SPS import SPSCourse, SPSCourseEnrolled
+from sqlalchemy.orm import selectinload
 
 
 class AllInformationService:
@@ -204,8 +205,70 @@ class AllInformationService:
         count = result.scalar()
         return count
     
+    @staticmethod
+    async def compute_collaboration_metrics(db, research_proposal_id):
+        # Load the research proposal along with authors and users
+        proposal = await db.execute(
+            select(ResearchPaper).options(selectinload(ResearchPaper.authors).selectinload(Author.user)).
+            where(ResearchPaper.id == research_proposal_id)
+        )
+        proposal = proposal.scalar()
+        # Extract information for collaboration metrics
+        authors = proposal.authors
+        user_ids = {author.user_id for author in authors}
+        collaboration_count = len(authors)
+        unique_collaborators = len(user_ids)
+
+        # Calculate the percentage of authors
+        percentage_of_authors = (unique_collaborators / collaboration_count) * 100 if collaboration_count > 0 else 0
+
+        return collaboration_count, unique_collaborators, percentage_of_authors
     
-    
+    @staticmethod
+    async def compute_all_collaboration_metrics(db):
+        # Fetch all research proposals
+        proposals = await db.execute(select(ResearchPaper).options(selectinload(ResearchPaper.authors).selectinload(Author.user)))
+        proposals = proposals.scalars().all()
+
+        # Store collaboration metrics for each research proposal
+        all_metrics = []
+
+        total_collaboration_count = 0
+        total_percentage_of_authors = 0
+
+        for proposal in proposals:
+            # Extract information for collaboration metrics
+            authors = proposal.authors
+            user_ids = {author.user_id for author in authors}
+            collaboration_count = len(authors)
+            unique_collaborators = len(user_ids)
+
+            # Calculate the percentage of authors
+            percentage_of_authors = (unique_collaborators / collaboration_count) * 100 if collaboration_count > 0 else 0
+
+            # Store the metrics for this research proposal
+            proposal_metrics = {
+                "research_proposal_id": proposal.id,
+                "collaboration_count": collaboration_count,
+                "percentage_of_authors": percentage_of_authors
+            }
+
+            all_metrics.append(proposal_metrics)
+
+            # Update total counts for averaging
+            total_collaboration_count += collaboration_count
+            total_percentage_of_authors += percentage_of_authors
+
+        # Calculate average collaboration count and average percentage of authors
+        average_collaboration_count = total_collaboration_count / len(proposals) if len(proposals) > 0 else 0
+        average_percentage_of_authors = total_percentage_of_authors / len(proposals) if len(proposals) > 0 else 0
+
+        return {
+            "Average Collaboration Count": average_collaboration_count,
+            "Average Percentage of Authors": average_percentage_of_authors,
+            "All Metrics": all_metrics
+        }
+
 
     @staticmethod
     async def get_student_count_by_course(db: Session, course: str):

@@ -58,7 +58,7 @@ async def assign_section(
         title=display_announcement.title,
         content=display_announcement.content,
         other_details=display_announcement.other_details,
-        upload_image=display_announcement.image
+        image=display_announcement.image
     )
 
     return announcement_schema

@@ -139,6 +139,7 @@ class ResearchService:
                                     ResearchPaper.file_path,
                                     ResearchPaper.research_adviser,
                                     func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('faculty_name'),
+                                    ResearchPaper.extension
                                 )
                                 .join(Users, ResearchPaper.research_adviser == Users.id)
                                 .join(Faculty, Users.faculty_id == Faculty.FacultyId)
@@ -1119,59 +1120,54 @@ class ResearchService:
         return combined_result
     
     
-    #     @staticmethod
-    # async def get_research_paper_with_authors(research_paper_id: str):
-    #     try:
-    #         research_paper_query = (select(
-    #                                 ResearchPaper.id,
-    #                                 ResearchPaper.title,
-    #                                 ResearchPaper.submitted_date,
-    #                                 ResearchPaper.status,
-    #                                 ResearchPaper.research_type,
-    #                                 ResearchPaper.file_path,
-    #                                 ResearchPaper.research_adviser,
-    #                                 func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('faculty_name'),
-    #                             )
-    #                             .join(Users, ResearchPaper.research_adviser == Users.id)
-    #                             .join(Faculty, Users.faculty_id == Faculty.FacultyId)
-    #                             .where(ResearchPaper.id == research_paper_id)
-    #                             )
-    #         research_paper_result = await db.execute(research_paper_query)
-    #         research_paper = research_paper_result.fetchall()
-    #         print(research_paper)
-
-
-    #         if not research_paper:
-    #             raise HTTPException(status_code=404, detail=f"Research paper with id {research_paper_id} not found.")
-
-    #         # Query to get authors' details
-    #         authors_query = (
-    #             select(Users.id, 
-    #                    func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
-    #                    Student.StudentNumber.label('student_number'),
-    #                 #    Class.section, Class.course
-    #                    )
-    #             .join(Author, Users.id == Author.user_id)
-    #             .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-    #             .join(Student, Users.student_id == Student.StudentId)
-    #             #.join(Class, Class.id == Student.class_id)
-    #             .where(ResearchPaper.id == research_paper_id)
-    #         )
-
-    #         authors_result = await db.execute(authors_query)
-    #         authors_details = authors_result.fetchall()
+    @staticmethod
+    async def extension_list_for_extension():
+        try:
+            research_paper_query = (
+                select(
+                    ResearchPaper.id.label('paper_id'),
+                    ResearchPaper.title.label('Title'),
+                    func.to_char(CopyRight.modified_at, 'YYYY-DD-MM').label('Date'),
+                    CopyRight.co_authorship.label('Co Authorship file'),
+                    CopyRight.approval_sheet.label('Approval file'),
+                    CopyRight.journal_publication.label('Journal file')
+                )
+                .join(CopyRight, ResearchPaper.id == CopyRight.research_paper_id)
+                #.where(ResearchPaper.extension == "")
+            )
             
+            result = await db.execute(research_paper_query)
+            fetched_result = result.fetchall()
 
+            combined_result = []
 
-    #         # Create a dictionary to hold the results
-    #         result_dict = {
-    #             "research_paper": research_paper,
-    #             "authors": authors_details,
-    #         }
+            for row in fetched_result:
+                authors_query = (
+                    select(
+                        func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('Name'),
+                        Student.StudentNumber.label('Student Number'),
+                        SPSCourse.CourseCode.label('Course'),
+                    )
+                    .select_from(ResearchPaper)  # Explicit FROM clause
+                    .join(Author, ResearchPaper.id == Author.research_paper_id)
+                    .join(Users, Author.user_id == Users.id)
+                    .join(Student, Users.student_id == Student.StudentId)
+                    .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                    .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                    .where(ResearchPaper.id == row['paper_id'])
+                )
 
-    #         return result_dict
+                authors_result = await db.execute(authors_query)
+                authors_fetched_result = authors_result.fetchall()
 
-    #     except HTTPException as e:
-    #         raise e
-    #     except Exception as e:
-    #         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+                row_dict = dict(row)
+                row_dict['Researchers'] = authors_fetched_result
+                row_dict.pop('paper_id', None)
+                combined_result.append(row_dict)
+
+            return combined_result
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")

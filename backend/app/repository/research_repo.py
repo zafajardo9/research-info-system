@@ -158,9 +158,8 @@ class ResearchPaperRepository(BaseRepo):
         if research_paper:
             # Assign values from make_extension
             research_paper.extension = make_extension.extension
-            research_paper.extension_type = make_extension.extension_type
             await db.commit()
-            db.refresh(research_paper)
+            await db.refresh(research_paper)
             return research_paper
         else:
             raise HTTPException(status_code=404, detail="Research paper not found")

@@ -58,5 +58,16 @@ async def list_of_papers():
     
 
 
+@router.get("/extension/for-extension/list")
+async def extension_list_for_extension():
+    try:
+        research_papers = await ResearchService.extension_list_for_extension()
+        if research_papers is None:
+            return []
+        return research_papers
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting records: {str(e)}", result=None)
+
+
 
 

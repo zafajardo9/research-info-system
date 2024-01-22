@@ -49,8 +49,8 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
 
 
         # EXTENSIOOOOONNNNN
-    extension: Optional[bool]
-    extension_type: Optional[str]
+    extension: Optional[str]
+    #extension_type: Optional[str]
     
     
     workflow_step_id: str = Field(foreign_key="RISworkflow_steps.id")

@@ -202,8 +202,7 @@ class StatusUpdate(BaseModel):
 #     authors: Optional[List[AuthorSchema]] = []
 
 class MakeExtension(BaseModel):
-    extension: bool
-    extension_type: str
+    extension: str
 
 #==================== ETHICS =====================
 class EthicsCreate(BaseModel):

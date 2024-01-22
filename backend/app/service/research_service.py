@@ -704,7 +704,7 @@ class ResearchService:
         research_paper = await ResearchPaperRepository.update_manuscript_status(db, id, new_status)
         return research_paper
     
-
+    
 
 
 #============================ WILL PUT RESEARCH COMMENTS HERE ==================#

@@ -4,13 +4,14 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
 
-from app.schema import AssignUserProfile, CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FPSTest, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptWithResearchResponse, ResearchPaperResponse, ResponseSchema, StatusUpdate
+from app.schema import AssignUserProfile, CopyRightWithResearchResponse, EthicsResponse, EthicsWithResearchResponse, FPSTest, FacultyResearchPaperCreate, FacultyResearchPaperUpdate, FullManuscriptWithResearchResponse, MakeExtension, ResearchPaperResponse, ResponseSchema, StatusUpdate
 from app.service.research_service import ResearchService
 from app.config import db
 from app.service.assignTo_service import AssignToSection
 from app.service.users_service import UserService
 from app.model.research_paper import FacultyResearchPaper
 from app.repository.users import UsersRepository
+from app.repository.research_repo import ResearchPaperRepository
 
 router = APIRouter(
     prefix="/faculty",
@@ -313,6 +314,28 @@ async def update_research_paper_status(
         return ResponseSchema(detail=f"Research paper {research_paper.id} status updated successfully", result=research_paper)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error updating research paper status: {str(e)}", result=None)
+    
+
+@router.put("/make-extension/{research_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def update_research_paper_status(
+    id: str,
+    make_extension: MakeExtension,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    # Extract the user role from the JWT token
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']  # this line will show what role the logged-in user is
+
+    user_roles = await UsersRepository.get_user_roles(current_user)
+    if "faculty" not in user_roles:
+        raise HTTPException(status_code=403, detail=f"You are not allowed to use this feature")
+
+    try:
+        research_paper = await ResearchPaperRepository.make_paper_extension(db, id, make_extension)
+        return ResponseSchema(detail=f"Research paper {research_paper.id} is now part of extension", result=research_paper)
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error making research extension: {str(e)}", result=None)
+    
     
     
     

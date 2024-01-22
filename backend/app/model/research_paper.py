@@ -46,6 +46,13 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
 
     file_path: str
     research_adviser: str
+
+
+        # EXTENSIOOOOONNNNN
+    extension: Optional[bool]
+    extension_type: Optional[str]
+    
+    
     workflow_step_id: str = Field(foreign_key="RISworkflow_steps.id")
     workflow_step: "WorkflowStep" = Relationship(back_populates="research_paper")
 

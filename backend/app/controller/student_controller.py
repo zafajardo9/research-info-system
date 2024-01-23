@@ -61,7 +61,7 @@ async def read_workflow(
 
     advisers_assigned = await AssignToSection.get_list_my_adviser(user_class, research_type)
     
-    print(advisers_assigned) # Add this line
+    print(advisers_assigned)
     if not advisers_assigned:
         raise HTTPException(status_code=404, detail="Nothing found")
     return advisers_assigned
@@ -120,43 +120,41 @@ async def get_workflow_details(workflow_id: str, research_paper_id: str, credent
     token = JWTRepo.extract_token(credentials)
     user_id = token['user_id']
     roles = token.get('role', [])
-
     if "student" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
-
-
     result = await UserService.get_class_id(user_id)
-    
     user_class = result[0] if result else None
     
-    
-    
-    workflow = await WorkflowService.get_all_data_related_in_research(workflow_id, research_paper_id)
-    
-    if not workflow:
-        raise HTTPException(status_code=404, detail="Workflow not found")
-    
-    return workflow
-
-
-@router.get("/flow-info-status2/{workflow_id}/")
-async def flow_2(workflow_id: str, research_paper_id: str, credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
-    
-    token = JWTRepo.extract_token(credentials)
-    user_id = token['user_id']
-    roles = token.get('role', [])
-
-    if "student" not in roles:
-        raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
-
-
-    result = await UserService.get_class_id(user_id)
-    
-    user_class = result[0] if result else None
-    
+    #dating version
+    #workflow = await WorkflowService.get_all_data_related_in_research(workflow_id, research_paper_id)
+    # bago
     workflow = await WorkflowService.flow_2(workflow_id, research_paper_id, user_class)
     
+    
     if not workflow:
         raise HTTPException(status_code=404, detail="Workflow not found")
     
     return workflow
+
+
+# @router.get("/flow-info-status2/{workflow_id}/")
+# async def flow_2(workflow_id: str, research_paper_id: str, credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    
+#     token = JWTRepo.extract_token(credentials)
+#     user_id = token['user_id']
+#     roles = token.get('role', [])
+
+#     if "student" not in roles:
+#         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
+
+
+#     result = await UserService.get_class_id(user_id)
+    
+#     user_class = result[0] if result else None
+    
+#     workflow = await WorkflowService.flow_2(workflow_id, research_paper_id, user_class)
+    
+#     if not workflow:
+#         raise HTTPException(status_code=404, detail="Workflow not found")
+    
+#     return workflow

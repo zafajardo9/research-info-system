@@ -442,7 +442,7 @@ class WorkflowDetail(BaseModel):
     course: str
     section: str
     steps: List[WorkflowStepDetail]
-    defense: List[str]
+    #defense: List[str]
     
 class WorkflowDetailSpecific(BaseModel):
     id: str
@@ -483,6 +483,7 @@ class FLOW2(BaseModel):
     id: str
     type: str
     steps: List[WorkflowResearchInfoStep]
+    set_defense: List[Dict[str, Any]]
 # END ============================================================
 
 

@@ -23,13 +23,14 @@ from app.model.workflowprocess import NavigationClass, NavigationTab, Workflow, 
 from app.model.workflowprocess import WorkflowStep
 
 from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight
-from app.schema import NavigationProcessDisplay, NavigationTabCreate, NavigationTabUpdate, WorkflowCreate, WorkflowDetail, WorkflowDetailSpecific, WorkflowDetailWithStatus, WorkflowGroupbyType, WorkflowResearchInfo, WorkflowResearchInfoStep, WorkflowResponse, WorkflowStepCreate, WorkflowStepDetailWithStatus, WorkflowUpdate
+from app.schema import FLOW2, NavigationProcessDisplay, NavigationTabCreate, NavigationTabUpdate, WorkflowCreate, WorkflowDetail, WorkflowDetailSpecific, WorkflowDetailWithStatus, WorkflowGroupbyType, WorkflowResearchInfo, WorkflowResearchInfoStep, WorkflowResponse, WorkflowStepCreate, WorkflowStepDetailWithStatus, WorkflowUpdate
 from app.service.section_service import SectionService
 from app.model.student import Class, Student
 from app.model.researchdef import ResearchDefense
 from app.model.faculty import Faculty
 from app.model.research_paper import Author
 from app.model.users import Users
+from app.model import SetDefense, SetDefenseClass
 
 
 
@@ -462,6 +463,7 @@ class WorkflowService:
         return workflows_with_steps
     
     
+# todo FIX
 
     @staticmethod
     async def get_my_workflow(user_class: str):
@@ -488,6 +490,20 @@ class WorkflowService:
             steps = await db.execute(steps_query)
             steps = steps.scalars().all()
 
+
+            #todo delete this part tapos sa schema tapos yung sa baba din
+            # def_query = (
+            #     select(SetDefense)
+            #     .join(SetDefenseClass, SetDefenseClass.set_defense_id == SetDefense.id)
+            #     .where(
+            #         (SetDefense.research_type == workflow.type) &
+            #         (SetDefenseClass.class_id == user_class)
+            #     )
+            #     .select_from(SetDefense)  # Explicitly specify the left side
+            # )
+            # result = await db.execute(def_query)
+            # defense = result.scalars().all()
+
             workflow_detail = WorkflowDetail(
                 id=workflow.id,
                 class_id=user_class,
@@ -495,7 +511,8 @@ class WorkflowService:
                 user_id=workflow.user_id,
                 course=course,
                 section=section,
-                steps=steps
+                steps=steps,
+                #defense=defense
             )
             workflows_with_steps.append(workflow_detail)
 
@@ -1002,7 +1019,7 @@ class WorkflowService:
     
     
     @staticmethod
-    async def get_all_data_related_in_research(workflow_id: str, research_paper_id: str):
+    async def flow_2(workflow_id: str, research_paper_id: str, user_class:str):
         query = (
             select(Workflow)
             .where(Workflow.id == workflow_id)
@@ -1018,15 +1035,29 @@ class WorkflowService:
         steps_result = await db.execute(steps_query)
         steps = steps_result.scalars().all()
 
-        workflow_detail = WorkflowResearchInfo(
+
+        def_query = (
+                select(SetDefense)
+                .join(SetDefenseClass, SetDefenseClass.set_defense_id == SetDefense.id)
+                .where(
+                    (SetDefense.research_type == workflow.type) &
+                    (SetDefenseClass.class_id == user_class)
+                )
+                .select_from(SetDefense)
+            )
+        result = await db.execute(def_query)
+        defense = result.scalars().all()
+
+        workflow_detail = FLOW2(
             id=workflow.id,
             type=workflow.type,
-            steps=[]
+            steps=[],
+            set_defense=[],
         )
 
         for step in steps:
             step_name = step.name
-            info = await WorkflowService.displayinfo_from_all(step_name, research_paper_id, step.id)
+            info = await WorkflowService.flow_2_holder(step_name, research_paper_id, step.id)
             info_dict = {"whole-info": info}
             step_detail = WorkflowResearchInfoStep(
                 id=step.id,
@@ -1036,11 +1067,12 @@ class WorkflowService:
             )
             workflow_detail.steps.append(step_detail)
 
+        workflow_detail.set_defense = defense
         return [workflow_detail]
     
     
     @staticmethod
-    async def displayinfo_from_all(step_name: str, research_paper_id: str, workflowstep_id: str):
+    async def flow_2_holder(step_name: str, research_paper_id: str, workflowstep_id: str):
         if step_name == "Ethics":
             ethics_query = select(Ethics).where(
                 (Ethics.workflow_step_id == workflowstep_id) &

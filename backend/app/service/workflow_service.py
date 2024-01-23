@@ -1067,7 +1067,11 @@ class WorkflowService:
             )
             workflow_detail.steps.append(step_detail)
 
-        workflow_detail.set_defense = defense
+        if defense:
+            workflow_detail.set_defense = defense
+        else:
+            workflow_detail.set_defense = [{"message": "No defense set by professor records found."}]
+
         return [workflow_detail]
     
     

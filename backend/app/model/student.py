@@ -13,10 +13,7 @@ class Class(SQLModel, table=True):
     id: str = Field(primary_key=True, nullable=False)
     section: str
     course: str
-    
-    #students: List["Student"] = Relationship(back_populates="classes")
-    
-    
+
     assigned_sections: List["AssignedSections"] = Relationship(back_populates="class_")
     
     assign_section_prof: List["AssignedSectionsToProf"] = Relationship(back_populates="class_")
@@ -24,6 +21,7 @@ class Class(SQLModel, table=True):
     #connection to the workflow table
     workflows: List["Workflow"] = Relationship(back_populates="class_", link_model=WorkflowClass)
     navigation_role: List["NavigationTab"] = Relationship(back_populates="class_id", link_model=NavigationClass)
+    set_defense_class: List["SetDefenseClass"] = Relationship(back_populates="class_")
         
 class Student(SQLModel, table=True):
     __tablename__ = "SPSStudent"

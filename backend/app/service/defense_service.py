@@ -17,12 +17,47 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.announcement_repo import AnnouncementRepository
-from app.schema import DefenseCreate, DefenseUpdate
-from app.model import ResearchDefense
+from app.schema import DefenseCreate, DefenseUpdate, SetDefenseCreate, SetDefenseUpdate
+from app.model import ResearchDefense, SetDefense
 
 class DefenseService:
     
+    @staticmethod
+    async def faculty_set(data: SetDefenseCreate):
         
+        gen_id = str(uuid.uuid4())
+        # Parse the date and time strings into date and time objects
+        defense_date = datetime.strptime(data.date, "%Y-%m-%d").date()
+        defense_time = datetime.strptime(data.time, "%H:%M:%S").time()
+        
+        db_make = SetDefense(
+            id=gen_id, 
+            research_type=data.research_type, 
+            defense_type=data.defense_type,
+            date=defense_date, 
+            time=defense_time, 
+            )
+        db.add(db_make)
+        await db.commit()
+        await db.refresh(db_make)
+        return db_make
+    
+    
+    @staticmethod
+    async def display_set_defense(research_type: str):
+        
+        query = (
+            select(SetDefense)
+            .where(SetDefense.research_type == research_type)
+        )
+        result = await db.execute(query)
+        defense = result.scalar()
+        
+        return defense
+    
+    
+    
+# ========================================================
     @staticmethod
     async def create_defense(data: DefenseCreate):
         

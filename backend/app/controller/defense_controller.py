@@ -5,12 +5,12 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
 
 from app.config import db
-from app.schema import DefenseCreate, DefenseUpdate, ResponseSchema
+from app.schema import DefenseCreate, DefenseUpdate, ResponseSchema, SetDefenseCreate, SetDefenseUpdate
 from app.service.ethics_service import EthicsService
 from app.service.defense_service import DefenseService
 from app.service.workflow_service import WorkflowService
 
-from app.model import ResearchDefense
+from app.model import ResearchDefense, SetDefense
 
 router = APIRouter(
     prefix="/defense",
@@ -25,6 +25,33 @@ async def submit_def(data: DefenseCreate):
         return await DefenseService.create_defense(data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+#============================= FACULTY
+@router.post("/faculty-set-date", response_model=SetDefense)
+async def set_date(data: SetDefenseCreate):
+    try:
+        return await DefenseService.faculty_set(data)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+@router.get("/faculty-set-date-display/")
+async def display_set_date(research_type: str):
+    try:
+        return await DefenseService.display_set_defense(research_type)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+@router.put("/faculty-update-date/{id}", response_model=List[SetDefense])
+async def display_set_date(id: str, data: DefenseCreate):
+    try:
+        return await DefenseService.create_defense(id, data)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+# ======================================================
+
 
 
 

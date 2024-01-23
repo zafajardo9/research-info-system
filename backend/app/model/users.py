@@ -38,19 +38,15 @@ class Users(SQLModel, TimeMixin, table=True):
     author: Optional[List["Author"]] = Relationship(back_populates="user")
     comments: Optional[List["Comment"]] = Relationship(back_populates="user")
 
-      
     workflow: List["Workflow"] = Relationship(back_populates="users")
     
     notifications: Optional[List["Notification"]] = Relationship(back_populates="user")
     
     
-    #reltionship to faculty research papers:
     faculty_research_papers: List["FacultyResearchPaper"] = Relationship(back_populates="user")
     
-    #iba to ewan
     research_types: Optional[List["AssignedResearchType"]] = Relationship(back_populates="users")
    
-    # research_type_assigned_prof: Optional[List["AssignedResearchTypeToProf"]] = Relationship(back_populates="users")
     section_assigned_prof: Optional[List["AssignedSectionsToProf"]] = Relationship(back_populates="users")
 
 

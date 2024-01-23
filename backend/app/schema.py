@@ -715,6 +715,19 @@ class DefenseUpdate(BaseModel):
     date: str
     time: str
     
+    
+class SetDefenseCreate(BaseModel):
+    research_type: str
+    defense_type: str
+    date: str
+    time: str
+    
+class SetDefenseUpdate(BaseModel):
+    research_type: str
+    defense_type: str
+    date: str
+    time: str
+    
 
 # END =============================
 #FOR THE DISPLAY OF LIST IN PAGE

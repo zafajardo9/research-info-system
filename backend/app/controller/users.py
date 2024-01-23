@@ -81,7 +81,7 @@ async def get_student_list():
     """
     Get all student
     """
-    result = await UserService.get_all_student()
+    result = await UserService.get_all_students()
     if result:
         return ResponseSchema(detail="Successfully fetch Student profile!", result=result)
     else:

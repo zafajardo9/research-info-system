@@ -1,4 +1,4 @@
-from sqlalchemy import desc, distinct, func, or_, outerjoin, select, and_
+from sqlalchemy import case, desc, distinct, func, or_, outerjoin, select, and_
 from app.model import Users
 
 
@@ -34,10 +34,7 @@ class UserService:
             .join(Student, SPSCourseEnrolled.StudentId == Student.StudentId)
             .join(Users, Student.StudentId == Users.student_id)
             .where(Users.id == user_id)
-            # .order_by(desc(SPSMetadata.Batch), desc(SPSMetadata.Semester))
-            # .limit(1)
         )
-        # display sa kung alumni or graduated na si student
         
         result = await db.execute(query)
         result = result.mappings().first()
@@ -168,11 +165,11 @@ class UserService:
                 Student.year,
                 Student.student_number,
                 Student.phone_number,
-                Class.section,
-                Class.course
+                # Class.section,
+                # Class.course
             )
             .join(Student, Users.student_id == Student.id)
-            .join(Class, Student.class_id == Class.id)
+            # .join(Class, Student.class_id == Class.id)
             .where(Users.id == user_id)
         )
         return (await db.execute(query)).mappings().one()
@@ -222,29 +219,56 @@ class UserService:
 
 #FOR NOW OKS LANG TO
     @staticmethod
-    async def get_all_student():
+    async def get_all_students():
+        profiles = []
+
         query = (
             select(
-                Users.id,
+                Users.id.label('id'),
+                # Student.StudentId.label('student_id'),
                 Student.Email.label('email'),
                 func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
                 Student.DateOfBirth.label('birth'),
                 Student.StudentNumber.label('student_number'),
-                Student.MobileNumber.label('phone_number')
-                # Class.section,
-                # Class.course
+                Student.MobileNumber.label('phone_number'),
+                SPSCourse.CourseCode.label('course'),
+                # SPSClass.ClassId.label('class_id'),
+                case([(SPSCourseEnrolled.Status == 1, 'Alumni')], else_='Student').label('status'),
+                func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
             )
-            .join(Student, Users.student_id == Student.StudentId)
-            #.join(Class, Student.class_id == Class.id)
-            .where(Role.role_name == "student")
+            .distinct(Users.id)
+            .select_from(Users)
+            .join(Student, Student.StudentId == Users.student_id)
+            .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
+            .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
+            .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
+            .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+            .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+            .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
         )
 
-        result = await db.execute(query)
-        students_data = result.mappings().all()
+        results = await db.execute(query)
+        results = results.mappings()
 
-        return students_data
-    
-    
+
+        for result in results:
+            custom_result = {
+                "user_id": result.user_id,
+                "student_id": result.student_id,
+                "email": result.email,
+                "name": result.name,
+                "birth": result.birth,
+                "student_number": result.student_number,
+                "phone_number": result.phone_number,
+                "course": result.course,
+                "class_id": result.class_id,
+                "status": result.status,
+                "year_section": result.year_section,
+            }
+
+            profiles.append(custom_result)
+
+        return profiles
 
     @staticmethod
     async def get_all_faculty():

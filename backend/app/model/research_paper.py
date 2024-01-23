@@ -46,8 +46,6 @@ class ResearchPaper(SQLModel, TimeMixin, table=True):
 
     file_path: str
     research_adviser: str
-
-
         # EXTENSIOOOOONNNNN
     extension: Optional[str]
     #extension_type: Optional[str]

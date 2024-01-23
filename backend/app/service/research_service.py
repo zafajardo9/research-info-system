@@ -1084,9 +1084,16 @@ class ResearchService:
                 ResearchPaper.id.label('paper_id'),
                 ResearchPaper.title.label('Title'),
                 func.to_char(CopyRight.modified_at, 'YYYY-DD-MM').label('Date'),
+                func.concat(Faculty.FirstName, ' ', Faculty.MiddleName, ' ', Faculty.LastName).label('Research Advicer'),
             )
+            .distinct(ResearchPaper.id)
             .join(CopyRight, ResearchPaper.id == CopyRight.research_paper_id)
+            .join(Author, ResearchPaper.id == Author.research_paper_id)
+            .join(Users, ResearchPaper.research_adviser == Users.id)
+            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
         )
+        
+                                
 
         result = await db.execute(query)
         fetched_result = result.fetchall()

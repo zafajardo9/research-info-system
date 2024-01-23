@@ -40,6 +40,7 @@ class SetDefenseClass(SQLModel, table=True):
     class_id: str = Field(foreign_key="RISClass.id")
     set_defense_id: Optional[str] = Field(default=None, foreign_key="RISset_defense.id")
 
+
+
     set_defense: Optional["SetDefense"] = Relationship(back_populates="set_defense_class_handle")
-    
     class_: "Class" = Relationship(back_populates="set_defense_class") 

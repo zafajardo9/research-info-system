@@ -728,6 +728,10 @@ class SetDefenseUpdate(BaseModel):
     date: str
     time: str
     
+    
+class SetDefenseCreateClass(BaseModel):
+    class_id: str
+    
 
 # END =============================
 #FOR THE DISPLAY OF LIST IN PAGE

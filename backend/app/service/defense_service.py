@@ -17,8 +17,8 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.repository.announcement_repo import AnnouncementRepository
-from app.schema import DefenseCreate, DefenseUpdate, SetDefenseCreate, SetDefenseUpdate
-from app.model import ResearchDefense, SetDefense
+from app.schema import DefenseCreate, DefenseUpdate, SetDefenseCreate, SetDefenseUpdate, SetDefenseCreateClass
+from app.model import ResearchDefense, SetDefense, SetDefenseClass
 
 class DefenseService:
     
@@ -44,20 +44,83 @@ class DefenseService:
     
     
     @staticmethod
-    async def display_set_defense(research_type: str):
+    async def faculty_set_class(id: str ,data: SetDefenseCreateClass):
         
-        query = (
-            select(SetDefense)
-            .where(SetDefense.research_type == research_type)
-        )
+        gen_id = str(uuid.uuid4())
+        
+        db_make = SetDefenseClass(
+            id=gen_id, 
+            class_id=data.class_id, 
+            set_defense_id=id, 
+            )
+        db.add(db_make)
+        await db.commit()
+        await db.refresh(db_make)
+        return db_make
+    
+    
+    @staticmethod
+    async def delete_faculty_set_class(id: str):
+        print(f"Deleting announcement with ID: {id}")
+
+        query = delete(SetDefenseClass).where(SetDefenseClass.id == id)
+        
         result = await db.execute(query)
-        defense = result.scalar()
-        
-        return defense
+        await db.commit()
+        if result.rowcount > 0:
+            return True 
+        else:
+            return False
+
+
     
     
-    
+    @staticmethod
+    async def display_set_defense(research_type: str, defense_type: str):
+        try:
+            query = (
+                select(
+                    SetDefense
+                    # .id, 
+                    # SetDefense.research_type, 
+                    # SetDefense.defense_type,
+                    # SetDefense.date,
+                    # SetDefense.time
+                    )
+                .where((SetDefense.research_type == research_type) & (SetDefense.defense_type == defense_type))
+            )
+            result = await db.execute(query)
+            defense = result.scalar()
+            
+            
+            print(defense)
+            if not defense:
+                return None  
+            query_set_defense_class = (
+                select(
+                    SetDefenseClass
+                    # .id,
+                    # SetDefenseClass.class_id,
+                    # SetDefenseClass.set_defense_id
+                    )
+                .where(SetDefenseClass.set_defense_id == defense.id)
+            )
+            result_set_defense_class = await db.execute(query_set_defense_class)
+            set_defense_class_list = result_set_defense_class.scalars().all()
+
+            return {
+                "Defense": defense,
+                "class_list": set_defense_class_list,
+            }
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 # ========================================================
+
+
+
+
+
     @staticmethod
     async def create_defense(data: DefenseCreate):
         

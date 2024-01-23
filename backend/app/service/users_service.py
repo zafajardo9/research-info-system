@@ -253,15 +253,15 @@ class UserService:
 
         for result in results:
             custom_result = {
-                "user_id": result.user_id,
-                "student_id": result.student_id,
+                "user_id": result.id,
+                #"student_id": result.student_id,
                 "email": result.email,
                 "name": result.name,
                 "birth": result.birth,
                 "student_number": result.student_number,
                 "phone_number": result.phone_number,
                 "course": result.course,
-                "class_id": result.class_id,
+                #"class_id": result.class_id,
                 "status": result.status,
                 "year_section": result.year_section,
             }

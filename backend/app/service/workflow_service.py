@@ -631,7 +631,7 @@ class WorkflowService:
         workflow = result.scalar()
 
         if not workflow:
-            return []  # Return an empty list when no workflows are found
+            return [] 
 
         steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
         steps_result = await db.execute(steps_query)
@@ -994,3 +994,102 @@ class WorkflowService:
             workflow_with_steps['steps'].append(step_detail)
 
         return workflow_with_steps
+    
+    
+    
+    
+    #Testing here
+    
+    
+    @staticmethod
+    async def get_all_data_related_in_research(workflow_id: str, research_paper_id: str):
+        query = (
+            select(Workflow)
+            .where(Workflow.id == workflow_id)
+        )
+
+        result = await db.execute(query)
+        workflow = result.scalar()
+
+        if not workflow:
+            return [] 
+
+        steps_query = select(WorkflowStep).where(WorkflowStep.workflow_id == workflow.id)
+        steps_result = await db.execute(steps_query)
+        steps = steps_result.scalars().all()
+
+        workflow_detail = WorkflowResearchInfo(
+            id=workflow.id,
+            type=workflow.type,
+            steps=[]
+        )
+
+        for step in steps:
+            step_name = step.name
+            info = await WorkflowService.displayinfo_from_all(step_name, research_paper_id, step.id)
+            info_dict = {"whole-info": info}
+            step_detail = WorkflowResearchInfoStep(
+                id=step.id,
+                name=step_name,
+                description=step.description,
+                info=info_dict
+            )
+            workflow_detail.steps.append(step_detail)
+
+        return [workflow_detail]
+    
+    
+    @staticmethod
+    async def displayinfo_from_all(step_name: str, research_paper_id: str, workflowstep_id: str):
+        if step_name == "Ethics":
+            ethics_query = select(Ethics).where(
+                (Ethics.workflow_step_id == workflowstep_id) &
+                (Ethics.research_paper_id == research_paper_id)
+            )
+            ethics_status = await db.execute(ethics_query)
+            return ethics_status.scalars().all()
+        
+        elif step_name == "Proposal":
+            proposal_query = select(ResearchPaper).where(
+                (ResearchPaper.workflow_step_id == workflowstep_id) &
+                (ResearchPaper.id == research_paper_id)
+            )
+            _status = await db.execute(proposal_query)
+            result = _status.scalars().all()
+            print(result)
+            return result
+        
+        elif step_name == "Copyright":
+            copyright_query = select(CopyRight).where(
+                (CopyRight.workflow_step_id == workflowstep_id) &
+                (CopyRight.research_paper_id == research_paper_id)
+            )
+            copyright_status = await db.execute(copyright_query)
+            return copyright_status.scalars().all()
+        
+        elif step_name == "Pre-Oral Defense":
+            def_query = select(ResearchDefense).where(
+                (ResearchDefense.workflow_step_id == workflowstep_id) &
+                (ResearchDefense.research_paper_id == research_paper_id) & 
+                (ResearchDefense.type == 'pre-oral')
+            )
+            status = await db.execute(def_query)
+            return status.scalars().all()
+        
+        elif step_name == "Full Manuscript":
+            manu_query = select(FullManuscript).where(
+                (FullManuscript.workflow_step_id == workflowstep_id) &
+                (FullManuscript.research_paper_id == research_paper_id)
+            )
+            manu_status = await db.execute(manu_query)
+            return manu_status.scalars().all()
+        
+        elif step_name == "Final Defense":
+            def2_query = select(ResearchDefense).where(
+                (ResearchDefense.workflow_step_id == workflowstep_id) &
+                (ResearchDefense.research_paper_id == research_paper_id) & 
+                (ResearchDefense.type == 'final')
+            )
+            status = await db.execute(def2_query)
+            return status.scalars().all()
+        return None

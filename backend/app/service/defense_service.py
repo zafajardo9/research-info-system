@@ -76,18 +76,18 @@ class DefenseService:
     
     
     @staticmethod
-    async def display_set_defense(research_type: str, defense_type: str):
+    async def display_set_defense(research_type: str, defense_type: str, class_id: str):
         try:
             query = (
                 select(
                     SetDefense
-                    # .id, 
-                    # SetDefense.research_type, 
-                    # SetDefense.defense_type,
-                    # SetDefense.date,
-                    # SetDefense.time
                     )
-                .where((SetDefense.research_type == research_type) & (SetDefense.defense_type == defense_type))
+                # .join(SetDefense, SetDefenseClass.set_defense_id == SetDefense.id)
+                .where(
+                    (SetDefense.research_type == research_type) & 
+                    (SetDefense.defense_type == defense_type)
+                    # (SetDefenseClass.class_id == class_id)
+                    )
             )
             result = await db.execute(query)
             defense = result.scalar()
@@ -103,7 +103,7 @@ class DefenseService:
                     # SetDefenseClass.class_id,
                     # SetDefenseClass.set_defense_id
                     )
-                .where(SetDefenseClass.set_defense_id == defense.id)
+                .where((SetDefenseClass.set_defense_id == defense.id) & (SetDefenseClass.class_id == class_id))
             )
             result_set_defense_class = await db.execute(query_set_defense_class)
             set_defense_class_list = result_set_defense_class.scalars().all()

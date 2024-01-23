@@ -29,9 +29,9 @@ async def set_date(data: SetDefenseCreate):
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 @router.get("/faculty-set-date-display/")
-async def display_set_date(research_type: str, defense_type: str):
+async def display_set_date(research_type: str, defense_type: str, class_id: str):
     try:
-        return await DefenseService.display_set_defense(research_type, defense_type)
+        return await DefenseService.display_set_defense(research_type, defense_type, class_id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
@@ -119,3 +119,15 @@ async def delete_defense(defense_id: str):
             raise HTTPException(status_code=404, detail=f"Defense with ID {defense_id} not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+
+# BSIT = Feasibility {
+#     pre oral = {
+        
+#         date time
+#     }
+#     pag wala "null"
+    
+# }
+

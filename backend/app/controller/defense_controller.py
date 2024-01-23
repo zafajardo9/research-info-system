@@ -55,10 +55,10 @@ async def delete_defense(id: str):
 
 
 
-@router.put("/faculty-update-date/{id}", response_model=List[SetDefense])
-async def display_set_date(id: str, data: DefenseCreate):
+@router.put("/faculty-update-date/{id}")
+async def display_set_date(id: str, data: SetDefenseUpdate):
     try:
-        return await DefenseService.create_defense(id, data)
+        return await DefenseService.update_faculty_set(id, data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 

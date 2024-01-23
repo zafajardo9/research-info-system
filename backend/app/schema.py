@@ -442,6 +442,7 @@ class WorkflowDetail(BaseModel):
     course: str
     section: str
     steps: List[WorkflowStepDetail]
+    defense: List[str]
     
 class WorkflowDetailSpecific(BaseModel):
     id: str
@@ -473,6 +474,12 @@ class WorkflowResearchInfoStep(BaseModel):
     
     #connect to here (below)
 class WorkflowResearchInfo(BaseModel):
+    id: str
+    type: str
+    steps: List[WorkflowResearchInfoStep]
+    
+    
+class FLOW2(BaseModel):
     id: str
     type: str
     steps: List[WorkflowResearchInfoStep]

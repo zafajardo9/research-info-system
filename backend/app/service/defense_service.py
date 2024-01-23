@@ -42,6 +42,29 @@ class DefenseService:
         await db.refresh(db_make)
         return db_make
     
+    @staticmethod
+    async def update_faculty_set(id: str, data: SetDefenseUpdate):
+        query = select(SetDefense).filter_by(id=id)
+        
+        query_defense = await db.execute(query)
+        defense = query_defense.scalar()
+        
+        if not defense:
+            raise HTTPException(status_code=404, detail="Not found")
+
+        update_data = data.dict(exclude_unset=True)
+        
+        if 'date' in update_data:
+            update_data['date'] = datetime.strptime(update_data['date'], "%Y-%m-%d").date()
+        if 'time' in update_data:
+            update_data['time'] = datetime.strptime(update_data['time'], "%H:%M:%S").time()
+    
+        for key, value in update_data.items():
+            setattr(defense, key, value)
+        await db.commit()
+        await db.refresh(defense)
+        
+        return defense
     
     @staticmethod
     async def faculty_set_class(id: str ,data: SetDefenseCreateClass):

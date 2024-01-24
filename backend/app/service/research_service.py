@@ -732,11 +732,9 @@ class ResearchService:
         _research_paper_id = str(uuid4())
         date_published = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
         
-        # Convert to dictionary and remove 'date_publish' since it's already handled separately
         research_paper_data_dict = research_paper_data.dict()
         research_paper_data_dict.pop('date_publish', None)
         
-        # Pass the dictionary as keyword arguments, excluding 'date_publish'
         research_paper = await FacultyResearchRepository.create(
             db,
             model=FacultyResearchPaper,
@@ -1179,7 +1177,58 @@ class ResearchService:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
         
-        
+    @staticmethod
+    async def extension_list_from_extension():
+        try:
+            research_paper_query = (
+                select(
+                    ResearchPaper.id.label('paper_id'),
+                    ResearchPaper.title.label('Title'),
+                    func.to_char(CopyRight.modified_at, 'YYYY-DD-MM').label('Date'),
+                    CopyRight.co_authorship.label('Co Authorship file'),
+                    CopyRight.approval_sheet.label('Approval file'),
+                    CopyRight.journal_publication.label('Journal file')
+                )
+                .join(CopyRight, ResearchPaper.id == CopyRight.research_paper_id)
+                .where(ResearchPaper.extension == "From Extension")
+            )
+            
+            result = await db.execute(research_paper_query)
+            fetched_result = result.fetchall()
+
+            combined_result = []
+
+            for row in fetched_result:
+                authors_query = (
+                    select(
+                        func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('Name'),
+                        Student.StudentNumber.label('Student Number'),
+                        SPSCourse.CourseCode.label('Course'),
+                    )
+                    .select_from(ResearchPaper)  # Explicit FROM clause
+                    .join(Author, ResearchPaper.id == Author.research_paper_id)
+                    .join(Users, Author.user_id == Users.id)
+                    .join(Student, Users.student_id == Student.StudentId)
+                    .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                    .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                    .where(ResearchPaper.id == row['paper_id'])
+                )
+
+                authors_result = await db.execute(authors_query)
+                authors_fetched_result = authors_result.fetchall()
+
+                row_dict = dict(row)
+                row_dict['Researchers'] = authors_fetched_result
+                row_dict.pop('paper_id', None)
+                combined_result.append(row_dict)
+
+            return combined_result
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+         
         
         
     @staticmethod

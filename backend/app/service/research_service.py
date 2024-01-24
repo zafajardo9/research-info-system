@@ -826,7 +826,18 @@ class ResearchService:
 
     @staticmethod
     async def update_faculty_research_paper(research_paper_id: str, research_paper_data: FacultyResearchPaperUpdate):
-        query = update(FacultyResearchPaper).where(FacultyResearchPaper.id == research_paper_id).values(research_paper_data.dict())
+        find = select(FacultyResearchPaper).where(FacultyResearchPaper.id == research_paper_id)
+        
+        existing_paper = await db.execute(find)
+        if not existing_paper.scalar():
+            raise HTTPException(status_code=404, detail=f"Paper with ID {research_paper_id} not found")
+
+
+        date_submitted = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
+        research_paper_data_dict = research_paper_data.dict()
+        research_paper_data_dict['date_publish'] = date_submitted
+
+        query = update(FacultyResearchPaper).where(FacultyResearchPaper.id == research_paper_id).values(research_paper_data_dict)
         await db.execute(query)
         await db.commit()
 

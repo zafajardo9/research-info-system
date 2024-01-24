@@ -16,16 +16,16 @@ router = APIRouter(
     dependencies=[Depends(JWTBearer())]
 )
 
-@router.post("/fps/upload-all")
-async def testing_fps(research_paper_data: List[FPSTest]):
+# @router.post("/fps/upload-all")
+# async def testing_fps(research_paper_data: List[FPSTest]):
 
-    try:
-        faculty_papers = await ResearchService.upload_multiple_faculty_papers(research_paper_data)
-        return ResponseSchema(detail="All research papers created successfully", result=[faculty_paper.dict() for faculty_paper in faculty_papers])
-    except ValueError as ve:
-        return ResponseSchema(detail=f"Error creating research paper: Invalid date format. Please use 'dd-mm-yyyy'.", result=None)
-    except HTTPException as e:
-        return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
+#     try:
+#         faculty_papers = await ResearchService.upload_multiple_faculty_papers(research_paper_data)
+#         return ResponseSchema(detail="All research papers created successfully", result=[faculty_paper.dict() for faculty_paper in faculty_papers])
+#     except ValueError as ve:
+#         return ResponseSchema(detail=f"Error creating research paper: Invalid date format. Please use 'dd-mm-yyyy'.", result=None)
+#     except HTTPException as e:
+#         return ResponseSchema(detail=f"Error creating research paper: {str(e)}", result=None)
 
 
 

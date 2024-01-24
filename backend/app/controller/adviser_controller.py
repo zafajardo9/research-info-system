@@ -448,7 +448,7 @@ def list_categories():
 @router.get("/category_list",)
 async def get_list_categories():
     """
-    Get all user in USER TABLE
+    display
     """
     category = list_categories()
     return {"categories": category}
@@ -456,10 +456,12 @@ async def get_list_categories():
 
 def list_publisher():
     return ["PUP Research Publication Office"]
+
+
 @router.get("/publisher_list",)
 async def get_list_publisher():
     """
-    Get all user in USER TABLE
+    display
     """
-    pub = list_categories()
+    pub = list_publisher()
     return {"publishers": pub}

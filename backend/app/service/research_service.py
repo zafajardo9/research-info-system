@@ -373,8 +373,9 @@ class ResearchService:
     
     @staticmethod
     async def user_profile_papers(user_id: str):
-        query = (
-            select(
+        try:
+            query = (
+                select(
                     ResearchPaper.id,
                     ResearchPaper.title,
                     ResearchPaper.research_type,
@@ -382,18 +383,58 @@ class ResearchService:
                     FullManuscript.abstract,
                     FullManuscript.keywords,
                     FullManuscript.modified_at.label('date_publish')
-                   
-                   )
-                    .distinct(ResearchPaper.title) 
-                    .join(Author, ResearchPaper.id == Author.research_paper_id)
-                    .where((Author.user_id == user_id)
-                   )
-        )
-        result = await db.execute(query)
-        research_papers = result.fetchall()
+                )
+                .distinct(ResearchPaper.title)
+                .join(Author, ResearchPaper.id == Author.research_paper_id)
+                .where(Author.user_id == user_id)
+            )
+
+            result = await db.execute(query)
+            research_papers = result.fetchall()
+
+            research_papers_with_authors = []
+
+            for research_paper in research_papers:
+                authors_query = (
+                    select(
+                        #Users.id.label('id'),
+                        func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                        Student.StudentNumber.label('student_number'),
+                        SPSCourse.CourseCode.label('course'),
+                        #case([(SPSCourseEnrolled.Status == 1, 'Alumni')], else_='Student').label('status'),
+                        func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
+                    )
+                    .distinct(Users.id)
+                    .select_from(Users)
+                    .join(Author, Users.id == Author.user_id)
+                    .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+                    .join(Student, Student.StudentId == Users.student_id)
+                    .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
+                    .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
+                    .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
+                    .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+                    .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                    .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
+                    .where(ResearchPaper.id == research_paper.id)
+                )
+
+                authors_result = await db.execute(authors_query)
+                authors_details = authors_result.fetchall()
+
+                # Create a dictionary for each research paper with its authors
+                result_dict = {
+                    "research_paper": research_paper,
+                    "authors": authors_details,
+                }
+
+                research_papers_with_authors.append(result_dict)
+
+            return research_papers_with_authors
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
         
         
-        return research_papers
     
     @staticmethod
     async def user_profile_papers_faculty(user_id: str):

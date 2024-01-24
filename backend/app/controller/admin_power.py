@@ -380,6 +380,7 @@ async def get_faculty_research_papers(
 
 
 
+
 @router.put("/approve-faculty-paper/{research_id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_research_paper_status(
     id: str,

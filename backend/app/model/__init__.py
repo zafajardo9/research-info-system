@@ -23,7 +23,7 @@ from .research_status import Comment
 
 from .researchdef import ResearchDefense
 from .researchdef import SetDefense
-from .researchdef import SetDefenseClass
+# from .researchdef import SetDefenseClass
 
 from .ethics import Ethics
 from .full_manuscript import FullManuscript

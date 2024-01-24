@@ -29,20 +29,24 @@ async def set_date(data: SetDefenseCreate):
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 @router.get("/faculty-set-date-display/")
-async def display_set_date(research_type: str, defense_type: str, class_id: str):
+async def display_set_date(
+    research_type: str, 
+    defense_type: str, 
+    class_id: str
+    ):
     try:
         return await DefenseService.display_set_defense(research_type, defense_type, class_id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
-@router.post("/faculty-set-date/class/{set_id}")
-async def set_date_class(set_id: str, data: SetDefenseCreateClass):
-    try:
-        return await DefenseService.faculty_set_class(set_id, data)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+# @router.post("/faculty-set-date/class/{set_id}")
+# async def set_date_class(set_id: str, data: SetDefenseCreateClass):
+#     try:
+#         return await DefenseService.faculty_set_class(set_id, data)
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
-@router.delete("/delete-set-date/class/{id}")
+@router.delete("/delete-set-date/{id}")
 async def delete_defense(id: str):
     try:
         result = await DefenseService.delete_faculty_set_class(id)

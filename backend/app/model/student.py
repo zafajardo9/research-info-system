@@ -21,7 +21,7 @@ class Class(SQLModel, table=True):
     #connection to the workflow table
     workflows: List["Workflow"] = Relationship(back_populates="class_", link_model=WorkflowClass)
     navigation_role: List["NavigationTab"] = Relationship(back_populates="class_id", link_model=NavigationClass)
-    set_defense_class: List["SetDefenseClass"] = Relationship(back_populates="class_")
+    set_defense_class: List["SetDefense"] = Relationship(back_populates="class_")
         
 class Student(SQLModel, table=True):
     __tablename__ = "SPSStudent"

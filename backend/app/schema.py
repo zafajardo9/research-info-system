@@ -729,6 +729,7 @@ class SetDefenseCreate(BaseModel):
     defense_type: str
     date: str
     time: str
+    class_id: str
     
 class SetDefenseUpdate(BaseModel):
     research_type: str

@@ -30,17 +30,21 @@ class SetDefense(SQLModel, TimeMixin, table=True):
     defense_type: str
     date: date
     time: time
-    set_defense_class_handle: List["SetDefenseClass"] = Relationship(back_populates="set_defense")
+    class_id: Optional[str] = Field(foreign_key="RISClass.id")
+    
+    
+    # set_defense_class_handle: List["SetDefenseClass"] = Relationship(back_populates="set_defense")
+    class_: "Class" = Relationship(back_populates="set_defense_class") 
     
 
-class SetDefenseClass(SQLModel, table=True):
-    __tablename__ = "RISset_defense_class"
+# class SetDefenseClass(SQLModel, table=True):
+#     __tablename__ = "RISset_defense_class"
 
-    id: Optional[str] = Field(primary_key=True, nullable=False)
-    class_id: str = Field(foreign_key="RISClass.id")
-    set_defense_id: Optional[str] = Field(default=None, foreign_key="RISset_defense.id")
+#     id: Optional[str] = Field(primary_key=True, nullable=False)
+#     class_id: str = Field(foreign_key="RISClass.id")
+#     set_defense_id: Optional[str] = Field(default=None, foreign_key="RISset_defense.id")
 
+#     class_id: Optional[str] = Field(foreign_key="RISClass.id")
 
-
-    set_defense: Optional["SetDefense"] = Relationship(back_populates="set_defense_class_handle")
-    class_: "Class" = Relationship(back_populates="set_defense_class") 
+#     set_defense: Optional["SetDefense"] = Relationship(back_populates="set_defense_class_handle")
+#     class_: "Class" = Relationship(back_populates="set_defense_class") 

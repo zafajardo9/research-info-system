@@ -30,7 +30,7 @@ from app.model.researchdef import ResearchDefense
 from app.model.faculty import Faculty
 from app.model.research_paper import Author
 from app.model.users import Users
-from app.model import SetDefense, SetDefenseClass
+from app.model import SetDefense
 
 
 
@@ -1038,12 +1038,10 @@ class WorkflowService:
 
         def_query = (
                 select(SetDefense)
-                .join(SetDefenseClass, SetDefenseClass.set_defense_id == SetDefense.id)
                 .where(
                     (SetDefense.research_type == workflow.type) &
-                    (SetDefenseClass.class_id == user_class)
+                    (SetDefense.class_id == user_class)
                 )
-                .select_from(SetDefense)
             )
         result = await db.execute(def_query)
         defense = result.scalars().all()

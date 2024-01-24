@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlite3 import Row
-from sqlalchemy import delete, desc, distinct, func, join, literal, update
+from sqlalchemy import case, delete, desc, distinct, func, join, literal, update
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import select
@@ -94,15 +94,24 @@ class ResearchService:
             for research_paper in research_papers:
                 authors_query = (
                     select(
-                        Users.id, 
+                        Users.id.label('id'),
                         func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
                         Student.StudentNumber.label('student_number'),
-                        # Class.section, 
-                        # Class.course
+                        SPSCourse.CourseCode.label('course'),
+                        case([(SPSCourseEnrolled.Status == 1, 'Alumni')], else_='Student').label('status'),
+                        func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
                         )
+                    .distinct(Users.id)
+                    .select_from(Users)
                     .join(Author, Users.id == Author.user_id)
                     .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-                    .join(Student, Users.student_id == Student.StudentId)
+                    .join(Student, Student.StudentId == Users.student_id)
+                    .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
+                    .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
+                    .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
+                    .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+                    .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                    .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
                     .where(ResearchPaper.id == research_paper.id)
                 )
 

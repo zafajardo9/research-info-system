@@ -12,7 +12,8 @@ from app.service.research_service import ResearchService
 
 router = APIRouter(
     prefix="/integration",
-    tags=['All related to integration']
+    tags=['All related to integration'],
+    dependencies=[Depends(JWTBearer())]
 )
 
 @router.post("/fps/upload-all")

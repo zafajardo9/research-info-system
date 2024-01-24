@@ -107,6 +107,64 @@ async def get_all_collaboration_metrics():
 
 
 
+@router.get("/admin/dashboard-2/")
+async def admin_2(
+    type: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+    ):
+    try: 
+
+        
+        total_count_student = await AllInformationService.get_student_count_all(db)
+        total_count_prof = await AllInformationService.get_prof_count_all(db)
+        
+        #number_advisee = await AllInformationService.user_number_of_advisee(db, current_user, type)
+        total_count_adviser = await AllInformationService.get_adviser_count_all(db, type)
+        
+        
+        proposal_count = await AllInformationService.overall_count_proposal(db, type)
+        proposal_rejected = await AllInformationService.overall_proposal_rejected(db, type)
+        ethics_approved = await AllInformationService.overall_approved_ethics(db, type)
+        ethics_revision = await AllInformationService.overall_revision_ethics(db, type)
+        
+        copyright_approved = await AllInformationService.overall_approved_copyright(db, type)
+        copyright_revision = await AllInformationService.overall_revision_copyright(db, type)
+        
+        manu_approved = await AllInformationService.overall_approved_manuscript(db, type)
+        manu_revision = await AllInformationService.overall_revision_manuscript(db, type)
+
+        
+        result = [
+            {
+                "Students": total_count_student,
+                "Research Adviser": total_count_adviser,
+                "Research Professor": total_count_prof
+            },
+            {
+                "Approved Proposal": proposal_count,
+                "For Revision Proposal": proposal_rejected
+            },
+            
+            {
+                "Approved Ethics": ethics_approved,
+                "For Revision Ethics": ethics_revision
+            },
+                    
+            {
+                "Approved Copyright": copyright_approved,
+                "For Revision Copyright": copyright_revision
+            },
+            {
+                "Approved Full Manuscript": manu_approved,
+                "For Revision Full Manuscript": manu_revision
+            }
+            
+            ]
+        return result
+    except Exception as e:
+        return ResponseSchema(detail=f"You have no number of research paper as an adviser: {str(e)}", result=None)
+
+
 
 @router.get("/admin/count-research-info/all")
 async def read_research_count_all():

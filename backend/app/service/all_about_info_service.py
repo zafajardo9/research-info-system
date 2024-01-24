@@ -584,3 +584,122 @@ class AllInformationService:
         result = await db.execute(query)
         status_counts = result.fetchall()
         return status_counts
+    
+    
+    
+    
+    
+    
+    
+    ###################################################
+    
+    
+    
+    ###################################################
+    
+    
+    @staticmethod
+    async def overall_count_proposal(db: Session, type: str):
+        query = (
+            select(func.count(ResearchPaper.id))
+            .where(
+                (ResearchPaper.research_type == type) & 
+                (ResearchPaper.status == "Approved")
+                )
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def overall_proposal_rejected(db: Session, type: str):
+        query = (
+            select(func.count(ResearchPaper.id))
+            .where(or_(
+                (ResearchPaper.research_type == type) & (ResearchPaper.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (ResearchPaper.status == "Pending")
+            ))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    ###################################
+    @staticmethod
+    async def overall_approved_ethics(db: Session, type: str):
+        query = (
+            select(func.count(Ethics.id))
+            .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
+            .where(and_(ResearchPaper.research_type == type, Ethics.status == "Approved"))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def overall_revision_ethics(db: Session, type: str):
+        query = (
+            select(func.count(Ethics.id))
+            .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
+            .where(and_(
+                (ResearchPaper.research_type == type) & (Ethics.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (Ethics.status == "Pending")
+            ))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    ######################################333
+    
+    @staticmethod
+    async def overall_approved_copyright(db: Session, type: str):
+        query = (
+            select(func.count(CopyRight.id))
+            .join(ResearchPaper, CopyRight.research_paper_id == ResearchPaper.id)
+            .where(and_(ResearchPaper.research_type == type, CopyRight.status == "Approved"))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def overall_revision_copyright(db: Session, type: str):
+        query = (
+            select(func.count(CopyRight.id))
+            .join(ResearchPaper, CopyRight.research_paper_id == ResearchPaper.id)
+            .where(and_(
+                (ResearchPaper.research_type == type) & (CopyRight.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (CopyRight.status == "Pending")))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    
+    ######################################
+    @staticmethod
+    async def overall_approved_manuscript(db: Session, type: str,):
+        query = (
+            select(func.count(FullManuscript.id))
+            .join(ResearchPaper, FullManuscript.research_paper_id == FullManuscript.id)
+            .where(and_(ResearchPaper.research_type == type, FullManuscript.status == "Approved"))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    @staticmethod
+    async def overall_revision_manuscript(db: Session, type: str):
+        query = (
+            select(func.count(FullManuscript.id))
+            .join(ResearchPaper, FullManuscript.research_paper_id == ResearchPaper.id)
+            .where(and_(
+                (ResearchPaper.research_type == type) & (FullManuscript.status == "Rejected"),
+                (ResearchPaper.research_type == type) & (FullManuscript.status == "Pending")
+            ))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
+    

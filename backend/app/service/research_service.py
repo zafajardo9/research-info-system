@@ -1178,3 +1178,85 @@ class ResearchService:
             raise e
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        
+        
+        
+        
+    @staticmethod
+    async def view_proposal():
+        try:
+            query = (
+                select(
+                    ResearchPaper
+                )
+            )
+            
+            result = await db.execute(query)
+            fetched_result = result.fetchall()
+
+            return fetched_result
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+    
+    
+    @staticmethod
+    async def view_ethics():
+        try:
+            query = (
+                select(
+                    Ethics
+                )
+            )
+            
+            result = await db.execute(query)
+            fetched_result = result.scalars().all()
+
+            return fetched_result
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        
+        
+    @staticmethod
+    async def view_copyright():
+        try:
+            query = (
+                select(
+                    CopyRight
+                )
+            )
+            
+            result = await db.execute(query)
+            fetched_result = result.scalars().all()
+
+            return fetched_result
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        view_manuscript
+        
+    @staticmethod
+    async def view_manuscript():
+        try:
+            query = (
+                select(
+                    FullManuscript
+                )
+            )
+            
+            result = await db.execute(query)
+            fetched_result = result.scalars().all()
+
+            return fetched_result
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")

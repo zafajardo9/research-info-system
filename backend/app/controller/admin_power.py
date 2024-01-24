@@ -306,6 +306,8 @@ async def read_user_assignments(user_id: str):
 
 
 
+
+
 @router.get("/prof-with-assigned")
 async def get_users_with_assignments():
     try:
@@ -314,5 +316,49 @@ async def get_users_with_assignments():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+    
+
+@router.get("/view-proposals/list")
+async def view_proposal():
+    try:
+        users_with_assignments = await ResearchService.view_proposal()
+        return users_with_assignments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    
+@router.get("/view-ethics/list")
+async def view_ethics():
+    try:
+        users_with_assignments = await ResearchService.view_ethics()
+        return users_with_assignments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    
+        
+@router.get("/view-copyright/list")
+async def view_copyright():
+    try:
+        users_with_assignments = await ResearchService.view_copyright()
+        return users_with_assignments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    
+    
+
+    
+@router.get("/view-full-manuscript/list")
+async def view_manuscript():
+    try:
+        users_with_assignments = await ResearchService.view_manuscript()
+        return users_with_assignments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    
+    
+
 
 

@@ -203,6 +203,10 @@ class StatusUpdate(BaseModel):
 
 class MakeExtension(BaseModel):
     extension: str
+    
+
+class ChangeFacultyPaperStatus(BaseModel):
+    status: str
 
 #==================== ETHICS =====================
 class EthicsCreate(BaseModel):

@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from app.config import commit_rollback, db
 from app.model.research_paper import Author, FacultyResearchPaper, ResearchPaper, Status
 from app.repository.base_repo import BaseRepo
-from app.schema import AuthorShow, DisplayAllByUser, MakeExtension, PageResponse, ResearchPaperCreate, ResearchPaperShow, ResearchPaperWithAuthorsResponse
+from app.schema import AuthorShow, ChangeFacultyPaperStatus, DisplayAllByUser, MakeExtension, PageResponse, ResearchPaperCreate, ResearchPaperShow, ResearchPaperWithAuthorsResponse
 from sqlalchemy.orm import joinedload
 from app.model.users import Users
 from app.model.research_status import Comment
@@ -166,6 +166,22 @@ class ResearchPaperRepository(BaseRepo):
         else:
             raise HTTPException(status_code=404, detail="Research paper not found")
 
+
+
+    @staticmethod
+    async def faculty_paper_approve(db: Session, research_id: str, status: ChangeFacultyPaperStatus) -> ResearchPaper:
+        # Fetch the research paper
+        result = await db.execute(select(FacultyResearchPaper).where(FacultyResearchPaper.id == research_id))
+        research_paper = result.scalar_one_or_none()
+
+        if research_paper:
+            # Assign values from make_extension
+            research_paper.status = status.status
+            await db.commit()
+            await db.refresh(research_paper)
+            return research_paper
+        else:
+            raise HTTPException(status_code=404, detail="Research paper not found")
 
     @staticmethod
     def map_to_research_paper_model(query_result):

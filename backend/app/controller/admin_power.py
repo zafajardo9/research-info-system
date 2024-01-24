@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional, Union
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy import select
@@ -8,7 +8,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Securi
 from app.service.research_service import ResearchService
 from app.config import db
 from app.repository.users import UsersRepository
-from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AssignedSectionsWhole, ResponseSchema, UpdateAssign
+from app.schema import AssignUserProfile, AssignWhole, AssignedResearchTypeCreate, AssignedSectionsCreate, AssignedSectionsWhole, ChangeFacultyPaperStatus, ResponseSchema, UpdateAssign
 
 
 from app.service.users_service import UserService
@@ -17,6 +17,8 @@ from app.service.assignTo_service import AssignToSection
 from app.model import AssignedSectionsToProf
 from app.service.prof_assignTo import AssignToProf
 from app.service.notif_service import NotificationService
+from app.model.research_paper import FacultyResearchPaper
+from app.repository.research_repo import ResearchPaperRepository
 
 router = APIRouter(
     prefix="/admin",
@@ -359,6 +361,44 @@ async def view_manuscript(type: str):
     
     
     
+@router.get("/faculty-paper-view/{research_paper_id}", response_model=Optional[FacultyResearchPaper], response_model_exclude_none=True)
+async def get_faculty_research_papers(
+    research_paper_id: str,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    token = JWTRepo.extract_token(credentials)
+
+    try:
+        research_papers = await ResearchService.get_faculty_research_papers_by_id(research_paper_id)
+        if research_papers:
+            return research_papers
+        else:
+            return None
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+    
 
 
 
+@router.put("/approve-faculty-paper/{research_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def update_research_paper_status(
+    id: str,
+    make_extension: ChangeFacultyPaperStatus,
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
+):
+    # Extract the user role from the JWT token
+    token = JWTRepo.extract_token(credentials)
+    current_user = token['user_id']  # this line will show what role the logged-in user is
+
+    user_roles = await UsersRepository.get_user_roles(current_user)
+    if "admin" not in user_roles:
+        raise HTTPException(status_code=403, detail=f"You are not allowed to use this feature")
+
+    try:
+        research_paper = await ResearchPaperRepository.faculty_paper_approve(db, id, make_extension)
+        return ResponseSchema(detail=f"Faculty paper {research_paper.id} is Approved", result=research_paper)
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error making research extension: {str(e)}", result=None)
+    
+    
+    

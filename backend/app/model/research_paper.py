@@ -75,6 +75,7 @@ class FacultyResearchPaper(SQLModel, TimeMixin, table=True):
     date_publish: date
     category: str
     publisher: str
+    status: Optional[str]
     user_id: Optional[str] = Field(default=None, foreign_key="RISUsers.id")
 
     user: Optional["Users"] = Relationship(back_populates="faculty_research_papers")

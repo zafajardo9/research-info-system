@@ -8,6 +8,7 @@ from app.service.users_service import UserService
 from app.model.student import Student  
 from app.model.faculty import Faculty
 from app.repository.users import UsersRepository
+from app.service.research_service import ResearchService
 #from app.model.workflowprocess import Course
 
 router = APIRouter(
@@ -48,32 +49,50 @@ async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Securi
     else:
         raise HTTPException(status_code=404, detail="Faculty profile not found")
 
-@router.get("/profile/student/{user_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+@router.get("/profile/student/{user_id}")
 async def get_student_profile_by_ID(user_id: str):
+    try:
+        # Fetch roles, student profile, and papers asynchronously
+        roles = await UsersRepository.get_user_roles(user_id)
+        result = await UserService.get_student_profile(user_id)
+        papers = await ResearchService.user_profile_papers(user_id)
 
-    roles = await UsersRepository.get_user_roles(user_id)
-    result = await UserService.get_student_profile(user_id)
-    
-    if result:
-        result_dict = dict(result)
-        result_dict['roles'] = roles
-        return ResponseSchema(detail="Successfully fetch student profile by ID!", result=result_dict)
-    else:
-        raise HTTPException(status_code=404, detail="Student profile not found")
+        # Check if the student profile exists
+        if result:
+            result_dict = dict(result)
+            result_dict['roles'] = roles
+            result_dict['papers'] = papers
+
+            # Return the collected information as a JSON response
+            return result_dict
+        else:
+            raise HTTPException(status_code=404, detail="Student profile not found")
+
+    except Exception as e:
+        # Handle exceptions and return an appropriate error response
+        return {"error": f"An error occurred: {str(e)}"}
 
 
-@router.get("/profile/faculty/{user_id}", response_model=ResponseSchema, response_model_exclude_none=True)
+@router.get("/profile/faculty/{user_id}")
 async def get_faculty_profile_by_ID(user_id: str):
+    try: 
+        roles = await UsersRepository.get_user_roles(user_id)
+        result = await UserService.get_faculty_profile_by_ID(user_id)
+        papers = await ResearchService.user_profile_papers_faculty(user_id)
 
-    roles = await UsersRepository.get_user_roles(user_id)
-    result = await UserService.get_faculty_profile_by_ID(user_id)
-    
-    if result:
-        result_dict = dict(result)
-        result_dict['roles'] = roles
-        return ResponseSchema(detail="Successfully fetch faculty profile by ID!", result=result_dict)
-    else:
-        raise HTTPException(status_code=404, detail="Faculty profile not found")
+        # Check if the student profile exists
+        if result:
+            result_dict = dict(result)
+            result_dict['roles'] = roles
+            result_dict['papers'] = papers
+
+            return result_dict
+        
+        else:
+            raise HTTPException(status_code=404, detail="Faculty profile not found")
+    except Exception as e:
+        # Handle exceptions and return an appropriate error response
+        return {"error": f"An error occurred: {str(e)}"}
 
 
 @router.get("/student_list", response_model=ResponseSchema, response_model_exclude_none=True)

@@ -369,6 +369,48 @@ class ResearchService:
 
         return research_papers
     
+    
+    
+    @staticmethod
+    async def user_profile_papers(user_id: str):
+        query = (
+            select(
+                    ResearchPaper.id,
+                    ResearchPaper.title,
+                    ResearchPaper.research_type,
+                    FullManuscript.content,
+                    FullManuscript.abstract,
+                    FullManuscript.keywords,
+                    FullManuscript.modified_at.label('date_publish')
+                   
+                   )
+                    .distinct(ResearchPaper.title) 
+                    .join(Author, ResearchPaper.id == Author.research_paper_id)
+                    .where((Author.user_id == user_id)
+                   )
+        )
+        result = await db.execute(query)
+        research_papers = result.fetchall()
+        
+        
+        return research_papers
+    
+    @staticmethod
+    async def user_profile_papers_faculty(user_id: str):
+        query = (
+            select(
+                    FacultyResearchPaper
+                   
+                   )
+                    .where(FacultyResearchPaper.user_id == user_id)
+                   )
+        
+        result = await db.execute(query)
+        research_papers = result.scalars().all()
+        
+        return research_papers
+
+
 
     # @staticmethod
     # async def get_all_by_user(db: Session, user_id: str) -> List[DisplayAllByUser]:

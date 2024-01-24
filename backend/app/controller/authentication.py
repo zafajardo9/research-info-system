@@ -40,5 +40,11 @@ async def forgot_password(request_body: ForgotPasswordSchema):
     return ResponseSchema(detail="Password updated successfully!")
 
 
+@router.get("/integration/authentication", response_model=ResponseSchema)
+async def login_faculty():
+    token = await AuthService.integration_auth()
+    return ResponseSchema(detail="Successfully login", result={"token_type": "Bearer", "access_token": token})
+
+
 # todo making user automatically register faculty information
 # todo integrate with ROBERT

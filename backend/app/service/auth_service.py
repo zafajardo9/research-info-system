@@ -126,7 +126,9 @@ class AuthService:
 
         raise HTTPException(status_code=404, detail="Faculty not found or invalid role!")
     
-
+    @staticmethod
+    async def integration_auth():
+        return JWTRepo(data={"user": "test_user", "token_generate": "success", "connection_type": "for integration"}).generate_token()
 
 # Generate roles manually
 async def generate_role():

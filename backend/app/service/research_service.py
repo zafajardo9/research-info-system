@@ -1140,7 +1140,7 @@ class ResearchService:
                     CopyRight.journal_publication.label('Journal file')
                 )
                 .join(CopyRight, ResearchPaper.id == CopyRight.research_paper_id)
-                #.where(ResearchPaper.extension == "")
+                .where(ResearchPaper.extension == "For Extension")
             )
             
             result = await db.execute(research_paper_query)

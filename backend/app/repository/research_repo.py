@@ -4,7 +4,7 @@ from typing import List, Optional
 from uuid import uuid4
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import distinct, join, select
+from sqlalchemy import case, desc, distinct, func, join, select
 from sqlalchemy import insert
 from sqlalchemy import update
 from sqlalchemy import delete
@@ -19,9 +19,10 @@ from app.model.research_status import Comment
 from app.model.ethics import Ethics
 from app.model.full_manuscript import FullManuscript
 from app.model.copyright import CopyRight
-from app.model.connected_SPS import SPSCourse, SPSCourseEnrolled
+from app.model.connected_SPS import SPSClass, SPSCourse, SPSCourseEnrolled, SPSMetadata, SPSStudentClassGrade
 from app.model.student import Student
 from app.model import ResearchDefense
+from app.model.faculty import Faculty
 
 
 class ResearchPaperRepository(BaseRepo):
@@ -199,41 +200,112 @@ class ResearchPaperRepository(BaseRepo):
     async def pagination_all_papers(user_type: str, type_paper: str = None):
         
         if user_type == "faculty":
-            research_paper_query = select(
-                FacultyResearchPaper.title,
-                FacultyResearchPaper.content,
-                FacultyResearchPaper.abstract,
-                FacultyResearchPaper.file_path,
-                FacultyResearchPaper.date_publish,
-                #FacultyResearchPaper.category
+            query = (
+                select(
+                    FacultyResearchPaper.title,
+                    FacultyResearchPaper.content,
+                    FacultyResearchPaper.abstract,
+                    FacultyResearchPaper.date_publish,
+                    FacultyResearchPaper.publisher,
+                    FacultyResearchPaper.category,
+                    func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleName).label('author'),
                 )
-            research_paper_result = await db.execute(research_paper_query)
-            return research_paper_result.fetchall()
+                .join(Users, FacultyResearchPaper.user_id == Users.id)
+                .join(Faculty, Users.faculty_id == Faculty.FacultyId)
+            ) 
+            result = await db.execute(query)
+            overall_result = result.fetchall()
+
+            faculty_response_list = []
+
+            for research_paper in overall_result:
+                faculty_paper_response = {
+                    "research_paper": {
+                        "title": research_paper.title,
+                        "content": research_paper.content,
+                        "abstract": research_paper.abstract,
+                        "date_publish": research_paper.date_publish,
+                        "publisher": research_paper.publisher,
+                        "category": research_paper.category,
+                        "authors": research_paper.author,
+                    },
+                }
+
+                faculty_response_list.append(faculty_paper_response)
+
+            return faculty_response_list
             
         else:
             research_paper_query = (
-            select(
-                distinct(ResearchPaper.title).label('title'),
-                FullManuscript.content,
-                FullManuscript.abstract,
-                FullManuscript.file.label('file_path'),
-                FullManuscript.modified_at.label('date_publish')
+                select(
+                    ResearchPaper.id,
+                    ResearchPaper.title,
+                    ResearchPaper.research_type,
+                    FullManuscript.content,
+                    FullManuscript.abstract,
+                    FullManuscript.modified_at.label('date_publish')
+                )
+                .distinct(ResearchPaper.title)  # Use distinct() method here
+                .select_from(
+                    join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Users, Author.user_id == Users.id)
+                    .join(Student, Users.student_id == Student.StudentId)
+                    .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                    .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                )
+                #.where(SPSCourse.CourseCode == user_type)
             )
-            .select_from(
-                join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
-                .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
-                .join(Users, Author.user_id == Users.id)
-                .join(Student, Users.student_id == Student.StudentId)
-                .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
-                .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
-            )
-            .where(SPSCourse.CourseCode == user_type)
-            )
+
             if type_paper:
                 research_paper_query = research_paper_query.where(ResearchPaper.research_type == type_paper)
 
             research_paper_result = await db.execute(research_paper_query)
-            return research_paper_result.fetchall()
+            paper_result = research_paper_result.fetchall()
+
+            research_papers_list = []
+            for research_paper in paper_result:
+                authors_query = (
+                    select(
+                        Users.id.label('id'),
+                        func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                        Student.StudentNumber.label('student_number'),
+                        SPSCourse.CourseCode.label('course'),
+                        case([(SPSCourseEnrolled.Status == 1, 'Alumni')], else_='Student').label('status'),
+                        func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
+                        )
+                    .distinct(Users.id)
+                    .select_from(Users)
+                    .join(Author, Users.id == Author.user_id)
+                    .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+                    .join(Student, Student.StudentId == Users.student_id)
+                    .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
+                    .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
+                    .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
+                    .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+                    .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                    .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
+                    .where(ResearchPaper.id == research_paper.id)
+                )
+
+                authors_result = await db.execute(authors_query)
+                authors_details = authors_result.fetchall()
+
+                # Create a dictionary for each research paper with its authors
+                result_dict = {
+                    "research_paper": {
+                        "title": research_paper.title,
+                        "research-type": research_paper.research_type,
+                        "content": research_paper.content,
+                        "abstract": research_paper.abstract,
+                        "date_publish": research_paper.date_publish,
+                        "authors": authors_details,
+                    },  
+                }
+
+                research_papers_list.append(result_dict)
+
+            return research_papers_list
     
     
     

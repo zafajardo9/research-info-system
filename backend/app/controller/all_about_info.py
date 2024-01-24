@@ -95,14 +95,17 @@ async def admin_info():
         "BSENTREP": await AllInformationService.number_of_papers_by_course(db, "BSENTREP"),
         "BPAPFM": await AllInformationService.number_of_papers_by_course(db, "BPAPFM"),
         "DOMTMOM": await AllInformationService.number_of_papers_by_course(db, "DOMTMOM"),
-        "metrics": await AllInformationService.compute_collaboration_metrics(db, "b3adcb3b-79cd-4862-8738-7f6e674548d2")
+        #"metrics": await AllInformationService.compute_collaboration_metrics(db, "b3adcb3b-79cd-4862-8738-7f6e674548d2")
+        "Faculty Copyrighted Papers Total": await AllInformationService.number_faculty_paper(db),
         }
 
 
-@router.get("/all-collaboration-metrics")
+@router.get("/admin/all-collaboration-metrics")
 async def get_all_collaboration_metrics():
     all_metrics = await AllInformationService.compute_all_collaboration_metrics(db)
     return {"all_metrics": all_metrics}
+
+
 
 
 @router.get("/admin/count-research-info/all")
@@ -137,7 +140,7 @@ async def get_number_of_advisory_by_status(
         count = await AllInformationService.get_number_of_advisory_by_status(db, current_user, status)
         
         ## dagdagan to base sa status dapat
-        return {"Status": status, "Count" : count}
+        return {"Status": status, "Count (Any research types)" : count}
     except Exception as e:
         return ResponseSchema(detail=f"You have no number of research paper as an adviser: {str(e)}", result=None)
 

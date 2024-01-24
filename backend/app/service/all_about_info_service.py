@@ -11,14 +11,14 @@ from app.schema import AuthorSchema
 from app.model import Users, Author
 from app.model.research_paper import Status
 
-from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight, Student, Faculty
+from app.model import ResearchPaper, Ethics, FullManuscript, CopyRight, Student, Faculty, FacultyResearchPaper
 from app.model.assignedTo import AssignedResearchType
 from app.model.users import Role, UsersRole
 from sqlalchemy import or_, and_
 
 from app.model.connected_SPS import SPSCourse, SPSCourseEnrolled
 from sqlalchemy.orm import selectinload
-
+from collections import Counter
 
 class AllInformationService:
 
@@ -46,6 +46,17 @@ class AllInformationService:
         result = await db.execute(query)
         count = result.scalar()
         return count
+    
+    
+    @staticmethod
+    async def number_faculty_paper(db: Session):
+        query = (
+            select(func.count(FacultyResearchPaper.id))
+        )
+        result = await db.execute(query)
+        count = result.scalar()
+        return count
+    
     
     
     @staticmethod
@@ -253,6 +264,9 @@ class AllInformationService:
         total_collaboration_count = 0
         total_percentage_of_authors = 0
 
+        # Counter to store the count of each research type
+        research_type_counter = Counter()
+
         for proposal in proposals:
             # Extract information for collaboration metrics
             authors = proposal.authors
@@ -267,7 +281,8 @@ class AllInformationService:
             proposal_metrics = {
                 "research_proposal_id": proposal.id,
                 "collaboration_count": collaboration_count,
-                "percentage_of_authors": percentage_of_authors
+                "percentage_of_authors": percentage_of_authors,
+                "research_type": proposal.research_type  # Include research type in the metrics
             }
 
             all_metrics.append(proposal_metrics)
@@ -276,14 +291,21 @@ class AllInformationService:
             total_collaboration_count += collaboration_count
             total_percentage_of_authors += percentage_of_authors
 
+            # Update the research type counter
+            research_type_counter[proposal.research_type] += 1
+
         # Calculate average collaboration count and average percentage of authors
         average_collaboration_count = total_collaboration_count / len(proposals) if len(proposals) > 0 else 0
         average_percentage_of_authors = total_percentage_of_authors / len(proposals) if len(proposals) > 0 else 0
 
+        # Pie chart values for research types
+        pie_chart_values = [{"research_type": research_type, "count": count} for research_type, count in research_type_counter.items()]
+
         return {
             "Average Collaboration Count": average_collaboration_count,
             "Average Percentage of Authors": average_percentage_of_authors,
-            "All Metrics": all_metrics
+            "All Metrics": all_metrics,
+            "Pie Chart Values": pie_chart_values
         }
 
 

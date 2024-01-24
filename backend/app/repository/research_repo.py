@@ -1,5 +1,6 @@
 from datetime import datetime
 import math
+from operator import and_
 from typing import List, Optional
 from uuid import uuid4
 from fastapi import HTTPException
@@ -243,18 +244,16 @@ class ResearchPaperRepository(BaseRepo):
                     ResearchPaper.research_type,
                     FullManuscript.content,
                     FullManuscript.abstract,
+                    FullManuscript.keywords,
                     FullManuscript.modified_at.label('date_publish')
                 )
                 .distinct(ResearchPaper.title)  # Use distinct() method here
                 .select_from(
                     join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
                     .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
-                    .join(Users, Author.user_id == Users.id)
-                    .join(Student, Users.student_id == Student.StudentId)
-                    .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
-                    .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+
                 )
-                #.where(SPSCourse.CourseCode == user_type)
+                # .where(SPSCourse.CourseCode == user_type)
             )
 
             if type_paper:
@@ -273,7 +272,7 @@ class ResearchPaperRepository(BaseRepo):
                         SPSCourse.CourseCode.label('course'),
                         case([(SPSCourseEnrolled.Status == 1, 'Alumni')], else_='Student').label('status'),
                         func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
-                        )
+                    )
                     .distinct(Users.id)
                     .select_from(Users)
                     .join(Author, Users.id == Author.user_id)
@@ -285,27 +284,30 @@ class ResearchPaperRepository(BaseRepo):
                     .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
                     .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
                     .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
-                    .where(ResearchPaper.id == research_paper.id)
+                    .where(and_(ResearchPaper.id == research_paper.id, SPSCourse.CourseCode == user_type))
                 )
 
                 authors_result = await db.execute(authors_query)
                 authors_details = authors_result.fetchall()
 
-                # Create a dictionary for each research paper with its authors
-                result_dict = {
-                    "research_paper": {
-                        "title": research_paper.title,
-                        "research-type": research_paper.research_type,
-                        "content": research_paper.content,
-                        "abstract": research_paper.abstract,
-                        "date_publish": research_paper.date_publish,
-                        "authors": authors_details,
-                    },  
-                }
+                # Check if there are authors with the specified user_type
+                if any(author['course'] == user_type for author in authors_details):
+                    # Create a dictionary for each research paper with its authors
+                    result_dict = {
+                        "research_paper": {
+                            "title": research_paper.title,
+                            "research-type": research_paper.research_type,
+                            "content": research_paper.content,
+                            "abstract": research_paper.abstract,
+                            "keywords": research_paper.keywords,
+                            "date_publish": research_paper.date_publish,
+                            "authors": authors_details,
+                        },
+                    }
 
-                research_papers_list.append(result_dict)
+                    research_papers_list.append(result_dict)
 
             return research_papers_list
-    
+                
     
     

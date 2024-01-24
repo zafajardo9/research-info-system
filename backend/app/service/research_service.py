@@ -86,9 +86,33 @@ class ResearchService:
     async def get_all_with_authors():
         try:
             # Query to get research paper details
-            research_paper_query = select(ResearchPaper)
+            research_paper_query = (
+                select(
+                    ResearchPaper.id,
+                    ResearchPaper.title,
+                    ResearchPaper.research_type,
+                    FullManuscript.content,
+                    FullManuscript.abstract,
+                    FullManuscript.keywords,
+                    FullManuscript.modified_at.label('date_publish')
+                )
+                .distinct(ResearchPaper.title)  # Use distinct() method here
+                .select_from(
+                    join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
+                    .join(Users, Author.user_id == Users.id)
+                    .join(Student, Users.student_id == Student.StudentId)
+                    .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
+                    .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
+                )
+                #.where(SPSCourse.CourseCode == user_type)
+            )
+            
+            
+            
+            # research_paper_query = select(ResearchPaper)
             research_paper_result = await db.execute(research_paper_query)
-            research_papers = research_paper_result.scalars().all()
+            research_papers = research_paper_result.fetchall()
             research_papers_with_authors = []
             print(research_paper_query)
             for research_paper in research_papers:
@@ -1252,12 +1276,13 @@ class ResearchService:
         
         
     @staticmethod
-    async def view_proposal():
+    async def view_proposal(type: str):
         try:
             query = (
                 select(
                     ResearchPaper
                 )
+                .where(ResearchPaper.research_type == type)
             )
             
             result = await db.execute(query)
@@ -1272,12 +1297,14 @@ class ResearchService:
     
     
     @staticmethod
-    async def view_ethics():
+    async def view_ethics(type: str):
         try:
             query = (
                 select(
                     Ethics
                 )
+                .join(ResearchPaper, Ethics.research_paper_id == ResearchPaper.id)
+                .where(ResearchPaper.research_type == type)
             )
             
             result = await db.execute(query)
@@ -1292,12 +1319,14 @@ class ResearchService:
         
         
     @staticmethod
-    async def view_copyright():
+    async def view_copyright(type: str):
         try:
             query = (
                 select(
                     CopyRight
                 )
+                .join(ResearchPaper, CopyRight.research_paper_id == ResearchPaper.id)
+                .where(ResearchPaper.research_type == type)
             )
             
             result = await db.execute(query)
@@ -1312,12 +1341,14 @@ class ResearchService:
         view_manuscript
         
     @staticmethod
-    async def view_manuscript():
+    async def view_manuscript(type:str):
         try:
             query = (
                 select(
                     FullManuscript
                 )
+                .join(ResearchPaper, FullManuscript.research_paper_id == ResearchPaper.id)
+                .where(ResearchPaper.research_type == type)
             )
             
             result = await db.execute(query)

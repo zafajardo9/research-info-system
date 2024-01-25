@@ -568,22 +568,22 @@ class AllInformationService:
     
     
     #Mahirap na part kasi yung class information ng user sa db ni jocarl mahirap kunin
-    @staticmethod
-    async def get_research_status_by_course_section(db: Session, class_id: str):
-        query = (
-            select(
-                FullManuscript.status,
-                func.count().label("count")
-            )
-            .join(ResearchPaper, ResearchPaper.id == FullManuscript.research_paper_id)
-            .where(ResearchPaper.research_adviser == adviser_id)
-            .group_by(FullManuscript.status)
-            .having(func.count() > 0)
-        )
+    # @staticmethod
+    # async def get_research_status_by_course_section(db: Session, class_id: str):
+    #     query = (
+    #         select(
+    #             FullManuscript.status,
+    #             func.count().label("count")
+    #         )
+    #         .join(ResearchPaper, ResearchPaper.id == FullManuscript.research_paper_id)
+    #         .where(ResearchPaper.research_adviser == adviser_id)
+    #         .group_by(FullManuscript.status)
+    #         .having(func.count() > 0)
+    #     )
 
-        result = await db.execute(query)
-        status_counts = result.fetchall()
-        return status_counts
+    #     result = await db.execute(query)
+    #     status_counts = result.fetchall()
+    #     return status_counts
     
     
     

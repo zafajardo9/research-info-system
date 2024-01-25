@@ -397,7 +397,6 @@ class ResearchService:
             for research_paper in research_papers:
                 authors_query = (
                     select(
-                        #Users.id.label('id'),
                         func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
                         Student.StudentNumber.label('student_number'),
                         SPSCourse.CourseCode.label('course'),

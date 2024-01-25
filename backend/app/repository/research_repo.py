@@ -65,10 +65,14 @@ class ResearchPaperRepository(BaseRepo):
             await commit_rollback()
 
         except IntegrityError as e:
-            # Handle any integrity errors, such as foreign key constraints
-            # You can log the error or take appropriate action based on your requirements
             print(f"IntegrityError: {str(e)}")
             await commit_rollback()
+        except Exception as e:
+            print(f"Error deleting research paper: {str(e)}")
+            # Rollback the changes on any error
+            await commit_rollback()
+            # Raise or return an appropriate response
+            raise HTTPException(status_code=500, detail="Error deleting research paper")
                 
 
 

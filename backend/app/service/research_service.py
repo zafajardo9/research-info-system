@@ -887,7 +887,17 @@ class ResearchService:
     
     @staticmethod
     async def get_faculty_research_papers(user_id: str):
-        query = select(FacultyResearchPaper).where(FacultyResearchPaper.user_id == user_id)
+        query = select(
+            FacultyResearchPaper
+            # .title,
+            # FacultyResearchPaper.content,
+            # FacultyResearchPaper.abstract,
+            # FacultyResearchPaper.file_path,
+            # FacultyResearchPaper.date_publish,
+            # FacultyResearchPaper.category,
+            # FacultyResearchPaper.publisher,
+            # FacultyResearchPaper.status,
+            ).where(FacultyResearchPaper.user_id == user_id)
         
         result = await db.execute(query)
         return result.scalars().all()

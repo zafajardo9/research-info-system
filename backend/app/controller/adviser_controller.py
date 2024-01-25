@@ -380,7 +380,7 @@ async def upload_faculty_paper(
     
 
     
-@router.get("/my-research-papers", response_model=Optional[List[FacultyResearchPaper]], response_model_exclude_none=True)
+@router.get("/my-research-papers",)
 async def get_faculty_research_papers(
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())
 ):
@@ -390,6 +390,7 @@ async def get_faculty_research_papers(
     try:
         research_papers = await ResearchService.get_faculty_research_papers(current_user_id)
         if research_papers:
+            print(research_papers)
             return research_papers
         else:
             return None
@@ -397,7 +398,7 @@ async def get_faculty_research_papers(
         return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
     
     
-@router.get("/my-research-papers/{research_paper_id}", response_model=Optional[FacultyResearchPaper], response_model_exclude_none=True)
+@router.get("/my-research-papers/{research_paper_id}", response_model=Optional[FacultyResearchPaper])
 async def get_faculty_research_papers(
     research_paper_id: str,
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())

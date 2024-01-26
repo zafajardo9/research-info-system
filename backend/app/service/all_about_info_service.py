@@ -51,7 +51,7 @@ class AllInformationService:
     @staticmethod
     async def number_faculty_paper(db: Session):
         query = (
-            select(func.count(FacultyResearchPaper.id))
+            select(func.count(FacultyResearchPaper.id)).where(FacultyResearchPaper.status == "Approved")
         )
         result = await db.execute(query)
         count = result.scalar()

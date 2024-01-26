@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 
 from app.repository.author_repo import AuthorRepository
-from app.schema import AuthorSchema
+from app.schema import AuthorSchema, ResponseSchema
 from app.model import Users, Author
 from app.model.research_paper import Status
 
@@ -195,11 +195,15 @@ class AllInformationService:
     
     
     @staticmethod
-    async def number_of_papers_by_course(db: Session, course:str):
-        count = (
+    async def number_of_papers_by_course(db: Session, course: str):
+        try:
+            count_query = (
                 select(
-                    func.count(distinct(ResearchPaper.title))
+                    func.count(distinct(ResearchPaper.id)).label("count"),  # Count the distinct ResearchPapers.id
+                    ResearchPaper.research_type   # Select the research_type column from ResearchPaper
                 )
+
+                # Define the tables to be joined
                 .select_from(
                     join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
                     .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
@@ -208,11 +212,24 @@ class AllInformationService:
                     .join(SPSCourseEnrolled, Student.StudentId == SPSCourseEnrolled.StudentId)
                     .join(SPSCourse, SPSCourseEnrolled.CourseId == SPSCourse.CourseId)
                 )
+
                 .where(SPSCourse.CourseCode == course)
+
+                .group_by(ResearchPaper.research_type)
             )
-        result = await db.execute(count)
-        count = result.scalar()
-        return count
+
+            result = await db.execute(count_query)
+
+            counts = result.all()
+
+            # Convert the result to a list of dictionaries
+            counts_list = [{"research_type": research_type, "count": count} for count, research_type in counts]
+
+            return counts_list
+
+        except Exception as e:
+            return ResponseSchema(detail=f"Error in getting information: {str(e)}", result=None)
+
     
     @staticmethod
     async def total_number_of_papers(db: Session):

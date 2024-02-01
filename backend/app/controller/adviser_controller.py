@@ -86,6 +86,7 @@ async def get_user_research_papers(
             raise HTTPException(status_code=404, detail="Research paper not found")
         response_papers = [
             {
+                # "modified_at": paper.modified_at,
                 "id": paper.id,
                 "title": paper.title,
                 "research_type": paper.research_type,
@@ -120,6 +121,7 @@ async def get_user_research_papers(
             raise HTTPException(status_code=404, detail="Research paper not found")
         response_papers = [
             {
+                # "modified_at": paper.modified_at,
                 "id": paper.id,
                 "title": paper.title,
                 "time": paper.time,

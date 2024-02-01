@@ -164,6 +164,7 @@ class ResearchService:
     async def get_research_paper_with_authors(research_paper_id: str):
         try:
             research_paper_query = (select(
+                                    ResearchPaper.modified_at,
                                     ResearchPaper.id,
                                     ResearchPaper.title,
                                     ResearchPaper.submitted_date,
@@ -325,6 +326,7 @@ class ResearchService:
 
         query = (
             select(
+                ResearchPaper.modified_at,
                 distinct(ResearchPaper.id).label('id'),
                 ResearchPaper.title,
                 ResearchPaper.research_type,
@@ -612,6 +614,7 @@ class ResearchService:
 
         query = (
             select(
+                # ResearchPaper.modified_at,
                 distinct(ResearchDefense.id).label('id'),
                 ResearchPaper.title,
                 ResearchDefense.date,
@@ -654,6 +657,7 @@ class ResearchService:
 
         query = (
             select(
+                # Ethics.modified_at,
                 distinct(Ethics.id).label('id'),
                 ResearchPaper.title,
                 Ethics.status

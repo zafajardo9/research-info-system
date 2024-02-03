@@ -326,7 +326,7 @@ class ResearchService:
 
         query = (
             select(
-                ResearchPaper.modified_at,
+                # ResearchPaper.modified_at,
                 distinct(ResearchPaper.id).label('id'),
                 ResearchPaper.title,
                 ResearchPaper.research_type,

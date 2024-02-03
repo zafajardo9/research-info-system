@@ -20,7 +20,7 @@ from fastapi import HTTPException
 from app.repository.notif_repo import NotificationRepository
 
 
-from app.schema import NavigationTabCreate, NavigationProcessDisplay, NavigationTabUpdate
+from app.schema import NavigationTabCreate, NavigationProcessDisplay, NavigationTabUpdate, ResponseSchema
 
 from app.model import Notification, Users, Author, Student, Faculty
 
@@ -84,9 +84,9 @@ class NotificationService:
     async def delete_all_user_notif(user_id: str):
         try:
             stmt = delete(Notification).where(Notification.user_id == user_id)
-            result = await db.execute(stmt)
+            await db.execute(stmt)
             await db.commit()
-            return result
+            return ResponseSchema(detail=f"Successfully deleted all")
         except Exception as e:
             print(f"Error Deleting all: {e}")
             raise
@@ -95,10 +95,9 @@ class NotificationService:
     async def delete_selected(notif_id: str):
         try:
             stmt = delete(Notification).where(Notification.id == notif_id)
-            print(stmt)  # Check the generated SQL statement
-            result = await db.execute(stmt)
+            await db.execute(stmt)
             await db.commit()
-            return result
+            return ResponseSchema(detail=f"Successfully deleted the notif")
         except Exception as e:
             print(f"Error deleting this: {e}")
             raise

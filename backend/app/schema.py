@@ -7,7 +7,7 @@ import re
 from typing import Any, Dict, List, TypeVar, Optional, Generic, Union
 
 from pydantic.generics import GenericModel
-from pydantic import BaseModel, Field, validator, constr
+from pydantic import BaseModel, EmailStr, Field, validator, constr
 from sqlalchemy import false
 
 from app.model.research_paper import Author, Status
@@ -20,7 +20,10 @@ T = TypeVar('T')
 # get root logger
 logger = logging.getLogger(__name__)
 
-
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
+    
+    
 class RegisterSchema(BaseModel):
 
     #username: str

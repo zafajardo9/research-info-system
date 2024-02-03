@@ -1,7 +1,13 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import db
+
+
+
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
+from pydantic import BaseModel, EmailStr
+from starlette.responses import JSONResponse
 
 
 origins= [
@@ -13,6 +19,20 @@ app = FastAPI(
         description= "Research Information System",
         version= "1.5",
 )
+
+
+conf = ConnectionConfig(
+    MAIL_USERNAME ="pupris.qc@gmail.com",
+    MAIL_PASSWORD = "ahus nmvh quvo lgng",
+    MAIL_FROM = "pupris.qc@gmail.com",
+    MAIL_PORT = 465,
+    MAIL_SERVER = "smtp.gmail.com",
+    MAIL_STARTTLS = False,
+    MAIL_SSL_TLS = True,
+    USE_CREDENTIALS = True,
+    VALIDATE_CERTS = True
+)
+
 
 def init_app():
     db.init()

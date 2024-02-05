@@ -1,13 +1,13 @@
+from app.repository.users import UsersRepository
 from fastapi import APIRouter, HTTPException
 from app.schema import EmailSchema, RegisterSchemaFaculty, ResponseSchema, RegisterSchema, LoginSchema, ForgotPasswordSchema
 from app.service.auth_service import AuthService, generate_role
+from fastapi.security import OAuth2PasswordBearer
 
-#Email
-from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
-from pydantic import BaseModel, EmailStr
-from starlette.responses import JSONResponse
 
-from app.main import conf
+
+
+
 
 router = APIRouter(prefix="/auth", tags=['Authentication'])
 
@@ -40,11 +40,11 @@ async def login_faculty(request_body: LoginSchema):
 
 
 # di naman needed
-@router.post("/forgot-password", response_model=ResponseSchema, response_model_exclude_none=True)
-async def forgot_password(request_body: ForgotPasswordSchema):
-    # Implement forgot password logic
-    # Update password for the user
-    return ResponseSchema(detail="Password updated successfully!")
+# @router.post("/forgot-password", response_model=ResponseSchema, response_model_exclude_none=True)
+# async def forgot_password(request_body: ForgotPasswordSchema):
+#     # Implement forgot password logic
+#     # Update password for the user
+#     return ResponseSchema(detail="Password updated successfully!")
 
 
 @router.get("/integration/authentication", response_model=ResponseSchema)
@@ -56,19 +56,3 @@ async def login_faculty():
 # todo making user automatically register faculty information
 # todo integrate with ROBERT
 
-html = """
-<p>Thanks for using Fastapi-mail</p> 
-"""
-
-@router.post("/email")
-async def simple_send(email: EmailSchema) -> JSONResponse:
-
-    message = MessageSchema(
-        subject="Fastapi-Mail module",
-        recipients=email.dict().get("email"),
-        body=html,
-        subtype=MessageType.html)
-
-    fm = FastMail(conf)
-    await fm.send_message(message)
-    return JSONResponse(status_code=200, content={"message": "email has been sent"})   

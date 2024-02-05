@@ -1,8 +1,9 @@
 from typing import List
+from app.service.auth_service import AuthService
 from fastapi import APIRouter, Depends, Security, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.future import select
-from app.schema import ResponseSchema
+from app.schema import ForgotPassword, ResponseSchema
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from app.service.users_service import UserService
 from app.model.student import Student  
@@ -10,6 +11,14 @@ from app.model.faculty import Faculty
 from app.repository.users import UsersRepository
 from app.service.research_service import ResearchService
 #from app.model.workflowprocess import Course
+
+
+#Email
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
+from pydantic import BaseModel, EmailStr
+from starlette.responses import JSONResponse
+from werkzeug.security import check_password_hash, generate_password_hash
+from app.main import conf
 
 router = APIRouter(
     prefix="/users",
@@ -32,6 +41,49 @@ async def get_student_profile(credentials: HTTPAuthorizationCredentials = Securi
     else:
         raise HTTPException(status_code=404, detail="Student profile not found")
 
+
+@router.post("/student/forgot-password")
+async def forgot_password(
+    email: ForgotPassword, 
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    
+    token = JWTRepo.extract_token(credentials)
+    id = token['user_id']
+    
+    result = await AuthService.update_user_password(id, email.new_password)
+    
+    
+    message = MessageSchema(
+        subject="Password Reset",
+        recipients=[result.Email],
+        body=f"""You have successfully reset your password 
+        
+        This is your new password:
+        <b>{email.new_password}</>""",
+        subtype=MessageType.html
+    )
+
+    fm = FastMail(conf)
+    await fm.send_message(message)
+    
+    return {"message": "Password reset successfully. We also sent your password to your email"}
+
+
+    # @staticmethod
+    # async def update_status(db: Session, research_paper_id: str, new_status: Status) -> ResearchPaper:
+    #     # Fetch the research paper
+    #     result = await db.execute(select(ResearchPaper).where(ResearchPaper.id == research_paper_id))
+    #     research_paper = result.scalar_one_or_none()
+
+    #     if research_paper:
+    #         research_paper.status = new_status
+    #         await db.commit()
+    #         db.refresh(research_paper)
+    #         return research_paper
+    #     else:
+    #         raise HTTPException(status_code=404, detail="Research paper not found")
+
+
 @router.get("/profile/faculty", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     token = JWTRepo.extract_token(credentials)
@@ -48,6 +100,34 @@ async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Securi
         return ResponseSchema(detail="Successfully fetch faculty profile!", result=result_dict)
     else:
         raise HTTPException(status_code=404, detail="Faculty profile not found")
+    
+@router.post("/faculty/forgot-password")
+async def forgot_password(
+    email: ForgotPassword, 
+    credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
+    
+    token = JWTRepo.extract_token(credentials)
+    id = token['user_id']
+    
+    result = await AuthService.update_faculty_password(id, email.new_password)
+    
+    
+    message = MessageSchema(
+        subject="Password Reset",
+        recipients=[result.Email],
+        body=f"""You have successfully reset your password 
+        
+        This is your new password:
+        <b>{email.new_password}</>""",
+        subtype=MessageType.html
+    )
+
+    fm = FastMail(conf)
+    await fm.send_message(message)
+    
+    return {"message": "Password reset successfully. We also sent your password to your email"}   
+    
+
 
 @router.get("/profile/student/{user_id}")
 async def get_student_profile_by_ID(user_id: str):

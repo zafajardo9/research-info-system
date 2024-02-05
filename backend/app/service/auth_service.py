@@ -18,6 +18,7 @@ from app.model.users import Users, UsersRole, Role
 
 from app.config import db
 from app.service.section_service import SectionService
+from sqlalchemy import select
 
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -130,6 +131,44 @@ class AuthService:
     async def integration_auth():
         return JWTRepo(data={"user": "test_user", "token_generate": "success", "connection_type": "for integration"}).generate_token()
 
+
+    @staticmethod     
+    async def update_user_password(user_id: str, new_password: str):
+        query = (
+            select(Student)
+            .join(Users, Student.StudentId == Users.student_id)
+            .filter(Users.id == user_id)
+        )
+        result = await db.execute(query)
+        user = result.scalar_one_or_none()
+
+        if user:
+            user.Password = generate_password_hash(new_password, method='pbkdf2')
+            await db.commit()
+            db.refresh(user)
+            return user
+        else:
+            raise HTTPException(status_code=404, detail="Not Found")
+
+
+    @staticmethod     
+    async def update_faculty_password(user_id: str, new_password: str):
+        query = (
+            select(Faculty)
+            .join(Users, Faculty.FacultyId == Users.student_id)
+            .filter(Users.id == user_id)
+        )
+        result = await db.execute(query)
+        user = result.scalar_one_or_none()
+
+        if user:
+            user.Password = generate_password_hash(new_password, method='pbkdf2')
+            await db.commit()
+            db.refresh(user)
+            return user
+        else:
+            raise HTTPException(status_code=404, detail="Not Found")
+
 # Generate roles manually
 async def generate_role():
     _role = await RoleRepository.find_by_list_role_name(["admin", "student", "faculty", "research professor"])
@@ -142,3 +181,4 @@ async def generate_role():
                 Role(id=str(uuid4()), role_name="research professor"),
                 Role(id=str(uuid4()), role_name="research adviser")
             ])
+        

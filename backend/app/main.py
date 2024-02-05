@@ -23,12 +23,12 @@ app = FastAPI(
 
 conf = ConnectionConfig(
     MAIL_USERNAME ="pupris.qc@gmail.com",
-    MAIL_PASSWORD = "ahus nmvh quvo lgng",
+    MAIL_PASSWORD = "yqsukxfuzdazeejv", #yqsu kxfu zdaz eejv
     MAIL_FROM = "pupris.qc@gmail.com",
-    MAIL_PORT = 465,
+    MAIL_PORT = 587,
     MAIL_SERVER = "smtp.gmail.com",
-    MAIL_STARTTLS = False,
-    MAIL_SSL_TLS = True,
+    MAIL_STARTTLS = True,
+    MAIL_SSL_TLS = False,
     USE_CREDENTIALS = True,
     VALIDATE_CERTS = True
 )

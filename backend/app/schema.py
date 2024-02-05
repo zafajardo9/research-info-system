@@ -22,11 +22,11 @@ logger = logging.getLogger(__name__)
 
 class EmailSchema(BaseModel):
     email: List[EmailStr]
-    
+
+class ForgotPassword(BaseModel):
+    new_password: str
     
 class RegisterSchema(BaseModel):
-
-    #username: str
     email: str
     name: str
     password: str

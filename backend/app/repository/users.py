@@ -68,6 +68,28 @@ class UsersRepository(BaseRepo):
     async def find_by_email(email: str):
         query = select(Faculty).where(Faculty.Email == email)
         return (await db.execute(query)).scalar_one_or_none()
+    
+
+
+    
+    @staticmethod
+    async def fetch_student_by_user_id(user_id: str):
+        query = select(
+            Users.id,
+            Student.id,
+            Student.Email,
+            Student.Password,
+            ).where(Users.id == user_id)
+        return (await db.execute(query)).fetchall()
+    # @staticmethod
+    # async def find_by_email_faculty(email: str):
+    #     query = select(Faculty).where(Faculty.Email == email)
+    #     return (await db.execute(query)).scalar_one_or_none()
+    
+    # @staticmethod
+    # async def find_by_email_student(email: str):
+    #     query = select(Student).where(Student.Email == email)
+    #     return (await db.execute(query)).scalar_one_or_none()
 
     @staticmethod
     async def update_password(user: Users, password: str):

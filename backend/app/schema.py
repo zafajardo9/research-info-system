@@ -703,6 +703,7 @@ class FPSTest(BaseModel):
     abstract: str
     file_path: str
     category: str
+    keywords: str
     publisher: str
     date_publish: str
 

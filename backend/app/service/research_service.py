@@ -953,6 +953,7 @@ class ResearchService:
         await db.execute(query)
         await db.commit()
 
+
     @staticmethod
     async def update_faculty_research_paper(research_paper_id: str, research_paper_data: FacultyResearchPaperUpdate):
         find = select(FacultyResearchPaper).where(FacultyResearchPaper.id == research_paper_id)

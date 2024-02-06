@@ -428,8 +428,8 @@ async def delete_faculty_research_paper(
         return ResponseSchema(detail=f"Research paper {research_paper_id} deleted successfully", result=None)
     except HTTPException as e:
         return ResponseSchema(detail=f"Error deleting research paper: {str(e)}", result=None)
-    
-    
+
+
 @router.put("/my-research-papers/{research_paper_id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_faculty_research_paper(
     research_paper_id: str,

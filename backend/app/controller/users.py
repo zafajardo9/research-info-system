@@ -42,7 +42,7 @@ async def get_student_profile(credentials: HTTPAuthorizationCredentials = Securi
         raise HTTPException(status_code=404, detail="Student profile not found")
 
 
-@router.post("/student/forgot-password")
+@router.post("/student/reset-password")
 async def forgot_password(
     email: ForgotPassword, 
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
@@ -101,7 +101,7 @@ async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Securi
     else:
         raise HTTPException(status_code=404, detail="Faculty profile not found")
     
-@router.post("/faculty/forgot-password")
+@router.post("/faculty/reset-password")
 async def forgot_password(
     email: ForgotPassword, 
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):

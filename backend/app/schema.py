@@ -24,8 +24,9 @@ class EmailSchema(BaseModel):
     email: List[EmailStr]
 
 class ForgotPassword(BaseModel):
+    current_password: str
     new_password: str
-    
+
 class RegisterSchema(BaseModel):
     email: str
     name: str

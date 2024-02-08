@@ -132,8 +132,12 @@ class AuthService:
         return JWTRepo(data={"user": "test_user", "token_generate": "success", "connection_type": "for integration"}).generate_token()
 
 
+    @staticmethod
+    async def verify_password(plain_password, hashed_password):
+        return check_password_hash(hashed_password, plain_password)
+
     @staticmethod     
-    async def update_user_password(user_id: str, new_password: str):
+    async def update_user_password(user_id: str, current_password: str, new_password: str):
         query = (
             select(Student)
             .join(Users, Student.StudentId == Users.student_id)
@@ -142,13 +146,17 @@ class AuthService:
         result = await db.execute(query)
         user = result.scalar_one_or_none()
 
-        if user:
-            user.Password = generate_password_hash(new_password, method='pbkdf2')
-            await db.commit()
-            db.refresh(user)
-            return user
-        else:
-            raise HTTPException(status_code=404, detail="Not Found")
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        if not await AuthService.verify_password(current_password, user.Password):
+            raise HTTPException(status_code=400, detail="You have input a wrong current password")
+
+        # Password verification passed, update the password
+        user.Password = generate_password_hash(new_password, method='pbkdf2')
+        await db.commit()
+        db.refresh(user)
+        return user
 
 
     @staticmethod     

@@ -51,8 +51,8 @@ async def get_all_research_papers_with_authors():
 
 @router.get("/display-all")
 async def get_all_papers_student_faculty(
-    user_type: str,
-    type_paper: str = Query(None, alias="type")
+    user_type: Optional[str] = None,
+    type_paper: Optional[str] = Query(None, alias="type")
     ):
     try:
         research_papers = await ResearchPaperRepository.pagination_all_papers(user_type, type_paper)

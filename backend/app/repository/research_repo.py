@@ -251,6 +251,7 @@ class ResearchPaperRepository(BaseRepo):
                     FacultyResearchPaper.keywords,
                     # FacultyResearchPaper.publisher,
                     # FacultyResearchPaper.category,
+                    FacultyResearchPaper.file_path.label('file'),
                     func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleName).label('author'),
                 )
                 .join(Users, FacultyResearchPaper.user_id == Users.id)
@@ -268,6 +269,7 @@ class ResearchPaperRepository(BaseRepo):
                     "content": research_paper.content,
                     "abstract": research_paper.abstract,
                     "keywords": research_paper.keywords,
+                    "file": research_paper.file,
                     "date_publish": research_paper.date_publish,
                     "authors": [{"name": research_paper.author}],
                 },
@@ -288,7 +290,8 @@ class ResearchPaperRepository(BaseRepo):
                     FullManuscript.content,
                     FullManuscript.abstract,
                     FullManuscript.keywords,
-                    FullManuscript.modified_at.label('date_publish')
+                    FullManuscript.file.label('file'),
+                    func.date(FullManuscript.modified_at).label('date_publish')
                 )
                 .distinct(ResearchPaper.title)  # Use distinct() method here
                 .select_from(
@@ -345,6 +348,7 @@ class ResearchPaperRepository(BaseRepo):
                             "content": research_paper.content,
                             "abstract": research_paper.abstract,
                             "keywords": research_paper.keywords,
+                            "file": research_paper.file,
                             "date_publish": research_paper.date_publish,
                             "authors": authors_names,
                         },
@@ -365,7 +369,8 @@ class ResearchPaperRepository(BaseRepo):
                 FullManuscript.content,
                 FullManuscript.abstract,
                 FullManuscript.keywords,
-                FullManuscript.modified_at.label('date_publish')
+                FullManuscript.file,
+                func.date(FullManuscript.modified_at).label('date_publish')
             )
             .distinct(ResearchPaper.title)  # Use distinct() method here
             .select_from(
@@ -404,6 +409,7 @@ class ResearchPaperRepository(BaseRepo):
                     "content": research_paper.content,
                     "abstract": research_paper.abstract,
                     "keywords": research_paper.keywords,
+                    "file": research_paper.file,
                     "date_publish": research_paper.date_publish,
                     "authors": authors_names,
                 },

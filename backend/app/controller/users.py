@@ -92,9 +92,9 @@ async def forgot_password(
     credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):
     
     token = JWTRepo.extract_token(credentials)
-    id = token['user_id']
+    user_id = token['user_id']
     
-    result = await AuthService.update_faculty_password(id, email.new_password)
+    result = await AuthService.update_faculty_password(user_id, email.current_password, email.new_password)
     
     
     message = MessageSchema(

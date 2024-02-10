@@ -160,22 +160,26 @@ class AuthService:
 
 
     @staticmethod     
-    async def update_faculty_password(user_id: str, new_password: str):
+    async def update_faculty_password(user_id: str, current_password: str, new_password: str):
         query = (
             select(Faculty)
-            .join(Users, Faculty.FacultyId == Users.student_id)
+            .join(Users, Faculty.FacultyId == Users.faculty_id)
             .filter(Users.id == user_id)
         )
         result = await db.execute(query)
         user = result.scalar_one_or_none()
 
-        if user:
-            user.Password = generate_password_hash(new_password, method='pbkdf2')
-            await db.commit()
-            db.refresh(user)
-            return user
-        else:
-            raise HTTPException(status_code=404, detail="Not Found")
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        if not await AuthService.verify_password(current_password, user.Password):
+            raise HTTPException(status_code=400, detail="You have input a wrong current password")
+
+        # Password verification passed, update the password
+        user.Password = generate_password_hash(new_password, method='pbkdf2')
+        await db.commit()
+        db.refresh(user)
+        return user
 
 # Generate roles manually
 async def generate_role():

@@ -68,20 +68,6 @@ async def forgot_password(
     return {"message": "Password reset successfully. We also sent your password to your email"}
 
 
-    # @staticmethod
-    # async def update_status(db: Session, research_paper_id: str, new_status: Status) -> ResearchPaper:
-    #     # Fetch the research paper
-    #     result = await db.execute(select(ResearchPaper).where(ResearchPaper.id == research_paper_id))
-    #     research_paper = result.scalar_one_or_none()
-
-    #     if research_paper:
-    #         research_paper.status = new_status
-    #         await db.commit()
-    #         db.refresh(research_paper)
-    #         return research_paper
-    #     else:
-    #         raise HTTPException(status_code=404, detail="Research paper not found")
-
 
 @router.get("/profile/faculty", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_faculty_profile(credentials: HTTPAuthorizationCredentials = Security(JWTBearer())):

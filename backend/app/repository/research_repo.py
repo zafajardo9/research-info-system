@@ -429,7 +429,7 @@ class ResearchPaperRepository(BaseRepo):
     @staticmethod
     async def accre_pagination(user_type: str):
         if user_type is None:
-            return await ResearchPaperRepository.combine_faculty_student_papers()
+            return await ResearchPaperRepository.accre_combine()
         if user_type == "faculty":
             return await ResearchPaperRepository.accre_get_faculty()
         if user_type == "student":

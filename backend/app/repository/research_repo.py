@@ -418,3 +418,210 @@ class ResearchPaperRepository(BaseRepo):
             research_papers_list.append(result_dict)
 
         return research_papers_list
+    
+    
+    
+    
+    
+# FOR ACCRE SYSTEM ----------------------------- INTEGRATION
+
+        
+    @staticmethod
+    async def accre_pagination(user_type: str):
+        if user_type is None:
+            return await ResearchPaperRepository.combine_faculty_student_papers()
+        if user_type == "faculty":
+            return await ResearchPaperRepository.accre_get_faculty()
+        if user_type == "student":
+            return await ResearchPaperRepository.accre_get_student()
+        else:
+            return {"ERROR: Please specify"}
+                
+    
+    
+    @staticmethod
+    async def accre_combine():
+        faculty_papers = await ResearchPaperRepository.accre_get_faculty()
+        student_papers = await ResearchPaperRepository.accre_get_student()
+
+        combined_result = faculty_papers + student_papers
+
+        return combined_result
+    
+    @staticmethod
+    async def accre_get_faculty():
+        query = (
+            select(
+                    FacultyResearchPaper.title,
+                    FacultyResearchPaper.content,
+                    FacultyResearchPaper.abstract,
+                    FacultyResearchPaper.date_publish,
+                    # FacultyResearchPaper.keywords,
+                    # FacultyResearchPaper.publisher,
+                    # FacultyResearchPaper.category,
+                    FacultyResearchPaper.file_path.label('file'),
+                    func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleName).label('author'),
+                )
+                .join(Users, FacultyResearchPaper.user_id == Users.id)
+                .join(Faculty, Users.faculty_id == Faculty.FacultyId)
+        )
+        result = await db.execute(query)
+        overall_result = result.fetchall()
+
+        faculty_response_list = []
+
+        for research_paper in overall_result:
+            faculty_paper_response = {
+                "research_paper": {
+                    "title": research_paper.title,
+                    "content": research_paper.content,
+                    "abstract": research_paper.abstract,
+                    "file": research_paper.file,
+                    "date_publish": research_paper.date_publish,
+                    "authors": [{"name": research_paper.author}],
+                },
+            }
+
+            faculty_response_list.append(faculty_paper_response)
+
+        return faculty_response_list
+    
+    
+    # @staticmethod
+    # async def accre_get_student_papers_by_course(user_type: str, type_paper: str):
+    #         research_paper_query = (
+    #             select(
+    #                 ResearchPaper.id,
+    #                 ResearchPaper.title,
+    #                 ResearchPaper.research_type,
+    #                 FullManuscript.content,
+    #                 FullManuscript.abstract,
+    #                 # FullManuscript.keywords,
+    #                 FullManuscript.file.label('file'),
+    #                 func.date(FullManuscript.modified_at).label('date_publish')
+    #             )
+    #             .distinct(ResearchPaper.title)  # Use distinct() method here
+    #             .select_from(
+    #                 join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+    #                 .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
+
+    #             )
+    #             # .where(SPSCourse.CourseCode == user_type)
+    #         )
+
+    #         if type_paper:
+    #             research_paper_query = research_paper_query.where(ResearchPaper.research_type == type_paper)
+
+    #         research_paper_result = await db.execute(research_paper_query)
+    #         paper_result = research_paper_result.fetchall()
+
+    #         research_papers_list = []
+    #         for research_paper in paper_result:
+    #             authors_query = (
+    #                 select(
+    #                     Users.id.label('id'),
+    #                     func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+    #                     # Student.StudentNumber.label('student_number'),
+    #                     SPSCourse.CourseCode.label('course'),
+    #                     # case([(SPSCourseEnrolled.Status == 1, 'Alumni')], else_='Student').label('status'),
+    #                     # func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
+    #                 )
+    #                 .distinct(Users.id)
+    #                 .select_from(Users)
+    #                 .join(Author, Users.id == Author.user_id)
+    #                 .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+    #                 .join(Student, Student.StudentId == Users.student_id)
+    #                 .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
+    #                 .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
+    #                 .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
+    #                 .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+    #                 .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+    #                 .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
+    #                 .where(and_(ResearchPaper.id == research_paper.id, SPSCourse.CourseCode == user_type))
+    #             )
+
+    #             authors_result = await db.execute(authors_query)
+    #             authors_details = authors_result.fetchall()
+    #             authors_names = [{"name": author["name"]} for author in authors_details]
+
+
+    #             # Check if there are authors with the specified user_type
+    #             if any(author['course'] == user_type for author in authors_details):
+    #                 # Create a dictionary for each research paper with its authors
+    #                 result_dict = {
+    #                     "research_paper": {
+    #                         "title": research_paper.title,
+    #                         #"research-type": research_paper.research_type,
+    #                         "content": research_paper.content,
+    #                         "abstract": research_paper.abstract,
+    #                         # "keywords": research_paper.keywords,
+    #                         "file": research_paper.file,
+    #                         "date_publish": research_paper.date_publish,
+    #                         "authors": authors_names,
+    #                     },
+    #                 }
+
+    #                 research_papers_list.append(result_dict)
+
+    #         return research_papers_list
+        
+        
+    @staticmethod
+    async def accre_get_student():
+        research_paper_query = (
+            select(
+                ResearchPaper.id,
+                ResearchPaper.title,
+                ResearchPaper.research_type,
+                FullManuscript.content,
+                FullManuscript.abstract,
+                # FullManuscript.keywords,
+                FullManuscript.file,
+                func.date(FullManuscript.modified_at).label('date_publish')
+            )
+            .distinct(ResearchPaper.title)  # Use distinct() method here
+            .select_from(
+                join(ResearchPaper, FullManuscript, ResearchPaper.id == FullManuscript.research_paper_id)
+                .join(Author, ResearchPaper.id == FullManuscript.research_paper_id)
+            )
+        )
+
+        research_paper_result = await db.execute(research_paper_query)
+        paper_result = research_paper_result.fetchall()
+
+        research_papers_list = []
+        for research_paper in paper_result:
+            authors_query = (
+                select(
+                    Users.id.label('id'),
+                    func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                )
+                .distinct(Users.id)
+                .select_from(Users)
+                .join(Author, Users.id == Author.user_id)
+                .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+                .join(Student, Student.StudentId == Users.student_id)
+                .order_by(Users.id)
+                .where(ResearchPaper.id == research_paper.id)
+            )
+
+            authors_result = await db.execute(authors_query)
+            authors_details = authors_result.fetchall()
+            authors_names = [{"name": author["name"]} for author in authors_details]
+
+            # Create a dictionary for each research paper with its authors
+            result_dict = {
+                "research_paper": {
+                    "title": research_paper.title,
+                    "content": research_paper.content,
+                    "abstract": research_paper.abstract,
+                    # "keywords": research_paper.keywords,
+                    "file": research_paper.file,
+                    "date_publish": research_paper.date_publish,
+                    "authors": authors_names,
+                },
+            }
+
+            research_papers_list.append(result_dict)
+
+        return research_papers_list

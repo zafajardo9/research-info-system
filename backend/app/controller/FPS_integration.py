@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Optional
+from app.repository.research_repo import ResearchPaperRepository
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
@@ -56,10 +57,23 @@ async def list_of_papers(student_number: str):
         return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
     
     
-@router.get("/accre/list/papers")
+# @router.get("/accre/list/papers")
+# async def list_of_papers():
+#     try:
+#         result = await ResearchService.get_all_research_with_authors_info_integration()
+#         if result:
+#             return result
+#         else:
+#             return None
+#     except HTTPException as e:
+#         return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+    
+
+
+@router.get("/accre/all-papers")
 async def list_of_papers():
     try:
-        result = await ResearchService.get_all_research_with_authors_info_integration()
+        result = await ResearchPaperRepository.accre_combine()
         if result:
             return result
         else:
@@ -68,6 +82,42 @@ async def list_of_papers():
         return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
     
     
+@router.get("/accre/all-papers/faculty")
+async def list_of_papers():
+    try:
+        result = await ResearchPaperRepository.accre_get_faculty()
+        if result:
+            return result
+        else:
+            return None
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
+
+
+@router.get("/accre/all-papers/students")
+async def list_of_papers():
+    try:
+        research_papers = await ResearchPaperRepository.accre_get_student()
+        if research_papers is None:
+            return []
+        return research_papers
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
+    
+@router.get("/accre/lists")
+async def list_of_papers(
+    user_type: Optional[str] = None
+):
+    try:
+        research_papers = await ResearchPaperRepository.accre_pagination(user_type)
+        if research_papers is None:
+            return []
+        return research_papers
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
+    
+    
+
 
 
 @router.get("/extension/for-extension/list")

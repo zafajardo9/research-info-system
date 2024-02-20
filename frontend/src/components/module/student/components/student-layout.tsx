@@ -39,7 +39,12 @@ export function StudentLayout({ children }: React.PropsWithChildren) {
         value={{ researchType, setResearchType, workflowId, setWorkflowId }}
       >
         <StudentSidebar sidebars={sidebars} />
-        <DashboardContent role="Student">{children}</DashboardContent>
+        <DashboardContent
+          changePasswordPath="/student/change-password"
+          role="Student"
+        >
+          {children}
+        </DashboardContent>
       </StudentWorkflowContext.Provider>
     </div>
   );

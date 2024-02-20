@@ -26,7 +26,12 @@ export function FacultyLayout({ children }: React.PropsWithChildren) {
         }}
       >
         <FacultySidebar />
-        <DashboardContent role="Faculty">{children}</DashboardContent>
+        <DashboardContent
+          changePasswordPath="/faculty/change-password"
+          role="Faculty"
+        >
+          {children}
+        </DashboardContent>
       </FacultyWorkflowContext.Provider>
     </div>
   );

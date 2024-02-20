@@ -79,7 +79,7 @@ export function FullManuscriptView({
                 id={id}
                 disabled={
                   fullManuscript.status === 'Approved' ||
-                  fullManuscript.status === 'Revise' ||
+                  // fullManuscript.status === 'Revise' ||
                   isCooldown
                 }
               />

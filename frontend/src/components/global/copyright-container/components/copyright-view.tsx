@@ -78,7 +78,7 @@ export function CopyrightView({
                 id={id}
                 disabled={
                   copyright.status === 'Approved' ||
-                  copyright.status === 'Revise' ||
+                  // copyright.status === 'Revise' ||
                   isCooldown
                 }
               />

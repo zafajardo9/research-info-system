@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,18 +14,17 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { useGetAllResearchPapersWithAuthors } from '@/hooks/use-research-query';
 import { useGetCourseList } from '@/hooks/use-user-query';
 import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 import parse from 'html-react-parser';
 import moment from 'moment';
-import { useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { HiOutlineBookOpen } from 'react-icons/hi2';
 import {
-  FacultyResearchPaperData,
-  useGetFacultyResearchPapers,
-} from '../../admin/hooks/use-faculty-research-papers';
+  RepositoryData,
+  useGetRepositories,
+} from '../hooks/use-repository-query';
 
 const PROPOSAL_TYPES = [
   'Research',
@@ -49,33 +49,45 @@ const CHARACTERS = Array.from({ length: 26 }, function (_, idx) {
 });
 
 export function RepositorySection() {
-  const [activeCourses, setActiveCourses] = useState<string[]>([]);
-  const [activeProposalTypes, setActiveProposalTypes] = useState<string[]>([]);
+  const [activeCourse, setActiveCourse] = useState<string>('');
+  const [activeProposalType, setActiveProposalType] = useState<string>('');
   const [activeChars, setActiveChars] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>('');
   const [search, setSearch] = useState<string>('');
-  const [selectedResearch, setSelectedResearch] = useState<ResearchPaperV2>();
+  // const [selectedResearch, setSelectedResearch] = useState<ResearchPaperV2>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { data: courseList, isLoading: courseListLoading } = useGetCourseList();
-  const { data: researches, isLoading } = useGetAllResearchPapersWithAuthors();
+  // const { data: researches, isLoading } = useGetAllResearchPapersWithAuthors();
 
-  const { data: facultyResearches = [] } = useGetFacultyResearchPapers();
+  // const { data: facultyResearches = [], isLoading } =
+  //   useGetFacultyResearchPapers();
 
-  const facultyResearchApprovedList = facultyResearches.filter(
-    ({ FacultyResearchPaper: { status } }) => status === 'Approved'
-  );
+  const {
+    data: repositories = [],
+    isLoading,
+    refetch,
+  } = useGetRepositories({
+    user_type: activeCourse,
+    type: activeProposalType,
+  });
+
+  // const facultyResearchApprovedList = facultyResearches.filter(
+  //   ({ FacultyResearchPaper: { status } }) => status === 'Approved'
+  // );
 
   const coursesId = useId();
   const proposalTypesId = useId();
   const characterId = useId();
   const researchId = useId();
-  const courseId = useId();
+  const authorId = useId();
 
-  const filteredResearches = useMemo<FacultyResearchPaperData[]>(() => {
-    let filter: FacultyResearchPaperData[] = Array.from(
-      facultyResearchApprovedList
-    );
+  useEffect(() => {
+    refetch();
+  }, [activeCourse, activeProposalType, refetch]);
+
+  const filteredResearches = useMemo<RepositoryData[]>(() => {
+    let filter: RepositoryData[] = Array.from(repositories);
 
     // if (activeCourses.length > 0) {
     //   filter = filter.filter(({ authors }) =>
@@ -92,7 +104,7 @@ export function RepositorySection() {
     // }
 
     if (activeChars.length > 0) {
-      filter = filter.filter(({ FacultyResearchPaper: { title } }) =>
+      filter = filter.filter(({ research_paper: { title } }) =>
         activeChars.some((v) => title.toLowerCase().startsWith(v.toLowerCase()))
       );
     }
@@ -100,28 +112,30 @@ export function RepositorySection() {
     if (search) {
       const regex = new RegExp(search.toLowerCase());
 
-      filter = filter.filter(({ FacultyResearchPaper: { title } }) =>
-        title.toLowerCase().match(regex)
+      filter = filter.filter(
+        ({ research_paper: { title, keywords } }) =>
+          title.toLowerCase().match(regex) ||
+          keywords.toLowerCase().match(regex)
       );
     }
 
     if (Boolean(sortBy) && sortBy === 'title') {
       filter = filter.sort((a, b) =>
-        a.FacultyResearchPaper.title.localeCompare(b.FacultyResearchPaper.title)
+        a.research_paper.title.localeCompare(b.research_paper.title)
       );
     }
 
     if (Boolean(sortBy) && sortBy === 'submitted_date') {
       filter = filter.sort((a, b) => {
-        const bDate = Date.parse(b.FacultyResearchPaper.created_at);
-        const aDate = Date.parse(a.FacultyResearchPaper.created_at);
+        const bDate = Date.parse(b.research_paper.date_publish);
+        const aDate = Date.parse(a.research_paper.date_publish);
 
         return bDate - aDate;
       });
     }
 
     return filter;
-  }, [facultyResearchApprovedList, activeChars, search, sortBy]);
+  }, [repositories, activeChars, search, sortBy]);
 
   function toggleHandler(prev: string[], value: string) {
     const cloned = [...prev];
@@ -148,39 +162,66 @@ export function RepositorySection() {
   return (
     <section className="space-y-10 px-1">
       <div className="space-y-5">
-        {/* {courseList && (
-          <div className="flex items-center gap-3 flex-wrap">
-            {courseList.courses.map((course, idx) => (
-              <Toggle
-                key={coursesId + idx}
+        {courseList && (
+          <div className="flex items-center flex-wrap">
+            <ToggleGroup type="single" className="gap-0">
+              {courseList.courses.map((course, idx) => (
+                <ToggleGroupItem
+                  key={coursesId + idx}
+                  size="sm"
+                  variant="outline"
+                  value={course}
+                  className="capitalize data-[state=on]:bg-primary data-[state=on]:text-white rounded-none"
+                  onClick={() => {
+                    setActiveCourse((prev) => (prev === course ? '' : course));
+                  }}
+                  unselectable="on"
+                >
+                  {course}
+                </ToggleGroupItem>
+              ))}
+              <ToggleGroupItem
+                key={coursesId + courseList.courses.length + 1}
                 size="sm"
                 variant="outline"
-                className="capitalize data-[state=on]:bg-primary data-[state=on]:text-white rounded-2xl"
+                value="faculty"
+                className="capitalize data-[state=on]:bg-primary data-[state=on]:text-white rounded-none"
                 onClick={() => {
-                  setActiveCourses((prev) => toggleHandler(prev, course));
+                  setActiveCourse((prev) =>
+                    prev === 'faculty' ? '' : 'faculty'
+                  );
                 }}
+                unselectable="on"
               >
-                {course}
-              </Toggle>
-            ))}
+                FACULTY
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
-        )} */}
+        )}
 
-        {/* <div className="flex items-center gap-3 flex-wrap">
-          {PROPOSAL_TYPES.map((type) => (
-            <Toggle
-              key={proposalTypesId + type}
-              size="sm"
-              variant="outline"
-              className="uppercase data-[state=on]:bg-primary data-[state=on]:text-white rounded-2xl"
-              onClick={() => {
-                setActiveProposalTypes((prev) => toggleHandler(prev, type));
-              }}
-            >
-              {type}
-            </Toggle>
-          ))}
-        </div> */}
+        <div className="flex items-center flex-wrap">
+          <ToggleGroup
+            type="single"
+            className="gap-0"
+            // disabled={!Boolean(activeCourse)}
+          >
+            {PROPOSAL_TYPES.map((type, idx) => (
+              <ToggleGroupItem
+                key={proposalTypesId + idx}
+                size="sm"
+                variant="outline"
+                value={type}
+                className="capitalize data-[state=on]:bg-primary data-[state=on]:text-white rounded-none"
+                onClick={() => {
+                  setActiveProposalType((prev) => (prev === type ? '' : type));
+                }}
+                unselectable="on"
+              >
+                {type}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
 
         <div className="flex items-center flex-wrap">
           <ToggleGroup type="single" className="gap-0">
@@ -221,7 +262,7 @@ export function RepositorySection() {
         <div className="relative h-fit max-w-lg">
           <Input
             ref={inputRef}
-            placeholder="Search research title..."
+            placeholder="Search research title/keywords..."
             className="pr-28"
             onChange={(e) => {
               if (!Boolean(e.target.value)) {
@@ -256,34 +297,21 @@ export function RepositorySection() {
           filteredResearches.map(
             (
               {
-                FacultyResearchPaper: {
-                  created_at,
-                  id,
-                  content,
-                  file_path,
-                  category,
-                  user_id,
+                research_paper: {
                   title,
-                  modified_at,
+                  content,
                   abstract,
+                  keywords,
+                  file,
                   date_publish,
-                  publisher,
-                  status,
+                  authors,
                 },
-                name,
               },
               idx
             ) => {
-              // const courses = authors
-              //   ? authors.map(
-              //       ({ course, year_section }) => `${course} ${year_section}`
-              //     )
-              //   : [];
-
-              // const filteredCourses = Array.from(new Set(courses));
               const docs = [
                 {
-                  uri: file_path ?? '',
+                  uri: file ?? '',
                 },
               ];
 
@@ -293,11 +321,11 @@ export function RepositorySection() {
                     <div
                       role="button"
                       className="border bg-card rounded p-3 transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1"
-                      // onClick={() => {
-                      //   setSelectedResearch(research_paper);
-                      // }}
                     >
                       <h2 className="font-bold">{title}</h2>
+                      <small className="text-muted-foreground">
+                        {keywords}
+                      </small>
                       <div className="flex items-center gap-2 text-sm my-4">
                         {/* {filteredCourses.map((course, idx) => (
                         <Badge key={courseId + idx} variant="outline">
@@ -305,21 +333,21 @@ export function RepositorySection() {
                         </Badge>
                       ))} */}
 
-                        <div>{moment(created_at).format('LL')}</div>
+                        <div>{moment(date_publish).format('LL')}</div>
                       </div>
 
                       <div className="flex items-center gap-4">
                         <div className="flex flex-1 flex-wrap gap-3">
-                          {/* {authors &&
-                          authors.map(({ id, name }) => ( */}
-                          <div
-                            // key={id}
-                            className="flex items-center gap-2 capitalize text-sm"
-                          >
-                            <BsFillPersonFill />
-                            <span>{name}</span>
-                          </div>
-                          {/* ))} */}
+                          {authors &&
+                            authors.map(({ name }, idx) => (
+                              <div
+                                key={authorId + idx}
+                                className="flex items-center gap-2 capitalize text-sm"
+                              >
+                                <BsFillPersonFill />
+                                <span>{name}</span>
+                              </div>
+                            ))}
                         </div>
                       </div>
                     </div>
@@ -328,10 +356,11 @@ export function RepositorySection() {
                     <div>
                       <DialogHeader>
                         <DialogTitle>{title}</DialogTitle>
+                        <DialogDescription>{keywords}</DialogDescription>
                       </DialogHeader>
                       <ScrollArea className="h-96 py-10">
                         <div className="space-y-6 ">
-                          <div className="space-y-1 text-sm">
+                          {/* <div className="space-y-1 text-sm">
                             <div className="font-semibold">Category</div>
                             <div>{category}</div>
                           </div>
@@ -339,7 +368,7 @@ export function RepositorySection() {
                           <div className="space-y-1 text-sm">
                             <div className="font-semibold">Publisher</div>
                             <div>{publisher}</div>
-                          </div>
+                          </div> */}
 
                           {content && (
                             <div className="space-y-1 text-sm">
@@ -359,7 +388,7 @@ export function RepositorySection() {
                             </div>
                           )}
 
-                          {file_path && (
+                          {/* {file && (
                             <div className="mt-10">
                               <DocViewer
                                 documents={docs}
@@ -370,7 +399,7 @@ export function RepositorySection() {
                                 }}
                               />
                             </div>
-                          )}
+                          )} */}
 
                           <div className="space-y-1 text-sm">
                             <div className="font-semibold">Date Publish</div>

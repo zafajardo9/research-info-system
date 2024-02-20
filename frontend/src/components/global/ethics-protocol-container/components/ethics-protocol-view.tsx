@@ -80,7 +80,7 @@ export function EthicsProtocolView({
                 id={id}
                 disabled={
                   ethicsProtocol.status === 'Approved' ||
-                  ethicsProtocol.status === 'Revise' ||
+                  // ethicsProtocol.status === 'Revise' ||
                   isCooldown
                 }
               />

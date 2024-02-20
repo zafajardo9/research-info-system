@@ -22,6 +22,7 @@ export interface FacultyResearchPaper {
   date_publish: string;
   publisher: string;
   status: string;
+  keywords: string;
 }
 
 export const FACULTY_RESEARCH_PAPERS_KEY = '/faculty/faculty-papers/list';

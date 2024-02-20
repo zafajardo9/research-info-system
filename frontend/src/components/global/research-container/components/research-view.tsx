@@ -140,7 +140,11 @@ export function ResearchView({
             {showApproveDialog && (
               <ApproveDialog
                 id={id}
-                disabled={research.status === 'Approved' || research.status === 'Revise' || isCooldown}
+                disabled={
+                  research.status === 'Approved' ||
+                  // research.status === 'Revise' ||
+                  isCooldown
+                }
               />
             )}
 

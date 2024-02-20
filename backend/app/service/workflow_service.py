@@ -478,7 +478,7 @@ class WorkflowService:
         rows = result.mappings().all()
 
         if not rows:
-            return []  # Return an empty list when no workflows are found
+            return [] 
 
         workflows_with_steps = []
         for row in rows:
@@ -491,19 +491,6 @@ class WorkflowService:
             steps = steps.scalars().all()
 
 
-            #todo delete this part tapos sa schema tapos yung sa baba din
-            # def_query = (
-            #     select(SetDefense)
-            #     .join(SetDefenseClass, SetDefenseClass.set_defense_id == SetDefense.id)
-            #     .where(
-            #         (SetDefense.research_type == workflow.type) &
-            #         (SetDefenseClass.class_id == user_class)
-            #     )
-            #     .select_from(SetDefense)  # Explicitly specify the left side
-            # )
-            # result = await db.execute(def_query)
-            # defense = result.scalars().all()
-
             workflow_detail = WorkflowDetail(
                 id=workflow.id,
                 class_id=user_class,
@@ -512,7 +499,6 @@ class WorkflowService:
                 course=course,
                 section=section,
                 steps=steps,
-                #defense=defense
             )
             workflows_with_steps.append(workflow_detail)
 

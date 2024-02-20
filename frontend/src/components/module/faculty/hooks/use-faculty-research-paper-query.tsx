@@ -15,6 +15,7 @@ export interface FacultyMyResearchPaper {
   publisher: string;
   user_id: string;
   status: string;
+  keywords: string;
 }
 
 export const FACULTY_MY_RESEARCH_PAPERS_KEY = '/faculty/my-research-papers';
@@ -47,6 +48,7 @@ export interface FacultyUploadCopyrightResearchPayload {
   category: string;
   publisher: string;
   date_publish: string;
+  keywords: string;
 }
 
 export function useFacultyUploadCopyrightResearch() {
@@ -79,6 +81,7 @@ export interface FacultyUpdateCopyrightResearchPayload {
   category: string;
   publisher: string;
   date_publish: string;
+  keywords: string;
 }
 
 export function useFacultyUpdateCopyrightResearch() {
@@ -194,6 +197,7 @@ export interface CopyrightedResearchData {
   date_publish: string;
   category: string;
   publisher: string;
+  keywords: string;
 }
 
 export function useGetFacultyMyResearchPaperById({

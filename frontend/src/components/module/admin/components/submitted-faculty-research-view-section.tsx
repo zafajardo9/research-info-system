@@ -106,6 +106,15 @@ export function SubmittedFacultyResearchViewSection({
                 </div>
               )}
 
+              {researchPaper?.keywords && (
+                <div className="space-y-1 text-sm">
+                  <div className="font-semibold">Keywords</div>
+                  <div className="prose prose-sm max-w-none">
+                    {parse(researchPaper?.keywords)}
+                  </div>
+                </div>
+              )}
+
               {researchPaper?.file_path && (
                 <div className="mt-10">
                   <DocViewer

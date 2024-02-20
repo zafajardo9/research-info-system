@@ -4,7 +4,9 @@ import profileImage from '@/assets/images/profile.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -12,15 +14,17 @@ import { useSidebarStore } from '@/store/sidebar-store';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
 
 export interface ProfileGearProps {
+  changePasswordPath?: string;
   role: string;
 }
 
-export function ProfileGear({ role }: ProfileGearProps) {
+export function ProfileGear({ changePasswordPath, role }: ProfileGearProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const router = useRouter();
@@ -82,16 +86,17 @@ export function ProfileGear({ role }: ProfileGearProps) {
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator /> */}
-            <DropdownMenuItem
-              onClick={logOutHandler}
-              className="justify-center"
-            >
-              Log out
-            </DropdownMenuItem>
+            {changePasswordPath ? (
+              <>
+                <DropdownMenuGroup>
+                  <Link href={changePasswordPath}>
+                    <DropdownMenuItem>Change Password</DropdownMenuItem>
+                  </Link>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </>
+            ) : null}
+            <DropdownMenuItem onClick={logOutHandler}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )}

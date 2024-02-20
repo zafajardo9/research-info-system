@@ -6,10 +6,8 @@ import {
   useGetFacultyAnnouncementFundingOpportunity,
   useGetFacultyAnnouncementTrainingAndWorkshop,
 } from '@/hooks/use-announcement-query';
-import { useId } from 'react';
-import { IoCloudUploadOutline } from 'react-icons/io5';
-import { LuCheckCircle, LuShield, LuXCircle } from 'react-icons/lu';
-import { MdOutlinePending } from 'react-icons/md';
+import { FaCheck } from 'react-icons/fa6';
+import { FiEdit3 } from 'react-icons/fi';
 import { PiChalkboardTeacherLight } from 'react-icons/pi';
 import { useGetFacultyAnalytics } from '../hooks/use-analytics-query';
 import { useFacultyWorkflowContext } from './context/faculty-workflow';
@@ -51,8 +49,6 @@ export function FacultyDashboardSection() {
   const { data: trainingAndWorkshops } =
     useGetFacultyAnnouncementTrainingAndWorkshop();
 
-  const analyticId = useId();
-
   const { selectedProcess, selectedProcessIndex } = useFacultyWorkflowContext();
 
   const process = selectedProcess?.process?.[selectedProcessIndex];
@@ -88,7 +84,7 @@ export function FacultyDashboardSection() {
           {advisee && (
             <Card className="w-full max-w-[260px] p-0">
               <CardContent className="flex items-center gap-3 p-5">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl border text-4xl">
                   <PiChalkboardTeacherLight />
                 </div>
                 <div className="space-y-1">
@@ -101,69 +97,143 @@ export function FacultyDashboardSection() {
             </Card>
           )}
 
-          {ethics && (
-            <Card className="w-full max-w-[260px] p-0">
-              <CardContent className="flex items-center gap-3 p-5">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
-                  <LuShield />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-4xl font-semibold">
-                    {ethics['Approved Ethics']}
+          {proposal && (
+            <>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                    <FaCheck />
                   </div>
-                  <div className="text-xs font-semibold">Ethics</div>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {proposal['Approved Proposal']}
+                    </div>
+                    <div className="text-xs font-semibold">
+                      Approved Proposal
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                    <FiEdit3 />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {proposal['For Revision Proposal']}
+                    </div>
+                    <div className="text-xs font-semibold">
+                      For Revision Proposal
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
           )}
 
-          {proposal && <Card className="w-full max-w-[260px] p-0">
-            <CardContent className="flex items-center gap-3 p-5">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
-                <IoCloudUploadOutline />
-              </div>
-              <div className="space-y-1">
-                <div className="text-4xl font-semibold">{proposal['Approved Proposal']}</div>
-                <div className="text-xs font-semibold">Approved Researches</div>
-              </div>
-            </CardContent>
-          </Card>}
+          {ethics && (
+            <>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                    <FaCheck />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {ethics['Approved Ethics']}
+                    </div>
+                    <div className="text-xs font-semibold">Approved Ethics</div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                    <FiEdit3 />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {ethics['For Revision Ethics']}
+                    </div>
+                    <div className="text-xs font-semibold">
+                      For Revision Ethics
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
 
-          {/* <Card className="w-full max-w-[260px] p-0">
-            <CardContent className="flex items-center gap-3 p-5">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-[#f7f8f8] text-4xl text-green-500">
-                <LuCheckCircle />
-              </div>
-              <div className="space-y-1">
-                <div className="text-4xl font-semibold">80</div>
-                <div className="text-xs font-semibold">Approved Researches</div>
-              </div>
-            </CardContent>
-          </Card>
+          {manuscript && (
+            <>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                    <FaCheck />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {manuscript['Approved Full Manuscript']}
+                    </div>
+                    <div className="text-xs font-semibold">
+                      Approved Full Manuscript
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                    <FiEdit3 />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {manuscript['For Revision Full Manuscript']}
+                    </div>
+                    <div className="text-xs font-semibold">
+                      For Revision Full Manuscript
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
 
-          <Card className="w-full max-w-[260px] p-0">
-            <CardContent className="flex items-center gap-3 p-5">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-red-500 bg-[#faf9f9] text-4xl text-red-500">
-                <LuXCircle />
-              </div>
-              <div className="space-y-1">
-                <div className="text-4xl font-semibold">80</div>
-                <div className="text-xs font-semibold">Rejected Researches</div>
-              </div>
-            </CardContent>
-          </Card> */}
-
-          {/* <Card className="w-full max-w-[260px] p-0">
-            <CardContent className="flex items-center gap-3 p-5">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-yellow-500 bg-[#f9f9f8] text-4xl text-yellow-500">
-                <MdOutlinePending />
-              </div>
-              <div className="space-y-1">
-                <div className="text-4xl font-semibold">80</div>
-                <div className="text-xs font-semibold">Pending Researches</div>
-              </div>
-            </CardContent>
-          </Card> */}
+          {copyright && (
+            <>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                    <FaCheck />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {copyright['Approved Copyright']}
+                    </div>
+                    <div className="text-xs font-semibold">
+                      Approved Full Manuscript
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                    <FiEdit3 />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {copyright['For Revision Copyright']}
+                    </div>
+                    <div className="text-xs font-semibold">
+                      For Revision Copyright
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       )}
 

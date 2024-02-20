@@ -10,7 +10,7 @@ export function CopyrightedResearchSubmissionsSection() {
   const { data: myResearchPapers = [], isLoading } =
     useGetFacultyMyResearchPapers();
 
-  const myResearchPapersSorted = myResearchPapers.sort(
+  const myResearchPapersSorted = myResearchPapers?.sort(
     (a, b) =>
       new Date(b.created_at).valueOf() - new Date(a.created_at).valueOf()
   );

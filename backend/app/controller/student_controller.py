@@ -29,7 +29,6 @@ async def read_workflow(credentials: HTTPAuthorizationCredentials = Security(JWT
     if "student" not in roles:
         raise HTTPException(status_code=403, detail="Access forbidden. Only research professors are allowed to create workflows.")
 
-
     result = await UserService.get_class_id(user_id)
     
     user_class = result[0] if result else None

@@ -259,6 +259,21 @@ export function CopyrightedResearchSubmissionsViewSection({
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="keywords"
+                defaultValue={researchPaper?.keywords}
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Keywords</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter keywords here" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FileUploadInput
                 control={form.control}
                 name="file"

@@ -1,12 +1,12 @@
 'use client';
 
-import { DashboardContent, Sidebar } from '@/components/global';
+import { DashboardContent } from '@/components/global';
 import { ADMIN_NAVIGATION } from '@/lib/constants';
 import { useSidebarStore } from '@/store/sidebar-store';
 import { SidebarData } from '@/types/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { AdminWorkflowContext } from './context/process';
 import { AdminSidebar } from './admin-sidebar';
+import { AdminWorkflowContext } from './context/process';
 
 export function AdminLayout({ children }: React.PropsWithChildren) {
   const { selectSidebar } = useSidebarStore();
@@ -57,7 +57,12 @@ export function AdminLayout({ children }: React.PropsWithChildren) {
         }}
       >
         <AdminSidebar />
-        <DashboardContent role="Admin">{children}</DashboardContent>
+        <DashboardContent
+          changePasswordPath="/admin/change-password"
+          role="Admin"
+        >
+          {children}
+        </DashboardContent>
       </AdminWorkflowContext.Provider>
     </div>
   );

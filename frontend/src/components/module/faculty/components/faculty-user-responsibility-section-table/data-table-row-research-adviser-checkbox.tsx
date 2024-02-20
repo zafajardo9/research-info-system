@@ -1,6 +1,15 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
 import {
   useAdminAssignResearchAdviser,
@@ -35,6 +44,7 @@ export function DataTableRowResearchAdviserCheckbox<TData>({
   row,
   table,
 }: DataTableRowResearchAdviserCheckboxProps<TData>) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const id = row.getValue('id') as string;
@@ -109,6 +119,7 @@ export function DataTableRowResearchAdviserCheckbox<TData>({
       });
     } finally {
       setIsSubmitting(false);
+      setIsOpen(false);
 
       table.options.meta?.setIsUpdating &&
         table.options.meta?.setIsUpdating(false);
@@ -118,18 +129,63 @@ export function DataTableRowResearchAdviserCheckbox<TData>({
   const isUpdating = table.options.meta?.isUpdating;
 
   return (
-    <div className="relative w-fit h-fit flex items-center justify-center">
-      <Checkbox
-        checked={isAdviser}
-        disabled={!isValidType || isSubmitting || isUpdating}
-        onClick={toggleHandler}
-      />
+    <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+      <div className="relative w-fit h-fit flex items-center justify-center">
+        <Checkbox
+          checked={isAdviser}
+          disabled={!isValidType || isSubmitting || isUpdating}
+          onClick={() => setIsOpen((prev) => !prev)}
+        />
 
-      {isSubmitting && (
-        <div className="text-muted-foreground cursor-not-allowed text-base animate-spin h-fit w-fit absolute">
-          <BiLoaderAlt />
+        {isSubmitting && (
+          <div className="text-muted-foreground cursor-not-allowed text-base animate-spin h-fit w-fit absolute">
+            <BiLoaderAlt />
+          </div>
+        )}
+      </div>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Research Adviser</DialogTitle>
+          <Badge className="w-fit">{research_type}</Badge>
+        </DialogHeader>
+        <div className="prose prose-sm">
+          {isAdviser ? (
+            <div>
+              <p>
+                Are you sure you want to remove <b>{facultyName}</b> from{' '}
+                <b>research adviser</b>?
+              </p>
+              <p>Proceed with caution.</p>
+            </div>
+          ) : (
+            <div>
+              <p>
+                Are you sure you want to assign <b>{facultyName}</b> as{' '}
+                <b>research adviser</b>?
+              </p>
+              <p>Proceed with caution.</p>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            variant="secondary"
+            onClick={() => setIsOpen(false)}
+          >
+            No
+          </Button>
+          <Button type="submit" onClick={toggleHandler}>
+            {isSubmitting ? (
+              <span className="h-fit w-fit animate-spin">
+                <BiLoaderAlt />
+              </span>
+            ) : (
+              'Yes'
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

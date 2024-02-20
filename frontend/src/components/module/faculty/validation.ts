@@ -123,6 +123,7 @@ export const copyrightResearchSubsFormSchema = z.object({
   file: z.custom<File>((val) => val instanceof File, 'This field is required.'),
   category: z.string({ required_error: 'This field is required.' }),
   publisher: z.string({ required_error: 'This field is required.' }),
+  keywords: z.string({ required_error: 'This field is required.' }),
 });
 
 export const updateCopyrightResearchSubsFormSchema = z.object({
@@ -132,4 +133,5 @@ export const updateCopyrightResearchSubsFormSchema = z.object({
   file: z.custom<File>(),
   category: z.string({ required_error: 'This field is required.' }),
   publisher: z.string({ required_error: 'This field is required.' }),
+  keywords: z.string({ required_error: 'This field is required.' }),
 });

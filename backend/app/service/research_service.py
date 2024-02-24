@@ -924,7 +924,7 @@ class ResearchService:
     async def for_FPS_integration():
         query = (
             select(
-                func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleName).label('Author'),
+                func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleInitial,'.').label('Author'),
                 FacultyResearchPaper.title.label('Research Title'),
                 FacultyResearchPaper.date_publish.label('Publication Year'),
                 #FacultyResearchPaper.content,

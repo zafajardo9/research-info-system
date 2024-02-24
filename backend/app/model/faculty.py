@@ -11,6 +11,7 @@ class Faculty(SQLModel, table=True):
     FirstName: str = Column(name="FirstName")
     LastName: str = Column(name="LastName")
     MiddleName: str = Column(name="MiddleName")
+    MiddleInitial: str = Column(name="MiddleInitial")
     BirthDate: date = Column(name="BirthDate")
     MobileNumber: str = Column(name="MobileNumber")
     

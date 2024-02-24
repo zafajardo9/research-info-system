@@ -252,7 +252,7 @@ class ResearchPaperRepository(BaseRepo):
                     # FacultyResearchPaper.publisher,
                     # FacultyResearchPaper.category,
                     FacultyResearchPaper.file_path.label('file'),
-                    func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleName).label('author'),
+                    func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleInitial,'.').label('author'),
                 )
                 .join(Users, FacultyResearchPaper.user_id == Users.id)
                 .join(Faculty, Users.faculty_id == Faculty.FacultyId)
@@ -460,7 +460,7 @@ class ResearchPaperRepository(BaseRepo):
                     # FacultyResearchPaper.publisher,
                     # FacultyResearchPaper.category,
                     FacultyResearchPaper.file_path.label('file'),
-                    func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleName).label('author'),
+                    func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleInitial,'.').label('author'),
                 )
                 .join(Users, FacultyResearchPaper.user_id == Users.id)
                 .join(Faculty, Users.faculty_id == Faculty.FacultyId)

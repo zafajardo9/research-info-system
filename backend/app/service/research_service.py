@@ -25,6 +25,7 @@ from app.model.student import Class
 from app.model.connected_SPS import SPSClass, SPSClassSubject, SPSCourse, SPSCourseEnrolled, SPSMetadata, SPSStudentClassGrade, SPSStudentClassSubjectGrade
 from app.service.notif_service import NotificationService
 from app.repository.ethics_repo import EthicsRepository
+from sqlalchemy.exc import SQLAlchemyError
 class ResearchService:
 
     @staticmethod
@@ -922,22 +923,24 @@ class ResearchService:
     
     @staticmethod
     async def for_FPS_integration():
-        query = (
-            select(
-                func.concat(Faculty.LastName , ', ', Faculty.FirstName, ' ', Faculty.MiddleInitial,'.').label('Author'),
-                FacultyResearchPaper.title.label('Research Title'),
-                FacultyResearchPaper.date_publish.label('Publication Year'),
-                #FacultyResearchPaper.content,
-                #FacultyResearchPaper.abstract,
-                FacultyResearchPaper.publisher.label('Publisher'),
-                FacultyResearchPaper.category.label('Category'),
-                literal("Faculty").label("Author Type")
+        try:
+            query = (
+                select(
+                    func.concat(Faculty.LastName, ', ', Faculty.FirstName, ' ', Faculty.MiddleInitial, '.').label('Author'),
+                    FacultyResearchPaper.title.label('Research Title'),
+                    FacultyResearchPaper.date_publish.label('Publication Year'),
+                    FacultyResearchPaper.publisher.label('Publisher'),
+                    FacultyResearchPaper.category.label('Category'),
+                    literal("Faculty").label("Author Type")
                 )
-            .join(Users, FacultyResearchPaper.user_id == Users.id)
-            .join(Faculty, Users.faculty_id == Faculty.FacultyId)
-        )
-        result = await db.execute(query)
-        return result.fetchall()
+                .join(Users, FacultyResearchPaper.user_id == Users.id)
+                .join(Faculty, Users.faculty_id == Faculty.FacultyId)
+            )
+            result = await db.execute(query)
+            return result.fetchall()
+        except SQLAlchemyError as e:
+            # Handle SQLAlchemy errors in ResearchService
+            raise HTTPException(status_code=500, detail=f"SQLAlchemy Error in ResearchService: {str(e)}")
     
 
     @staticmethod

@@ -10,6 +10,7 @@ from app.config import db
 from app.service.all_about_info_service import AllInformationService
 from app.repository.users import UsersRepository
 from app.service.research_service import ResearchService
+from sqlalchemy.exc import SQLAlchemyError
 
 router = APIRouter(
     prefix="/integration",
@@ -39,10 +40,15 @@ async def list_of_papers():
             return research_papers
         else:
             return None
+    except SQLAlchemyError as e:
+        # Handle SQLAlchemy errors
+        return ResponseSchema(detail=f"SQLAlchemy Error retrieving research papers: {str(e)}", result=None)
     except HTTPException as e:
-        return ResponseSchema(detail=f"Error retrieving research papers: {str(e)}", result=None)
-    
-
+        # Handle FastAPI HTTPException
+        return ResponseSchema(detail=f"FastAPI Error retrieving research papers: {str(e)}", result=None)
+    except Exception as e:
+        # Handle other unexpected errors
+        return ResponseSchema(detail=f"Unexpected Error retrieving research papers: {str(e)}", result=None)
 
 
 @router.get("/alumni/{student_number}/papers/")

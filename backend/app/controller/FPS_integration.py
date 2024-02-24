@@ -11,6 +11,15 @@ from app.service.all_about_info_service import AllInformationService
 from app.repository.users import UsersRepository
 from app.service.research_service import ResearchService
 from sqlalchemy.exc import SQLAlchemyError
+import logging
+
+# Configure the root logger to print logs to the console
+logging.basicConfig(level=logging.DEBUG)
+
+# Optionally, configure a file handler to save logs to a file
+file_handler = logging.FileHandler("app.log")
+file_handler.setLevel(logging.DEBUG)
+logging.getLogger().addHandler(file_handler)
 
 router = APIRouter(
     prefix="/integration",
@@ -48,6 +57,7 @@ async def list_of_papers():
         return ResponseSchema(detail=f"FastAPI Error retrieving research papers: {str(e)}", result=None)
     except Exception as e:
         # Handle other unexpected errors
+        logging.exception(f"Error in API LOGGED: {str(e)}")
         return ResponseSchema(detail=f"Unexpected Error retrieving research papers: {str(e)}", result=None)
 
 

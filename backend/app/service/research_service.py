@@ -931,13 +931,21 @@ class ResearchService:
                     FacultyResearchPaper.date_publish.label('Publication Year'),
                     FacultyResearchPaper.publisher.label('Publisher'),
                     FacultyResearchPaper.category.label('Category'),
-                    literal("Faculty").label("Author Type")
+                    # literal("Faculty").label("Author Type")
                 )
                 .join(Users, FacultyResearchPaper.user_id == Users.id)
                 .join(Faculty, Users.faculty_id == Faculty.FacultyId)
             )
             result = await db.execute(query)
-            return result.fetchall()
+            rows = result.fetchall()
+            edited_rows = []
+            for row in rows:
+                edited_row = dict(row)
+                edited_row['Author Type'] = 'Faculty'
+                edited_rows.append(edited_row)
+
+            # Return the edited response
+            return edited_rows
         except SQLAlchemyError as e:
             # Handle SQLAlchemy errors in ResearchService
             raise HTTPException(status_code=500, detail=f"SQLAlchemy Error in ResearchService: {str(e)}")

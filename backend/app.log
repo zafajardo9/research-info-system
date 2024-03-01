@@ -83,3 +83,359 @@ SELECT concat("FISFaculty"."LastName", %s, "FISFaculty"."FirstName", %s, "FISFac
 FROM "RISfaculty_research_papers" JOIN "RISUsers" ON "RISfaculty_research_papers".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId"
 [generated in 0.00333s] (', ', ' ', '.', 'Faculty')
 Stopping reloader process [3424]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [14784] using StatReload
+Started server process [19032]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00170s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1465s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1939s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2584s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3077s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3586s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4079s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4594s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5098s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5628s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6114s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6593s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7075s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7574s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8058s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8534s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9013s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.948s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9949s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.043s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.091s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.141s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.191s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.24s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.288s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.337s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.385s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.441s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.491s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.543s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.594s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.641s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.689s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+BEGIN (implicit)
+SELECT "SPSStudent"."StudentId", "SPSStudent"."FirstName", "SPSStudent"."LastName", "SPSStudent"."MiddleName", "SPSStudent"."DateOfBirth", "SPSStudent"."StudentNumber", "SPSStudent"."MobileNumber", "SPSStudent"."Email", "SPSStudent"."Password" 
+FROM "SPSStudent" 
+WHERE "SPSStudent"."StudentNumber" = %s
+[generated in 0.00307s] ('2019-00001-CM-0',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".student_id = %s
+[generated in 0.00203s] (1,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".student_id = %s
+[cached since 0.1017s ago] (1,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00161s] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT concat("FISFaculty"."LastName", %s, "FISFaculty"."FirstName", %s, "FISFaculty"."MiddleInitial", %s) AS "Author", "RISfaculty_research_papers".title AS "Research Title", "RISfaculty_research_papers".date_publish AS "Publication Year", "RISfaculty_research_papers".publisher AS "Publisher", "RISfaculty_research_papers".category AS "Category" 
+FROM "RISfaculty_research_papers" JOIN "RISUsers" ON "RISfaculty_research_papers".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId"
+[generated in 0.00300s] (', ', ' ', '.')
+SELECT concat("FISFaculty"."LastName", %s, "FISFaculty"."FirstName", %s, "FISFaculty"."MiddleInitial", %s) AS "Author", "RISfaculty_research_papers".title AS "Research Title", "RISfaculty_research_papers".date_publish AS "Publication Year", "RISfaculty_research_papers".publisher AS "Publisher", "RISfaculty_research_papers".category AS "Category" 
+FROM "RISfaculty_research_papers" JOIN "RISUsers" ON "RISfaculty_research_papers".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId"
+[cached since 436.9s ago] (', ', ' ', '.')
+Shutting down
+Waiting for application shutdown.
+ROLLBACK
+Application shutdown complete.
+Finished server process [19032]
+Stopping reloader process [14784]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [12216] using StatReload
+Started server process [13768]
+Waiting for application startup.
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 738, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 610, in __aenter__
+    await self._router.startup()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in startup
+    await handler()
+  File "D:\DEVELOP\research-info-system\backend\app\main.py", line 55, in starup
+    await db.create_all()
+  File "D:\DEVELOP\research-info-system\backend\app\config.py", line 39, in create_all
+    async with self.engine.begin() as conn:
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\base.py", line 60, in __aenter__
+    return await self.start(is_ctxmanager=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\engine.py", line 598, in start
+    await self.conn.start(is_ctxmanager=is_ctxmanager)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\engine.py", line 157, in start
+    await (greenlet_spawn(self.sync_engine.connect))
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 126, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\future\engine.py", line 406, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3315, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3394, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3361, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 320, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 884, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 486, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 145, in _do_get
+    with util.safe_reraise():
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\compat.py", line 208, in raise_
+    raise exception
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 266, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 381, in __init__
+    self.__connect()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 677, in __connect
+    with util.safe_reraise():
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\compat.py", line 208, in raise_
+    raise exception
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 673, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 578, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 780, in connect
+    await_only(self.asyncpg.connect(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 68, in await_only
+    return current.driver.switch(awaitable)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 121, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connection.py", line 2329, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1017, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 991, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 828, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 873, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 744, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1057, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1433, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 878, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+Application startup failed. Exiting.
+Stopping reloader process [12216]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [10220] using StatReload
+Started server process [10312]
+Waiting for application startup.
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 738, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 610, in __aenter__
+    await self._router.startup()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in startup
+    await handler()
+  File "D:\DEVELOP\research-info-system\backend\app\main.py", line 55, in starup
+    await db.create_all()
+  File "D:\DEVELOP\research-info-system\backend\app\config.py", line 39, in create_all
+    async with self.engine.begin() as conn:
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\base.py", line 60, in __aenter__
+    return await self.start(is_ctxmanager=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\engine.py", line 598, in start
+    await self.conn.start(is_ctxmanager=is_ctxmanager)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\engine.py", line 157, in start
+    await (greenlet_spawn(self.sync_engine.connect))
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 126, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\future\engine.py", line 406, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3315, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3394, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3361, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 320, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 884, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 486, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 145, in _do_get
+    with util.safe_reraise():
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\compat.py", line 208, in raise_
+    raise exception
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 266, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 381, in __init__
+    self.__connect()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 677, in __connect
+    with util.safe_reraise():
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\compat.py", line 208, in raise_
+    raise exception
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 673, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 578, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 780, in connect
+    await_only(self.asyncpg.connect(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 68, in await_only
+    return current.driver.switch(awaitable)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 121, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connection.py", line 2329, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1017, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 991, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 828, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 873, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 744, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1057, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1433, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 878, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+Application startup failed. Exiting.

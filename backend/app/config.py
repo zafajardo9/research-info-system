@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 # load_dotenv()
 # DB_CONFIG = os.getenv("DATABASE_URL")
-DB_CONFIG = f"postgresql+asyncpg://pupqc_cloud_user:Zk8P78HfpsnlO3LKILyRTLd7SFmoNYWd@dpg-cmp63r6n7f5s73dc4k7g-a.singapore-postgres.render.com/pupqc_cloud_4dhl"
-
+DB_CONFIG = f"postgresql+asyncpg://pupqc_cloud_user:23z0VQDywV0fzOwXLHHe1uvT0v7y1kgG@dpg-cngjuamct0pc73e37m20-a.singapore-postgres.render.com/pupqc_cloud_dh4m"
+# postgres://pupqc_cloud_user:23z0VQDywV0fzOwXLHHe1uvT0v7y1kgG@dpg-cngjuamct0pc73e37m20-a/pupqc_cloud_dh4m
 # #MAIN
 # #postgresql+asyncpg://postgres:fCBCc*G3Ce4geF*c1gFDgB24BCgg234g@viaduct.proxy.rlwy.net:28889/railway
 # #SECOND

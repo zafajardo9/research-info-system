@@ -74,7 +74,6 @@ Thumbs.db
 /frontend/.gitignore
 
 /frontend/tailwind.config.js
-/frontend/postcss.config.js
 /frontend/src/form/
 
 

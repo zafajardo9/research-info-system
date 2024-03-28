@@ -96,5 +96,7 @@
   },
   "engines": {
     "node": "20.11.1"
-  }
+  },
+  "main": "index.js",
+  "license": "MIT"
 }

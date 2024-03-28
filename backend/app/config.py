@@ -7,14 +7,13 @@ import os
 
 load_dotenv()
 DB_CONFIG = os.getenv("DATABASE_URL")
-# DB_CONFIG = f"postgresql+asyncpg://pupqc_cloud_user:23z0VQDywV0fzOwXLHHe1uvT0v7y1kgG@dpg-cngjuamct0pc73e37m20-a.singapore-postgres.render.com/pupqc_cloud_dh4m"
 
 SECRET_KEY = "zack1234"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
 
-
+print(DB_CONFIG)
 
 class AsyncDatabaseSession: 
 

@@ -95,8 +95,6 @@
     "typescript": "^5"
   },
   "engines": {
-    "node": "20.11.1"
-  },
-  "main": "index.js",
-  "license": "MIT"
+    "node": "^18.17.1"
+  }
 }

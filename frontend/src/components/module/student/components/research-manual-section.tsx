@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 export function ResearchManualSection() {
   const docs = [
     {
-      uri: 'https://ik.imagekit.io/0x1lnkvjw/PUP_-_University_Thesis_and_Dissertation_Manual_with_ISBN_as_of_08.07.17_RC1dDSLX4.pdf?updatedAt=1699843692653',
+      uri: "https://ik.imagekit.io/mdhmumzsp/PUP%20-%20University%20Thesis%20and%20Dissertation%20Manual%20with%20ISBN%20as%20of%2008.07.17.pdf?updatedAt=1712968355227",
     },
   ];
 
@@ -45,8 +45,8 @@ export function ResearchManualSection() {
               documents={docs}
               pluginRenderers={DocViewerRenderers}
               theme={{
-                primary: '#f4f4f4',
-                textPrimary: '#000000',
+                primary: "#f4f4f4",
+                textPrimary: "#000000",
               }}
             />
           </div>

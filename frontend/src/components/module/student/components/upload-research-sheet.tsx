@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { FormSheetWrapper } from '@/components/global/wrappers/form-sheet-wrapper';
-import { Button } from '@/components/ui/button';
-import { ComboboxOptions } from '@/components/ui/combobox';
+import { FormSheetWrapper } from "@/components/global/wrappers/form-sheet-wrapper";
+import { Button } from "@/components/ui/button";
+import { ComboboxOptions } from "@/components/ui/combobox";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from '@/components/ui/command';
-import { FileUploadInput } from '@/components/ui/file-upload-input';
+} from "@/components/ui/command";
+import { FileUploadInput } from "@/components/ui/file-upload-input";
 import {
   Form,
   FormControl,
@@ -18,37 +18,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useToast } from '@/components/ui/use-toast';
-import { useGetFaculties } from '@/hooks/use-faculty-query';
-import { useUploadResearch } from '@/hooks/use-research-query';
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
+import { useGetFaculties } from "@/hooks/use-faculty-query";
+import { useUploadResearch } from "@/hooks/use-research-query";
 import {
   useGetMyAdviserList,
   useGetStudentMyWorkflow,
   useGetStudentProfile,
   useGetStudents,
-} from '@/hooks/use-student-query';
-import { uploadFile } from '@/lib/upload-file';
-import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
-import { format } from 'date-fns';
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { BiLoaderAlt } from 'react-icons/bi';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { IoAdd, IoCloudUploadOutline } from 'react-icons/io5';
-import * as z from 'zod';
-import { uploadResearchFormSchema } from '../validation';
-import { useStudentWorkflowContext } from './context/student-workflow';
+} from "@/hooks/use-student-query";
+import { uploadFile } from "@/lib/upload-file";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { IoAdd, IoCloudUploadOutline } from "react-icons/io5";
+import * as z from "zod";
+import { uploadResearchFormSchema } from "../validation";
+import { useStudentWorkflowContext } from "./context/student-workflow";
 
 export type StudentOptions = {
   student_number: string;
@@ -71,7 +71,7 @@ export default function UploadResearchSheet() {
 
   const currentWorkflow = myWorkflow.find(({ type }) => type === researchType);
   const steps = currentWorkflow?.steps ?? [];
-  const proposalStep = steps.find(({ name }) => name === 'Proposal');
+  const proposalStep = steps.find(({ name }) => name === "Proposal");
 
   const user = studentData?.result.filter(
     ({ user_id }) => profile?.result?.id === user_id
@@ -101,7 +101,7 @@ export default function UploadResearchSheet() {
     append: appendAuthor,
     update: updateAuthor,
     remove: removeAuthor,
-  } = useFieldArray({ control: form.control, name: 'author_ids' });
+  } = useFieldArray({ control: form.control, name: "author_ids" });
 
   const { isSubmitting } = form.formState;
 
@@ -126,12 +126,13 @@ export default function UploadResearchSheet() {
     ...rest
   }: z.infer<typeof uploadResearchFormSchema>) {
     try {
-      const file_path = await uploadFile({ file, fileName: file.name });
+      // const file_path = await uploadFile({ file, fileName: file.name });
+      const file_path = file;
 
       if (!proposalStep) {
         toast({
-          title: 'Proposal upload failed; step not set by professors.',
-          variant: 'destructive',
+          title: "Proposal upload failed; step not set by professors.",
+          variant: "destructive",
         });
 
         return;
@@ -139,8 +140,8 @@ export default function UploadResearchSheet() {
 
       if (!file_path) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Link file failed",
+          variant: "destructive",
         });
 
         return;
@@ -163,7 +164,7 @@ export default function UploadResearchSheet() {
         research_paper_data: {
           ...rest,
           research_type: researchType,
-          submitted_date: format(new Date(), 'dd-MM-yyyy'),
+          submitted_date: format(new Date(), "dd-MM-yyyy"),
           file_path,
           workflow_step_id: proposalStep.id,
         },
@@ -173,20 +174,20 @@ export default function UploadResearchSheet() {
       await create.mutateAsync(modifiedValues);
 
       toast({
-        title: 'Upload Proposal Success',
+        title: "Upload Proposal Success",
       });
 
       form.reset({
-        title: '',
+        title: "",
         author_ids: [],
-        research_adviser: '',
+        research_adviser: "",
       });
 
       setOpen(false);
     } catch (error) {
       toast({
-        title: 'Upload Proposal Failed',
-        variant: 'destructive',
+        title: "Upload Proposal Failed",
+        variant: "destructive",
       });
     }
   }
@@ -262,10 +263,24 @@ export default function UploadResearchSheet() {
                 )}
               /> */}
 
-              <FileUploadInput
+              {/* <FileUploadInput
                 control={form.control}
                 name="file"
                 label="File input"
+              /> */}
+
+              <FormField
+                control={form.control}
+                name="file"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>File link</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Paste link here" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
               <FormField
@@ -289,8 +304,8 @@ export default function UploadResearchSheet() {
                                 variant="outline"
                                 role="combobox"
                                 className={cn(
-                                  'flex-1 justify-between',
-                                  !authorsField.value && 'text-muted-foreground'
+                                  "flex-1 justify-between",
+                                  !authorsField.value && "text-muted-foreground"
                                 )}
                               >
                                 {_.truncate(
@@ -299,7 +314,7 @@ export default function UploadResearchSheet() {
                                         (option) =>
                                           option.value === authorsField.value
                                       )?.label
-                                    : 'Select author',
+                                    : "Select author",
                                   { length: 60 }
                                 )}
                                 <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -347,15 +362,15 @@ export default function UploadResearchSheet() {
                                         </div>
                                         <CheckIcon
                                           className={cn(
-                                            'ml-auto h-4 w-4',
+                                            "ml-auto h-4 w-4",
                                             option.value ===
                                               authorsField.value ||
                                               authorsFields.some(
                                                 (author) =>
                                                   author.value === option.value
                                               )
-                                              ? 'opacity-100'
-                                              : 'opacity-0'
+                                              ? "opacity-100"
+                                              : "opacity-0"
                                           )}
                                         />
                                       </CommandItem>
@@ -382,7 +397,7 @@ export default function UploadResearchSheet() {
                       type="button"
                       variant="secondary"
                       className="gap-2 items-center"
-                      onClick={() => appendAuthor({ value: '' })}
+                      onClick={() => appendAuthor({ value: "" })}
                     >
                       <IoAdd /> <span>Add more author</span>
                     </Button>
@@ -406,8 +421,8 @@ export default function UploadResearchSheet() {
                               variant="outline"
                               role="combobox"
                               className={cn(
-                                'flex-1 justify-between',
-                                !field.value && 'text-muted-foreground'
+                                "flex-1 justify-between",
+                                !field.value && "text-muted-foreground"
                               )}
                             >
                               {_.truncate(
@@ -415,7 +430,7 @@ export default function UploadResearchSheet() {
                                   ? facultyList.find(
                                       (option) => option.value === field.value
                                     )?.label
-                                  : 'Select research adviser',
+                                  : "Select research adviser",
                                 { length: 60 }
                               )}
                               <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -448,10 +463,10 @@ export default function UploadResearchSheet() {
                                     {option.label}
                                     <CheckIcon
                                       className={cn(
-                                        'ml-auto h-4 w-4',
+                                        "ml-auto h-4 w-4",
                                         option.value === field.value
-                                          ? 'opacity-100'
-                                          : 'opacity-0'
+                                          ? "opacity-100"
+                                          : "opacity-0"
                                       )}
                                     />
                                   </CommandItem>
@@ -476,7 +491,7 @@ export default function UploadResearchSheet() {
                   <BiLoaderAlt />
                 </span>
               ) : (
-                'Upload'
+                "Upload"
               )}
             </Button>
           </div>

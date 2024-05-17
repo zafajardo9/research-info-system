@@ -127,3 +127,4 @@ yarn-error.log*
 /frontend/*.tsbuildinfo
 /frontend/next-env.d.ts
 frontend/yarn.lock
+frontend/.env

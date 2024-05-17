@@ -1,25 +1,26 @@
-'use client';
+"use client";
 
-import UpdateResearchSheet from '@/components/module/student/components/update-research-sheet';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { risApi } from '@/lib/api';
-import { RESEARCH_KEY } from '@/lib/constants';
-import { cn, isURL } from '@/lib/utils';
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
-import { useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { BsFillPersonFill } from 'react-icons/bs';
-import { IoChevronBackSharp } from 'react-icons/io5';
-import Cooldown from '../../cooldown';
-import { ApproveDialog } from './approve-dialog';
-import { CommentSection } from './comment-section';
-import { ExtensionDropdown } from './extension-dropdown';
-import { RejectDialog } from './reject-dialog';
-import { ReviseDialog } from './revise-dialog';
+import UpdateResearchSheet from "@/components/module/student/components/update-research-sheet";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { risApi } from "@/lib/api";
+import { RESEARCH_KEY } from "@/lib/constants";
+import { cn, isURL } from "@/lib/utils";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { BsFillPersonFill } from "react-icons/bs";
+import { IoChevronBackSharp } from "react-icons/io5";
+import Cooldown from "../../cooldown";
+import { ApproveDialog } from "./approve-dialog";
+import { CommentSection } from "./comment-section";
+import { ExtensionDropdown } from "./extension-dropdown";
+import { RejectDialog } from "./reject-dialog";
+import { ReviseDialog } from "./revise-dialog";
+import { DotsHorizontalIcon, OpenInNewWindowIcon } from "@radix-ui/react-icons";
 
 export interface ResearchPaperDetails {
   research_paper: ResearchPaper[];
@@ -87,7 +88,7 @@ export function ResearchView({
         );
         return res.data;
       },
-      enabled: status === 'authenticated',
+      enabled: status === "authenticated",
     });
 
   const research = researchWithAuthors?.research_paper?.[0];
@@ -96,7 +97,7 @@ export function ResearchView({
 
   const docs = [
     {
-      uri: research?.file_path ?? '',
+      uri: research?.file_path ?? "",
     },
   ];
 
@@ -104,7 +105,7 @@ export function ResearchView({
     <>
       {hasCooldown && (
         <Cooldown
-          modified_at={research?.modified_at ?? ''}
+          modified_at={research?.modified_at ?? ""}
           isCooldown={isCooldown}
           setIsCooldown={(value) => setIsCooldown(value)}
         />
@@ -132,7 +133,7 @@ export function ResearchView({
             {!hideExtensionDropdown && (
               <ExtensionDropdown
                 id={research.id}
-                extension={research?.extension ?? ''}
+                extension={research?.extension ?? ""}
                 disabled={isCooldown}
               />
             )}
@@ -141,7 +142,7 @@ export function ResearchView({
               <ApproveDialog
                 id={id}
                 disabled={
-                  research.status === 'Approved' ||
+                  research.status === "Approved" ||
                   // research.status === 'Revise' ||
                   isCooldown
                 }
@@ -151,14 +152,14 @@ export function ResearchView({
             {showReviseDialog && (
               <ReviseDialog
                 id={id}
-                disabled={research.status === 'Revise' || isCooldown}
+                disabled={research.status === "Revise" || isCooldown}
               />
             )}
 
             {showRejectDialog && (
               <RejectDialog
                 id={id}
-                disabled={research.status === 'Rejected' || isCooldown}
+                disabled={research.status === "Rejected" || isCooldown}
               />
             )}
           </div>
@@ -198,12 +199,12 @@ export function ResearchView({
             <Badge>{research.research_type}</Badge>
             <Badge
               className={cn(
-                research.status === 'Pending' &&
-                  'bg-yellow-500 hover:bg-yellow-500/80',
-                research.status === 'Approved' &&
-                  'bg-green-500 hover:bg-green-500/80',
-                research.status === 'Rejected' &&
-                  'bg-red-500 hover:bg-red-500/80'
+                research.status === "Pending" &&
+                  "bg-yellow-500 hover:bg-yellow-500/80",
+                research.status === "Approved" &&
+                  "bg-green-500 hover:bg-green-500/80",
+                research.status === "Rejected" &&
+                  "bg-red-500 hover:bg-red-500/80"
               )}
             >
               {research.status}
@@ -222,15 +223,29 @@ export function ResearchView({
       )}
 
       {research?.file_path && isURL(research.file_path) && (
-        <div className="mt-10">
-          <DocViewer
+        <div className="my-10">
+          {/* <DocViewer
             documents={docs}
             pluginRenderers={DocViewerRenderers}
             theme={{
-              primary: '#f4f4f4',
-              textPrimary: '#000000',
+              primary: "#f4f4f4",
+              textPrimary: "#000000",
             }}
-          />
+          /> */}
+          <iframe
+            src={research.file_path}
+            width="100%"
+            height="500px"
+            // allowFullScreen
+          ></iframe>
+          <Button
+            variant="default"
+            className="flex w-52 p-0 data-[state=open]:bg-muted gap-4"
+            onClick={() => window.open(research.file_path, "_blank")}
+          >
+            <span>Open File</span>
+            <OpenInNewWindowIcon className="h-4 w-4 " />
+          </Button>
         </div>
       )}
 

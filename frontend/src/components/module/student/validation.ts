@@ -1,5 +1,15 @@
 import * as z from 'zod';
 
+function isValidUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+
 export const studentloginFormSchema = z.object({
   username: z.string({ required_error: 'This field is required.' }),
   password: z.string({ required_error: 'This field is required.' }),
@@ -9,7 +19,10 @@ export const studentloginFormSchema = z.object({
 export const uploadResearchFormSchema = z.object({
   title: z.string({ required_error: 'This field is required.' }),
   // research_type: z.string({ required_error: 'This field is required.' }),
-  file: z.custom<File>((val) => val instanceof File, 'This field is required.'),
+  // file: z.custom<File>((val) => val instanceof File, 'This field is required.'),
+  file: z.string().refine((value) => isValidUrl(value), {
+    message: 'Invalid URL',
+  }),
   research_adviser: z.string({ required_error: 'This field is required.' }),
   author_ids: z
     .object({
@@ -28,9 +41,12 @@ export const updateResearchFormSchema = z.object({
   title: z.string({ required_error: 'This field is required.' }),
   // research_type: z.string({ required_error: 'This field is required.' }),
   submitted_date: z.string({ required_error: 'This field is required.' }),
-  file: z.custom<File>(),
+  // file: z.custom<File>(),
+  file: z.string({ required_error: 'This field is required.' }),
   research_adviser: z.string({ required_error: 'This field is required.' }),
 });
+
+
 
 export const uploadEthicsProtocolFormSchema = z.object({
   letter_of_intent: z.custom<File>(),

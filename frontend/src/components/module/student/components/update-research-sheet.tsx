@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { FormSheetWrapper } from '@/components/global/wrappers/form-sheet-wrapper';
-import { Button } from '@/components/ui/button';
-import { ComboboxOptions } from '@/components/ui/combobox';
+import { FormSheetWrapper } from "@/components/global/wrappers/form-sheet-wrapper";
+import { Button } from "@/components/ui/button";
+import { ComboboxOptions } from "@/components/ui/combobox";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from '@/components/ui/command';
-import { FileUploadInput } from '@/components/ui/file-upload-input';
+} from "@/components/ui/command";
+import { FileUploadInput } from "@/components/ui/file-upload-input";
 import {
   Form,
   FormControl,
@@ -18,14 +18,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 // import {
 //   Select,
 //   SelectContent,
@@ -33,22 +33,22 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 //   SelectTrigger,
 //   SelectValue,
 // } from '@/components/ui/select';
-import { useToast } from '@/components/ui/use-toast';
-import { useGetFaculties } from '@/hooks/use-faculty-query';
-import { useUpdateResearch } from '@/hooks/use-research-query';
-import { useGetMyAdviserList } from '@/hooks/use-student-query';
-import { uploadFile } from '@/lib/upload-file';
-import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
-import { format } from 'date-fns';
-import _ from 'lodash';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { BiLoaderAlt, BiSolidEdit } from 'react-icons/bi';
-import * as z from 'zod';
-import { updateResearchFormSchema } from '../validation';
-import { useStudentWorkflowContext } from './context/student-workflow';
+import { useToast } from "@/components/ui/use-toast";
+import { useGetFaculties } from "@/hooks/use-faculty-query";
+import { useUpdateResearch } from "@/hooks/use-research-query";
+import { useGetMyAdviserList } from "@/hooks/use-student-query";
+import { uploadFile } from "@/lib/upload-file";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import _ from "lodash";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { BiLoaderAlt, BiSolidEdit } from "react-icons/bi";
+import * as z from "zod";
+import { updateResearchFormSchema } from "../validation";
+import { useStudentWorkflowContext } from "./context/student-workflow";
 
 export type StudentOptions = {
   student_number: string;
@@ -82,7 +82,7 @@ export default function UpdateResearchSheet({
     shouldFocusError: false,
     defaultValues: {
       ...research,
-      submitted_date: format(new Date(research.submitted_date), 'dd-MM-yyyy'),
+      submitted_date: format(new Date(research.submitted_date), "dd-MM-yyyy"),
     },
   });
 
@@ -93,21 +93,31 @@ export default function UpdateResearchSheet({
     ...rest
   }: z.infer<typeof updateResearchFormSchema>) {
     try {
-      let file_path = research?.file_path;
+      // let file_path = research?.file_path;
 
-      if (file instanceof File) {
-        const newFilePath = await uploadFile({ file, fileName: file.name });
+      const file_path = file;
 
-        if (!newFilePath) {
-          toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
-          });
+      // if (file instanceof File) {
+      //   const newFilePath = await uploadFile({ file, fileName: file.name });
 
-          return;
-        }
+      //   if (!newFilePath) {
+      //     toast({
+      //       title: 'Upload File Failed',
+      //       variant: 'destructive',
+      //     });
 
-        file_path = newFilePath;
+      //     return;
+      //   }
+
+      //   file_path = newFilePath;
+      // }
+      if (!file_path) {
+        toast({
+          title: "File link is required",
+          variant: "destructive",
+        });
+
+        return;
       }
 
       const modifiedValues: UpdateResearchPayload = {
@@ -119,14 +129,14 @@ export default function UpdateResearchSheet({
       await update.mutateAsync(modifiedValues);
 
       toast({
-        title: 'Edit Proposal Success',
+        title: "Edit Proposal Success",
       });
 
       setOpen(false);
     } catch (error) {
       toast({
-        title: 'Edit Proposal Failed',
-        variant: 'destructive',
+        title: "Edit Proposal Failed",
+        variant: "destructive",
       });
     }
   }
@@ -224,8 +234,8 @@ export default function UpdateResearchSheet({
                               variant="outline"
                               role="combobox"
                               className={cn(
-                                'flex-1 justify-between',
-                                !field.value && 'text-muted-foreground'
+                                "flex-1 justify-between",
+                                !field.value && "text-muted-foreground"
                               )}
                             >
                               {_.truncate(
@@ -233,7 +243,7 @@ export default function UpdateResearchSheet({
                                   ? facultyList.find(
                                       (option) => option.value === field.value
                                     )?.label
-                                  : 'Select research adviser',
+                                  : "Select research adviser",
                                 { length: 60 }
                               )}
                               <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -266,10 +276,10 @@ export default function UpdateResearchSheet({
                                     {option.label}
                                     <CheckIcon
                                       className={cn(
-                                        'ml-auto h-4 w-4',
+                                        "ml-auto h-4 w-4",
                                         option.value === field.value
-                                          ? 'opacity-100'
-                                          : 'opacity-0'
+                                          ? "opacity-100"
+                                          : "opacity-0"
                                       )}
                                     />
                                   </CommandItem>
@@ -294,7 +304,7 @@ export default function UpdateResearchSheet({
                   <BiLoaderAlt />
                 </span>
               ) : (
-                'Edit'
+                "Edit"
               )}
             </Button>
           </div>

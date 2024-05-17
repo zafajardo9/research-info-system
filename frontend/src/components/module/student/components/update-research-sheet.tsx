@@ -211,13 +211,27 @@ export default function UpdateResearchSheet({
                   </FormItem>
                 )}
               /> */}
-
+              {/* 
               <FileUploadInput
                 control={form.control}
                 name="file"
                 label="File input"
                 defaultFile={research.file_path}
                 defaultFileName={research.title}
+              /> */}
+              <FormField
+                control={form.control}
+                name="file"
+                defaultValue={research.file_path}
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>File Link</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Update your file link" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
               <FormField

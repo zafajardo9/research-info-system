@@ -240,7 +240,7 @@ export function ResearchView({
           ></iframe>
           <Button
             variant="default"
-            className="flex w-52 p-0 data-[state=open]:bg-muted gap-4"
+            className="flex w-52 my-8 p-0 data-[state=open]:bg-muted gap-4"
             onClick={() => window.open(research.file_path, "_blank")}
           >
             <span>Open File</span>

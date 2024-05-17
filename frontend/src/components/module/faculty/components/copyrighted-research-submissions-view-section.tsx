@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { ComboboxOptions } from '@/components/ui/combobox';
-import { FileUploadInput } from '@/components/ui/file-upload-input';
+import { Button } from "@/components/ui/button";
+import { ComboboxOptions } from "@/components/ui/combobox";
+import { FileUploadInput } from "@/components/ui/file-upload-input";
 import {
   Form,
   FormControl,
@@ -10,34 +10,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useToast } from '@/components/ui/use-toast';
-import { uploadFile } from '@/lib/upload-file';
-import { zodResolver } from '@hookform/resolvers/zod';
-import moment from 'moment';
-import { useRouter } from 'next/navigation';
-import { useId } from 'react';
-import { useForm } from 'react-hook-form';
-import { BiLoaderAlt } from 'react-icons/bi';
-import { IoChevronBackSharp } from 'react-icons/io5';
-import * as z from 'zod';
-import { TiptapEditor } from '../../tiptap';
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { uploadFile } from "@/lib/upload-file";
+import { zodResolver } from "@hookform/resolvers/zod";
+import moment from "moment";
+import { useRouter } from "next/navigation";
+import { useId } from "react";
+import { useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import { IoChevronBackSharp } from "react-icons/io5";
+import * as z from "zod";
+import { TiptapEditor } from "../../tiptap";
 import {
   FacultyUpdateCopyrightResearchPayload,
   useFacultyCopyrightCategoryList,
   useFacultyCopyrightPublishersList,
   useFacultyUpdateCopyrightResearch,
   useGetFacultyMyResearchPaperById,
-} from '../hooks/use-faculty-research-paper-query';
-import { updateCopyrightResearchSubsFormSchema } from '../validation';
+} from "../hooks/use-faculty-research-paper-query";
+import { updateCopyrightResearchSubsFormSchema } from "../validation";
 
 export interface CopyrightedResearchSubmissionsViewSectionProps {
   id: string;
@@ -90,39 +90,47 @@ export function CopyrightedResearchSubmissionsViewSection({
     ...rest
   }: z.infer<typeof updateCopyrightResearchSubsFormSchema>) {
     try {
-      let file_path = researchPaper?.file_path ?? '';
+      let file_path = researchPaper?.file_path ?? "";
 
-      if (file instanceof File) {
-        const newFilePath = await uploadFile({ file, fileName: file.name });
+      // if (file instanceof File) {
+      //   const newFilePath = await uploadFile({ file, fileName: file.name });
 
-        if (!newFilePath) {
-          toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
-          });
+      //   if (!newFilePath) {
+      //     toast({
+      //       title: 'Upload File Failed',
+      //       variant: 'destructive',
+      //     });
 
-          return;
-        }
+      //     return;
+      //   }
 
-        file_path = newFilePath;
+      //   file_path = newFilePath;
+      // }
+      if (!file_path) {
+        toast({
+          title: "File link is required",
+          variant: "destructive",
+        });
+
+        return;
       }
 
       const modifiedValues: FacultyUpdateCopyrightResearchPayload = {
         ...rest,
         id,
         file_path,
-        date_publish: moment().format('DD-MM-YYYY'),
+        date_publish: moment().format("DD-MM-YYYY"),
       };
 
       await update.mutateAsync(modifiedValues);
 
       toast({
-        title: 'Update Copyrighted Research Submission Success',
+        title: "Update Copyrighted Research Submission Success",
       });
     } catch (error) {
       toast({
-        title: 'Update Copyrighted Research Submission Failed',
-        variant: 'destructive',
+        title: "Update Copyrighted Research Submission Failed",
+        variant: "destructive",
       });
     }
   }
@@ -274,12 +282,27 @@ export function CopyrightedResearchSubmissionsViewSection({
                 )}
               />
 
-              <FileUploadInput
+              {/* <FileUploadInput
                 control={form.control}
                 name="file"
                 label="File Input"
                 defaultFile={researchPaper?.file_path}
                 defaultFileName={researchPaper?.title}
+              /> */}
+
+              <FormField
+                control={form.control}
+                name="file"
+                defaultValue={researchPaper?.file_path}
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>File link</FormLabel>
+                    <FormControl>
+                      <Input placeholder="File link" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
 
@@ -290,7 +313,7 @@ export function CopyrightedResearchSubmissionsViewSection({
                     <BiLoaderAlt />
                   </span>
                 ) : (
-                  'Update'
+                  "Update"
                 )}
               </Button>
             </div>

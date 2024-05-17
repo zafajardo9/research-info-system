@@ -42,7 +42,9 @@ export const updateResearchFormSchema = z.object({
   // research_type: z.string({ required_error: 'This field is required.' }),
   submitted_date: z.string({ required_error: 'This field is required.' }),
   // file: z.custom<File>(),
-  file: z.string({ required_error: 'This field is required.' }),
+  file: z.string().refine((value) => isValidUrl(value), {
+    message: 'Invalid URL',
+  }),
   research_adviser: z.string({ required_error: 'This field is required.' }),
 });
 

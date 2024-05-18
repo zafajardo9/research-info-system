@@ -19,6 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { cn } from "@/lib/utils";
+import { format, parseISO } from "date-fns";
+
 import { useToast } from "@/components/ui/use-toast";
 import { uploadFile } from "@/lib/upload-file";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -119,7 +130,9 @@ export function CopyrightedResearchSubmissionsViewSection({
         ...rest,
         id,
         file_path,
-        date_publish: moment().format("DD-MM-YYYY"),
+        date_publish: rest.date_publish
+          ? moment(rest.date_publish).format("DD-MM-YYYY")
+          : "",
       };
 
       await update.mutateAsync(modifiedValues);
@@ -134,6 +147,17 @@ export function CopyrightedResearchSubmissionsViewSection({
       });
     }
   }
+
+  const formatDate = (dateString?: string): string => {
+    if (!dateString) return "Unknown Date";
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
 
   return (
     <section>
@@ -156,6 +180,17 @@ export function CopyrightedResearchSubmissionsViewSection({
             className="space-y-7 flex flex-col flex-grow py-7"
           >
             <div className="grid grid-cols-2 gap-6 items-end p-6">
+              <div className="">
+                <h1 className="">
+                  <span className="font-bold">Research Upload Date: </span>
+                  {formatDate(researchPaper?.created_at)}
+                </h1>
+                <h1>
+                  <span className="font-bold">Last Modified: </span>
+                  {formatDate(researchPaper?.modified_at)}
+                </h1>
+              </div>
+
               <FormField
                 control={form.control}
                 name="title"
@@ -282,6 +317,50 @@ export function CopyrightedResearchSubmissionsViewSection({
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="date_publish"
+                defaultValue={
+                  researchPaper?.date_publish
+                    ? new Date(researchPaper?.date_publish)
+                    : undefined
+                }
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Publish Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FileUploadInput
                 control={form.control}
                 name="file"
@@ -289,21 +368,6 @@ export function CopyrightedResearchSubmissionsViewSection({
                 defaultFile={researchPaper?.file_path}
                 defaultFileName={researchPaper?.title}
               />
-
-              {/* <FormField
-                control={form.control}
-                name="file"
-                // defaultValue={researchPaper?.file_path}
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>File link</FormLabel>
-                    <FormControl>
-                      <Input placeholder="File link" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
             </div>
 
             <div className="flex flex-0 px-6">

@@ -5,7 +5,7 @@ from jose import jwt
 
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
+from jose import jwt, ExpiredSignatureError, JWTError
 
 from app.config import SECRET_KEY, ALGORITHM
 
@@ -30,15 +30,19 @@ class JWTRepo:
 
     def decode_token(self):
         try:
-            decode_token = jwt.decode(
-                self.token, SECRET_KEY, algorithms=[ALGORITHM])
-            return decode_token if decode_token["expires"] >= datetime.time() else None
-        except:
-            return {}
+            decoded_token = jwt.decode(self.token, SECRET_KEY, algorithms=[ALGORITHM])
+            return decoded_token if decoded_token.get("exp") >= datetime.datetime().timestamp() else None
+        except ExpiredSignatureError:
+            return None  # Explicitly return None if the token is expired
+        except JWTError:
+            return None
 
     @staticmethod
     def extract_token(token: str):
-        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        try:
+            return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        except JWTError:
+            return None
 
 
 class JWTBearer(HTTPBearer):
@@ -60,6 +64,18 @@ class JWTBearer(HTTPBearer):
             raise HTTPException(
                 status_code=403, detail={"status": "Forbidden", "message": "Invalid authorization code."})
 
+
     @staticmethod
     def verify_jwt(jwt_token: str):
-        return True if jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM]) is not None else False
+        try:
+            jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM])
+            return True
+        except ExpiredSignatureError:
+            return False
+        except JWTError:
+            return False
+        
+        
+    # @staticmethod
+    # def verify_jwt(jwt_token: str):
+    #     return True if jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM]) is not None else False

@@ -16,7 +16,7 @@ from starlette.responses import JSONResponse
 load_dotenv()
 
 
-PORT = os.getenv("PORT", 10000)
+PORT = int(os.getenv("PORT", 10000))
 
 origins= [
     "*"
@@ -103,5 +103,5 @@ app = init_app()
 
 def start():
     """Launched with 'poetry run start' at root level """
-    uvicorn.run("app.main:app", host= "0.0.0.0", port=10000, reload=True)
+    uvicorn.run("app.main:app", host= "0.0.0.0", port=PORT, reload=True)
     # uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)

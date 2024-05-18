@@ -14904,3 +14904,26 @@ ROLLBACK
 Application shutdown complete.
 Finished server process [1860]
 Stopping reloader process [12008]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [1364] using StatReload
+Started server process [9152]
+Waiting for application startup.
+Application startup complete.
+Shutting down
+Waiting for application shutdown.
+Application shutdown complete.
+Finished server process [9152]
+Stopping reloader process [1364]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:10000 (Press CTRL+C to quit)
+Started reloader process [15252] using StatReload
+Started server process [12244]
+Waiting for application startup.
+Application startup complete.
+Shutting down
+Waiting for application shutdown.
+Application shutdown complete.
+Finished server process [12244]
+Stopping reloader process [15252]

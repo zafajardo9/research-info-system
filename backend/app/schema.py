@@ -695,7 +695,7 @@ class FacultyResearchPaperCreate(BaseModel):
     category: str
     keywords: str
     publisher: str
-    date_publish: str
+    date_publish: Optional[str] = None
     
 class FPSTest(BaseModel):
     user_id: str

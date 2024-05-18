@@ -850,8 +850,14 @@ class ResearchService:
     @staticmethod
     async def upload_faculty_paper(user_id: str, research_paper_data: FacultyResearchPaperCreate) -> FacultyResearchPaper:
         _research_paper_id = str(uuid4())
-        date_published = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
         
+        date_published = None
+        if research_paper_data.date_publish:
+            try:
+                date_published = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
+            except ValueError:
+                raise ValueError("Invalid date format. Please use 'dd-mm-yyyy'.")
+
         research_paper_data_dict = research_paper_data.dict()
         research_paper_data_dict.pop('date_publish', None)
         

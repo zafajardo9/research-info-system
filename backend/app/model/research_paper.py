@@ -72,7 +72,7 @@ class FacultyResearchPaper(SQLModel, TimeMixin, table=True):
     content: str
     abstract: str
     file_path: str
-    date_publish: date
+    date_publish: Optional[date]
     category: str
     keywords: str
     publisher: str

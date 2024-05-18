@@ -50,13 +50,16 @@ def init_app():
 
 
 
-    @app.on_event("startup")
-    async def starup():
-        await db.create_all()
-    
-    @app.on_event("shutdown")
-    async def shutdown():
+    async def init_db():
+        await db.init()
+
+
+    async def close_db():
         await db.close()
+
+
+    app.add_event_handler("startup", init_db)
+    app.add_event_handler("shutdown", close_db)
 
     from app.controller import authentication, notif_controller, workflow_controller, prof_process_set, section_controller, announcement_controller, faculty_workflow, student_controller, users, defense_controller, research_professor, research_controller, auth_controller, admin_power, comment, adviser_controller, ethics, manuscript_controller, copyright_controller, all_about_info, FPS_integration
 

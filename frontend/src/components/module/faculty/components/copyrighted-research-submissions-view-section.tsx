@@ -92,28 +92,28 @@ export function CopyrightedResearchSubmissionsViewSection({
     try {
       let file_path = researchPaper?.file_path ?? "";
 
-      // if (file instanceof File) {
-      //   const newFilePath = await uploadFile({ file, fileName: file.name });
+      if (file instanceof File) {
+        const newFilePath = await uploadFile({ file, fileName: file.name });
 
-      //   if (!newFilePath) {
-      //     toast({
-      //       title: 'Upload File Failed',
-      //       variant: 'destructive',
-      //     });
+        if (!newFilePath) {
+          toast({
+            title: "Upload File Failed",
+            variant: "destructive",
+          });
 
-      //     return;
-      //   }
+          return;
+        }
 
-      //   file_path = newFilePath;
-      // }
-      if (!file_path) {
-        toast({
-          title: "File link is required",
-          variant: "destructive",
-        });
-
-        return;
+        file_path = newFilePath;
       }
+      // if (!file_path) {
+      //   toast({
+      //     title: "File link is required",
+      //     variant: "destructive",
+      //   });
+
+      //   return;
+      // }
 
       const modifiedValues: FacultyUpdateCopyrightResearchPayload = {
         ...rest,
@@ -282,18 +282,18 @@ export function CopyrightedResearchSubmissionsViewSection({
                 )}
               />
 
-              {/* <FileUploadInput
+              <FileUploadInput
                 control={form.control}
                 name="file"
                 label="File Input"
                 defaultFile={researchPaper?.file_path}
                 defaultFileName={researchPaper?.title}
-              /> */}
+              />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="file"
-                defaultValue={researchPaper?.file_path}
+                // defaultValue={researchPaper?.file_path}
                 render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormLabel>File link</FormLabel>
@@ -303,7 +303,7 @@ export function CopyrightedResearchSubmissionsViewSection({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
             </div>
 
             <div className="flex flex-0 px-6">

@@ -1,9 +1,18 @@
-'use client';
+"use client";
 
-import { FormSheetWrapper } from '@/components/global/wrappers/form-sheet-wrapper';
-import { Button } from '@/components/ui/button';
-import { ComboboxOptions } from '@/components/ui/combobox';
-import { FileUploadInput } from '@/components/ui/file-upload-input';
+import { FormSheetWrapper } from "@/components/global/wrappers/form-sheet-wrapper";
+import { Button } from "@/components/ui/button";
+import { ComboboxOptions } from "@/components/ui/combobox";
+import { FileUploadInput } from "@/components/ui/file-upload-input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import {
   Form,
   FormControl,
@@ -11,33 +20,33 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useToast } from '@/components/ui/use-toast';
-import { uploadFile } from '@/lib/upload-file';
-import { zodResolver } from '@hookform/resolvers/zod';
-import moment from 'moment';
-import { useId, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { BiLoaderAlt } from 'react-icons/bi';
-import { IoCloudUploadOutline } from 'react-icons/io5';
-import * as z from 'zod';
-import { TiptapEditor } from '../../tiptap';
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { uploadFile } from "@/lib/upload-file";
+import { zodResolver } from "@hookform/resolvers/zod";
+import moment from "moment";
+import { useId, useState } from "react";
+import { useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import { IoCloudUploadOutline } from "react-icons/io5";
+import * as z from "zod";
+import { TiptapEditor } from "../../tiptap";
 import {
   FacultyUploadCopyrightResearchPayload,
   useFacultyCopyrightCategoryList,
   useFacultyCopyrightPublishersList,
   useFacultyUploadCopyrightResearch,
-} from '../hooks/use-faculty-research-paper-query';
-import { copyrightResearchSubsFormSchema } from '../validation';
+} from "../hooks/use-faculty-research-paper-query";
+import { copyrightResearchSubsFormSchema } from "../validation";
 
 export default function UploadCopyrightResearchSheet() {
   const [open, setOpen] = useState<boolean>(false);
@@ -85,8 +94,8 @@ export default function UploadCopyrightResearchSheet() {
 
       if (!file_path) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -95,29 +104,31 @@ export default function UploadCopyrightResearchSheet() {
       const modifiedValues: FacultyUploadCopyrightResearchPayload = {
         ...rest,
         file_path,
-        date_publish: moment().format('DD-MM-YYYY'),
+        date_publish: rest.date_publish
+          ? moment(rest.date_publish).format("DD-MM-YYYY")
+          : "",
       };
 
       await create.mutateAsync(modifiedValues);
 
       toast({
-        title: 'Upload Copyrighted Research Submission Success',
+        title: "Upload Copyrighted Research Submission Success",
       });
 
       reset({
-        title: '',
-        content: '',
-        abstract: '',
+        title: "",
+        content: "",
+        abstract: "",
         file: undefined,
-        category: '',
-        publisher: '',
+        category: "",
+        publisher: "",
       });
 
       setOpen(false);
     } catch (error) {
       toast({
-        title: 'Upload Copyrighted Research Submission Failed',
-        variant: 'destructive',
+        title: "Upload Copyrighted Research Submission Failed",
+        variant: "destructive",
       });
     }
   }
@@ -228,6 +239,45 @@ export default function UploadCopyrightResearchSheet() {
 
               <FormField
                 control={form.control}
+                name="date_publish"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Publish Date (Optional)</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="category"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
@@ -283,7 +333,7 @@ export default function UploadCopyrightResearchSheet() {
                   <BiLoaderAlt />
                 </span>
               ) : (
-                'Upload'
+                "Upload"
               )}
             </Button>
           </div>

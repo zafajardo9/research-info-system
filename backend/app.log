@@ -14621,3 +14621,286 @@ Started server process [18328]
 Waiting for application startup.
 Application startup complete.
 Stopping reloader process [16804]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [12008] using StatReload
+Started server process [1860]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00182s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00144s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.08079s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00259s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 0.265s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "FISFaculty"."BirthDate" AS birth, "FISFaculty"."MobileNumber" AS phone_number 
+FROM "RISUsers" JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RISUsers".id = %s
+[generated in 0.00195s] (' ', ' ', '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 1.545s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[generated in 0.00296s] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 0.008775s ago] (' ', ' ', 'faculty', 'training and workshop')
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[generated in 0.00335s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[generated in 0.00193s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[generated in 0.00328s] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 0.08322s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[generated in 0.00236s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[generated in 0.00164s] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[generated in 0.00286s] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.1s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.4894s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2008s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2449s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.294s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.6781s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.3787s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[generated in 0.00362s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[generated in 0.00256s] (datetime.datetime(2024, 5, 18, 10, 4, 32, 624945), datetime.datetime(2024, 5, 18, 10, 4, 32, 621945), 'f2e54e3e-8a19-4b28-b587-604bdea84cfd', 'ala', '<p>asdf</p>', '<p>fsfs</p>', 'https://ik.imagekit.io/mdhmumzsp/Fajardo_4-1_Rizal-4__3__nn-l5hYnR.pdf', datetime.date(2024, 5, 17), 'Scopus', 'sfadf', 'PUP Research Publication Office', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 84.85s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[cached since 41.52s ago] (datetime.datetime(2024, 5, 18, 10, 5, 14, 147574), datetime.datetime(2024, 5, 18, 10, 5, 14, 147574), '4dd7daa7-225a-491c-9e85-17d850ef970d', 'newnew', '<p>asdfasdf</p>', '<p>adsfasdf</p>', 'https://ik.imagekit.io/mdhmumzsp/utot_xLs8Bj2xm.pdf', None, 'Scopus', 'sdfgsdfgs', 'PUP Research Publication Office', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 126.3s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00098s] ('4dd7daa7-225a-491c-9e85-17d850ef970d',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 237.4s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[cached since 2.323s ago] ('f2e54e3e-8a19-4b28-b587-604bdea84cfd',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 239.7s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[cached since 4.408s ago] ('e4a240f3-5f18-4644-86d7-a6e1f26000f9',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 241.8s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[cached since 6.587s ago] ('096746d8-ba4a-4b70-9bad-07eec319ddf5',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 244.2s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[cached since 9.131s ago] ('a4ab9d94-c156-45fb-a1d2-dd9b70bde617',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 246.5s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[cached since 546.2s ago] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 545.9s ago] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 546s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 545.9s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 546s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "FISFaculty"."BirthDate" AS birth, "FISFaculty"."MobileNumber" AS phone_number 
+FROM "RISUsers" JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RISUsers".id = %s
+[cached since 545.5s ago] (' ', ' ', '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 555.3s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 553.8s ago] (' ', ' ', 'faculty', 'training and workshop')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 553.8s ago] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[cached since 553.8s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[cached since 553.8s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 553.6s ago] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 554s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[cached since 553.6s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 553.6s ago] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 553.3s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 553.6s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 554s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 554s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 554s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 554.1s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 554.4s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 554.2s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 546s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[cached since 491.2s ago] (datetime.datetime(2024, 5, 18, 10, 12, 43, 803562), datetime.datetime(2024, 5, 18, 10, 12, 43, 795035), '28e59e3d-a2ba-46b3-a120-cdb07a12e220', 'new', '<p>asdfasdf</p>', '<p>adsfasdfasdf</p>', 'https://ik.imagekit.io/mdhmumzsp/utot_PFrpcfRih.pdf', None, 'Scopus', 'adsfasdf', 'PUP Research Publication Office', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 576s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00445s] ('28e59e3d-a2ba-46b3-a120-cdb07a12e220',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 7.797s ago] ('28e59e3d-a2ba-46b3-a120-cdb07a12e220',)
+Shutting down
+Waiting for application shutdown.
+ROLLBACK
+Application shutdown complete.
+Finished server process [1860]
+Stopping reloader process [12008]

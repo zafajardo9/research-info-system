@@ -5,10 +5,18 @@ from app.config import db
 
 
 
+from dotenv import load_dotenv
+import os
+
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 from pydantic import BaseModel, EmailStr
 from starlette.responses import JSONResponse
 
+
+load_dotenv()
+
+
+PORT = os.getenv("PORT", 10000)
 
 origins= [
     "*"
@@ -95,5 +103,5 @@ app = init_app()
 
 def start():
     """Launched with 'poetry run start' at root level """
-    uvicorn.run("app.main:app", host= "0.0.0.0", port=8888, reload=True)
+    uvicorn.run("app.main:app", host= "0.0.0.0", port=10000, reload=True)
     # uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)

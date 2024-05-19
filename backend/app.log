@@ -17475,3 +17475,2059 @@ Shutting down
 Waiting for application shutdown.
 Application shutdown complete.
 Finished server process [20412]
+Started server process [9592]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00308s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00190s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.0901s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00223s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 0.4562s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "FISFaculty"."BirthDate" AS birth, "FISFaculty"."MobileNumber" AS phone_number 
+FROM "RISUsers" JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RISUsers".id = %s
+[generated in 0.00230s] (' ', ' ', '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[generated in 0.00542s] (' ', ' ', 'faculty', 'training and workshop')
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 37.01s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 0.02368s ago] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[generated in 0.00240s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[generated in 0.00247s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[generated in 0.00464s] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 0.09664s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[generated in 0.00295s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[generated in 0.00225s] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[generated in 0.00347s] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.08672s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.2184s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.1739s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2162s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2593s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.3891s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.3425s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[generated in 0.00302s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 207s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 170s ago] (' ', ' ', 'faculty', 'training and workshop')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 170s ago] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[cached since 170s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[cached since 169.9s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 169.9s ago] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 169.9s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[cached since 169.8s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 169.8s ago] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 169.7s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 169.8s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 169.9s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 169.9s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 169.9s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 170s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 170.1s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 170s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 210.8s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+Shutting down
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [12764] using StatReload
+Started server process [12964]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00197s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00111s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.08271s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00119s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00203s] ('28e59e3d-a2ba-46b3-a120-cdb07a12e220',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 46.76s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[generated in 0.00234s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[generated in 0.00210s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[generated in 0.00167s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[generated in 0.00297s] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 0.09119s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[generated in 0.00161s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[generated in 0.00215s] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[generated in 0.00238s] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.09054s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.2324s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.1849s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2285s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2752s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.4124s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.3663s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[generated in 0.00394s] (' ', ' ', 'faculty', 'training and workshop')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 0.08261s ago] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 334s ago] (' ', ' ', 'faculty', 'funding opportunity')
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 442, in _prepare_and_execute
+    self._rows = await prepared_stmt.fetch(*parameters)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connresource.py", line 19, in _check
+    self._check_conn_validity(meth.__name__)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 255, in _check_conn_validity
+    super()._check_conn_validity(meth_name)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connresource.py", line 41, in _check_conn_validity
+    raise exceptions.InterfaceError(
+asyncpg.exceptions._base.InterfaceError: cannot call PreparedStatement.fetch(): the underlying connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 479, in execute
+    self._adapt_connection.await_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 68, in await_only
+    return current.driver.switch(awaitable)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 121, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 454, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 389, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 682, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.InterfaceError: <class 'asyncpg.exceptions._base.InterfaceError'>: cannot call PreparedStatement.fetch(): the underlying connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\announcement_controller.py", line 141, in get_announcements_students_funding
+    announcements = await AnnouncementService.get_announcements_faculty_funding()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\announcement_service.py", line 225, in get_announcements_faculty_funding
+    result = await db.execute(query)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 126, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1943, in _execute_context
+    self._handle_dbapi_exception(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _handle_dbapi_exception
+    util.raise_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\compat.py", line 208, in raise_
+    raise exception
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 479, in execute
+    self._adapt_connection.await_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 68, in await_only
+    return current.driver.switch(awaitable)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 121, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 454, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 389, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 682, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.InterfaceError: (sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot call PreparedStatement.fetch(): the underlying connection is closed
+[SQL: SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC]
+[parameters: (' ', ' ', 'faculty', 'funding opportunity')]
+(Background on this error at: https://sqlalche.me/e/14/rvf5)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\announcement_controller.py", line 149, in get_announcements_students_training
+    announcements = await AnnouncementService.get_announcements_faculty_training()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\announcement_service.py", line 263, in get_announcements_faculty_training
+    result = await db.execute(query)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\faculty_workflow.py", line 42, in assign_process
+    resultz = await FacultyFlow.overall(user_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\faculty_flow.py", line 31, in overall
+    user_roles = await UsersRepository.get_user_roles(user_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\repository\users.py", line 26, in get_user_roles
+    roles = (await db.execute(query)).scalars().all()
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\faculty_workflow.py", line 42, in assign_process
+    resultz = await FacultyFlow.overall(user_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\faculty_flow.py", line 31, in overall
+    user_roles = await UsersRepository.get_user_roles(user_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\repository\users.py", line 26, in get_user_roles
+    roles = (await db.execute(query)).scalars().all()
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\announcement_controller.py", line 149, in get_announcements_students_training
+    announcements = await AnnouncementService.get_announcements_faculty_training()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\announcement_service.py", line 263, in get_announcements_faculty_training
+    result = await db.execute(query)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\announcement_controller.py", line 141, in get_announcements_students_funding
+    announcements = await AnnouncementService.get_announcements_faculty_funding()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\announcement_service.py", line 225, in get_announcements_faculty_funding
+    result = await db.execute(query)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\faculty_workflow.py", line 42, in assign_process
+    resultz = await FacultyFlow.overall(user_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\faculty_flow.py", line 31, in overall
+    user_roles = await UsersRepository.get_user_roles(user_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\repository\users.py", line 26, in get_user_roles
+    roles = (await db.execute(query)).scalars().all()
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\announcement_controller.py", line 149, in get_announcements_students_training
+    announcements = await AnnouncementService.get_announcements_faculty_training()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\announcement_service.py", line 263, in get_announcements_faculty_training
+    result = await db.execute(query)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\announcement_controller.py", line 141, in get_announcements_students_funding
+    announcements = await AnnouncementService.get_announcements_faculty_funding()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\announcement_service.py", line 225, in get_announcements_faculty_funding
+    result = await db.execute(query)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 83, in __call__
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\authentication.py", line 31, in login_faculty
+    token = await AuthService.login_faculty(request_body)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\auth_service.py", line 88, in login_faculty
+    _user_by_email = await UsersRepository.find_by_email(login.username)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\repository\users.py", line 70, in find_by_email
+    return (await db.execute(query)).scalar_one_or_none()
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1798, in _execute_context
+    conn = self._revalidate_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 645, in _revalidate_connection
+    self._invalid_transaction()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 617, in _invalid_transaction
+    raise exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is rolled back. (Background on this error at: https://sqlalche.me/e/14/8s2b)
+Shutting down
+Waiting for application shutdown.
+Application shutdown complete.
+Finished server process [12964]
+Stopping reloader process [12764]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [15408] using StatReload
+Started server process [12216]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00175s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00156s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.08101s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00120s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 0.2095s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "FISFaculty"."BirthDate" AS birth, "FISFaculty"."MobileNumber" AS phone_number 
+FROM "RISUsers" JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RISUsers".id = %s
+[generated in 0.00182s] (' ', ' ', '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 1.132s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[generated in 0.00259s] (' ', ' ', 'faculty', 'training and workshop')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 0.007428s ago] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[generated in 0.00144s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[generated in 0.00224s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[generated in 0.00504s] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 0.08535s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[generated in 0.00256s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[generated in 0.00227s] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[generated in 0.00188s] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.09413s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.2526s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.1983s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2408s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2844s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.4254s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.3681s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[generated in 0.00250s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00260s] ('28e59e3d-a2ba-46b3-a120-cdb07a12e220',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 2.798s ago] ('28e59e3d-a2ba-46b3-a120-cdb07a12e220',)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[generated in 0.00598s] (datetime.datetime(2024, 5, 19, 20, 29, 47, 335932), datetime.datetime(2024, 5, 19, 20, 29, 47, 294537), '32ec2ee0-f698-41d7-a137-8b975968519b', '2nd', '<p>asdf</p>', '<p>adsf</p>', 'https://ik.imagekit.io/mdhmumzsp/utot_X7KQv4WY9.pdf', datetime.date(2024, 5, 1), 'asdf', 'asdf', 'asdf', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 418, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 660, in _prepare
+    prepared_stmt = await self._connection.prepare(operation)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connection.py", line 636, in prepare
+    return await self._prepare(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connection.py", line 653, in _prepare
+    self._check_open()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\asyncpg\connection.py", line 1534, in _check_open
+    raise exceptions.InterfaceError('connection is closed')
+asyncpg.exceptions._base.InterfaceError: connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 479, in execute
+    self._adapt_connection.await_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 68, in await_only
+    return current.driver.switch(awaitable)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 121, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 454, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 389, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 682, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.InterfaceError: <class 'asyncpg.exceptions._base.InterfaceError'>: connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\adviser_controller.py", line 376, in upload_faculty_paper
+    faculty_paper = await ResearchService.upload_faculty_paper(current_user, research_paper_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\research_service.py", line 864, in upload_faculty_paper
+    research_paper = await FacultyResearchRepository.create(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\repository\base_repo.py", line 21, in create
+    await db.commit()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 583, in commit
+    return await greenlet_spawn(self.sync_session.commit)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 126, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1451, in commit
+    self._transaction.commit(_to_root=self.future)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 829, in commit
+    self._prepare_impl()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 808, in _prepare_impl
+    self.session.flush()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3386, in flush
+    self._flush(objects)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3525, in _flush
+    with util.safe_reraise():
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\compat.py", line 208, in raise_
+    raise exception
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3486, in _flush
+    flush_context.execute()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 456, in execute
+    rec.execute(self)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 630, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 245, in save_obj
+    _emit_insert_statements(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1097, in _emit_insert_statements
+    c = connection._execute_20(
+        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1943, in _execute_context
+    self._handle_dbapi_exception(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _handle_dbapi_exception
+    util.raise_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\compat.py", line 208, in raise_
+    raise exception
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 479, in execute
+    self._adapt_connection.await_(
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 68, in await_only
+    return current.driver.switch(awaitable)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 121, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 454, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 389, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 682, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.InterfaceError: (sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: connection is closed
+[SQL: INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)]
+[parameters: (datetime.datetime(2024, 5, 19, 20, 29, 47, 335932), datetime.datetime(2024, 5, 19, 20, 29, 47, 294537), '32ec2ee0-f698-41d7-a137-8b975968519b', '2nd', '<p>asdf</p>', '<p>adsf</p>', 'https://ik.imagekit.io/mdhmumzsp/utot_X7KQv4WY9.pdf', datetime.date(2024, 5, 1), 'asdf', 'asdf', 'asdf', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')]
+(Background on this error at: https://sqlalche.me/e/14/rvf5)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\authentication.py", line 31, in login_faculty
+    token = await AuthService.login_faculty(request_body)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\auth_service.py", line 88, in login_faculty
+    _user_by_email = await UsersRepository.find_by_email(login.username)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\repository\users.py", line 70, in find_by_email
+    return (await db.execute(query)).scalar_one_or_none()
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 215, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 115, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1711, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1552, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 721, in _connection_for_bind
+    self._assert_active()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 601, in _assert_active
+    raise sa_exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: connection is closed
+[SQL: INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)]
+[parameters: (datetime.datetime(2024, 5, 19, 20, 29, 47, 335932), datetime.datetime(2024, 5, 19, 20, 29, 47, 294537), '32ec2ee0-f698-41d7-a137-8b975968519b', '2nd', '<p>asdf</p>', '<p>adsf</p>', 'https://ik.imagekit.io/mdhmumzsp/utot_X7KQv4WY9.pdf', datetime.date(2024, 5, 1), 'asdf', 'asdf', 'asdf', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')]
+(Background on this error at: https://sqlalche.me/e/14/rvf5) (Background on this error at: https://sqlalche.me/e/14/7s2a)
+Shutting down
+Waiting for application shutdown.
+Application shutdown complete.
+Finished server process [12216]
+Stopping reloader process [15408]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [17900] using StatReload
+Started server process [4292]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00132s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00131s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.08746s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00089s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[generated in 0.00165s] (datetime.datetime(2024, 5, 19, 20, 32, 45, 640342), datetime.datetime(2024, 5, 19, 20, 32, 45, 640342), 'b17caaae-8d3a-49fb-a210-efb9ab4fa55d', 'asdf', 'stradsfasdfing', 'sdf', 'strsdfaing', None, 'striasdfng', 'adsf', 'sdfasd', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[generated in 0.00219s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 69.39s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[generated in 0.00198s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[generated in 0.00218s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[generated in 0.00286s] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 0.08842s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[generated in 0.00200s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[generated in 0.00185s] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[generated in 0.00224s] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.08349s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.214s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.1697s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2129s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2644s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.4001s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.3565s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[generated in 0.00344s] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 0.01455s ago] (' ', ' ', 'faculty', 'training and workshop')
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00126s] ('b17caaae-8d3a-49fb-a210-efb9ab4fa55d',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 15.71s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[cached since 63.64s ago] (datetime.datetime(2024, 5, 19, 20, 33, 49, 277792), datetime.datetime(2024, 5, 19, 20, 33, 49, 277792), 'c82f95ea-ed2a-454d-9551-e137be78adbe', 'asdf', '<p>adsf</p>', '<p>adsf</p>', 'https://ik.imagekit.io/mdhmumzsp/utot_cbH16L0_q.pdf', None, 'adsf', 'sdfsdf', 'adsf', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 45.75s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00170s] ('c82f95ea-ed2a-454d-9551-e137be78adbe',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 2.383s ago] ('c82f95ea-ed2a-454d-9551-e137be78adbe',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[cached since 319.3s ago] ('c82f95ea-ed2a-454d-9551-e137be78adbe',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 335s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[cached since 394.7s ago] (datetime.datetime(2024, 5, 19, 20, 39, 20, 344224), datetime.datetime(2024, 5, 19, 20, 39, 20, 344224), '18898738-8798-4dc6-93f6-48fa507d9466', 'adsfasdf', '<p>adfasdf</p>', '<p>sadfasdf</p>', 'https://ik.imagekit.io/mdhmumzsp/utot_54WSBCYsb.pdf', None, 'adsfasdf', 'adsfasdf', 'asdfadf adsfasdf', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 376.8s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 328.7s ago] ('18898738-8798-4dc6-93f6-48fa507d9466',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 329.3s ago] ('18898738-8798-4dc6-93f6-48fa507d9466',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 404.8s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[cached since 551.4s ago] ('18898738-8798-4dc6-93f6-48fa507d9466',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 567.1s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+StatReload detected changes in 'app\service\research_service.py'. Reloading...
+Started server process [19028]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00259s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00241s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.08232s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00141s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\adviser_controller.py", line 376, in upload_faculty_paper
+    faculty_paper = await ResearchService.upload_faculty_paper(current_user, research_paper_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\service\research_service.py", line 866, in upload_faculty_paper
+    research_paper = await FacultyResearchRepository.create(
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: app.repository.base_repo.BaseRepo.create() got multiple values for keyword argument 'category'
+StatReload detected changes in 'app\service\research_service.py'. Reloading...
+Started server process [16652]
+Waiting for application startup.
+Application startup complete.
+StatReload detected changes in 'app\service\research_service.py'. Reloading...
+Started server process [3816]
+Waiting for application startup.
+Application startup complete.
+StatReload detected changes in 'app\schema.py'. Reloading...
+Started server process [19016]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[generated in 0.00265s] (datetime.datetime(2024, 5, 19, 20, 52, 2, 661980), datetime.datetime(2024, 5, 19, 20, 52, 1, 587806), '3467028c-77fb-4a03-984f-d9c588bc5121', 'asdf', 'stradsfasdfing', 'sdf', 'strsdfaing', None, 'Ito sana nga', 'adsf', 'Tapos ito pa sana', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+StatReload detected changes in 'app\service\research_service.py'. Reloading...
+Started server process [8568]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+INSERT INTO "RISfaculty_research_papers" (modified_at, created_at, id, title, content, abstract, file_path, date_publish, category, keywords, publisher, status, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+[generated in 0.00154s] (datetime.datetime(2024, 5, 19, 20, 54, 11, 310687), datetime.datetime(2024, 5, 19, 20, 54, 10, 306944), '9e7fcf42-ae44-4600-b644-97549d05d662', 'ITo iba to ha', 'stradsfasdfing', 'sdf', 'strsdfaing', None, 'Ito Sana Nga', 'adsf', 'Tapos Ito Pa Sana', None, '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+COMMIT
+Shutting down
+Stopping reloader process [17900]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [17600] using StatReload
+Started server process [19112]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00138s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00123s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.1002s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00095s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 0.1116s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "FISFaculty"."BirthDate" AS birth, "FISFaculty"."MobileNumber" AS phone_number 
+FROM "RISUsers" JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RISUsers".id = %s
+[generated in 0.00160s] (' ', ' ', '40cd76c9-611d-43e6-8b91-a964d48f3c46')
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[cached since 1.05s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[generated in 0.00194s] (' ', ' ', 'faculty', 'funding opportunity')
+SELECT "RISannouncements".modified_at, "RISannouncements".created_at, "RISannouncements".id, "RISannouncements".user_id, "RISannouncements".user_role_target, "RISannouncements".announcement_type, "RISannouncements".title, "RISannouncements".content, "RISannouncements".other_details, "RISannouncements".image, "FISFaculty"."Email" AS email, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISannouncements" JOIN "RISUsers" ON "RISannouncements".user_id = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISannouncements".user_role_target = %s AND "RISannouncements".announcement_type = %s ORDER BY "RISannouncements".modified_at DESC
+[cached since 0.006513s ago] (' ', ' ', 'faculty', 'training and workshop')
+SELECT "RISsection_assigned_prof".id, "RISsection_assigned_prof".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsection_assigned_prof" JOIN "RISClass" ON "RISsection_assigned_prof".class_id = "RISClass".id 
+WHERE "RISsection_assigned_prof".user_id = %s
+[generated in 0.00128s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[generated in 0.00115s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[generated in 0.00238s] ('f56852a7-747b-4fdf-9c4d-654082578f0e', 'research professor')
+SELECT "RISnavigation_role".type, "RISnavigation_role".role, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s
+[cached since 0.1682s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research professor')
+SELECT "RISresearch_types_assigned".id, "RISresearch_types_assigned".user_id, "RISresearch_types_assigned".research_type_name 
+FROM "RISresearch_types_assigned" 
+WHERE "RISresearch_types_assigned".user_id = %s
+[generated in 0.00144s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[generated in 0.00226s] ('0322b873-a793-412d-b17d-63de26d0f212',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[generated in 0.00190s] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Research')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.09215s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Research')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.2229s ago] ('b0ca68c1-3cd8-4e7d-9232-c4f8f15a8bef',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.1765s ago] ('c488bf13-bc7e-467a-abeb-80fae3002506', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2232s ago] ('84019d8a-39a0-4ecd-8ef3-2709eeac0c8b', 'research adviser', 'Capstone')
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.2674s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Capstone')
+SELECT "RISsections_course_assigned".id AS assignment_id, "RISsections_course_assigned".class_id, "RISClass".course, "RISClass".section 
+FROM "RISsections_course_assigned" LEFT OUTER JOIN "RISClass" ON "RISsections_course_assigned".class_id = "RISClass".id 
+WHERE "RISsections_course_assigned".research_type_id = %s
+[cached since 0.3991s ago] ('7c1529ca-8c54-40e9-8a7e-9073f47e7006',)
+SELECT "RISnavigation_role".role, "RISnavigation_role".type, "RISnavigation_role".has_submitted_proposal, "RISnavigation_role".has_pre_oral_defense_date, "RISnavigation_role".has_submitted_ethics_protocol, "RISnavigation_role".has_submitted_full_manuscript, "RISnavigation_role".has_set_final_defense_date, "RISnavigation_role".has_submitted_copyright 
+FROM "RISnavigation_class" JOIN "RISClass" ON "RISClass".id = "RISnavigation_class".class_id JOIN "RISnavigation_role" ON "RISnavigation_role".id = "RISnavigation_class".navigation_id 
+WHERE "RISnavigation_class".class_id = %s AND "RISnavigation_role".role = %s AND "RISnavigation_role".type = %s
+[cached since 0.3508s ago] ('63954765-dfad-460b-98a3-44b2856c316f', 'research adviser', 'Feasibility Study')
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[generated in 0.00177s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00226s] ('3467028c-77fb-4a03-984f-d9c588bc5121',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 11.75s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00222s] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 0.3463s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 232.2s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 391.2s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 414.5s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 463s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 404, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\app\controller\adviser_controller.py", line 442, in update_faculty_research_paper
+    await ResearchService.update_faculty_research_paper(research_paper_id, research_paper_data)
+  File "D:\DEVELOP\research-info-system\backend\app\service\research_service.py", line 989, in update_faculty_research_paper
+    date_submitted = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\_strptime.py", line 555, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\_strptime.py", line 333, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data '' does not match format '%d-%m-%Y'
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 510.9s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+UPDATE "RISfaculty_research_papers" SET modified_at=%s, title=%s, content=%s, abstract=%s, file_path=%s, date_publish=%s, category=%s, keywords=%s, publisher=%s WHERE "RISfaculty_research_papers".id = %s
+[generated in 0.00620s] (datetime.datetime(2024, 5, 19, 21, 4, 57, 744877), 'ITo iba to ha', 'stradsfasdfing', 'sdf', 'strsdfaing', datetime.datetime(2024, 5, 1, 0, 0), 'Ito Sana Nga', 'adsf', 'Ewannasdf asdfasdfaefaerqerqwer', '9e7fcf42-ae44-4600-b644-97549d05d662')
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".id = %s
+[cached since 511.2s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 560s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+DELETE FROM "RISfaculty_research_papers" WHERE "RISfaculty_research_papers".id = %s
+[cached since 552.4s ago] ('9e7fcf42-ae44-4600-b644-97549d05d662',)
+COMMIT
+BEGIN (implicit)
+SELECT "RISfaculty_research_papers".modified_at, "RISfaculty_research_papers".created_at, "RISfaculty_research_papers".id, "RISfaculty_research_papers".title, "RISfaculty_research_papers".content, "RISfaculty_research_papers".abstract, "RISfaculty_research_papers".file_path, "RISfaculty_research_papers".date_publish, "RISfaculty_research_papers".category, "RISfaculty_research_papers".keywords, "RISfaculty_research_papers".publisher, "RISfaculty_research_papers".status, "RISfaculty_research_papers".user_id 
+FROM "RISfaculty_research_papers" 
+WHERE "RISfaculty_research_papers".user_id = %s
+[cached since 564.1s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+StatReload detected changes in 'app\schema.py'. Reloading...
+Started server process [1928]
+Waiting for application startup.
+Application startup complete.
+StatReload detected changes in 'app\service\research_service.py'. Reloading...

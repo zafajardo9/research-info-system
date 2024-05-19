@@ -244,7 +244,7 @@ export function CopyrightedResearchSubmissionsViewSection({
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="publisher"
                 defaultValue={researchPaper?.publisher}
@@ -271,9 +271,27 @@ export function CopyrightedResearchSubmissionsViewSection({
                     <FormMessage />
                   </FormItem>
                 )}
+              /> */}
+              <FormField
+                control={form.control}
+                name="publisher"
+                defaultValue={researchPaper?.publisher}
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Publisher</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Update publisher here"
+                        {...field}
+                        style={{ textTransform: "capitalize" }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="category"
                 defaultValue={researchPaper?.category}
@@ -297,6 +315,25 @@ export function CopyrightedResearchSubmissionsViewSection({
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+
+              <FormField
+                control={form.control}
+                name="category"
+                defaultValue={researchPaper?.category}
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Update category here"
+                        {...field}
+                        style={{ textTransform: "capitalize" }}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

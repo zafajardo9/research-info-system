@@ -717,7 +717,7 @@ class FacultyResearchPaperUpdate(BaseModel):
     keywords: str
     category: str
     publisher: str
-    date_publish: str
+    date_publish: Optional[str] = None
 
 
 

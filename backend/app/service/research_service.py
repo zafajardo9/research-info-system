@@ -860,13 +860,19 @@ class ResearchService:
 
         research_paper_data_dict = research_paper_data.dict()
         research_paper_data_dict.pop('date_publish', None)
+        publisher = research_paper_data.publisher.title()
+        category = research_paper_data.category.title()
         
+        research_paper_data_dict.update({'publisher': publisher, 'category': category})
+
         research_paper = await FacultyResearchRepository.create(
             db,
             model=FacultyResearchPaper,
             id=_research_paper_id,
             date_publish=date_published,
             user_id=user_id,
+            # publisher=publisher,
+            # category=category,
             **research_paper_data_dict,
         )
         return research_paper
@@ -979,10 +985,22 @@ class ResearchService:
         if not existing_paper.scalar():
             raise HTTPException(status_code=404, detail=f"Paper with ID {research_paper_id} not found")
 
+        # Capitalize publisher and category
+        publisher = research_paper_data.publisher.title()
+        category = research_paper_data.category.title()
 
-        date_submitted = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
+        # Update date_published
+        date_published = None
+        if research_paper_data.date_publish:
+            try:
+                date_published = datetime.strptime(research_paper_data.date_publish, '%d-%m-%Y')
+            except ValueError:
+                raise ValueError("Invalid date format. Please use 'dd-mm-yyyy'.")
+        
         research_paper_data_dict = research_paper_data.dict()
-        research_paper_data_dict['date_publish'] = date_submitted
+        research_paper_data_dict['date_publish'] = date_published
+        research_paper_data_dict['publisher'] = publisher
+        research_paper_data_dict['category'] = category
 
         query = update(FacultyResearchPaper).where(FacultyResearchPaper.id == research_paper_id).values(research_paper_data_dict)
         await db.execute(query)

@@ -209,7 +209,7 @@ export default function UploadCopyrightResearchSheet() {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="publisher"
                 render={({ field }) => (
@@ -232,6 +232,24 @@ export default function UploadCopyrightResearchSheet() {
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+
+              <FormField
+                control={form.control}
+                name="publisher"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Publisher</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter publisher"
+                        {...field}
+                        style={{ textTransform: "capitalize" }}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -276,7 +294,7 @@ export default function UploadCopyrightResearchSheet() {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="category"
                 render={({ field }) => (
@@ -299,6 +317,24 @@ export default function UploadCopyrightResearchSheet() {
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Publisher</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter category"
+                        {...field}
+                        style={{ textTransform: "capitalize" }}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

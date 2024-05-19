@@ -1,12 +1,14 @@
 {
     "version": 2,
+    "devCommand": "uvicorn app.main:start --reload",
     "builds": [
       {
         "src": "app/main.py",
-        "use": "@vercel/python"
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb" }
       }
     ],
-    "devCommand": "uvicorn app.main:start --reload",
+    
     "routes": [
       { 
         "src": "/(.*)",

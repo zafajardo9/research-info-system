@@ -42,7 +42,7 @@ conf = ConnectionConfig(
 )
 
 
-def init_app():
+async def init_app():
     db.init()
 
     global app
@@ -105,3 +105,6 @@ def start():
     """Launched with 'poetry run start' at root level """
     uvicorn.run("app.main:app", host= "0.0.0.0", port=PORT, reload=True)
     # uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)
+    
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="0.0.0.0", port=PORT, reload=True)

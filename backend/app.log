@@ -17462,3 +17462,16 @@ FROM "RISfaculty_research_papers"
 WHERE "RISfaculty_research_papers".user_id = %s
 [cached since 287.7s ago] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
 StatReload detected changes in 'app\repository\auth_repo.py'. Reloading...
+Started server process [6372]
+Waiting for application startup.
+Application startup complete.
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [2396] using StatReload
+Started server process [20412]
+Waiting for application startup.
+Application startup complete.
+Shutting down
+Waiting for application shutdown.
+Application shutdown complete.
+Finished server process [20412]

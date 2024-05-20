@@ -1,13 +1,13 @@
-import { risApi } from '@/lib/api';
+import { risApi } from "@/lib/api";
 import {
   ADVISER_KEY,
   ADVISER_WITH_ASSIGNED_KEY,
   FACULTY_ADVISER_KEY,
   FACULTY_LIST_KEY,
   USER_FACULTY_WITH_ROLES_KEY,
-} from '@/lib/constants';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
+} from "@/lib/constants";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 export function useGetFacultyAdviser() {
   const { data: session, status } = useSession();
@@ -22,7 +22,7 @@ export function useGetFacultyAdviser() {
       });
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
     refetchOnMount: true,
   });
 }
@@ -43,7 +43,7 @@ export function useGetFaculties() {
       );
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
     refetchOnMount: false,
   });
 }
@@ -64,24 +64,30 @@ export function useGetAdviserAssigned(user_id: string) {
       );
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
   });
 }
-
+import { useMemo } from "react";
 export function useGetAdviserWithAssignedList() {
   const { data: session, status } = useSession();
+  const memoizedSession = useMemo(() => session, [session]);
 
-  return useQuery<AdviserData[]>({
-    queryKey: [ADVISER_WITH_ASSIGNED_KEY],
-    queryFn: async () => {
+  const memoizedQueryFn = useMemo(
+    () => async () => {
       const res = await risApi.get<AdviserData[]>(ADVISER_WITH_ASSIGNED_KEY, {
         headers: {
-          Authorization: `Bearer ${session?.user?.authToken}`,
+          Authorization: `Bearer ${memoizedSession?.user?.authToken}`,
         },
       });
       return res.data;
     },
-    enabled: status === 'authenticated',
+    [memoizedSession]
+  );
+
+  return useQuery<AdviserData[]>({
+    queryKey: [ADVISER_WITH_ASSIGNED_KEY],
+    queryFn: memoizedQueryFn,
+    enabled: status === "authenticated",
   });
 }
 
@@ -108,7 +114,7 @@ export function useGetAdviserById({
       });
       return res.data;
     },
-    enabled: status === 'authenticated' && enabled,
+    enabled: status === "authenticated" && enabled,
   });
 }
 
@@ -131,7 +137,7 @@ export function useGetAdviserListByResearchType({
       });
       return res.data;
     },
-    enabled: status === 'authenticated' && Boolean(research_type),
+    enabled: status === "authenticated" && Boolean(research_type),
   });
 }
 
@@ -159,7 +165,7 @@ export function useAdminAssignResearchAdviser() {
 
   return useMutation({
     mutationFn: (payload: { user_id: string; research_type_name: string }) => {
-      return risApi.post('/researchprof/assign-adviser-type/', payload, {
+      return risApi.post("/researchprof/assign-adviser-type/", payload, {
         headers: {
           Authorization: `Bearer ${session?.user.authToken}`,
         },
@@ -246,7 +252,7 @@ export function useAdminRemoveAssignResearchAdviser() {
   return useMutation({
     mutationFn: ({
       user_id,
-      research_type
+      research_type,
     }: {
       user_id: string;
       research_type: string;

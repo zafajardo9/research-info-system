@@ -1,4 +1,4 @@
-import { risApi } from '@/lib/api';
+import { risApi } from "@/lib/api";
 import {
   ALL_USER_KEY,
   COURSE_LIST_KEY,
@@ -6,9 +6,9 @@ import {
   FACULTY_PROFILE_KEY,
   STUDENT_PROFILE_KEY,
   USER_FACULTY_WITH_ROLES_KEY,
-} from '@/lib/constants';
-import { useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
+} from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 export function useGetStudentProfile() {
   const { data: session, status } = useSession();
@@ -26,30 +26,37 @@ export function useGetStudentProfile() {
       );
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
     refetchOnMount: false,
   });
 }
+import { useMemo } from "react";
 
 export function useGetFacultyProfile() {
   const { data: session, status } = useSession();
+  const memoizedSession = useMemo(() => session, [session]);
 
-  return useQuery<DefaultApiResponse<FacultyProfile>>({
-    queryKey: [FACULTY_PROFILE_KEY],
-    queryFn: async () => {
+  const memoizedQueryFn = useMemo(
+    () => async () => {
       const res = await risApi.get<DefaultApiResponse<FacultyProfile>>(
         FACULTY_PROFILE_KEY,
         {
           headers: {
-            Authorization: `Bearer ${session?.user?.authToken}`,
+            Authorization: `Bearer ${memoizedSession?.user?.authToken}`,
           },
         }
       );
       return res.data;
     },
-    enabled: status === 'authenticated',
+    [memoizedSession]
+  );
+
+  return useQuery<DefaultApiResponse<FacultyProfile>>({
+    queryKey: [FACULTY_PROFILE_KEY],
+    queryFn: memoizedQueryFn,
+    enabled: status === "authenticated",
     refetchOnMount: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -69,12 +76,12 @@ export function useGetAllUser() {
       );
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
   });
 }
 
 export interface CourseListData {
-  courses: string[]
+  courses: string[];
 }
 
 export function useGetCourseList() {
@@ -90,7 +97,7 @@ export function useGetCourseList() {
       });
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
   });
 }
 
@@ -110,7 +117,7 @@ export function useGetCourseWithYearList() {
       );
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
   });
 }
 
@@ -130,7 +137,7 @@ export function useGetUserFacultyWithRoles() {
       );
       return res.data;
     },
-    enabled: status === 'authenticated',
+    enabled: status === "authenticated",
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

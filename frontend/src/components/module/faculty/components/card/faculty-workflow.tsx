@@ -1,26 +1,27 @@
-'use client';
+"use client";
 
-import { Checkbox } from '@/components/ui/checkbox';
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
+} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import {
-  FacultyWorkflow,
   useGetFacultyWorkflowByType,
   useUpdateFacultyWorkflow,
-} from '@/hooks/use-faculty-workflow';
-import { zodResolver } from '@hookform/resolvers/zod';
-import _ from 'lodash';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { updateFacultyAssignedProcessFormSchema } from '../../validation';
-import { useFacultyProcessContext } from '../context/process';
+} from "@/hooks/use-faculty-workflow";
+import type { FacultyWorkflow } from "@/hooks/use-faculty-workflow";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import _ from "lodash";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { updateFacultyAssignedProcessFormSchema } from "../../validation";
+import { useFacultyProcessContext } from "../context/process";
 
 export interface FacultyWorkflowProps {
   label: string;
@@ -57,28 +58,27 @@ export function FacultyWorkflow({ label, role }: FacultyWorkflowProps) {
   );
 
   const facultyWorkflowPickedValues = _.pick(facultyWorkflow, [
-    'has_submitted_proposal',
-    'has_pre_oral_defense_date',
-    'has_submitted_ethics_protocol',
-    'has_submitted_full_manuscript',
-    'has_set_final_defense_date',
-    'has_submitted_copyright',
+    "has_submitted_proposal",
+    "has_pre_oral_defense_date",
+    "has_submitted_ethics_protocol",
+    "has_submitted_full_manuscript",
+    "has_set_final_defense_date",
+    "has_submitted_copyright",
   ]) as Pick<
     FacultyWorkflow,
-    | 'has_pre_oral_defense_date'
-    | 'has_set_final_defense_date'
-    | 'has_submitted_copyright'
-    | 'has_submitted_ethics_protocol'
-    | 'has_submitted_full_manuscript'
-    | 'has_submitted_proposal'
+    | "has_pre_oral_defense_date"
+    | "has_set_final_defense_date"
+    | "has_submitted_copyright"
+    | "has_submitted_ethics_protocol"
+    | "has_submitted_full_manuscript"
+    | "has_submitted_proposal"
   >;
 
   useEffect(() => {
-    if (typeof facultyWorkflowPickedValues !== 'undefined') {
+    if (typeof facultyWorkflowPickedValues !== "undefined") {
       reset(facultyWorkflowPickedValues);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [facultyWorkflowPickedValues]);
+  }, [reset]);
 
   return (
     <div className="space-y-6">
@@ -111,12 +111,12 @@ export function FacultyWorkflow({ label, role }: FacultyWorkflowProps) {
                         }
 
                         toast({
-                          title: 'Update Faculty Workflow Success',
+                          title: "Update Faculty Workflow Success",
                         });
                       } catch (error) {
                         toast({
-                          title: 'Update Faculty Workflow Failed',
-                          variant: 'destructive',
+                          title: "Update Faculty Workflow Failed",
+                          variant: "destructive",
                         });
                       }
                     }}
@@ -153,12 +153,12 @@ export function FacultyWorkflow({ label, role }: FacultyWorkflowProps) {
                         }
 
                         toast({
-                          title: 'Update Faculty Workflow Success',
+                          title: "Update Faculty Workflow Success",
                         });
                       } catch (error) {
                         toast({
-                          title: 'Update Faculty Workflow Failed',
-                          variant: 'destructive',
+                          title: "Update Faculty Workflow Failed",
+                          variant: "destructive",
                         });
                       }
                     }}
@@ -195,12 +195,12 @@ export function FacultyWorkflow({ label, role }: FacultyWorkflowProps) {
                         }
 
                         toast({
-                          title: 'Update Faculty Workflow Success',
+                          title: "Update Faculty Workflow Success",
                         });
                       } catch (error) {
                         toast({
-                          title: 'Update Faculty Workflow Failed',
-                          variant: 'destructive',
+                          title: "Update Faculty Workflow Failed",
+                          variant: "destructive",
                         });
                       }
                     }}
@@ -237,12 +237,12 @@ export function FacultyWorkflow({ label, role }: FacultyWorkflowProps) {
                         }
 
                         toast({
-                          title: 'Update Faculty Workflow Success',
+                          title: "Update Faculty Workflow Success",
                         });
                       } catch (error) {
                         toast({
-                          title: 'Update Faculty Workflow Failed',
-                          variant: 'destructive',
+                          title: "Update Faculty Workflow Failed",
+                          variant: "destructive",
                         });
                       }
                     }}
@@ -279,12 +279,12 @@ export function FacultyWorkflow({ label, role }: FacultyWorkflowProps) {
                         }
 
                         toast({
-                          title: 'Update Faculty Workflow Success',
+                          title: "Update Faculty Workflow Success",
                         });
                       } catch (error) {
                         toast({
-                          title: 'Update Faculty Workflow Failed',
-                          variant: 'destructive',
+                          title: "Update Faculty Workflow Failed",
+                          variant: "destructive",
                         });
                       }
                     }}
@@ -321,12 +321,12 @@ export function FacultyWorkflow({ label, role }: FacultyWorkflowProps) {
                         }
 
                         toast({
-                          title: 'Update Faculty Workflow Success',
+                          title: "Update Faculty Workflow Success",
                         });
                       } catch (error) {
                         toast({
-                          title: 'Update Faculty Workflow Failed',
-                          variant: 'destructive',
+                          title: "Update Faculty Workflow Failed",
+                          variant: "destructive",
                         });
                       }
                     }}

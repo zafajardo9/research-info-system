@@ -1,6 +1,6 @@
-import { FacultyProcessContext } from '../context/process';
-import { FacultyWorkflow } from './faculty-workflow';
-import { FacultyWorkflowSections } from './faculty-workflow-sections';
+import { FacultyProcessContext } from "../context/process";
+import { FacultyWorkflow } from "./faculty-workflow";
+import { FacultyWorkflowSections } from "./faculty-workflow-sections";
 
 export interface FacultyWorkflowRowProps {
   research_type: string;
@@ -13,6 +13,7 @@ export function FacultyWorkflowRow({ research_type }: FacultyWorkflowRowProps) {
         research_type,
       }}
     >
+      <h1 className="font-bold">Faculty Process</h1>
       <div className="col-span-2 grid grid-cols-2 gap-x-10">
         <div className="col-span-1">
           <FacultyWorkflowSections />

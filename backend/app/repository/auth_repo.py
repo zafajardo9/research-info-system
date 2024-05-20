@@ -19,9 +19,9 @@ class JWTRepo:
     def generate_token(self, expires_delta: Optional[timedelta] = None):
         to_encode = self.data.copy()
         if expires_delta:
-            expire = datetime.utcnow() + expires_delta
+            expire = datetime.now() + expires_delta
         else:
-            expire = datetime.utcnow() + timedelta(minutes=30)  # token expires
+            expire = datetime.now() + timedelta(days=30)  # token expires
 
         to_encode.update({"exp": expire})
         encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

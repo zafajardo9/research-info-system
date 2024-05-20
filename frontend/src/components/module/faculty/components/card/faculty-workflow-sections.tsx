@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { ComboboxOptions } from '@/components/ui/combobox';
+import { Button } from "@/components/ui/button";
+import { ComboboxOptions } from "@/components/ui/combobox";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from '@/components/ui/command';
+} from "@/components/ui/command";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useToast } from '@/components/ui/use-toast';
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
 import {
   AddFacultyWorkflowClassPayload,
   CreateFacultyWorkflowPayload,
@@ -31,19 +31,19 @@ import {
   useCreateFacultyWorkflow,
   useDeleteFacultyWorkflowClass,
   useGetFacultyWorkflowByType,
-} from '@/hooks/use-faculty-workflow';
-import { useGetClassRooms } from '@/hooks/use-section-query';
-import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
-import _ from 'lodash';
-import { useEffect, useMemo } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { IoAdd } from 'react-icons/io5';
-import * as z from 'zod';
-import { updateAdviserSectionFormSchema } from '../../validation';
-import { useFacultyProcessContext } from '../context/process';
+} from "@/hooks/use-faculty-workflow";
+import { useGetClassRooms } from "@/hooks/use-section-query";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import _ from "lodash";
+import { useEffect, useMemo } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { IoAdd } from "react-icons/io5";
+import * as z from "zod";
+import { updateAdviserSectionFormSchema } from "../../validation";
+import { useFacultyProcessContext } from "../context/process";
 
 export type SectionComboboxOptions = {
   // workflow_id: string;
@@ -53,7 +53,7 @@ export type SectionComboboxOptions = {
 
 const DEFAULT_OPTIONS: SectionComboboxOptions[] = [];
 
-const RESEARCH_TYPES = ['research professor', 'research adviser'];
+const RESEARCH_TYPES = ["research professor", "research adviser"];
 
 export function FacultyWorkflowSections() {
   const { toast } = useToast();
@@ -75,7 +75,7 @@ export function FacultyWorkflowSections() {
     append: appendSection,
     update: sectionUpdate,
     remove: removeSection,
-  } = useFieldArray({ control: form.control, name: 'sections' });
+  } = useFieldArray({ control: form.control, name: "sections" });
 
   // prettier-ignore
   const { data: facultyWorkflows = []  } = useGetFacultyWorkflowByType(research_type);
@@ -94,7 +94,7 @@ export function FacultyWorkflowSections() {
           return {
             value: id,
             label: `${course} ${section}`,
-            class_id: item?.id ?? '',
+            class_id: item?.id ?? "",
           };
         })
       : DEFAULT_OPTIONS;
@@ -111,7 +111,7 @@ export function FacultyWorkflowSections() {
       const collection = workflow.class_
         .map(({ class_id }) => {
           const data = courseList.find(({ value }) => value === class_id);
-          return { value: data?.value ?? '' };
+          return { value: data?.value ?? "" };
         })
         .filter(({ value }) => Boolean(value));
 
@@ -146,8 +146,8 @@ export function FacultyWorkflowSections() {
                             variant="outline"
                             role="combobox"
                             className={cn(
-                              'flex-1 justify-between',
-                              !sectionsField.value && 'text-muted-foreground'
+                              "flex-1 justify-between",
+                              !sectionsField.value && "text-muted-foreground"
                             )}
                             disabled={Boolean(sectionsField.value)}
                           >
@@ -157,7 +157,7 @@ export function FacultyWorkflowSections() {
                                     (option) =>
                                       option.value === sectionsField.value
                                   )?.label
-                                : 'Select section',
+                                : "Select section",
                               { length: 60 }
                             )}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -186,26 +186,25 @@ export function FacultyWorkflowSections() {
 
                                     if (facultyWorkflows.length > 0) {
                                       const payloads: AddFacultyWorkflowClassPayload[] =
-                                        facultyWorkflows
-                                          .map((workflow) => ({
-                                            type: research_type,
-                                            id: workflow.id,
-                                            classes: [option.value],
-                                          }))
+                                        facultyWorkflows.map((workflow) => ({
+                                          type: research_type,
+                                          id: workflow.id,
+                                          classes: [option.value],
+                                        }));
 
                                       addFWFClass
                                         .mutateAsync(payloads)
                                         .then(() => {
                                           toast({
                                             title:
-                                              'Update Faculty Workflow Success',
+                                              "Update Faculty Workflow Success",
                                           });
                                         })
                                         .catch(() => {
                                           toast({
                                             title:
-                                              'Update Faculty Workflow Failed',
-                                            variant: 'destructive',
+                                              "Update Faculty Workflow Failed",
+                                            variant: "destructive",
                                           });
                                         });
                                     } else {
@@ -227,14 +226,14 @@ export function FacultyWorkflowSections() {
                                         .then(() => {
                                           toast({
                                             title:
-                                              'Create Faculty Workflow Success',
+                                              "Create Faculty Workflow Success",
                                           });
                                         })
                                         .catch(() => {
                                           toast({
                                             title:
-                                              'Create Faculty Workflow Failed',
-                                            variant: 'destructive',
+                                              "Create Faculty Workflow Failed",
+                                            variant: "destructive",
                                           });
                                         });
                                     }
@@ -246,14 +245,14 @@ export function FacultyWorkflowSections() {
                                   </div>
                                   <CheckIcon
                                     className={cn(
-                                      'ml-auto h-4 w-4',
+                                      "ml-auto h-4 w-4",
                                       option.value === sectionsField.value ||
                                         sectionsFields.some(
                                           (author) =>
                                             author.value === option.value
                                         )
-                                        ? 'opacity-100'
-                                        : 'opacity-0'
+                                        ? "opacity-100"
+                                        : "opacity-0"
                                     )}
                                   />
                                 </CommandItem>
@@ -286,13 +285,13 @@ export function FacultyWorkflowSections() {
                           await deleteFWFClass.mutateAsync(payloads);
 
                           toast({
-                            title: 'Remove Assignment Section Success',
+                            title: "Remove Assignment Section Success",
                             // description: `You removed the assignment of the ${section.course} ${section.section} section from ${name}.`,
                           });
                         } catch (error) {
                           toast({
-                            title: 'Remove Assignment Section Failed',
-                            variant: 'destructive',
+                            title: "Remove Assignment Section Failed",
+                            variant: "destructive",
                           });
                         }
                       }}
@@ -309,7 +308,7 @@ export function FacultyWorkflowSections() {
                     courseListFiltered.length < 1 ||
                     sectionsFields.length === courseList.length
                   }
-                  onClick={() => appendSection({ value: '' })}
+                  onClick={() => appendSection({ value: "" })}
                 >
                   <IoAdd /> <span>Add more section</span>
                 </Button>

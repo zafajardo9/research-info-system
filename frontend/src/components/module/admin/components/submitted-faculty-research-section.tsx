@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Card, CardContent } from '@/components/ui/card';
-import { BiLoaderAlt } from 'react-icons/bi';
+import { Card, CardContent } from "@/components/ui/card";
+import { BiLoaderAlt } from "react-icons/bi";
 import {
   FacultyResearchPaper,
   useGetFacultyResearchPapers,
-} from '../hooks/use-faculty-research-papers';
-import { columns } from './submitted-faculty-research-section-table/columns';
-import { DataTable } from './submitted-faculty-research-section-table/data-table';
+} from "../hooks/use-faculty-research-papers";
+import { columns } from "./submitted-faculty-research-section-table/columns";
+import { DataTable } from "./submitted-faculty-research-section-table/data-table";
 
 export type FacultyResearchTableData = {
   faculty_name: string;
@@ -16,16 +16,19 @@ export type FacultyResearchTableData = {
 export function SubmittedFacultyResearchSection() {
   const { data = [], isLoading } = useGetFacultyResearchPapers();
 
+  // Check if data is null or undefined
   const researchList: FacultyResearchTableData[] = data
-    .map(({ FacultyResearchPaper: { status, ...rest }, name }) => ({
-      ...rest,
-      status: status ?? 'Pending',
-      faculty_name: name,
-    }))
-    .sort(
-      (a, b) =>
-        new Date(b.created_at).valueOf() - new Date(a.created_at).valueOf()
-    );
+    ? data
+        .map(({ FacultyResearchPaper: { status, ...rest }, name }) => ({
+          ...rest,
+          status: status ?? "Pending",
+          faculty_name: name,
+        }))
+        .sort(
+          (a, b) =>
+            new Date(b.created_at).valueOf() - new Date(a.created_at).valueOf()
+        )
+    : [];
 
   return (
     <section>

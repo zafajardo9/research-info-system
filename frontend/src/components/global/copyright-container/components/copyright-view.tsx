@@ -1,23 +1,32 @@
-'use client';
+"use client";
 
-import { useGetFacultyCopyrightById } from '@/components/module/faculty/hooks/use-faculty-copyrigh-query';
-import { APPROVE_LIST } from '@/components/module/stepper';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { FileUploadInput } from '@/components/ui/file-upload-input';
-import { Form } from '@/components/ui/form';
-import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { IoChevronBackSharp } from 'react-icons/io5';
-import * as z from 'zod';
-import Cooldown from '../../cooldown';
-import { copyrightDocumentsFormSchema } from '../validation';
-import { ApproveDialog } from './approve-dialog';
-import { RejectDialog } from './reject-dialog';
-import { ReviseDialog } from './revise-dialog';
+import { useGetFacultyCopyrightById } from "@/components/module/faculty/hooks/use-faculty-copyrigh-query";
+import { APPROVE_LIST } from "@/components/module/stepper";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { FileUploadInput } from "@/components/ui/file-upload-input";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { IoChevronBackSharp } from "react-icons/io5";
+import * as z from "zod";
+import Cooldown from "../../cooldown";
+import { copyrightDocumentsFormSchema } from "../validation";
+import { ApproveDialog } from "./approve-dialog";
+import { RejectDialog } from "./reject-dialog";
+import { ReviseDialog } from "./revise-dialog";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export interface CopyrightViewProps {
   id: string;
@@ -50,7 +59,7 @@ export function CopyrightView({
     <>
       {hasCooldown && (
         <Cooldown
-          modified_at={copyright?.modified_at ?? ''}
+          modified_at={copyright?.modified_at ?? ""}
           isCooldown={isCooldown}
           setIsCooldown={(value) => setIsCooldown(value)}
         />
@@ -77,7 +86,7 @@ export function CopyrightView({
               <ApproveDialog
                 id={id}
                 disabled={
-                  copyright.status === 'Approved' ||
+                  copyright.status === "Approved" ||
                   // copyright.status === 'Revise' ||
                   isCooldown
                 }
@@ -87,14 +96,14 @@ export function CopyrightView({
             {showReviseDialog && (
               <ReviseDialog
                 id={id}
-                disabled={copyright.status === 'Revise' || isCooldown}
+                disabled={copyright.status === "Revise" || isCooldown}
               />
             )}
 
             {showRejectDialog && (
               <RejectDialog
                 id={id}
-                disabled={copyright.status === 'Rejected' || isCooldown}
+                disabled={copyright.status === "Rejected" || isCooldown}
               />
             )}
           </div>
@@ -105,19 +114,19 @@ export function CopyrightView({
         <Badge
           className={cn(
             APPROVE_LIST.includes(copyright?.status) &&
-              'bg-green-500 hover:bg-green-500/80',
+              "bg-green-500 hover:bg-green-500/80",
 
-            copyright?.status === 'Pending' &&
-              'bg-[#d4af37] hover:bg-[#d4af37]/80',
+            copyright?.status === "Pending" &&
+              "bg-[#d4af37] hover:bg-[#d4af37]/80",
 
-            copyright?.status === 'Rejected' &&
-              'bg-red-500 hover:bg-red-500/80',
+            copyright?.status === "Rejected" &&
+              "bg-red-500 hover:bg-red-500/80",
 
-            copyright?.status === 'Revise' &&
-              'bg-blue-500 hover:bg-blue-500/80',
+            copyright?.status === "Revise" &&
+              "bg-blue-500 hover:bg-blue-500/80",
 
-            copyright?.status === 'Revised' &&
-              'bg-purple-500 hover:bg-purple-500/80'
+            copyright?.status === "Revised" &&
+              "bg-purple-500 hover:bg-purple-500/80"
           )}
         >
           {copyright?.status}
@@ -250,13 +259,31 @@ export function CopyrightView({
               )}
 
               {copyright?.copyright_manuscript && (
-                <FileUploadInput
+                // <FileUploadInput
+                //   control={form.control}
+                //   name="copyright_manuscript"
+                //   label="Copyrighted Full Manuscript"
+                //   defaultFile={copyright?.copyright_manuscript}
+                //   defaultFileName={copyright?.copyright_manuscript}
+                //   hideDeleteButton
+                // />
+                <FormField
                   control={form.control}
                   name="copyright_manuscript"
-                  label="Copyrighted Full Manuscript"
-                  defaultFile={copyright?.copyright_manuscript}
-                  defaultFileName={copyright?.copyright_manuscript}
-                  hideDeleteButton
+                  defaultValue={copyright?.copyright_manuscript}
+                  render={({ field }) => (
+                    <FormItem className="col-span-2">
+                      <FormLabel>Copyrighted Full Manuscript</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Paste link here"
+                          {...field}
+                          readOnly
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               )}
             </form>

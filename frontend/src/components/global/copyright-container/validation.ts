@@ -1,4 +1,13 @@
 import * as z from 'zod';
+function isValidUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 
 export const messageFormSchema = z.object({
   message: z.string({ required_error: 'This field is required.' }),
@@ -57,8 +66,7 @@ export const copyrightDocumentsFormSchema = z.object({
     (val) => val instanceof File,
     'This field is required.'
   ),
-  copyright_manuscript: z.custom<File>(
-    (val) => val instanceof File,
-    'This field is required.'
-  ),
+  copyright_manuscript:z.string().refine((value) => isValidUrl(value), {
+    message: 'Invalid URL',
+  }),
 });

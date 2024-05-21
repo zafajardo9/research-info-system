@@ -32,7 +32,7 @@ export interface UpdateFullManuscriptProps {
 export default function UpdateCopyrightDocuments({
   copyright,
 }: UpdateFullManuscriptProps) {
-  console.log(copyright);
+  // console.log(copyright);
   const { toast } = useToast();
 
   const { workflowId } = useStudentWorkflowContext();

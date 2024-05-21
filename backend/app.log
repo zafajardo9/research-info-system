@@ -37724,3 +37724,729 @@ WHERE "RISnotifications".user_id = %s
 [cached since 98.39s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
 Shutting down
 Stopping reloader process [17004]
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [14356] using StatReload
+Started server process [16496]
+Waiting for application startup.
+Application startup complete.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, "RISUsers".faculty_id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISUsers" LEFT OUTER JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id JOIN "RISuser_role" ON "RISUsers".id = "RISuser_role".users_id JOIN "RISrole" ON "RISuser_role".users_id = "RISUsers".id AND "RISuser_role".role_id = "RISrole".id AND ("RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s)
+[generated in 0.00269s] (' ', ' ', 'faculty', 'research professor', 'research adviser', 'admin')
+BEGIN (implicit)
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[generated in 0.00180s] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[generated in 0.00120s] (1,)
+BEGIN (implicit)
+SELECT "RISUsers".id, "SPSStudent"."StudentId" AS student_id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, "SPSClass"."ClassId" AS class_id 
+FROM "SPSStudentClassSubjectGrade" JOIN "SPSClassSubject" ON "SPSClassSubject"."ClassSubjectId" = "SPSStudentClassSubjectGrade"."ClassSubjectId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSClassSubject"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSMetadata"."CourseId" JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "RISUsers" ON "SPSStudent"."StudentId" = "RISUsers".student_id 
+WHERE "RISUsers".id = %s
+[generated in 0.00333s] (' ', ' ', '5b4e31ce-9790-44df-8e9d-6e30df93a62d')
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[generated in 0.00170s] (1,)
+BEGIN (implicit)
+SELECT DISTINCT ON ("RISUsers".id) "RISUsers".id AS id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, CASE WHEN ("SPSCourseEnrolled"."Status" = %s) THEN %s ELSE %s END AS status, concat("SPSMetadata"."Year", %s, "SPSClass"."Section") AS year_section 
+FROM "RISUsers" JOIN "SPSStudent" ON "SPSStudent"."StudentId" = "RISUsers".student_id JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSCourseEnrolled"."CourseId" JOIN "SPSStudentClassGrade" ON "SPSStudentClassGrade"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" ORDER BY "RISUsers".id, "SPSMetadata"."Year" DESC, "SPSClass"."Section"
+[generated in 0.00401s] (' ', ' ', 1, 'Alumni', 'Student', '-')
+SELECT "SPSCourseEnrolled"."Status" 
+FROM "SPSCourseEnrolled" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" 
+WHERE "SPSCourseEnrolled"."StudentId" = %s
+[generated in 0.00130s] (1,)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 0.6324s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[generated in 0.00145s] ('4-2', 'BSIT')
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 0.6339s ago] (1,)
+SELECT "RISUsers".id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "RISresearch_types_assigned".research_type_name, "RISsections_course_assigned".class_id 
+FROM "RISUsers" JOIN "RISresearch_types_assigned" ON "RISUsers".id = "RISresearch_types_assigned".user_id JOIN "RISsections_course_assigned" ON "RISresearch_types_assigned".id = "RISsections_course_assigned".research_type_id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISsections_course_assigned".class_id = %s AND "RISresearch_types_assigned".research_type_name = %s
+[generated in 0.00258s] (' ', ' ', '63954765-dfad-460b-98a3-44b2856c316f', 'Feasibility Study')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" JOIN "RISauthors" ON "RISresearch_papers".id = "RISauthors".research_paper_id 
+WHERE "RISauthors".user_id = %s AND "RISresearch_papers".research_type = %s
+[generated in 0.00451s] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d', 'Feasibility Study')
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[generated in 0.00195s] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 2.395s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 2.352s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 2.3s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 1.816s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id 
+FROM "RISworkflow" 
+WHERE "RISworkflow".id = %s
+[generated in 0.00148s] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[generated in 0.00181s] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISset_defense".modified_at, "RISset_defense".created_at, "RISset_defense".id, "RISset_defense".research_type, "RISset_defense".defense_type, "RISset_defense".date, "RISset_defense".time, "RISset_defense".class_id 
+FROM "RISset_defense" 
+WHERE "RISset_defense".research_type = %s AND "RISset_defense".class_id = %s
+[generated in 0.00232s] ('Feasibility Study', '63954765-dfad-460b-98a3-44b2856c316f')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" 
+WHERE "RISresearch_papers".workflow_step_id = %s AND "RISresearch_papers".id = %s
+[generated in 0.00234s] ('d7161e66-8826-422d-a200-330acc2021fd', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[generated in 0.00164s] ('750bf687-1c4c-4ca0-9058-895cae5e6507', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'pre-oral')
+SELECT "RISethics".modified_at, "RISethics".created_at, "RISethics".id, "RISethics".research_paper_id, "RISethics".letter_of_intent, "RISethics".urec_9, "RISethics".urec_10, "RISethics".urec_11, "RISethics".urec_12, "RISethics".certificate_of_validation, "RISethics".co_authorship, "RISethics".status, "RISethics".workflow_step_id 
+FROM "RISethics" 
+WHERE "RISethics".workflow_step_id = %s AND "RISethics".research_paper_id = %s
+[generated in 0.00203s] ('0583d41e-a8a9-4922-9dc1-6372957c5b7c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISfull_manuscript".modified_at, "RISfull_manuscript".created_at, "RISfull_manuscript".id, "RISfull_manuscript".research_paper_id, "RISfull_manuscript".content, "RISfull_manuscript".keywords, "RISfull_manuscript".file, "RISfull_manuscript".abstract, "RISfull_manuscript".status, "RISfull_manuscript".workflow_step_id 
+FROM "RISfull_manuscript" 
+WHERE "RISfull_manuscript".workflow_step_id = %s AND "RISfull_manuscript".research_paper_id = %s
+[generated in 0.00246s] ('2d8b3087-7fca-42bd-aec7-ab6585649824', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 0.3086s ago] ('074e4787-8e98-40a0-8df8-13030a7e8673', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'final')
+SELECT "RIScopyright".modified_at, "RIScopyright".created_at, "RIScopyright".id, "RIScopyright".research_paper_id, "RIScopyright".co_authorship, "RIScopyright".affidavit_co_ownership, "RIScopyright".joint_authorship, "RIScopyright".approval_sheet, "RIScopyright".receipt_payment, "RIScopyright".recordal_slip, "RIScopyright".acknowledgement_receipt, "RIScopyright".certificate_copyright, "RIScopyright".recordal_template, "RIScopyright".ureb_18, "RIScopyright".journal_publication, "RIScopyright".copyright_manuscript, "RIScopyright".status, "RIScopyright".workflow_step_id 
+FROM "RIScopyright" 
+WHERE "RIScopyright".workflow_step_id = %s AND "RIScopyright".research_paper_id = %s
+[generated in 0.00223s] ('27d96c97-dfac-428d-b394-fe0f25f3598c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[generated in 0.00239s] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[generated in 0.35816s] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 3.405s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 3.349s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RIScomments".modified_at, "RIScomments".created_at, "RIScomments".id, "RIScomments".text, "RIScomments".user_id, "RIScomments".research_paper_id, "RISUsers".modified_at AS modified_at_1, "RISUsers".created_at AS created_at_1, "RISUsers".id AS id_1, "RISUsers".student_id, "RISUsers".faculty_id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS student_name, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "SPSStudent_1"."StudentId", "SPSStudent_1"."FirstName", "SPSStudent_1"."LastName", "SPSStudent_1"."MiddleName", "SPSStudent_1"."DateOfBirth", "SPSStudent_1"."StudentNumber", "SPSStudent_1"."MobileNumber", "SPSStudent_1"."Email", "SPSStudent_1"."Password", "FISFaculty_1"."FacultyId", "FISFaculty_1"."FirstName" AS "FirstName_1", "FISFaculty_1"."LastName" AS "LastName_1", "FISFaculty_1"."MiddleName" AS "MiddleName_1", "FISFaculty_1"."MiddleInitial", "FISFaculty_1"."BirthDate", "FISFaculty_1"."MobileNumber" AS "MobileNumber_1", "FISFaculty_1"."Email" AS "Email_1", "FISFaculty_1"."Password" AS "Password_1" 
+FROM "RIScomments" JOIN "RISUsers" ON "RIScomments".user_id = "RISUsers".id LEFT OUTER JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" LEFT OUTER JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" LEFT OUTER JOIN "SPSStudent" AS "SPSStudent_1" ON "SPSStudent_1"."StudentId" = "RISUsers".student_id LEFT OUTER JOIN "FISFaculty" AS "FISFaculty_1" ON "FISFaculty_1"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RIScomments".research_paper_id = %s
+[generated in 0.00455s] (' ', ' ', ' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, "SPSStudent"."StudentId" AS student_id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, "SPSClass"."ClassId" AS class_id 
+FROM "SPSStudentClassSubjectGrade" JOIN "SPSClassSubject" ON "SPSClassSubject"."ClassSubjectId" = "SPSStudentClassSubjectGrade"."ClassSubjectId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSClassSubject"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSMetadata"."CourseId" JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "RISUsers" ON "SPSStudent"."StudentId" = "RISUsers".student_id 
+WHERE "RISUsers".id = %s
+[cached since 9.37s ago] (' ', ' ', '5b4e31ce-9790-44df-8e9d-6e30df93a62d')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 9.592s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSCourseEnrolled"."Status" 
+FROM "SPSCourseEnrolled" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" 
+WHERE "SPSCourseEnrolled"."StudentId" = %s
+[cached since 10.99s ago] (1,)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 11.57s ago] (1,)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 11.61s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 11.55s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 11.6s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 11.12s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id 
+FROM "RISworkflow" 
+WHERE "RISworkflow".id = %s
+[cached since 9.36s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 9.302s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISset_defense".modified_at, "RISset_defense".created_at, "RISset_defense".id, "RISset_defense".research_type, "RISset_defense".defense_type, "RISset_defense".date, "RISset_defense".time, "RISset_defense".class_id 
+FROM "RISset_defense" 
+WHERE "RISset_defense".research_type = %s AND "RISset_defense".class_id = %s
+[cached since 9.252s ago] ('Feasibility Study', '63954765-dfad-460b-98a3-44b2856c316f')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" 
+WHERE "RISresearch_papers".workflow_step_id = %s AND "RISresearch_papers".id = %s
+[cached since 9.198s ago] ('d7161e66-8826-422d-a200-330acc2021fd', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 9.147s ago] ('750bf687-1c4c-4ca0-9058-895cae5e6507', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'pre-oral')
+SELECT "RISethics".modified_at, "RISethics".created_at, "RISethics".id, "RISethics".research_paper_id, "RISethics".letter_of_intent, "RISethics".urec_9, "RISethics".urec_10, "RISethics".urec_11, "RISethics".urec_12, "RISethics".certificate_of_validation, "RISethics".co_authorship, "RISethics".status, "RISethics".workflow_step_id 
+FROM "RISethics" 
+WHERE "RISethics".workflow_step_id = %s AND "RISethics".research_paper_id = %s
+[cached since 9.09s ago] ('0583d41e-a8a9-4922-9dc1-6372957c5b7c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISfull_manuscript".modified_at, "RISfull_manuscript".created_at, "RISfull_manuscript".id, "RISfull_manuscript".research_paper_id, "RISfull_manuscript".content, "RISfull_manuscript".keywords, "RISfull_manuscript".file, "RISfull_manuscript".abstract, "RISfull_manuscript".status, "RISfull_manuscript".workflow_step_id 
+FROM "RISfull_manuscript" 
+WHERE "RISfull_manuscript".workflow_step_id = %s AND "RISfull_manuscript".research_paper_id = %s
+[cached since 9.043s ago] ('2d8b3087-7fca-42bd-aec7-ab6585649824', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 9.296s ago] ('074e4787-8e98-40a0-8df8-13030a7e8673', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'final')
+SELECT "RIScopyright".modified_at, "RIScopyright".created_at, "RIScopyright".id, "RIScopyright".research_paper_id, "RIScopyright".co_authorship, "RIScopyright".affidavit_co_ownership, "RIScopyright".joint_authorship, "RIScopyright".approval_sheet, "RIScopyright".receipt_payment, "RIScopyright".recordal_slip, "RIScopyright".acknowledgement_receipt, "RIScopyright".certificate_copyright, "RIScopyright".recordal_template, "RIScopyright".ureb_18, "RIScopyright".journal_publication, "RIScopyright".copyright_manuscript, "RIScopyright".status, "RIScopyright".workflow_step_id 
+FROM "RIScopyright" 
+WHERE "RIScopyright".workflow_step_id = %s AND "RIScopyright".research_paper_id = %s
+[cached since 8.992s ago] ('27d96c97-dfac-428d-b394-fe0f25f3598c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 172.8s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 172.8s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 189s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 188.9s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 188.9s ago] (1,)
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[cached since 186.9s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 188.4s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id, "RISClass".course, "RISClass".section 
+FROM "RISworkflow" JOIN "RISworkflow_class" ON "RISworkflow".id = "RISworkflow_class".workflow_id JOIN "RISClass" ON "RISworkflow_class".class_id = "RISClass".id 
+WHERE "RISworkflow_class".class_id = %s
+[generated in 0.00232s] ('63954765-dfad-460b-98a3-44b2856c316f',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 186.7s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 186.7s ago] ('023e3dce-f090-4cf3-85a6-80f62fd08d58',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 186.8s ago] ('09c630da-51de-495a-80f1-36bc25ce7a60',)
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 189.7s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 189.6s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 189.5s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 189s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id 
+FROM "RISworkflow" 
+WHERE "RISworkflow".id = %s
+[cached since 187.2s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 187.2s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISset_defense".modified_at, "RISset_defense".created_at, "RISset_defense".id, "RISset_defense".research_type, "RISset_defense".defense_type, "RISset_defense".date, "RISset_defense".time, "RISset_defense".class_id 
+FROM "RISset_defense" 
+WHERE "RISset_defense".research_type = %s AND "RISset_defense".class_id = %s
+[cached since 187.1s ago] ('Feasibility Study', '63954765-dfad-460b-98a3-44b2856c316f')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" 
+WHERE "RISresearch_papers".workflow_step_id = %s AND "RISresearch_papers".id = %s
+[cached since 187.1s ago] ('d7161e66-8826-422d-a200-330acc2021fd', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 187s ago] ('750bf687-1c4c-4ca0-9058-895cae5e6507', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'pre-oral')
+SELECT "RISethics".modified_at, "RISethics".created_at, "RISethics".id, "RISethics".research_paper_id, "RISethics".letter_of_intent, "RISethics".urec_9, "RISethics".urec_10, "RISethics".urec_11, "RISethics".urec_12, "RISethics".certificate_of_validation, "RISethics".co_authorship, "RISethics".status, "RISethics".workflow_step_id 
+FROM "RISethics" 
+WHERE "RISethics".workflow_step_id = %s AND "RISethics".research_paper_id = %s
+[cached since 187s ago] ('0583d41e-a8a9-4922-9dc1-6372957c5b7c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISfull_manuscript".modified_at, "RISfull_manuscript".created_at, "RISfull_manuscript".id, "RISfull_manuscript".research_paper_id, "RISfull_manuscript".content, "RISfull_manuscript".keywords, "RISfull_manuscript".file, "RISfull_manuscript".abstract, "RISfull_manuscript".status, "RISfull_manuscript".workflow_step_id 
+FROM "RISfull_manuscript" 
+WHERE "RISfull_manuscript".workflow_step_id = %s AND "RISfull_manuscript".research_paper_id = %s
+[cached since 186.9s ago] ('2d8b3087-7fca-42bd-aec7-ab6585649824', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 187.2s ago] ('074e4787-8e98-40a0-8df8-13030a7e8673', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'final')
+SELECT "RIScopyright".modified_at, "RIScopyright".created_at, "RIScopyright".id, "RIScopyright".research_paper_id, "RIScopyright".co_authorship, "RIScopyright".affidavit_co_ownership, "RIScopyright".joint_authorship, "RIScopyright".approval_sheet, "RIScopyright".receipt_payment, "RIScopyright".recordal_slip, "RIScopyright".acknowledgement_receipt, "RIScopyright".certificate_copyright, "RIScopyright".recordal_template, "RIScopyright".ureb_18, "RIScopyright".journal_publication, "RIScopyright".copyright_manuscript, "RIScopyright".status, "RIScopyright".workflow_step_id 
+FROM "RIScopyright" 
+WHERE "RIScopyright".workflow_step_id = %s AND "RIScopyright".research_paper_id = %s
+[cached since 187.1s ago] ('27d96c97-dfac-428d-b394-fe0f25f3598c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 184.8s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 184.7s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, "RISUsers".faculty_id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISUsers" LEFT OUTER JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id JOIN "RISuser_role" ON "RISUsers".id = "RISuser_role".users_id JOIN "RISrole" ON "RISuser_role".users_id = "RISUsers".id AND "RISuser_role".role_id = "RISrole".id AND ("RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s)
+[cached since 191.1s ago] (' ', ' ', 'faculty', 'research professor', 'research adviser', 'admin')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 191s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 190.8s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 190.8s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 190.3s ago] ('4-2', 'BSIT')
+SELECT "RISUsers".id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "RISresearch_types_assigned".research_type_name, "RISsections_course_assigned".class_id 
+FROM "RISUsers" JOIN "RISresearch_types_assigned" ON "RISUsers".id = "RISresearch_types_assigned".user_id JOIN "RISsections_course_assigned" ON "RISresearch_types_assigned".id = "RISsections_course_assigned".research_type_id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISsections_course_assigned".class_id = %s AND "RISresearch_types_assigned".research_type_name = %s
+[cached since 190.2s ago] (' ', ' ', '63954765-dfad-460b-98a3-44b2856c316f', 'Feasibility Study')
+SELECT "RIScomments".modified_at, "RIScomments".created_at, "RIScomments".id, "RIScomments".text, "RIScomments".user_id, "RIScomments".research_paper_id, "RISUsers".modified_at AS modified_at_1, "RISUsers".created_at AS created_at_1, "RISUsers".id AS id_1, "RISUsers".student_id, "RISUsers".faculty_id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS student_name, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "SPSStudent_1"."StudentId", "SPSStudent_1"."FirstName", "SPSStudent_1"."LastName", "SPSStudent_1"."MiddleName", "SPSStudent_1"."DateOfBirth", "SPSStudent_1"."StudentNumber", "SPSStudent_1"."MobileNumber", "SPSStudent_1"."Email", "SPSStudent_1"."Password", "FISFaculty_1"."FacultyId", "FISFaculty_1"."FirstName" AS "FirstName_1", "FISFaculty_1"."LastName" AS "LastName_1", "FISFaculty_1"."MiddleName" AS "MiddleName_1", "FISFaculty_1"."MiddleInitial", "FISFaculty_1"."BirthDate", "FISFaculty_1"."MobileNumber" AS "MobileNumber_1", "FISFaculty_1"."Email" AS "Email_1", "FISFaculty_1"."Password" AS "Password_1" 
+FROM "RIScomments" JOIN "RISUsers" ON "RIScomments".user_id = "RISUsers".id LEFT OUTER JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" LEFT OUTER JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" LEFT OUTER JOIN "SPSStudent" AS "SPSStudent_1" ON "SPSStudent_1"."StudentId" = "RISUsers".student_id LEFT OUTER JOIN "FISFaculty" AS "FISFaculty_1" ON "FISFaculty_1"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RIScomments".research_paper_id = %s
+[cached since 181.7s ago] (' ', ' ', ' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, "SPSStudent"."StudentId" AS student_id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, "SPSClass"."ClassId" AS class_id 
+FROM "SPSStudentClassSubjectGrade" JOIN "SPSClassSubject" ON "SPSClassSubject"."ClassSubjectId" = "SPSStudentClassSubjectGrade"."ClassSubjectId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSClassSubject"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSMetadata"."CourseId" JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "RISUsers" ON "SPSStudent"."StudentId" = "RISUsers".student_id 
+WHERE "RISUsers".id = %s
+[cached since 191s ago] (' ', ' ', '5b4e31ce-9790-44df-8e9d-6e30df93a62d')
+SELECT "SPSCourseEnrolled"."Status" 
+FROM "SPSCourseEnrolled" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" 
+WHERE "SPSCourseEnrolled"."StudentId" = %s
+[cached since 192.3s ago] (1,)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 192.9s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 192.9s ago] (1,)
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" JOIN "RISauthors" ON "RISresearch_papers".id = "RISauthors".research_paper_id 
+WHERE "RISauthors".user_id = %s AND "RISresearch_papers".research_type = %s
+[cached since 228.3s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d', '')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 230.5s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 230.4s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 230.4s ago] (1,)
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[cached since 228.4s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 229.9s ago] ('4-2', 'BSIT')
+SELECT "RISUsers".id, "SPSStudent"."StudentId" AS student_id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, "SPSClass"."ClassId" AS class_id 
+FROM "SPSStudentClassSubjectGrade" JOIN "SPSClassSubject" ON "SPSClassSubject"."ClassSubjectId" = "SPSStudentClassSubjectGrade"."ClassSubjectId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSClassSubject"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSMetadata"."CourseId" JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "RISUsers" ON "SPSStudent"."StudentId" = "RISUsers".student_id 
+WHERE "RISUsers".id = %s
+[cached since 230.5s ago] (' ', ' ', '5b4e31ce-9790-44df-8e9d-6e30df93a62d')
+SELECT DISTINCT ON ("RISUsers".id) "RISUsers".id AS id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, CASE WHEN ("SPSCourseEnrolled"."Status" = %s) THEN %s ELSE %s END AS status, concat("SPSMetadata"."Year", %s, "SPSClass"."Section") AS year_section 
+FROM "RISUsers" JOIN "SPSStudent" ON "SPSStudent"."StudentId" = "RISUsers".student_id JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSCourseEnrolled"."CourseId" JOIN "SPSStudentClassGrade" ON "SPSStudentClassGrade"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" ORDER BY "RISUsers".id, "SPSMetadata"."Year" DESC, "SPSClass"."Section"
+[cached since 230.3s ago] (' ', ' ', 1, 'Alumni', 'Student', '-')
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, "RISUsers".faculty_id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISUsers" LEFT OUTER JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id JOIN "RISuser_role" ON "RISUsers".id = "RISuser_role".users_id JOIN "RISrole" ON "RISuser_role".users_id = "RISUsers".id AND "RISuser_role".role_id = "RISrole".id AND ("RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s)
+[cached since 231s ago] (' ', ' ', 'faculty', 'research professor', 'research adviser', 'admin')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id, "RISClass".course, "RISClass".section 
+FROM "RISworkflow" JOIN "RISworkflow_class" ON "RISworkflow".id = "RISworkflow_class".workflow_id JOIN "RISClass" ON "RISworkflow_class".class_id = "RISClass".id 
+WHERE "RISworkflow_class".class_id = %s
+[cached since 41.49s ago] ('63954765-dfad-460b-98a3-44b2856c316f',)
+SELECT "SPSCourseEnrolled"."Status" 
+FROM "SPSCourseEnrolled" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" 
+WHERE "SPSCourseEnrolled"."StudentId" = %s
+[cached since 231.1s ago] (1,)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 229.2s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 231.8s ago] (1,)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 229.3s ago] ('023e3dce-f090-4cf3-85a6-80f62fd08d58',)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 231.8s ago] (1,)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 229.4s ago] ('09c630da-51de-495a-80f1-36bc25ce7a60',)
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" JOIN "RISauthors" ON "RISresearch_papers".id = "RISauthors".research_paper_id 
+WHERE "RISauthors".user_id = %s AND "RISresearch_papers".research_type = %s
+[cached since 230.1s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d', 'Feasibility Study')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 232.5s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 232.4s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 232.3s ago] (1,)
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 232.6s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 231.9s ago] ('4-2', 'BSIT')
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 232.5s ago] (1,)
+SELECT "RISUsers".id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "RISresearch_types_assigned".research_type_name, "RISsections_course_assigned".class_id 
+FROM "RISUsers" JOIN "RISresearch_types_assigned" ON "RISUsers".id = "RISresearch_types_assigned".user_id JOIN "RISsections_course_assigned" ON "RISresearch_types_assigned".id = "RISsections_course_assigned".research_type_id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISsections_course_assigned".class_id = %s AND "RISresearch_types_assigned".research_type_name = %s
+[cached since 231.8s ago] (' ', ' ', '63954765-dfad-460b-98a3-44b2856c316f', 'Feasibility Study')
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 232.6s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 232.1s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id 
+FROM "RISworkflow" 
+WHERE "RISworkflow".id = %s
+[cached since 230.3s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 230.3s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISset_defense".modified_at, "RISset_defense".created_at, "RISset_defense".id, "RISset_defense".research_type, "RISset_defense".defense_type, "RISset_defense".date, "RISset_defense".time, "RISset_defense".class_id 
+FROM "RISset_defense" 
+WHERE "RISset_defense".research_type = %s AND "RISset_defense".class_id = %s
+[cached since 230.2s ago] ('Feasibility Study', '63954765-dfad-460b-98a3-44b2856c316f')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" 
+WHERE "RISresearch_papers".workflow_step_id = %s AND "RISresearch_papers".id = %s
+[cached since 230.2s ago] ('d7161e66-8826-422d-a200-330acc2021fd', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 230.1s ago] ('750bf687-1c4c-4ca0-9058-895cae5e6507', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'pre-oral')
+SELECT "RISethics".modified_at, "RISethics".created_at, "RISethics".id, "RISethics".research_paper_id, "RISethics".letter_of_intent, "RISethics".urec_9, "RISethics".urec_10, "RISethics".urec_11, "RISethics".urec_12, "RISethics".certificate_of_validation, "RISethics".co_authorship, "RISethics".status, "RISethics".workflow_step_id 
+FROM "RISethics" 
+WHERE "RISethics".workflow_step_id = %s AND "RISethics".research_paper_id = %s
+[cached since 230.1s ago] ('0583d41e-a8a9-4922-9dc1-6372957c5b7c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISfull_manuscript".modified_at, "RISfull_manuscript".created_at, "RISfull_manuscript".id, "RISfull_manuscript".research_paper_id, "RISfull_manuscript".content, "RISfull_manuscript".keywords, "RISfull_manuscript".file, "RISfull_manuscript".abstract, "RISfull_manuscript".status, "RISfull_manuscript".workflow_step_id 
+FROM "RISfull_manuscript" 
+WHERE "RISfull_manuscript".workflow_step_id = %s AND "RISfull_manuscript".research_paper_id = %s
+[cached since 230s ago] ('2d8b3087-7fca-42bd-aec7-ab6585649824', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 230.3s ago] ('074e4787-8e98-40a0-8df8-13030a7e8673', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'final')
+SELECT "RIScopyright".modified_at, "RIScopyright".created_at, "RIScopyright".id, "RIScopyright".research_paper_id, "RIScopyright".co_authorship, "RIScopyright".affidavit_co_ownership, "RIScopyright".joint_authorship, "RIScopyright".approval_sheet, "RIScopyright".receipt_payment, "RIScopyright".recordal_slip, "RIScopyright".acknowledgement_receipt, "RIScopyright".certificate_copyright, "RIScopyright".recordal_template, "RIScopyright".ureb_18, "RIScopyright".journal_publication, "RIScopyright".copyright_manuscript, "RIScopyright".status, "RIScopyright".workflow_step_id 
+FROM "RIScopyright" 
+WHERE "RIScopyright".workflow_step_id = %s AND "RIScopyright".research_paper_id = %s
+[cached since 230s ago] ('27d96c97-dfac-428d-b394-fe0f25f3598c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 232.2s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 232.1s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 237.9s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 243.8s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 237.8s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 243.7s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 243.7s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 243.2s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id 
+FROM "RISworkflow" 
+WHERE "RISworkflow".id = %s
+[cached since 241.4s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 241.3s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISset_defense".modified_at, "RISset_defense".created_at, "RISset_defense".id, "RISset_defense".research_type, "RISset_defense".defense_type, "RISset_defense".date, "RISset_defense".time, "RISset_defense".class_id 
+FROM "RISset_defense" 
+WHERE "RISset_defense".research_type = %s AND "RISset_defense".class_id = %s
+[cached since 241.3s ago] ('Feasibility Study', '63954765-dfad-460b-98a3-44b2856c316f')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" 
+WHERE "RISresearch_papers".workflow_step_id = %s AND "RISresearch_papers".id = %s
+[cached since 241.2s ago] ('d7161e66-8826-422d-a200-330acc2021fd', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 241.2s ago] ('750bf687-1c4c-4ca0-9058-895cae5e6507', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'pre-oral')
+SELECT "RISethics".modified_at, "RISethics".created_at, "RISethics".id, "RISethics".research_paper_id, "RISethics".letter_of_intent, "RISethics".urec_9, "RISethics".urec_10, "RISethics".urec_11, "RISethics".urec_12, "RISethics".certificate_of_validation, "RISethics".co_authorship, "RISethics".status, "RISethics".workflow_step_id 
+FROM "RISethics" 
+WHERE "RISethics".workflow_step_id = %s AND "RISethics".research_paper_id = %s
+[cached since 241.1s ago] ('0583d41e-a8a9-4922-9dc1-6372957c5b7c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISfull_manuscript".modified_at, "RISfull_manuscript".created_at, "RISfull_manuscript".id, "RISfull_manuscript".research_paper_id, "RISfull_manuscript".content, "RISfull_manuscript".keywords, "RISfull_manuscript".file, "RISfull_manuscript".abstract, "RISfull_manuscript".status, "RISfull_manuscript".workflow_step_id 
+FROM "RISfull_manuscript" 
+WHERE "RISfull_manuscript".workflow_step_id = %s AND "RISfull_manuscript".research_paper_id = %s
+[cached since 241.1s ago] ('2d8b3087-7fca-42bd-aec7-ab6585649824', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 241.3s ago] ('074e4787-8e98-40a0-8df8-13030a7e8673', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'final')
+SELECT "RIScopyright".modified_at, "RIScopyright".created_at, "RIScopyright".id, "RIScopyright".research_paper_id, "RIScopyright".co_authorship, "RIScopyright".affidavit_co_ownership, "RIScopyright".joint_authorship, "RIScopyright".approval_sheet, "RIScopyright".receipt_payment, "RIScopyright".recordal_slip, "RIScopyright".acknowledgement_receipt, "RIScopyright".certificate_copyright, "RIScopyright".recordal_template, "RIScopyright".ureb_18, "RIScopyright".journal_publication, "RIScopyright".copyright_manuscript, "RIScopyright".status, "RIScopyright".workflow_step_id 
+FROM "RIScopyright" 
+WHERE "RIScopyright".workflow_step_id = %s AND "RIScopyright".research_paper_id = %s
+[cached since 241s ago] ('27d96c97-dfac-428d-b394-fe0f25f3598c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RIScomments".modified_at, "RIScomments".created_at, "RIScomments".id, "RIScomments".text, "RIScomments".user_id, "RIScomments".research_paper_id, "RISUsers".modified_at AS modified_at_1, "RISUsers".created_at AS created_at_1, "RISUsers".id AS id_1, "RISUsers".student_id, "RISUsers".faculty_id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS student_name, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "SPSStudent_1"."StudentId", "SPSStudent_1"."FirstName", "SPSStudent_1"."LastName", "SPSStudent_1"."MiddleName", "SPSStudent_1"."DateOfBirth", "SPSStudent_1"."StudentNumber", "SPSStudent_1"."MobileNumber", "SPSStudent_1"."Email", "SPSStudent_1"."Password", "FISFaculty_1"."FacultyId", "FISFaculty_1"."FirstName" AS "FirstName_1", "FISFaculty_1"."LastName" AS "LastName_1", "FISFaculty_1"."MiddleName" AS "MiddleName_1", "FISFaculty_1"."MiddleInitial", "FISFaculty_1"."BirthDate", "FISFaculty_1"."MobileNumber" AS "MobileNumber_1", "FISFaculty_1"."Email" AS "Email_1", "FISFaculty_1"."Password" AS "Password_1" 
+FROM "RIScomments" JOIN "RISUsers" ON "RIScomments".user_id = "RISUsers".id LEFT OUTER JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" LEFT OUTER JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" LEFT OUTER JOIN "SPSStudent" AS "SPSStudent_1" ON "SPSStudent_1"."StudentId" = "RISUsers".student_id LEFT OUTER JOIN "FISFaculty" AS "FISFaculty_1" ON "FISFaculty_1"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RIScomments".research_paper_id = %s
+[cached since 235.1s ago] (' ', ' ', ' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, "SPSStudent"."StudentId" AS student_id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, "SPSClass"."ClassId" AS class_id 
+FROM "SPSStudentClassSubjectGrade" JOIN "SPSClassSubject" ON "SPSClassSubject"."ClassSubjectId" = "SPSStudentClassSubjectGrade"."ClassSubjectId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSClassSubject"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSMetadata"."CourseId" JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "RISUsers" ON "SPSStudent"."StudentId" = "RISUsers".student_id 
+WHERE "RISUsers".id = %s
+[cached since 244.4s ago] (' ', ' ', '5b4e31ce-9790-44df-8e9d-6e30df93a62d')
+SELECT "SPSCourseEnrolled"."Status" 
+FROM "SPSCourseEnrolled" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" 
+WHERE "SPSCourseEnrolled"."StudentId" = %s
+[cached since 246.3s ago] (1,)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 246.9s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 246.8s ago] (1,)
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 325.8s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 325.7s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 342.2s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "RISnotifications".modified_at, "RISnotifications".created_at, "RISnotifications".id, "RISnotifications".user_id, "RISnotifications".message, "RISnotifications"."isRead" 
+FROM "RISnotifications" 
+WHERE "RISnotifications".user_id = %s
+[cached since 339.9s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 342s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 342s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 341.6s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id, "RISClass".course, "RISClass".section 
+FROM "RISworkflow" JOIN "RISworkflow_class" ON "RISworkflow".id = "RISworkflow_class".workflow_id JOIN "RISClass" ON "RISworkflow_class".class_id = "RISClass".id 
+WHERE "RISworkflow_class".class_id = %s
+[cached since 153.1s ago] ('63954765-dfad-460b-98a3-44b2856c316f',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 339.7s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 339.7s ago] ('023e3dce-f090-4cf3-85a6-80f62fd08d58',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 339.8s ago] ('09c630da-51de-495a-80f1-36bc25ce7a60',)
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 343.4s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 343.3s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 343.3s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 342.8s ago] ('4-2', 'BSIT')
+SELECT "RISworkflow".id, "RISworkflow".type, "RISworkflow".user_id 
+FROM "RISworkflow" 
+WHERE "RISworkflow".id = %s
+[cached since 341s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISworkflow_steps".id, "RISworkflow_steps".name, "RISworkflow_steps".description, "RISworkflow_steps".workflow_id 
+FROM "RISworkflow_steps" 
+WHERE "RISworkflow_steps".workflow_id = %s
+[cached since 340.9s ago] ('ec00dd6f-4b1e-4fb0-b68d-4e302ab34d66',)
+SELECT "RISset_defense".modified_at, "RISset_defense".created_at, "RISset_defense".id, "RISset_defense".research_type, "RISset_defense".defense_type, "RISset_defense".date, "RISset_defense".time, "RISset_defense".class_id 
+FROM "RISset_defense" 
+WHERE "RISset_defense".research_type = %s AND "RISset_defense".class_id = %s
+[cached since 340.9s ago] ('Feasibility Study', '63954765-dfad-460b-98a3-44b2856c316f')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".created_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".research_type, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, "RISresearch_papers".extension, "RISresearch_papers".workflow_step_id 
+FROM "RISresearch_papers" 
+WHERE "RISresearch_papers".workflow_step_id = %s AND "RISresearch_papers".id = %s
+[cached since 340.9s ago] ('d7161e66-8826-422d-a200-330acc2021fd', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 340.8s ago] ('750bf687-1c4c-4ca0-9058-895cae5e6507', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'pre-oral')
+SELECT "RISethics".modified_at, "RISethics".created_at, "RISethics".id, "RISethics".research_paper_id, "RISethics".letter_of_intent, "RISethics".urec_9, "RISethics".urec_10, "RISethics".urec_11, "RISethics".urec_12, "RISethics".certificate_of_validation, "RISethics".co_authorship, "RISethics".status, "RISethics".workflow_step_id 
+FROM "RISethics" 
+WHERE "RISethics".workflow_step_id = %s AND "RISethics".research_paper_id = %s
+[cached since 340.8s ago] ('0583d41e-a8a9-4922-9dc1-6372957c5b7c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISfull_manuscript".modified_at, "RISfull_manuscript".created_at, "RISfull_manuscript".id, "RISfull_manuscript".research_paper_id, "RISfull_manuscript".content, "RISfull_manuscript".keywords, "RISfull_manuscript".file, "RISfull_manuscript".abstract, "RISfull_manuscript".status, "RISfull_manuscript".workflow_step_id 
+FROM "RISfull_manuscript" 
+WHERE "RISfull_manuscript".workflow_step_id = %s AND "RISfull_manuscript".research_paper_id = %s
+[cached since 340.7s ago] ('2d8b3087-7fca-42bd-aec7-ab6585649824', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_defense".modified_at, "RISresearch_defense".created_at, "RISresearch_defense".id, "RISresearch_defense".research_paper_id, "RISresearch_defense".type, "RISresearch_defense".date, "RISresearch_defense".time, "RISresearch_defense".workflow_step_id 
+FROM "RISresearch_defense" 
+WHERE "RISresearch_defense".workflow_step_id = %s AND "RISresearch_defense".research_paper_id = %s AND "RISresearch_defense".type = %s
+[cached since 341s ago] ('074e4787-8e98-40a0-8df8-13030a7e8673', '38b11fcc-5187-4d27-b260-7bd7e0016dc4', 'final')
+SELECT "RIScopyright".modified_at, "RIScopyright".created_at, "RIScopyright".id, "RIScopyright".research_paper_id, "RIScopyright".co_authorship, "RIScopyright".affidavit_co_ownership, "RIScopyright".joint_authorship, "RIScopyright".approval_sheet, "RIScopyright".receipt_payment, "RIScopyright".recordal_slip, "RIScopyright".acknowledgement_receipt, "RIScopyright".certificate_copyright, "RIScopyright".recordal_template, "RIScopyright".ureb_18, "RIScopyright".journal_publication, "RIScopyright".copyright_manuscript, "RIScopyright".status, "RIScopyright".workflow_step_id 
+FROM "RIScopyright" 
+WHERE "RIScopyright".workflow_step_id = %s AND "RIScopyright".research_paper_id = %s
+[cached since 340.7s ago] ('27d96c97-dfac-428d-b394-fe0f25f3598c', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISresearch_papers".modified_at, "RISresearch_papers".id, "RISresearch_papers".title, "RISresearch_papers".submitted_date, "RISresearch_papers".status, "RISresearch_papers".research_type, "RISresearch_papers".file_path, "RISresearch_papers".research_adviser, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "RISresearch_papers".extension 
+FROM "RISresearch_papers" JOIN "RISUsers" ON "RISresearch_papers".research_adviser = "RISUsers".id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 338.8s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" 
+WHERE "RISresearch_papers".id = %s
+[cached since 338.8s ago] (' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, "FISFaculty"."Email" AS email, "RISUsers".faculty_id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name 
+FROM "RISUsers" LEFT OUTER JOIN "FISFaculty" ON "FISFaculty"."FacultyId" = "RISUsers".faculty_id JOIN "RISuser_role" ON "RISUsers".id = "RISuser_role".users_id JOIN "RISrole" ON "RISuser_role".users_id = "RISUsers".id AND "RISuser_role".role_id = "RISrole".id AND ("RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s OR "RISrole".role_name = %s)
+[cached since 345.8s ago] (' ', ' ', 'faculty', 'research professor', 'research adviser', 'admin')
+SELECT "SPSCourse"."CourseCode" AS course, "SPSStudent"."StudentId" AS student_id 
+FROM "RISUsers" JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" JOIN "SPSCourseEnrolled" ON "SPSStudent"."StudentId" = "SPSCourseEnrolled"."StudentId" JOIN "SPSCourse" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" 
+WHERE "RISUsers".id = %s
+[cached since 345.6s ago] ('5b4e31ce-9790-44df-8e9d-6e30df93a62d',)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 345.5s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 345.4s ago] (1,)
+SELECT "RISClass".id, "RISClass".section, "RISClass".course 
+FROM "RISClass" 
+WHERE "RISClass".section = %s AND "RISClass".course = %s
+[cached since 345s ago] ('4-2', 'BSIT')
+SELECT "RIScomments".modified_at, "RIScomments".created_at, "RIScomments".id, "RIScomments".text, "RIScomments".user_id, "RIScomments".research_paper_id, "RISUsers".modified_at AS modified_at_1, "RISUsers".created_at AS created_at_1, "RISUsers".id AS id_1, "RISUsers".student_id, "RISUsers".faculty_id, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS student_name, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS faculty_name, "SPSStudent_1"."StudentId", "SPSStudent_1"."FirstName", "SPSStudent_1"."LastName", "SPSStudent_1"."MiddleName", "SPSStudent_1"."DateOfBirth", "SPSStudent_1"."StudentNumber", "SPSStudent_1"."MobileNumber", "SPSStudent_1"."Email", "SPSStudent_1"."Password", "FISFaculty_1"."FacultyId", "FISFaculty_1"."FirstName" AS "FirstName_1", "FISFaculty_1"."LastName" AS "LastName_1", "FISFaculty_1"."MiddleName" AS "MiddleName_1", "FISFaculty_1"."MiddleInitial", "FISFaculty_1"."BirthDate", "FISFaculty_1"."MobileNumber" AS "MobileNumber_1", "FISFaculty_1"."Email" AS "Email_1", "FISFaculty_1"."Password" AS "Password_1" 
+FROM "RIScomments" JOIN "RISUsers" ON "RIScomments".user_id = "RISUsers".id LEFT OUTER JOIN "SPSStudent" ON "RISUsers".student_id = "SPSStudent"."StudentId" LEFT OUTER JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" LEFT OUTER JOIN "SPSStudent" AS "SPSStudent_1" ON "SPSStudent_1"."StudentId" = "RISUsers".student_id LEFT OUTER JOIN "FISFaculty" AS "FISFaculty_1" ON "FISFaculty_1"."FacultyId" = "RISUsers".faculty_id 
+WHERE "RIScomments".research_paper_id = %s
+[cached since 336.3s ago] (' ', ' ', ' ', ' ', '38b11fcc-5187-4d27-b260-7bd7e0016dc4')
+SELECT "RISUsers".id, concat("FISFaculty"."FirstName", %s, "FISFaculty"."MiddleName", %s, "FISFaculty"."LastName") AS name, "RISresearch_types_assigned".research_type_name, "RISsections_course_assigned".class_id 
+FROM "RISUsers" JOIN "RISresearch_types_assigned" ON "RISUsers".id = "RISresearch_types_assigned".user_id JOIN "RISsections_course_assigned" ON "RISresearch_types_assigned".id = "RISsections_course_assigned".research_type_id JOIN "FISFaculty" ON "RISUsers".faculty_id = "FISFaculty"."FacultyId" 
+WHERE "RISsections_course_assigned".class_id = %s AND "RISresearch_types_assigned".research_type_name = %s
+[cached since 344.8s ago] (' ', ' ', '63954765-dfad-460b-98a3-44b2856c316f', 'Feasibility Study')
+SELECT "RISUsers".id, "SPSStudent"."StudentId" AS student_id, "SPSStudent"."Email" AS email, concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."DateOfBirth" AS birth, "SPSStudent"."StudentNumber" AS student_number, "SPSStudent"."MobileNumber" AS phone_number, "SPSCourse"."CourseCode" AS course, "SPSClass"."ClassId" AS class_id 
+FROM "SPSStudentClassSubjectGrade" JOIN "SPSClassSubject" ON "SPSClassSubject"."ClassSubjectId" = "SPSStudentClassSubjectGrade"."ClassSubjectId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSClassSubject"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSMetadata"."CourseId" JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."CourseId" = "SPSCourse"."CourseId" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "RISUsers" ON "SPSStudent"."StudentId" = "RISUsers".student_id 
+WHERE "RISUsers".id = %s
+[cached since 345.7s ago] (' ', ' ', '5b4e31ce-9790-44df-8e9d-6e30df93a62d')
+SELECT "SPSCourseEnrolled"."Status" 
+FROM "SPSCourseEnrolled" JOIN "SPSStudent" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" 
+WHERE "SPSCourseEnrolled"."StudentId" = %s
+[cached since 347.1s ago] (1,)
+SELECT "SPSClass"."Section" 
+FROM "SPSClass" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSClass"."Section"
+[cached since 347.7s ago] (1,)
+SELECT "SPSMetadata"."Year" 
+FROM "SPSMetadata" JOIN "SPSClass" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" JOIN "SPSStudentClassGrade" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" 
+WHERE "SPSStudentClassGrade"."StudentId" = %s ORDER BY "SPSMetadata"."Year" DESC
+[cached since 347.6s ago] (1,)

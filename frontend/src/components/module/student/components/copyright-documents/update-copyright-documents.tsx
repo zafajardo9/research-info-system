@@ -1,21 +1,29 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { FileUploadInput } from '@/components/ui/file-upload-input';
-import { Form } from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
+import { Button } from "@/components/ui/button";
+import { FileUploadInput } from "@/components/ui/file-upload-input";
+import { useToast } from "@/components/ui/use-toast";
 import {
   UpdateCopyrightDocumentPayload,
   useUpdateCopyrightDocument,
-} from '@/hooks/use-copyright-document';
-import { uploadFile } from '@/lib/upload-file';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { BiLoaderAlt } from 'react-icons/bi';
-import * as z from 'zod';
-import { updateCopyrightDocumentsFormSchema } from '../../validation';
-import { useStudentWorkflowContext } from '../context/student-workflow';
-import { CopyrightDocumentsData } from '../copyright-documents-section';
+} from "@/hooks/use-copyright-document";
+import { uploadFile } from "@/lib/upload-file";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import * as z from "zod";
+import { updateCopyrightDocumentsFormSchema } from "../../validation";
+import { useStudentWorkflowContext } from "../context/student-workflow";
+import { CopyrightDocumentsData } from "../copyright-documents-section";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export interface UpdateFullManuscriptProps {
   copyright: CopyrightDocumentsData;
@@ -24,6 +32,7 @@ export interface UpdateFullManuscriptProps {
 export default function UpdateCopyrightDocuments({
   copyright,
 }: UpdateFullManuscriptProps) {
+  console.log(copyright);
   const { toast } = useToast();
 
   const { workflowId } = useStudentWorkflowContext();
@@ -51,8 +60,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -71,8 +80,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -91,8 +100,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -111,8 +120,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -131,8 +140,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -151,8 +160,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -171,8 +180,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -191,8 +200,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -211,8 +220,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -231,8 +240,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -251,8 +260,8 @@ export default function UpdateCopyrightDocuments({
 
         if (!newFilePath) {
           toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
+            title: "Upload File Failed",
+            variant: "destructive",
           });
 
           return;
@@ -261,28 +270,19 @@ export default function UpdateCopyrightDocuments({
         journal_publication = newFilePath;
       }
 
-      let copyright_manuscript = copyright?.copyright_manuscript;
-
-      if (files.copyright_manuscript instanceof File) {
-        const newFilePath = await uploadFile({
-          file: files.copyright_manuscript,
-          fileName: files.copyright_manuscript.name,
+      let copyright_manuscript = copyright?.copyright_manuscript || "";
+      // const manuscriptUrl = copyright.copyright_manuscript;
+      if (!copyright_manuscript) {
+        toast({
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
-        if (!newFilePath) {
-          toast({
-            title: 'Upload File Failed',
-            variant: 'destructive',
-          });
-
-          return;
-        }
-
-        copyright_manuscript = newFilePath;
+        return;
       }
 
       const modifiedValues: UpdateCopyrightDocumentPayload = {
-        copyright_id: copyright?.id ?? '',
+        copyright_id: copyright?.id ?? "",
         co_authorship,
         affidavit_co_ownership,
         joint_authorship,
@@ -300,12 +300,12 @@ export default function UpdateCopyrightDocuments({
       await update.mutateAsync(modifiedValues);
 
       toast({
-        title: 'Update Copyright Documents Success',
+        title: "Update Copyright Documents Success",
       });
     } catch (error) {
       toast({
-        title: 'Update Copyright Documents Failed',
-        variant: 'destructive',
+        title: "Update Copyright Documents Failed",
+        variant: "destructive",
       });
     }
   }
@@ -404,13 +404,27 @@ export default function UpdateCopyrightDocuments({
             defaultFile={copyright.journal_publication}
             defaultFileName="View Journal Publication"
           />
-
+          {/* 
           <FileUploadInput
             control={form.control}
             name="copyright_manuscript"
             label="Copyrighted Full Manuscript"
             defaultFile={copyright.copyright_manuscript}
             defaultFileName="View Copyrighted Full Manuscript"
+          /> */}
+          <FormField
+            control={form.control}
+            name="copyright_manuscript"
+            defaultValue={copyright?.copyright_manuscript}
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormLabel>Copyrighted Full Manuscript</FormLabel>
+                <FormControl>
+                  <Input placeholder="Paste link here" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
 
@@ -421,7 +435,7 @@ export default function UpdateCopyrightDocuments({
                 <BiLoaderAlt />
               </span>
             ) : (
-              'Update'
+              "Update"
             )}
           </Button>
         </div>

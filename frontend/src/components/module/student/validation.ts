@@ -136,10 +136,9 @@ export const uploadCopyrightDocumentsFormSchema = z.object({
     (val) => val instanceof File,
     'This field is required.'
   ),
-  copyright_manuscript: z.custom<File>(
-    (val) => val instanceof File,
-    'This field is required.'
-  ),
+  copyright_manuscript: z.string().refine((value) => isValidUrl(value), {
+    message: 'Invalid URL',
+  }),
 });
 
 export const updateCopyrightDocumentsFormSchema = z.object({
@@ -154,5 +153,7 @@ export const updateCopyrightDocumentsFormSchema = z.object({
   recordal_template: z.custom<File>(),
   ureb_18: z.custom<File>(),
   journal_publication: z.custom<File>(),
-  copyright_manuscript: z.custom<File>(),
+  copyright_manuscript: z.string().refine((value) => isValidUrl(value), {
+    message: 'Invalid URL',
+  }),
 });

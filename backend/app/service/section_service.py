@@ -19,15 +19,6 @@ from app.model import Users, Class, Student
 
 class SectionService:
         
-    # @staticmethod
-    # async def input_section_course(class_create: ClassCreate):
-    #     id = str(uuid.uuid4())  # Generate UUID for workflow_id
-    #     db_class = Class(id=id, **class_create.dict())
-    #     db.add(db_class)
-    #     await db.commit()
-    #     await db.refresh(db_class)
-    #     return db_class
-    
     
     @staticmethod
     async def find_section_course(section: str, course:str):
@@ -42,14 +33,12 @@ class SectionService:
     
     @staticmethod
     async def check_and_input_section_course(class_create: ClassCreate):
-        # Check if the section and course already exist
         query = select(Class).where(Class.course == class_create.course).where(Class.section == class_create.section)
         existing_sections = await db.execute(query)
         records = existing_sections.all()
 
-        # If the section and course do not exist, create a new record
         if not records:
-            id = str(uuid.uuid4())  # Generate UUID for section_id
+            id = str(uuid.uuid4())
             db_section = Class(id=id, **class_create.dict())
             db.add(db_section)
             await db.commit()
@@ -61,13 +50,12 @@ class SectionService:
     @staticmethod
     async def display_all_sections():
         try:
-            # Fetch assigned sections for the user
             first_query = select(Class)
             get_all = await db.execute(first_query)
             all = get_all.fetchall()
 
             if not all:
-                return None  # Return None when no assignments are found
+                return None 
 
             return all
 
@@ -77,14 +65,12 @@ class SectionService:
         
     @staticmethod
     async def delete_section(id: str):
-            # Delete workflow steps
         await db.execute(delete(Class).where(Class.id == id))
 
         return True
     
     @staticmethod
     async def delete_all_section():
-            # Delete workflow steps
         await db.execute(delete(Class))
 
         return True

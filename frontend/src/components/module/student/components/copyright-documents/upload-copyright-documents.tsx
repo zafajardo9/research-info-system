@@ -1,17 +1,26 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { FileUploadInput } from '@/components/ui/file-upload-input';
-import { Form } from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
-import { useUploadCopyrightDocument } from '@/hooks/use-copyright-document';
-import { uploadFile } from '@/lib/upload-file';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { BiLoaderAlt } from 'react-icons/bi';
-import * as z from 'zod';
-import { uploadCopyrightDocumentsFormSchema } from '../../validation';
-import { useStudentWorkflowContext } from '../context/student-workflow';
+import { Button } from "@/components/ui/button";
+import { FileUploadInput } from "@/components/ui/file-upload-input";
+import { useToast } from "@/components/ui/use-toast";
+import { useUploadCopyrightDocument } from "@/hooks/use-copyright-document";
+import { uploadFile } from "@/lib/upload-file";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import * as z from "zod";
+import { uploadCopyrightDocumentsFormSchema } from "../../validation";
+import { useStudentWorkflowContext } from "../context/student-workflow";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export interface UploadCopyrightDocumentsProps {
   workflow_step_id: string;
@@ -46,8 +55,8 @@ export default function UploadCopyrightDocuments({
 
       if (!co_authorship && files.co_authorship) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -60,8 +69,8 @@ export default function UploadCopyrightDocuments({
 
       if (!affidavit_co_ownership && files.affidavit_co_ownership) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -74,8 +83,8 @@ export default function UploadCopyrightDocuments({
 
       if (!joint_authorship && files.joint_authorship) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -88,8 +97,8 @@ export default function UploadCopyrightDocuments({
 
       if (!approval_sheet && files.approval_sheet) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -102,8 +111,8 @@ export default function UploadCopyrightDocuments({
 
       if (!receipt_payment && files.receipt_payment) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -116,8 +125,8 @@ export default function UploadCopyrightDocuments({
 
       if (!recordal_slip && files.recordal_slip) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -130,8 +139,8 @@ export default function UploadCopyrightDocuments({
 
       if (!acknowledgement_receipt && files.acknowledgement_receipt) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -144,8 +153,8 @@ export default function UploadCopyrightDocuments({
 
       if (!certificate_copyright && files.certificate_copyright) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -158,8 +167,8 @@ export default function UploadCopyrightDocuments({
 
       if (!recordal_template && files.recordal_template) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -172,8 +181,8 @@ export default function UploadCopyrightDocuments({
 
       if (!ureb_18 && files.ureb_18) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
@@ -186,22 +195,22 @@ export default function UploadCopyrightDocuments({
 
       if (!journal_publication && files.journal_publication) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Upload File Failed",
+          variant: "destructive",
         });
 
         return;
       }
 
-      const copyright_manuscript = await uploadFile({
-        file: files.copyright_manuscript,
-        fileName: files.copyright_manuscript?.name,
-      });
-
-      if (!copyright_manuscript && files.copyright_manuscript) {
+      // const copyright_manuscript = await uploadFile({
+      //   file: files.copyright_manuscript,
+      //   fileName: files.copyright_manuscript?.name,
+      // });
+      const copyright_manuscript = files.copyright_manuscript;
+      if (!copyright_manuscript) {
         toast({
-          title: 'Upload File Failed',
-          variant: 'destructive',
+          title: "Link Error",
+          variant: "destructive",
         });
 
         return;
@@ -227,13 +236,13 @@ export default function UploadCopyrightDocuments({
       await create.mutateAsync(modifiedValues);
 
       toast({
-        title: 'Upload Copyright Documents Success',
+        title: "Upload Copyright Documents Success",
       });
     } catch (error) {
       console.log(error);
       toast({
-        title: 'Upload Copyright Documents Failed',
-        variant: 'destructive',
+        title: "Upload Copyright Documents Failed",
+        variant: "destructive",
       });
     }
   }
@@ -311,10 +320,24 @@ export default function UploadCopyrightDocuments({
             label="Journal Publication"
           />
 
-          <FileUploadInput
+          {/* <FileUploadInput
             control={form.control}
             name="copyright_manuscript"
             label="Copyrighted Full Manuscript"
+          /> */}
+
+          <FormField
+            control={form.control}
+            name="copyright_manuscript"
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormLabel>Copyrighted Full Manuscript</FormLabel>
+                <FormControl>
+                  <Input placeholder="Paste link here" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
 
@@ -325,7 +348,7 @@ export default function UploadCopyrightDocuments({
                 <BiLoaderAlt />
               </span>
             ) : (
-              'Upload'
+              "Upload"
             )}
           </Button>
         </div>

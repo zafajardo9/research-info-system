@@ -1,4 +1,5 @@
 from typing import List
+from app.service.research_service import ResearchService
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
@@ -79,6 +80,21 @@ async def read_student_count(
         return result
     except Exception as e:
         return ResponseSchema(detail=f"You have no number of research paper as an adviser: {str(e)}", result=None)
+
+
+
+
+@router.get("/print-all-info-student")
+async def get_all_research_papers_with_authors(type: str, section:str):
+    try:
+        research_papers = await ResearchService.get_all_for_pdf(type, section)
+        if research_papers is None:
+            return []
+        return research_papers
+    except HTTPException as e:
+        return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
+
+
 
 
 #number ng mga naka assign na prof per research type

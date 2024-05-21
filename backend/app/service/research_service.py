@@ -1492,3 +1492,48 @@ class ResearchService:
             raise e
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        
+    @staticmethod
+    async def get_all_for_pdf(type: str, section: str):
+        try:
+            authors_query = (
+                select(
+                    func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
+                    Student.StudentNumber.label('student_number'),
+                    SPSCourse.CourseCode.label('course'),
+                    func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
+                    func.concat(SPSCourse.CourseCode, ' ', SPSMetadata.Year, '-', SPSClass.Section),
+                    ResearchPaper.title.label('title'),
+                    ResearchPaper.research_type.label('type'),
+                    ResearchPaper.status.label('proposal_status'),
+                    Ethics.status.label('ethics_status'), 
+                    CopyRight.status.label('copyright_status'),
+                    FullManuscript.status.label('manuscript_status'),
+                )
+                .distinct(Users.id) 
+                .select_from(Users)
+                .join(Author, Users.id == Author.user_id)
+                .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
+                .join(Student, Student.StudentId == Users.student_id)
+                .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
+                .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
+                .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
+                .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+                .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                .join(Ethics, Ethics.research_paper_id == ResearchPaper.id, isouter=True) 
+                .join(FullManuscript, FullManuscript.research_paper_id == ResearchPaper.id, isouter=True)  
+                .join(CopyRight, CopyRight.research_paper_id == ResearchPaper.id, isouter=True)
+                .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
+                .where((ResearchPaper.research_type == type) & (SPSCourse.CourseCode == section))  # Added missing parentheses around conditions
+            )
+            #func.concat(SPSCourse.CourseCode, ' ', SPSMetadata.Year, '-', SPSClass.Section)
+
+            result = await db.execute(authors_query)
+            research_papers = result.all()
+
+            return research_papers
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")

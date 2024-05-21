@@ -4,6 +4,8 @@ from sqlmodel import SQLModel
 from dotenv import load_dotenv
 import os
 import logging
+from sqlalchemy import event
+import asyncio
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -22,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 # Print database configuration for debugging purposes
 logger.info(f"Database URL: {DB_CONFIG}")
-
 class AsyncDatabaseSession:
     def __init__(self) -> None:
         self.session: AsyncSession = None
@@ -34,8 +35,25 @@ class AsyncDatabaseSession:
         return getattr(self.session, name)
 
     async def init(self):
-        self.engine = create_async_engine(DB_CONFIG, future=True, echo=True,pool_size=10, max_overflow=20)
+        self.engine = create_async_engine(DB_CONFIG, echo=True, pool_size=10, max_overflow=20)
         self.session = sessionmaker(self.engine, expire_on_commit=False, class_=AsyncSession)()
+
+        # You can define any asyncio event handlers here
+        async def before_commit(conn):
+            try:
+                pass
+            except Exception as e:
+                logger.error(f"Error before commit: {e}")
+
+        async def after_commit(conn):
+            pass
+
+        async with self.engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.create_all)
+
+        # Schedule the event handlers
+        asyncio.create_task(before_commit(self.engine))
+        asyncio.create_task(after_commit(self.engine))
 
     async def create_all(self):
         async with self.engine.begin() as conn:
@@ -45,7 +63,6 @@ class AsyncDatabaseSession:
     def is_active(self) -> bool:
         return self.session.is_active if self.session else False
 
-# Instantiate the database session
 db = AsyncDatabaseSession()
 
 async def commit_rollback():

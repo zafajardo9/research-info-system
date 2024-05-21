@@ -39440,3 +39440,68 @@ Started server process [5000]
 Waiting for application startup.
 Application startup complete.
 StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [3552]
+Waiting for application startup.
+Application startup complete.
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [16780] using StatReload
+Started server process [19840]
+Waiting for application startup.
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 738, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 610, in __aenter__
+    await self._router.startup()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in startup
+    await handler()
+  File "D:\DEVELOP\research-info-system\backend\app\main.py", line 62, in init_db
+    await db.init()
+  File "D:\DEVELOP\research-info-system\backend\app\config.py", line 41, in init
+    @event.listens_for(self.engine, "before_connect")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\api.py", line 160, in decorate
+    listen(target, identifier, fn, *args, **kw)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\api.py", line 115, in listen
+    _event_key(target, identifier, fn).listen(*args, **kw)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\api.py", line 29, in _event_key
+    raise exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: No such event 'before_connect' for target '<sqlalchemy.ext.asyncio.engine.AsyncEngine object at 0x000002550D253B60>'
+
+Application startup failed. Exiting.
+StatReload detected changes in 'app\config.py'. Reloading...
+Started server process [17372]
+Waiting for application startup.
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\base.py", line 104, in __getattr__
+    ls = self._empty_listeners[name]
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'before_commit'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 738, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 610, in __aenter__
+    await self._router.startup()
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in startup
+    await handler()
+  File "D:\DEVELOP\research-info-system\backend\app\main.py", line 62, in init_db
+    await db.init()
+  File "D:\DEVELOP\research-info-system\backend\app\config.py", line 40, in init
+    @event.listens_for(self.engine.sync_engine, "before_commit")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\api.py", line 160, in decorate
+    listen(target, identifier, fn, *args, **kw)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\api.py", line 115, in listen
+    _event_key(target, identifier, fn).listen(*args, **kw)
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\registry.py", line 213, in listen
+    dispatch_collection = getattr(target.dispatch, identifier)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DEVELOP\research-info-system\backend\venv\Lib\site-packages\sqlalchemy\event\base.py", line 106, in __getattr__
+    raise AttributeError(name)
+AttributeError: before_commit
+
+Application startup failed. Exiting.

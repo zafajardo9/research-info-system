@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 from app.service.research_service import ResearchService
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
@@ -281,13 +281,13 @@ async def get_number_of_advisory_by_status(
     }
     
 @router.get("/print/print-all-research")
-async def print_all_filed(type: str, section: str):
+async def print_all_filed(type: str, section: Optional[str] = Query(None, alias="section")):
     try:
-        # Log request parameters
-        logging.info(f"Request received for type: {type}, section: {section}")
+
 
         # Fetch the research papers (this is a mock function, replace with your actual logic)
         research_papers = await ResearchService.get_all_for_pdf(type, section)
+        print(research_papers)
         if research_papers is None:
             logging.warning("No research papers found")
             return []
@@ -300,7 +300,7 @@ async def print_all_filed(type: str, section: str):
 
         # Generate a unique filename
         file_id = uuid4().hex
-        filename = f"{file_id}.xlsx"
+        filename = f"Dashboard_research_{file_id}.xlsx"
         filepath = f"./{filename}"
 
         # Save the DataFrame to an Excel file

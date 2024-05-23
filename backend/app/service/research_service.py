@@ -1494,7 +1494,7 @@ class ResearchService:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
         
     @staticmethod
-    async def get_all_for_pdf(type: str, section: str):
+    async def get_all_for_pdf(type: str, section: Optional[str]):
         try:
             authors_query = (
                 select(
@@ -1502,7 +1502,7 @@ class ResearchService:
                     Student.StudentNumber.label('student_number'),
                     SPSCourse.CourseCode.label('course'),
                     func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
-                    func.concat(SPSCourse.CourseCode, ' ', SPSMetadata.Year, '-', SPSClass.Section),
+                    #func.concat(SPSCourse.CourseCode, ' ', SPSMetadata.Year, '-', SPSClass.Section),
                     ResearchPaper.title.label('title'),
                     ResearchPaper.research_type.label('type'),
                     ResearchPaper.status.label('proposal_status'),
@@ -1524,9 +1524,12 @@ class ResearchService:
                 .join(FullManuscript, FullManuscript.research_paper_id == ResearchPaper.id, isouter=True)  
                 .join(CopyRight, CopyRight.research_paper_id == ResearchPaper.id, isouter=True)
                 .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
-                .where((ResearchPaper.research_type == type) & (SPSCourse.CourseCode == section))  # Added missing parentheses around conditions
+                .where(ResearchPaper.research_type == type)  # Added missing parentheses around conditions
             )
             #func.concat(SPSCourse.CourseCode, ' ', SPSMetadata.Year, '-', SPSClass.Section)
+            # Conditionally add the section filter if section is not None
+            if section is not None:
+                authors_query = authors_query.where(SPSCourse.CourseCode == section)
 
             result = await db.execute(authors_query)
             research_papers = result.all()

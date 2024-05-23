@@ -1,5 +1,6 @@
 'use client';
 
+import ExportExcelBtn from '@/components/global/export-excel-btn';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useId } from 'react';
 import { useGetAdminResearchTypeAnalytics } from '../../hooks/use-admin-analytics-query';
@@ -61,6 +62,12 @@ export function AdminResearchTypeAnalytic({
 
   return (
     <div>
+      {!isLoading && type ? (
+        <div className="flex justify-end mb-6">
+          <ExportExcelBtn type={type} />
+        </div>
+      ) : null}
+
       {isLoading && (
         <div className="flex flex-wrap gap-6 items-center">
           {Array.from({ length: 11 }).map((_, idx) => (

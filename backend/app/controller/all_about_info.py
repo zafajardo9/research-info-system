@@ -1,14 +1,36 @@
+import logging
 from typing import List
 from app.service.research_service import ResearchService
 from fastapi import APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from app.repository.auth_repo import JWTBearer, JWTRepo
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, Security
+from fastapi.responses import JSONResponse
 
 from app.schema import ResponseSchema
 from app.config import db
 from app.service.all_about_info_service import AllInformationService
 from app.repository.users import UsersRepository
+from imagekitio import ImageKit
+
+
+import pandas as pd
+import aiofiles
+import os
+from uuid import uuid4
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+
+
+imagekit = ImageKit(
+    private_key=os.getenv('IMAGEKIT_PRIVATE_KEY'),
+    public_key=os.getenv('IMAGEKIT_PUBLIC_KEY'),
+    url_endpoint=os.getenv('IMAGEKIT_URL_ENDPOINT')
+)
+
 
 router = APIRouter(
     prefix="/info",
@@ -91,8 +113,10 @@ async def get_all_research_papers_with_authors(type: str, section:str):
         if research_papers is None:
             return []
         return research_papers
+    
     except HTTPException as e:
         return ResponseSchema(detail=f"Error getting research papers: {str(e)}", result=None)
+
 
 
 
@@ -255,3 +279,68 @@ async def get_number_of_advisory_by_status(
             "Manuscript Status Counts": manuscript_status_count,
         }
     }
+    
+@router.get("/print/print-all-research")
+async def print_all_filed(type: str, section: str):
+    try:
+        # Log request parameters
+        logging.info(f"Request received for type: {type}, section: {section}")
+
+        # Fetch the research papers (this is a mock function, replace with your actual logic)
+        research_papers = await ResearchService.get_all_for_pdf(type, section)
+        if research_papers is None:
+            logging.warning("No research papers found")
+            return []
+
+        # Log research papers fetched
+        logging.info(f"Research papers fetched: {research_papers}")
+
+        # Convert the data to a DataFrame
+        df = pd.DataFrame(research_papers)
+
+        # Generate a unique filename
+        file_id = uuid4().hex
+        filename = f"{file_id}.xlsx"
+        filepath = f"./{filename}"
+
+        # Save the DataFrame to an Excel file
+        df.to_excel(filepath, index=False)
+
+        # Log file creation
+        logging.info(f"Excel file created at {filepath}")
+
+        # Upload the file to ImageKit
+        with open(filepath, "rb") as file:
+            upload_response = imagekit.upload_file(
+                file=file,
+                file_name=filename
+            )
+
+        # Remove the local file after upload
+        os.remove(filepath)
+
+        # Log file upload
+        logging.info(f"File uploaded to ImageKit: {upload_response}")
+
+        # Access the URL from the UploadFileResult object
+        file_url = upload_response.url
+
+        # Generate a URL with transformations
+        image_url = imagekit.url({
+            "src": file_url,
+            "transformation": [{
+                "height": "300",
+                "width": "400",
+                "raw": "ar-4-3,q-40"
+            }]
+        })
+
+        # Return the transformed file link
+        return {"file_link": image_url}
+        
+    except Exception as e:
+        logging.error(f"Exception occurred: {str(e)}", exc_info=True)
+        return JSONResponse(
+            status_code=500,
+            content=ResponseSchema(detail=f"Error getting research papers: {str(e)}").dict()
+        )

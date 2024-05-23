@@ -39505,3 +39505,1086 @@ Traceback (most recent call last):
 AttributeError: before_commit
 
 Application startup failed. Exiting.
+StatReload detected changes in 'app\config.py'. Reloading...
+Started server process [5992]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00118s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1391s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1785s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2203s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2598s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2995s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3385s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3772s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.415s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4538s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4932s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5312s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5708s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.614s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6579s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6976s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7372s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7762s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8143s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8539s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8937s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9316s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9727s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.012s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.054s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.094s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.132s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.173s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.211s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.253s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.292s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.33s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.37s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+BEGIN (implicit)
+SELECT "FISFaculty"."FacultyId", "FISFaculty"."FirstName", "FISFaculty"."LastName", "FISFaculty"."MiddleName", "FISFaculty"."MiddleInitial", "FISFaculty"."BirthDate", "FISFaculty"."MobileNumber", "FISFaculty"."Email", "FISFaculty"."Password" 
+FROM "FISFaculty" 
+WHERE "FISFaculty"."Email" = %s
+[generated in 0.00214s] ('alma123@gmail.com',)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[generated in 0.00266s] (10016,)
+SELECT "RISUsers".modified_at, "RISUsers".created_at, "RISUsers".id, "RISUsers".student_id, "RISUsers".faculty_id 
+FROM "RISUsers" 
+WHERE "RISUsers".faculty_id = %s
+[cached since 0.09338s ago] (10016,)
+SELECT "RISrole".role_name 
+FROM "RISrole" JOIN "RISuser_role" ON "RISrole".id = "RISuser_role".role_id 
+WHERE "RISuser_role".users_id = %s
+[generated in 0.00200s] ('40cd76c9-611d-43e6-8b91-a964d48f3c46',)
+Will watch for changes in these directories: ['D:\\DEVELOP\\research-info-system\\backend']
+Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+Started reloader process [9220] using StatReload
+Started server process [4600]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00122s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1298s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1712s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2104s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2576s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2969s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3396s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3854s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6749s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7134s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7582s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8035s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8441s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.882s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9221s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9685s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.009s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.052s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.09s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.128s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.172s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.214s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.256s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.299s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.341s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.387s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.43s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.47s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.513s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.552s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.597s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.637s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.685s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [13440]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00103s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1178s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1582s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1967s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4792s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.525s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5643s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6043s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6444s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6831s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7253s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7698s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.812s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8507s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8891s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9296s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9685s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.008s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.294s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.335s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.378s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.423s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.463s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.502s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.54s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.579s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.617s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.657s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.941s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.981s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.02s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.075s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.117s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [24036]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00103s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1191s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1589s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1977s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2402s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7722s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8165s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8539s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9048s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9498s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9955s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.038s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.076s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.124s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.163s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.202s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.251s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.292s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.331s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.374s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.42s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.467s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.515s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.556s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.599s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.645s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.689s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.732s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.778s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.824s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.863s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.151s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.192s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [24468]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00141s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6032s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6415s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6816s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.722s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7607s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7995s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.838s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8762s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9145s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9539s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9921s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.03s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.078s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.116s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.155s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.193s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.235s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.277s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.316s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.354s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.392s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.433s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.499s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.553s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.591s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.629s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.676s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.724s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.763s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.802s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.844s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.884s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [9952]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00138s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1227s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1648s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2061s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2458s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2884s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.328s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3688s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4085s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4485s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4934s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5336s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5742s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.629s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6689s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.708s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7503s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.039s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.341s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.381s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.42s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.46s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.746s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.787s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.827s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.868s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.916s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.956s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.041s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.082s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.122s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.162s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [11980]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00111s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1158s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1631s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2008s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4798s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5175s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5551s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5925s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6294s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6698s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7163s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7608s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8045s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8452s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8844s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9216s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9682s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.005s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.042s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.08s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.119s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.157s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.194s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.475s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.513s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.551s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.592s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.63s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.669s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.707s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.744s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.781s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.826s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+BEGIN (implicit)
+SELECT DISTINCT ON ("RISUsers".id) concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number, "SPSCourse"."CourseCode" AS course, concat("SPSMetadata"."Year", %s, "SPSClass"."Section") AS year_section, concat("SPSCourse"."CourseCode", %s, "SPSMetadata"."Year", %s, "SPSClass"."Section") AS concat_4, "RISresearch_papers".title AS title, "RISresearch_papers".research_type AS type, "RISresearch_papers".status AS proposal_status, "RISethics".status AS ethics_status, "RIScopyright".status AS copyright_status, "RISfull_manuscript".status AS manuscript_status 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "SPSStudent"."StudentId" = "RISUsers".student_id JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSCourseEnrolled"."CourseId" JOIN "SPSStudentClassGrade" ON "SPSStudentClassGrade"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" LEFT OUTER JOIN "RISethics" ON "RISethics".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RISfull_manuscript" ON "RISfull_manuscript".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RIScopyright" ON "RIScopyright".research_paper_id = "RISresearch_papers".id 
+WHERE "RISresearch_papers".research_type = %s AND "SPSCourse"."CourseCode" = %s ORDER BY "RISUsers".id, "SPSMetadata"."Year" DESC, "SPSClass"."Section"
+[generated in 0.00350s] (' ', ' ', '-', ' ', '-', 'Feasibility Study', 'BSIT')
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [23836]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00107s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1154s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1544s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1936s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2342s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.273s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3118s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3505s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3886s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4347s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4737s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5122s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5497s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5903s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6288s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6668s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7046s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7461s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7836s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8209s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8609s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9001s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9383s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.976s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.016s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.062s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.101s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.14s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.185s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.223s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.263s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.307s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.346s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [21388]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00113s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1144s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1542s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.197s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2359s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2753s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3149s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3568s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3951s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4341s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4742s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5145s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5551s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5969s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6363s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6767s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7152s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7545s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8012s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8397s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8802s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9188s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.959s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.239s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.278s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.317s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.356s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.394s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.499s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.543s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.585s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.625s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.664s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [8092]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00093s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1284s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1683s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2055s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2428s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2799s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3169s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3549s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3955s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4334s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.481s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.519s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5603s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5989s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6467s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6834s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9665s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.004s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.043s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.089s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.129s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.17s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.206s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.245s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.283s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.327s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.364s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.401s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.445s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.484s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.521s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.559s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.598s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+BEGIN (implicit)
+SELECT DISTINCT ON ("RISUsers".id) concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number, "SPSCourse"."CourseCode" AS course, concat("SPSMetadata"."Year", %s, "SPSClass"."Section") AS year_section, concat("SPSCourse"."CourseCode", %s, "SPSMetadata"."Year", %s, "SPSClass"."Section") AS concat_4, "RISresearch_papers".title AS title, "RISresearch_papers".research_type AS type, "RISresearch_papers".status AS proposal_status, "RISethics".status AS ethics_status, "RIScopyright".status AS copyright_status, "RISfull_manuscript".status AS manuscript_status 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "SPSStudent"."StudentId" = "RISUsers".student_id JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSCourseEnrolled"."CourseId" JOIN "SPSStudentClassGrade" ON "SPSStudentClassGrade"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" LEFT OUTER JOIN "RISethics" ON "RISethics".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RISfull_manuscript" ON "RISfull_manuscript".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RIScopyright" ON "RIScopyright".research_paper_id = "RISresearch_papers".id 
+WHERE "RISresearch_papers".research_type = %s AND "SPSCourse"."CourseCode" = %s ORDER BY "RISUsers".id, "SPSMetadata"."Year" DESC, "SPSClass"."Section"
+[generated in 0.00306s] (' ', ' ', '-', ' ', '-', 'Feasibility Study', 'BSIT')
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [13376]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00102s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3539s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3921s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.431s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7099s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7488s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7887s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8285s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8757s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9154s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9534s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9908s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.271s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.314s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.35s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.388s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.431s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.468s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.506s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.547s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.827s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.865s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.906s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.944s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.985s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.024s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.062s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.099s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.137s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.422s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.463s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.501s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 2.538s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+Request received for type: Feasibility Study, section: BSIT
+BEGIN (implicit)
+SELECT DISTINCT ON ("RISUsers".id) concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number, "SPSCourse"."CourseCode" AS course, concat("SPSMetadata"."Year", %s, "SPSClass"."Section") AS year_section, concat("SPSCourse"."CourseCode", %s, "SPSMetadata"."Year", %s, "SPSClass"."Section") AS concat_4, "RISresearch_papers".title AS title, "RISresearch_papers".research_type AS type, "RISresearch_papers".status AS proposal_status, "RISethics".status AS ethics_status, "RIScopyright".status AS copyright_status, "RISfull_manuscript".status AS manuscript_status 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "SPSStudent"."StudentId" = "RISUsers".student_id JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSCourseEnrolled"."CourseId" JOIN "SPSStudentClassGrade" ON "SPSStudentClassGrade"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" LEFT OUTER JOIN "RISethics" ON "RISethics".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RISfull_manuscript" ON "RISfull_manuscript".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RIScopyright" ON "RIScopyright".research_paper_id = "RISresearch_papers".id 
+WHERE "RISresearch_papers".research_type = %s AND "SPSCourse"."CourseCode" = %s ORDER BY "RISUsers".id, "SPSMetadata"."Year" DESC, "SPSClass"."Section"
+[generated in 0.00389s] (' ', ' ', '-', ' ', '-', 'Feasibility Study', 'BSIT')
+Research papers fetched: [('Amelia Carlos Cruz', '2019-00003-CM-0', 'BSIT', '4-2', 'BSIT 4-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved'), ('Lauren Galang Davis', '2021-00021-CM-0', 'BSIT', '3-2', 'BSIT 3-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved'), ('Imelda Antonio Lim', '2019-00001-CM-0', 'BSIT', '4-2', 'BSIT 4-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved')]
+Excel file created at ./6be0ecec7b0e4fce94077d38327ba273.xlsx
+File uploaded to ImageKit: <imagekitio.models.results.UploadFileResult.UploadFileResult object at 0x000001FDE5981FD0>
+Exception occurred: 'NoneType' object is not callable
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\app\controller\all_about_info.py", line 323, in print_all_filed
+    if upload_response.get("url"):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not callable
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [24532]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00117s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1238s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1685s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2067s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2477s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5422s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5802s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6197s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6569s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9422s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9849s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.023s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.066s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.108s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.147s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.189s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.227s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.264s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.305s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.351s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.39s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.428s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.468s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.506s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.551s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.593s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.631s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.67s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.708s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.749s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.788s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.826s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.866s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+Request received for type: Feasibility Study, section: BSIT
+BEGIN (implicit)
+SELECT DISTINCT ON ("RISUsers".id) concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number, "SPSCourse"."CourseCode" AS course, concat("SPSMetadata"."Year", %s, "SPSClass"."Section") AS year_section, concat("SPSCourse"."CourseCode", %s, "SPSMetadata"."Year", %s, "SPSClass"."Section") AS concat_4, "RISresearch_papers".title AS title, "RISresearch_papers".research_type AS type, "RISresearch_papers".status AS proposal_status, "RISethics".status AS ethics_status, "RIScopyright".status AS copyright_status, "RISfull_manuscript".status AS manuscript_status 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "SPSStudent"."StudentId" = "RISUsers".student_id JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSCourseEnrolled"."CourseId" JOIN "SPSStudentClassGrade" ON "SPSStudentClassGrade"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" LEFT OUTER JOIN "RISethics" ON "RISethics".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RISfull_manuscript" ON "RISfull_manuscript".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RIScopyright" ON "RIScopyright".research_paper_id = "RISresearch_papers".id 
+WHERE "RISresearch_papers".research_type = %s AND "SPSCourse"."CourseCode" = %s ORDER BY "RISUsers".id, "SPSMetadata"."Year" DESC, "SPSClass"."Section"
+[generated in 0.00378s] (' ', ' ', '-', ' ', '-', 'Feasibility Study', 'BSIT')
+Research papers fetched: [('Amelia Carlos Cruz', '2019-00003-CM-0', 'BSIT', '4-2', 'BSIT 4-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved'), ('Lauren Galang Davis', '2021-00021-CM-0', 'BSIT', '3-2', 'BSIT 3-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved'), ('Imelda Antonio Lim', '2019-00001-CM-0', 'BSIT', '4-2', 'BSIT 4-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved')]
+Excel file created at ./a6dd32869b804191ae8795018d43bbad.xlsx
+File uploaded to ImageKit: <imagekitio.models.results.UploadFileResult.UploadFileResult object at 0x000001903B34FB60>
+Exception occurred: argument of type 'UploadFileResult' is not iterable
+Traceback (most recent call last):
+  File "D:\DEVELOP\research-info-system\backend\app\controller\all_about_info.py", line 323, in print_all_filed
+    if 'url' not in upload_response:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'UploadFileResult' is not iterable
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...
+Started server process [24492]
+Waiting for application startup.
+select pg_catalog.version()
+[raw sql] ()
+select current_schema()
+[raw sql] ()
+show standard_conforming_strings
+[raw sql] ()
+BEGIN (implicit)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[generated in 0.00093s] ('RISuser_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1139s ago] ('RISrole',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.1626s ago] ('RISUsers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2026s ago] ('RISauthors',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2459s ago] ('RISresearch_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.2889s ago] ('RISfaculty_research_papers',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.3552s ago] ('RISworkflow_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4064s ago] ('RISworkflow',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.4627s ago] ('RISworkflow_steps',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5212s ago] ('RISnavigation_class',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.5609s ago] ('RISnavigation_role',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6045s ago] ('RISClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6423s ago] ('SPSStudent',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.6796s ago] ('FISFaculty',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7172s ago] ('RIScomments',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7572s ago] ('RISresearch_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.7965s ago] ('RISset_defense',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.8346s ago] ('RISethics',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.873s ago] ('RISfull_manuscript',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 0.9107s ago] ('RIScopyright',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.194s ago] ('RISnotifications',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.233s ago] ('RISannouncements',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.272s ago] ('RISresearch_types_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.316s ago] ('RISsections_course_assigned',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.353s ago] ('RISsection_assigned_prof',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.398s ago] ('SPSStudentClassSubjectGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.443s ago] ('SPSClassSubject',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.505s ago] ('SPSClass',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.543s ago] ('SPSMetadata',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.587s ago] ('SPSCourse',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.626s ago] ('SPSCourseEnrolled',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.664s ago] ('SPSStudentClassGrade',)
+select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%s
+[cached since 1.702s ago] ('SPSLatestBatchSemester',)
+COMMIT
+Application startup complete.
+Request received for type: Feasibility Study, section: BSIT
+BEGIN (implicit)
+SELECT DISTINCT ON ("RISUsers".id) concat("SPSStudent"."FirstName", %s, "SPSStudent"."MiddleName", %s, "SPSStudent"."LastName") AS name, "SPSStudent"."StudentNumber" AS student_number, "SPSCourse"."CourseCode" AS course, concat("SPSMetadata"."Year", %s, "SPSClass"."Section") AS year_section, concat("SPSCourse"."CourseCode", %s, "SPSMetadata"."Year", %s, "SPSClass"."Section") AS concat_4, "RISresearch_papers".title AS title, "RISresearch_papers".research_type AS type, "RISresearch_papers".status AS proposal_status, "RISethics".status AS ethics_status, "RIScopyright".status AS copyright_status, "RISfull_manuscript".status AS manuscript_status 
+FROM "RISUsers" JOIN "RISauthors" ON "RISUsers".id = "RISauthors".user_id JOIN "RISresearch_papers" ON "RISresearch_papers".id = "RISauthors".research_paper_id JOIN "SPSStudent" ON "SPSStudent"."StudentId" = "RISUsers".student_id JOIN "SPSCourseEnrolled" ON "SPSCourseEnrolled"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSCourse" ON "SPSCourse"."CourseId" = "SPSCourseEnrolled"."CourseId" JOIN "SPSStudentClassGrade" ON "SPSStudentClassGrade"."StudentId" = "SPSStudent"."StudentId" JOIN "SPSClass" ON "SPSClass"."ClassId" = "SPSStudentClassGrade"."ClassId" JOIN "SPSMetadata" ON "SPSMetadata"."MetadataId" = "SPSClass"."MetadataId" LEFT OUTER JOIN "RISethics" ON "RISethics".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RISfull_manuscript" ON "RISfull_manuscript".research_paper_id = "RISresearch_papers".id LEFT OUTER JOIN "RIScopyright" ON "RIScopyright".research_paper_id = "RISresearch_papers".id 
+WHERE "RISresearch_papers".research_type = %s AND "SPSCourse"."CourseCode" = %s ORDER BY "RISUsers".id, "SPSMetadata"."Year" DESC, "SPSClass"."Section"
+[generated in 0.00388s] (' ', ' ', '-', ' ', '-', 'Feasibility Study', 'BSIT')
+Research papers fetched: [('Amelia Carlos Cruz', '2019-00003-CM-0', 'BSIT', '4-2', 'BSIT 4-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved'), ('Lauren Galang Davis', '2021-00021-CM-0', 'BSIT', '3-2', 'BSIT 3-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved'), ('Imelda Antonio Lim', '2019-00001-CM-0', 'BSIT', '4-2', 'BSIT 4-2', 'AWS Algo', 'Feasibility Study', 'Approved', 'Approved', 'Pending', 'Approved')]
+Excel file created at ./8e760e01a0b64ece8804d15954638a45.xlsx
+File uploaded to ImageKit: <imagekitio.models.results.UploadFileResult.UploadFileResult object at 0x000001EE81839E20>
+StatReload detected changes in 'app\controller\all_about_info.py'. Reloading...

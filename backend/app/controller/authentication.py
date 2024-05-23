@@ -39,6 +39,29 @@ async def login_faculty(request_body: LoginSchema):
 
 
 
+# FOR USER PASSWORD RESET
+#user is mag sesend ng email nya then magg sesend ng email sa kanya with token link papunta sa another page for password reset.
+@router.post("/password-reset", response_model=ResponseSchema)
+async def reset_password_user(email: str):
+    token = await AuthService.login_admin(email)
+    return ResponseSchema(detail="Successfully login", result={"token_type": "Bearer", "access_token": token})
+
+#di ko pa sure to
+@router.get("/reset", response_model=ResponseSchema)
+async def password_reset(request_body: LoginSchema):
+    token = await AuthService.login_admin(request_body)
+    return ResponseSchema(detail="Successfully login", result={"token_type": "Bearer", "access_token": token})
+
+
+# sa part na to user will but his new password then if successful rekta sa lofgin page.
+@router.post("/password-reset", response_model=ResponseSchema)
+async def reset_password_user(password: str):
+    token = await AuthService.login_admin(password)
+    return ResponseSchema(detail="Successfully login", result={"token_type": "Bearer", "access_token": token})
+
+
+
+
 # di naman needed
 # @router.post("/forgot-password", response_model=ResponseSchema, response_model_exclude_none=True)
 # async def forgot_password(request_body: ForgotPasswordSchema):

@@ -58,6 +58,8 @@ export function FacultyDashboardSection() {
     type: process?.type,
   });
 
+  console.log({ selectedProcess });
+
   const advisee = facultyAnalytics?.find(
     (data) => 'Advisee' in data
   ) as AdviseeData;
@@ -85,7 +87,7 @@ export function FacultyDashboardSection() {
           <div className="flex justify-end">
             <ExportExcelBtn
               type={process?.type}
-              section={selectedProcess?.course}
+              section={`${selectedProcess?.course} ${selectedProcess?.section}`}
             />
           </div>
         ) : null}

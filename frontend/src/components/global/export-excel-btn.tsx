@@ -10,7 +10,7 @@ import { Button } from '../ui/button';
 
 export interface ExportExcelBtnProps {
   type: string;
-  section: string;
+  section?: string;
 }
 
 const ExportExcelBtn = ({ type, section }: ExportExcelBtnProps) => {
@@ -31,7 +31,12 @@ const ExportExcelBtn = ({ type, section }: ExportExcelBtnProps) => {
       const file_link = response.data?.file_link;
 
       if (file_link) {
-        const name = `${type}-${section}-${Date.now()}.xlsx`;
+        let name = type;
+
+        if (section) name += `-${section}`;
+
+        name += `-${Date.now()}.xlsx`;
+
         FileSaver.saveAs(file_link, name);
       }
     } catch (error) {

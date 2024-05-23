@@ -1552,7 +1552,7 @@ class ResearchService:
             # return combined_results
         
             if section:
-                filtered_results = [paper for paper in combined_results if paper['course_section'] == section]
+                filtered_results = [paper for paper in combined_results if paper['Course Section'] == section]
                 return filtered_results
             else:
                 return combined_results

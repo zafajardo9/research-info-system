@@ -1,6 +1,7 @@
 'use client';
 
 import { AnnouncementContainer } from '@/components/global/announcement-container';
+import ExportExcelBtn from '@/components/global/export-excel-btn';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   useGetFacultyAnnouncementFundingOpportunity,
@@ -79,163 +80,175 @@ export function FacultyDashboardSection() {
 
   return (
     <section className="space-y-10">
-      {facultyAnalytics && (
-        <div className="flex flex-wrap items-center gap-4">
-          {advisee && (
-            <Card className="w-full max-w-[260px] p-0">
-              <CardContent className="flex items-center gap-3 p-5">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border text-4xl">
-                  <PiChalkboardTeacherLight />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-4xl font-semibold">
-                    {advisee.Advisee}
+      <div className="space-y-6">
+        {selectedProcess && process ? (
+          <div className="flex justify-end">
+            <ExportExcelBtn
+              type={process?.type}
+              section={selectedProcess?.course}
+            />
+          </div>
+        ) : null}
+        {facultyAnalytics && (
+          <div className="flex flex-wrap items-center gap-4">
+            {advisee && (
+              <Card className="w-full max-w-[260px] p-0">
+                <CardContent className="flex items-center gap-3 p-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border text-4xl">
+                    <PiChalkboardTeacherLight />
                   </div>
-                  <div className="text-xs font-semibold">Advisee</div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                  <div className="space-y-1">
+                    <div className="text-4xl font-semibold">
+                      {advisee.Advisee}
+                    </div>
+                    <div className="text-xs font-semibold">Advisee</div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-          {proposal && (
-            <>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
-                    <FaCheck />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {proposal['Approved Proposal']}
+            {proposal && (
+              <>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                      <FaCheck />
                     </div>
-                    <div className="text-xs font-semibold">
-                      Approved Proposal
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {proposal['Approved Proposal']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        Approved Proposal
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
-                    <FiEdit3 />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {proposal['For Revision Proposal']}
+                  </CardContent>
+                </Card>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                      <FiEdit3 />
                     </div>
-                    <div className="text-xs font-semibold">
-                      For Revision Proposal
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {proposal['For Revision Proposal']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        For Revision Proposal
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
+                  </CardContent>
+                </Card>
+              </>
+            )}
 
-          {ethics && (
-            <>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
-                    <FaCheck />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {ethics['Approved Ethics']}
+            {ethics && (
+              <>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                      <FaCheck />
                     </div>
-                    <div className="text-xs font-semibold">Approved Ethics</div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
-                    <FiEdit3 />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {ethics['For Revision Ethics']}
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {ethics['Approved Ethics']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        Approved Ethics
+                      </div>
                     </div>
-                    <div className="text-xs font-semibold">
-                      For Revision Ethics
+                  </CardContent>
+                </Card>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                      <FiEdit3 />
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {ethics['For Revision Ethics']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        For Revision Ethics
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
 
-          {manuscript && (
-            <>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
-                    <FaCheck />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {manuscript['Approved Full Manuscript']}
+            {manuscript && (
+              <>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                      <FaCheck />
                     </div>
-                    <div className="text-xs font-semibold">
-                      Approved Full Manuscript
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {manuscript['Approved Full Manuscript']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        Approved Full Manuscript
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
-                    <FiEdit3 />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {manuscript['For Revision Full Manuscript']}
+                  </CardContent>
+                </Card>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                      <FiEdit3 />
                     </div>
-                    <div className="text-xs font-semibold">
-                      For Revision Full Manuscript
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {manuscript['For Revision Full Manuscript']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        For Revision Full Manuscript
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
+                  </CardContent>
+                </Card>
+              </>
+            )}
 
-          {copyright && (
-            <>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
-                    <FaCheck />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {copyright['Approved Copyright']}
+            {copyright && (
+              <>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-green-500 bg-green-50 text-4xl text-green-500">
+                      <FaCheck />
                     </div>
-                    <div className="text-xs font-semibold">
-                      Approved Full Manuscript
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {copyright['Approved Copyright']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        Approved Full Manuscript
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="w-full max-w-[260px] p-0">
-                <CardContent className="flex items-center gap-3 p-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
-                    <FiEdit3 />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-4xl font-semibold">
-                      {copyright['For Revision Copyright']}
+                  </CardContent>
+                </Card>
+                <Card className="w-full max-w-[260px] p-0">
+                  <CardContent className="flex items-center gap-3 p-5">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary bg-primary-foreground text-4xl text-primary">
+                      <FiEdit3 />
                     </div>
-                    <div className="text-xs font-semibold">
-                      For Revision Copyright
+                    <div className="space-y-1">
+                      <div className="text-4xl font-semibold">
+                        {copyright['For Revision Copyright']}
+                      </div>
+                      <div className="text-xs font-semibold">
+                        For Revision Copyright
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
-        </div>
-      )}
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
+        )}
+      </div>
 
       <div className="space-y-10">
         {fundingOpportunities instanceof Array && (

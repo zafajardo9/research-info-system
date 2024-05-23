@@ -98,6 +98,7 @@ async function facultyProfileHandler(authToken: string): Promise<FacultyProfile 
 
     return response.data.result
   } catch (error) {
+    console.log({error})
     return undefined
   }
 }

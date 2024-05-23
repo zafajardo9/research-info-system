@@ -1518,6 +1518,8 @@ class ResearchService:
             papers_result = await db.execute(paper_query)
             papers = papers_result.all()
 
+            if not papers: 
+                return [] 
             
             combined_results = []
 

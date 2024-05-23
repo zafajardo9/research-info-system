@@ -289,43 +289,40 @@ async def print_all_filed(type: str, section: Optional[str] = Query(None, alias=
         research_papers = await ResearchService.get_all_for_pdf(type, section)
         print(research_papers)
         if research_papers is None:
-            logging.warning("No research papers found")
             return []
+        #remove for testing
+        #return research_papers
 
-        # Log research papers fetched
-        logging.info(f"Research papers fetched: {research_papers}")
 
-        # Convert the data to a DataFrame
         df = pd.DataFrame(research_papers)
 
-        # Generate a unique filename
+
         file_id = uuid4().hex
         filename = f"Dashboard_research_{file_id}.xlsx"
         filepath = f"./{filename}"
 
-        # Save the DataFrame to an Excel file
+
         df.to_excel(filepath, index=False)
 
-        # Log file creation
+
         logging.info(f"Excel file created at {filepath}")
 
-        # Upload the file to ImageKit
         with open(filepath, "rb") as file:
             upload_response = imagekit.upload_file(
                 file=file,
                 file_name=filename
             )
 
-        # Remove the local file after upload
+
         os.remove(filepath)
 
-        # Log file upload
+
         logging.info(f"File uploaded to ImageKit: {upload_response}")
 
-        # Access the URL from the UploadFileResult object
+
         file_url = upload_response.url
 
-        # Generate a URL with transformations
+
         image_url = imagekit.url({
             "src": file_url,
             "transformation": [{
@@ -335,7 +332,7 @@ async def print_all_filed(type: str, section: Optional[str] = Query(None, alias=
             }]
         })
 
-        # Return the transformed file link
+
         return {"file_link": image_url}
         
     except Exception as e:

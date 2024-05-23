@@ -1496,47 +1496,70 @@ class ResearchService:
     @staticmethod
     async def get_all_for_pdf(type: str, section: Optional[str]):
         try:
-            authors_query = (
+            paper_query = (
                 select(
-                    func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('name'),
-                    Student.StudentNumber.label('student_number'),
-                    SPSCourse.CourseCode.label('course'),
-                    func.concat(SPSMetadata.Year, '-', SPSClass.Section).label('year_section'),
-                    #func.concat(SPSCourse.CourseCode, ' ', SPSMetadata.Year, '-', SPSClass.Section),
-                    ResearchPaper.title.label('title'),
-                    ResearchPaper.research_type.label('type'),
-                    ResearchPaper.status.label('proposal_status'),
-                    Ethics.status.label('ethics_status'), 
-                    CopyRight.status.label('copyright_status'),
-                    FullManuscript.status.label('manuscript_status'),
+                    Author.id.label('author_id'),   
+                    ResearchPaper.id.label('research_id'),  
+                    ResearchPaper.title.label('Title'),
+                    ResearchPaper.research_type.label('Research Type'),
+                    ResearchPaper.status.label('Proposal Status'),
+                    Ethics.status.label('Ethics Status'), 
+                    CopyRight.status.label('Copyright Status'),
+                    FullManuscript.status.label('Manuscript Status'),
                 )
-                .distinct(Users.id) 
-                .select_from(Users)
-                .join(Author, Users.id == Author.user_id)
+                .select_from(Author)
                 .join(ResearchPaper, ResearchPaper.id == Author.research_paper_id)
-                .join(Student, Student.StudentId == Users.student_id)
-                .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
-                .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
-                .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
-                .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
-                .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
                 .join(Ethics, Ethics.research_paper_id == ResearchPaper.id, isouter=True) 
                 .join(FullManuscript, FullManuscript.research_paper_id == ResearchPaper.id, isouter=True)  
                 .join(CopyRight, CopyRight.research_paper_id == ResearchPaper.id, isouter=True)
-                .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
-                .where(ResearchPaper.research_type == type)  # Added missing parentheses around conditions
+                .where(ResearchPaper.research_type == type) 
             )
-            #func.concat(SPSCourse.CourseCode, ' ', SPSMetadata.Year, '-', SPSClass.Section)
-            # Conditionally add the section filter if section is not None
-            if section is not None:
-                authors_query = authors_query.where(SPSCourse.CourseCode == section)
+            # Filter papers based on the type parameter
+            papers_result = await db.execute(paper_query)
+            papers = papers_result.all()
 
-            result = await db.execute(authors_query)
-            research_papers = result.all()
+            
+            combined_results = []
 
-            return research_papers
+            for paper in papers:
+                author_query = (
+                    select(
+                        func.concat(Student.FirstName, ' ', Student.MiddleName, ' ', Student.LastName).label('Name'),
+                        Student.StudentNumber.label('Student Number'),
+                        func.concat(SPSCourse.CourseCode.label('course'), ' ', SPSMetadata.Year, '-', SPSClass.Section).label('Course Section'),
+                    )
+                    .distinct(Users.id) 
+                    .select_from(Users)
+                    .join(Author, Users.id == Author.user_id)
+                    .join(Student, Student.StudentId == Users.student_id)
+                    .join(SPSCourseEnrolled, SPSCourseEnrolled.StudentId == Student.StudentId)
+                    .join(SPSCourse, SPSCourse.CourseId == SPSCourseEnrolled.CourseId)
+                    .join(SPSStudentClassGrade, SPSStudentClassGrade.StudentId == Student.StudentId)
+                    .join(SPSClass, SPSClass.ClassId == SPSStudentClassGrade.ClassId)
+                    .join(SPSMetadata, SPSMetadata.MetadataId == SPSClass.MetadataId)
+                    .order_by(Users.id, desc(SPSMetadata.Year), SPSClass.Section)
+                    .where(Author.id == paper.author_id)
+                )
+                print("===========================",paper.author_id, "==================================")
+
+                author_result = await db.execute(author_query)
+                author_info = author_result.first()
+
+                if author_info:
+                    combined_result = {**author_info, **paper}  # Combine author and paper info
+                    combined_results.append(combined_result)
+
+            # return combined_results
+        
+            if section:
+                filtered_results = [paper for paper in combined_results if paper['course_section'] == section]
+                return filtered_results
+            else:
+                return combined_results
 
         except HTTPException as e:
             raise e
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        
+        

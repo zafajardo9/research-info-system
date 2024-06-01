@@ -1,7 +1,13 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -9,19 +15,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
-import { USER_ROLE } from '@/lib/constants';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { gsap } from 'gsap';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useLayoutEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { BiLoaderAlt } from 'react-icons/bi';
-import * as z from 'zod';
-import { studentloginFormSchema } from '../validation';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { USER_ROLE } from "@/lib/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { gsap } from "gsap";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useLayoutEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import * as z from "zod";
+import { studentloginFormSchema } from "../validation";
+
+import { FaYoutube, FaFacebookSquare } from "react-icons/fa";
 
 export function StudentLoginForm() {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -43,7 +51,7 @@ export function StudentLoginForm() {
   }, [cardRef]);
 
   const onSubmit = async (values: z.infer<typeof studentloginFormSchema>) => {
-    const response = await signIn('credentials', {
+    const response = await signIn("credentials", {
       redirect: false,
       ...values,
       role: USER_ROLE.STUDENT,
@@ -51,27 +59,30 @@ export function StudentLoginForm() {
 
     if (response?.error) {
       toast({
-        title: 'Login Failed',
+        title: "Login Failed",
         description: response.error,
-        variant: 'destructive',
+        variant: "destructive",
       });
     }
 
     if (response?.ok) {
       toast({
-        title: 'Login Success',
+        title: "Login Success",
       });
 
-      router.push('/student/progress');
+      router.push("/student/progress");
     }
 
     return;
   };
 
   return (
-    <Card ref={cardRef} className="z-20 w-96 rounded">
-      <CardHeader>
-        <CardTitle className="text-xl">Student Login</CardTitle>
+    <Card ref={cardRef} className="z-20 w-96 rounded-lg">
+      <CardHeader className="text-center">
+        <CardTitle className="text-xl font-bold">
+          PUP-RIS Student Module
+        </CardTitle>
+        <CardDescription>Sign in to start your session</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -81,12 +92,9 @@ export function StudentLoginForm() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Student ID</FormLabel>
+                  {/* <FormLabel>Student ID</FormLabel> */}
                   <FormControl>
-                    <Input
-                      placeholder="Enter Student ID here"
-                      {...field}
-                    />
+                    <Input placeholder="Student Number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,7 +106,7 @@ export function StudentLoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  {/* <FormLabel>Password</FormLabel> */}
                   <FormControl>
                     <Input
                       type="password"
@@ -121,13 +129,59 @@ export function StudentLoginForm() {
                   <BiLoaderAlt />
                 </span>
               ) : (
-                'Login'
+                "Login"
               )}
             </Button>
 
-            {/* <Button variant="ghost" type="button" className="w-full">
+            <div className="w-full bg-neutral-400 h-px opacity-50"></div>
+            <p className="text-[.6rem] text-neutral-700 text-center">
+              A student's guide on how to use the Research Information System
+            </p>
+
+            <div className="flex gap-4">
+              <Button
+                variant="userLogIn"
+                type="button"
+                className="w-full gap-1"
+              >
+                <FaYoutube />
+                Youtube
+              </Button>
+              <Button
+                variant="userLogIn"
+                type="button"
+                className="w-full gap-1"
+              >
+                <FaFacebookSquare /> Facebook
+              </Button>
+            </div>
+            <div className="divide-x-2 divide-black divide-solid">
+              <p className="text-[.6rem] text-neutral-700 text-center">
+                By using this serrvice, you understood and agree to the PUP
+                Online Services
+                <a
+                  href="https://www.pup.edu.ph/terms/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[0.6rem] text-blue-600 underline font-bold px-1"
+                >
+                  Terms of Use
+                </a>
+                and
+                <a
+                  href="https://www.pup.edu.ph/privacy/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[0.6rem] text-blue-600 underline font-bold px-1"
+                >
+                  Privacy Statement
+                </a>
+              </p>
+            </div>
+
+            <Button variant="ghost" type="button" className="w-full">
               Forgot password?
-            </Button> */}
+            </Button>
           </form>
         </Form>
       </CardContent>

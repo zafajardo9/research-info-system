@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { gsap } from 'gsap';
-import Link from 'next/link';
-import { useLayoutEffect, useRef } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { gsap } from "gsap";
+import Link from "next/link";
+import { useLayoutEffect, useRef } from "react";
 
 export function HeroSection() {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -16,7 +16,10 @@ export function HeroSection() {
   return (
     <Card ref={cardRef} className="z-50 w-96">
       <CardHeader>
-        <CardTitle className="text-xl">Login as</CardTitle>
+        <CardTitle className="text-lg">
+          {" "}
+          <span className="text-xl font-bold">PUP-RIS</span> Login as
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-4">

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -8,23 +8,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 // import { useToast } from '@/components/ui/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 // import { signIn } from 'next-auth/react';
 // import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
-import { USER_ROLE } from '@/lib/constants';
-import { gsap } from 'gsap';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useLayoutEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { BiLoaderAlt } from 'react-icons/bi';
-import * as z from 'zod';
-import { facultyloginFormSchema } from '../validation';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
+import { USER_ROLE } from "@/lib/constants";
+import { gsap } from "gsap";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useLayoutEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import * as z from "zod";
+import { facultyloginFormSchema } from "../validation";
+import { FaYoutube, FaFacebookSquare } from "react-icons/fa";
 
 export function FacultyLoginForm() {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -46,7 +53,7 @@ export function FacultyLoginForm() {
   }, [cardRef]);
 
   const onSubmit = async (values: z.infer<typeof facultyloginFormSchema>) => {
-    const response = await signIn('credentials', {
+    const response = await signIn("credentials", {
       redirect: false,
       ...values,
       role: USER_ROLE.FACULTY,
@@ -54,27 +61,30 @@ export function FacultyLoginForm() {
 
     if (response?.error) {
       toast({
-        title: 'Login Failed',
+        title: "Login Failed",
         description: response.error,
-        variant: 'destructive',
+        variant: "destructive",
       });
     }
 
     if (response?.ok) {
       toast({
-        title: 'Login Success',
+        title: "Login Success",
       });
 
-      router.push('/faculty/dashboard');
+      router.push("/faculty/dashboard");
     }
 
     return;
   };
 
   return (
-    <Card ref={cardRef} className="z-20 w-96 rounded">
+    <Card ref={cardRef} className="z-20 w-96 rounded-lg">
       <CardHeader>
-        <CardTitle className="text-xl">Faculty Login</CardTitle>
+        <CardTitle className="text-xl font-bold">
+          PUP-RIS Faculty Login
+        </CardTitle>
+        <CardDescription>Sign in to start your session</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -84,9 +94,9 @@ export function FacultyLoginForm() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  {/* <FormLabel>Email</FormLabel> */}
                   <FormControl>
-                    <Input placeholder="Enter email here" {...field} />
+                    <Input placeholder="Email address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,13 +108,9 @@ export function FacultyLoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  {/* <FormLabel>Password</FormLabel> */}
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter password here"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="Password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,10 +127,55 @@ export function FacultyLoginForm() {
                   <BiLoaderAlt />
                 </span>
               ) : (
-                'Login'
+                "Login"
               )}
             </Button>
 
+            <div className="w-full bg-neutral-400 h-px opacity-50"></div>
+            <p className="text-[.6rem] text-neutral-700 text-center">
+              A facultys's guide on hotw to use the Research Information System
+            </p>
+
+            <div className="flex gap-4">
+              <Button
+                variant="userLogIn"
+                type="button"
+                className="w-full gap-1"
+              >
+                <FaYoutube />
+                Youtube
+              </Button>
+              <Button
+                variant="userLogIn"
+                type="button"
+                className="w-full gap-1"
+              >
+                <FaFacebookSquare /> Facebook
+              </Button>
+            </div>
+            <div className="divide-x-2 divide-black divide-solid">
+              <p className="text-[.6rem] text-neutral-700 text-center">
+                By using this serrvice, you understood and agree to the PUP
+                Online Services
+                <a
+                  href="https://www.pup.edu.ph/terms/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[0.6rem] text-blue-600 underline font-bold px-1"
+                >
+                  Terms of Use
+                </a>
+                and
+                <a
+                  href="https://www.pup.edu.ph/privacy/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[0.6rem] text-blue-600 underline font-bold px-1"
+                >
+                  Privacy Statement
+                </a>
+              </p>
+            </div>
             {/* <Button variant="ghost" type="button" className="w-full">
               Forgot password?
             </Button> */}

@@ -76,7 +76,7 @@ export function AdminLoginForm() {
   };
 
   return (
-    <Card ref={cardRef} className="z-20 w-96 rounded">
+    <Card ref={cardRef} className="z-20 w-96 rounded-lg">
       <CardHeader>
         <CardTitle className="text-xl font-bold">PUP-RIS Admin Login</CardTitle>
         <CardDescription>Sign in to start your session</CardDescription>

@@ -1,5 +1,5 @@
 "use client";
-
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,8 +30,15 @@ import * as z from "zod";
 import { studentloginFormSchema } from "../validation";
 
 import { FaYoutube, FaFacebookSquare } from "react-icons/fa";
+import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 
 export function StudentLoginForm() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
   const cardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const router = useRouter();
@@ -106,14 +113,23 @@ export function StudentLoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Password</FormLabel> */}
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter password here"
-                      {...field}
-                    />
-                  </FormControl>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        type={isPasswordVisible ? "text" : "password"}
+                        placeholder="Enter password here"
+                        {...field}
+                      />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant={"ghost"}
+                      onClick={handleTogglePasswordVisibility}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-neutral-600 hover:bg-transparent"
+                    >
+                      {isPasswordVisible ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -135,7 +151,8 @@ export function StudentLoginForm() {
 
             <div className="w-full bg-neutral-400 h-px opacity-50"></div>
             <p className="text-[.6rem] text-neutral-700 text-center">
-              A student's guide on how to use the Research Information System
+              A student&apos;s guide on how to use the Research Information
+              System
             </p>
 
             <div className="flex gap-4">

@@ -133,7 +133,8 @@ export function FacultyLoginForm() {
 
             <div className="w-full bg-neutral-400 h-px opacity-50"></div>
             <p className="text-[.6rem] text-neutral-700 text-center">
-              A facultys's guide on hotw to use the Research Information System
+              A faculty&apos;s guide on hotw to use the Research Information
+              System
             </p>
 
             <div className="flex gap-4">
@@ -155,7 +156,7 @@ export function FacultyLoginForm() {
             </div>
             <div className="divide-x-2 divide-black divide-solid">
               <p className="text-[.6rem] text-neutral-700 text-center">
-                By using this serrvice, you understood and agree to the PUP
+                By using this service, you understood and agree to the PUP
                 Online Services
                 <a
                   href="https://www.pup.edu.ph/terms/"
